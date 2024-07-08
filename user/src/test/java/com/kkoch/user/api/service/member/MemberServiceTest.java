@@ -17,7 +17,6 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@Transactional
 class MemberServiceTest extends IntegrationTestSupport {
 
     @Autowired
@@ -25,9 +24,6 @@ class MemberServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private MemberRepository memberRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @DisplayName("회원 정보를 입력받아 회원가입을 할 수 있다.")
     @Test

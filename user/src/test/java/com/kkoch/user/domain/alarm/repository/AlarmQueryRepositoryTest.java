@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 
-@Transactional
 class AlarmQueryRepositoryTest extends IntegrationTestSupport {
 
     @Autowired

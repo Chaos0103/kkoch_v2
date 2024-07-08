@@ -23,7 +23,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.BDDMockito.*;
 
-@Transactional
 class ReservationServiceTest extends IntegrationTestSupport {
 
     @Autowired

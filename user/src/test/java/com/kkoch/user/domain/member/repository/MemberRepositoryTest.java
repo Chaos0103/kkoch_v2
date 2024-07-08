@@ -13,14 +13,10 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
 
-@Transactional
 class MemberRepositoryTest extends IntegrationTestSupport {
 
     @Autowired
     private MemberRepository memberRepository;
-
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
 
     @DisplayName("이메일로 회원을 조회할 수 있다.")
     @Test

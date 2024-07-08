@@ -8,11 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-/**
- * Member Data JPA Repository
- *
- * @author 임우택
- */
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
 

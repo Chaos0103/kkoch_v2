@@ -18,7 +18,6 @@ import java.util.UUID;
 import static com.kkoch.user.domain.Grade.SUPER;
 import static org.assertj.core.api.Assertions.*;
 
-@Transactional
 class ReservationQueryRepositoryTest extends IntegrationTestSupport {
 
     @Autowired

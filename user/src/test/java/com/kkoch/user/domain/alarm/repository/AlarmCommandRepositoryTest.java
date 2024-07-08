@@ -14,7 +14,6 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
 
-@Transactional
 class AlarmCommandRepositoryTest extends IntegrationTestSupport {
 
     @Autowired
@@ -25,7 +24,6 @@ class AlarmCommandRepositoryTest extends IntegrationTestSupport {
 
     @Autowired
     private MemberRepository memberRepository;
-
 
     @DisplayName("회원의 알림이 모두 열람 상태가 된다.")
     @Test
