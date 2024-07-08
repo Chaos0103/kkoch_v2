@@ -35,7 +35,7 @@ public class MemberService implements UserDetailsService {
         }
 
         Member member = findMember.get();
-        return new User(member.getEmail(), member.getEncryptedPwd(),
+        return new User(member.getEmail(), member.getPwd(),
             true, true, true, true,
             new ArrayList<>()); //권한
     }
@@ -85,6 +85,7 @@ public class MemberService implements UserDetailsService {
         matchCurrentPwd(pwd, member);
 
         member.withdrawal();
+
         return MemberResponse.of(member);
     }
 
@@ -104,7 +105,7 @@ public class MemberService implements UserDetailsService {
     }
 
     private void matchCurrentPwd(String currentPwd, Member member) {
-        boolean matches = passwordEncoder.matches(currentPwd, member.getEncryptedPwd());
+        boolean matches = passwordEncoder.matches(currentPwd, member.getPwd());
         if (!matches) {
             throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
         }

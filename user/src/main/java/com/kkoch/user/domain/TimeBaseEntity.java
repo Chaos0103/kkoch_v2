@@ -19,6 +19,9 @@ import static lombok.AccessLevel.PROTECTED;
 @NoArgsConstructor(access = PROTECTED)
 public abstract class TimeBaseEntity {
 
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private boolean isDeleted;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdDate;
@@ -26,4 +29,12 @@ public abstract class TimeBaseEntity {
     @LastModifiedDate
     @Column(nullable = false)
     private LocalDateTime lastModifiedDate;
+
+    protected TimeBaseEntity(boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
+    protected void remove() {
+        this.isDeleted = true;
+    }
 }

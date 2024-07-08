@@ -69,12 +69,12 @@ class ReservationQueryRepositoryTest extends IntegrationTestSupport {
     private Member createMember() {
         Member member = Member.builder()
             .email("ssafy@ssafy.com")
-            .encryptedPwd("password")
+            .pwd("password")
             .name("김싸피")
             .tel("010-1234-1234")
             .businessNumber("123-12-12345")
             .point(0)
-            .active(true)
+            .isDeleted(false)
             .memberKey(UUID.randomUUID().toString())
             .build();
         return memberRepository.save(member);

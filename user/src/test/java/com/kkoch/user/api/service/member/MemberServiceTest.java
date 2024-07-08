@@ -16,7 +16,6 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.InstanceOfAssertFactories.predicate;
 
 @Transactional
 class MemberServiceTest extends IntegrationTestSupport {
@@ -81,7 +80,7 @@ class MemberServiceTest extends IntegrationTestSupport {
         //then
         Optional<Member> findMember = memberRepository.findByMemberKey(response.getMemberKey());
         assertThat(findMember).isPresent();
-        boolean result = passwordEncoder.matches(newPwd, findMember.get().getEncryptedPwd());
+        boolean result = passwordEncoder.matches(newPwd, findMember.get().getPwd());
         assertThat(result).isTrue();
     }
 
@@ -110,18 +109,18 @@ class MemberServiceTest extends IntegrationTestSupport {
         //then
         Optional<Member> findMember = memberRepository.findByMemberKey(response.getMemberKey());
         assertThat(findMember).isPresent();
-        assertThat(findMember.get().isActive()).isFalse();
+        assertThat(findMember.get().isDeleted()).isTrue();
     }
 
     private Member createMember() {
         Member member = Member.builder()
             .email("ssafy@ssafy.com")
-            .encryptedPwd(passwordEncoder.encode("ssafy1234!"))
+            .pwd(passwordEncoder.encode("ssafy1234!"))
             .name("김싸피")
             .tel("010-1234-1234")
             .businessNumber("123-12-12345")
             .point(0)
-            .active(true)
+            .isDeleted(false)
             .memberKey(UUID.randomUUID().toString())
             .build();
         return memberRepository.save(member);

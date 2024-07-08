@@ -29,12 +29,12 @@ public class JoinMemberDto {
     public Member toEntity(String encryptedPwd) {
         return Member.builder()
             .email(this.email)
-            .encryptedPwd(encryptedPwd)
+            .pwd(encryptedPwd)
             .name(this.name)
             .tel(this.tel)
             .businessNumber(this.businessNumber)
             .point(0)
-            .active(true)
+            .isDeleted(false)
             .memberKey(this.memberKey)
             .build();
     }

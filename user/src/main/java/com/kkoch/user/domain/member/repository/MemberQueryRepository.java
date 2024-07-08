@@ -69,7 +69,7 @@ public class MemberQueryRepository {
                         member.tel,
                         member.businessNumber,
                         member.point,
-                        member.active
+                        member.isDeleted
                 ))
                 .from(member)
                 .fetch();
