@@ -1,8 +1,8 @@
 package com.kkoch.user.domain.member.repository;
 
 import com.kkoch.user.IntegrationTestSupport;
-import com.kkoch.user.api.controller.member.response.MemberInfoResponse;
-import com.kkoch.user.api.controller.member.response.MemberResponseForAdmin;
+import com.kkoch.user.domain.member.repository.response.MemberInfoResponse;
+import com.kkoch.user.domain.member.repository.response.MemberResponseForAdmin;
 import com.kkoch.user.domain.member.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,7 +1,7 @@
 package com.kkoch.user.domain.member.repository;
 
-import com.kkoch.user.api.controller.member.response.MemberInfoResponse;
-import com.kkoch.user.api.controller.member.response.MemberResponseForAdmin;
+import com.kkoch.user.domain.member.repository.response.MemberInfoResponse;
+import com.kkoch.user.domain.member.repository.response.MemberResponseForAdmin;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -54,15 +54,18 @@ public class MemberQueryRepository {
 
     public List<MemberResponseForAdmin> findAllUser() {
         return queryFactory
-            .select(Projections.constructor(MemberResponseForAdmin.class,
-                member.id,
-                member.email,
-                member.name,
-                member.tel,
-                member.businessNumber,
-                member.point,
-                member.isDeleted
-            ))
+            .select(
+                Projections.fields(
+                    MemberResponseForAdmin.class,
+                    member.id.as("memberId"),
+                    member.email,
+                    member.name,
+                    member.tel,
+                    member.businessNumber,
+                    member.point,
+                    member.isDeleted
+                )
+            )
             .from(member)
             .fetch();
     }

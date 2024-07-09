@@ -1,6 +1,6 @@
 package com.kkoch.user.api.controller.member.request;
 
-import com.kkoch.user.api.service.member.dto.MemberCreateServiceRequest;
+import com.kkoch.user.api.service.member.request.MemberCreateServiceRequest;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

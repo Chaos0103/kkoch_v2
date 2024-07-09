@@ -1,7 +1,7 @@
 package com.kkoch.user.api.service.member;
 
 import com.kkoch.user.IntegrationTestSupport;
-import com.kkoch.user.api.controller.member.response.MemberInfoResponse;
+import com.kkoch.user.domain.member.repository.response.MemberInfoResponse;
 import com.kkoch.user.domain.member.Member;
 import com.kkoch.user.domain.member.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;

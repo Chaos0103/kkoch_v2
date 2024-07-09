@@ -1,31 +1,29 @@
-package com.kkoch.user.api.controller.member.response;
+package com.kkoch.user.domain.member.repository.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
+@Getter
 @NoArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class MemberResponseForAdmin {
 
-    private Long id;
+    private Long memberId;
     private String email;
     private String name;
     private String tel;
     private String businessNumber;
     private int point;
-    private boolean active;
+    private boolean isDeleted;
 
     @Builder
-    public MemberResponseForAdmin(Long id, String email, String name, String tel, String businessNumber, int point, boolean active) {
-        this.id = id;
+    private MemberResponseForAdmin(Long memberId, String email, String name, String tel, String businessNumber, int point, boolean isDeleted) {
+        this.memberId = memberId;
         this.email = email;
         this.name = name;
         this.tel = tel;
         this.businessNumber = businessNumber;
         this.point = point;
-        this.active = active;
+        this.isDeleted = isDeleted;
     }
 }

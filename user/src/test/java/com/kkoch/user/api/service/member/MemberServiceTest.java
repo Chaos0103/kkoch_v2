@@ -2,7 +2,7 @@ package com.kkoch.user.api.service.member;
 
 import com.kkoch.user.IntegrationTestSupport;
 import com.kkoch.user.api.controller.member.response.MemberResponse;
-import com.kkoch.user.api.service.member.dto.MemberCreateServiceRequest;
+import com.kkoch.user.api.service.member.request.MemberCreateServiceRequest;
 import com.kkoch.user.api.service.member.request.MemberPwdModifyServiceRequest;
 import com.kkoch.user.api.service.member.request.MemberRemoveServiceRequest;
 import com.kkoch.user.domain.member.Member;
@@ -16,8 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
 class MemberServiceTest extends IntegrationTestSupport {
 
@@ -118,15 +117,12 @@ class MemberServiceTest extends IntegrationTestSupport {
         MemberResponse response = memberService.createMember(request);
 
         //then
-        Optional<Member> findMember = memberRepository.findByMemberKey(response.getMemberKey());
-        assertThat(findMember).isPresent()
-            .get()
-            .hasFieldOrPropertyWithValue("email", "ssafy@ssafy.com")
-            .hasFieldOrPropertyWithValue("name", "김싸피")
-            .hasFieldOrPropertyWithValue("tel", "010-1234-1234")
-            .hasFieldOrPropertyWithValue("businessNumber", "123-12-12345")
-            .hasFieldOrPropertyWithValue("point", 0)
-            .hasFieldOrPropertyWithValue("isDeleted", false);
+        List<Member> members = memberRepository.findAll();
+        assertThat(members).hasSize(1)
+            .extracting("email", "name", "tel", "businessNumber", "point", "isDeleted")
+            .containsExactlyInAnyOrder(
+                tuple("ssafy@ssafy.com", "김싸피", "010-1234-1234", "123-12-12345", 0, false)
+            );
     }
 
     @DisplayName("비밀번호 변경시 입력 받은 현재 비밀번호와 등록된 비밀번호가 일치하지 않는다면 예외가 발생한다.")

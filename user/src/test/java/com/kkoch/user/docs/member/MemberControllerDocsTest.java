@@ -3,7 +3,7 @@ package com.kkoch.user.docs.member;
 import com.kkoch.user.api.controller.member.MemberController;
 import com.kkoch.user.api.controller.member.request.MemberPwdModifyRequest;
 import com.kkoch.user.api.controller.member.request.MemberRemoveRequest;
-import com.kkoch.user.api.controller.member.response.MemberInfoResponse;
+import com.kkoch.user.domain.member.repository.response.MemberInfoResponse;
 import com.kkoch.user.api.controller.member.response.MemberResponse;
 import com.kkoch.user.api.service.member.MemberQueryService;
 import com.kkoch.user.api.service.member.MemberService;

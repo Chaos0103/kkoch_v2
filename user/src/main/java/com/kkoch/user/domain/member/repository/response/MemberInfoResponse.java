@@ -1,7 +1,6 @@
-package com.kkoch.user.api.controller.member.response;
+package com.kkoch.user.domain.member.repository.response;
 
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

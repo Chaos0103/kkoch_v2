@@ -1,30 +1,28 @@
 package com.kkoch.user.api.controller.member.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.kkoch.user.domain.member.Member;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@Getter
 public class MemberResponse {
 
-    private String email;
-    private String name;
-    private String memberKey;
+    private final String memberKey;
+    private final String email;
+    private final String name;
 
     @Builder
-    private MemberResponse(String email, String name, String memberKey) {
+    private MemberResponse(String memberKey, String email, String name) {
+        this.memberKey = memberKey;
         this.email = email;
         this.name = name;
-        this.memberKey = memberKey;
     }
 
     public static MemberResponse of(Member member) {
         return MemberResponse.builder()
+            .memberKey(member.getMemberKey())
             .email(member.getEmail())
             .name(member.getName())
-            .memberKey(member.getMemberKey())
             .build();
     }
 }

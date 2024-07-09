@@ -1,4 +1,4 @@
-package com.kkoch.user.api.service.member.dto;
+package com.kkoch.user.api.service.member.request;
 
 import com.kkoch.user.domain.member.Member;
 import lombok.Builder;

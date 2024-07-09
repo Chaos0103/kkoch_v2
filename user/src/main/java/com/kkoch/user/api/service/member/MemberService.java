@@ -1,7 +1,7 @@
 package com.kkoch.user.api.service.member;
 
 import com.kkoch.user.api.controller.member.response.MemberResponse;
-import com.kkoch.user.api.service.member.dto.MemberCreateServiceRequest;
+import com.kkoch.user.api.service.member.request.MemberCreateServiceRequest;
 import com.kkoch.user.api.service.member.request.MemberPwdModifyServiceRequest;
 import com.kkoch.user.api.service.member.request.MemberRemoveServiceRequest;
 import com.kkoch.user.domain.member.Member;
@@ -74,11 +74,6 @@ public class MemberService {
         }
     }
 
-    private Member getMemberBy(String memberKey) {
-        return memberRepository.findByMemberKey(memberKey)
-            .orElseThrow(NoSuchElementException::new);
-    }
-
     private void checkEqualPwd(String currentPwd, String pwd) {
         if (isNotMatch(currentPwd, pwd)) {
             throw new AppException("현재 비밀번호가 일치하지 않습니다.");
@@ -87,5 +82,10 @@ public class MemberService {
 
     private boolean isNotMatch(String currentPwd, String pwd) {
         return !passwordEncoder.matches(currentPwd, pwd);
+    }
+
+    private Member getMemberBy(String memberKey) {
+        return memberRepository.findByMemberKey(memberKey)
+            .orElseThrow(NoSuchElementException::new);
     }
 }

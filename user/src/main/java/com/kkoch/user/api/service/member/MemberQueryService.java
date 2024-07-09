@@ -1,7 +1,7 @@
 package com.kkoch.user.api.service.member;
 
-import com.kkoch.user.api.controller.member.response.MemberInfoResponse;
-import com.kkoch.user.api.controller.member.response.MemberResponseForAdmin;
+import com.kkoch.user.domain.member.repository.response.MemberInfoResponse;
+import com.kkoch.user.domain.member.repository.response.MemberResponseForAdmin;
 import com.kkoch.user.domain.member.repository.MemberQueryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
