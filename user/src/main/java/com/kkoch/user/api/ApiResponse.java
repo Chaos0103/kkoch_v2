@@ -1,4 +1,4 @@
-package com.kkoch.user.api.controller;
+package com.kkoch.user.api;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -8,10 +8,10 @@ import static org.springframework.http.HttpStatus.*;
 @Getter
 public class ApiResponse<T> {
 
-    private int code;
-    private HttpStatus status;
-    private String message;
-    private T data;
+    private final int code;
+    private final HttpStatus status;
+    private final String message;
+    private final T data;
 
     public ApiResponse(HttpStatus status, String message, T data) {
         this.code = status.value();
@@ -26,6 +26,10 @@ public class ApiResponse<T> {
 
     public static <T> ApiResponse<T> ok(T data) {
         return of(OK, "SUCCESS", data);
+    }
+
+    public static <T> ApiResponse<T> created(T data) {
+        return of(CREATED, "CREATED", data);
     }
 
 }

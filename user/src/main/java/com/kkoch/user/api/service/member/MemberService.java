@@ -1,84 +1,48 @@
 package com.kkoch.user.api.service.member;
 
 import com.kkoch.user.api.controller.member.response.MemberResponse;
-import com.kkoch.user.api.service.member.dto.JoinMemberDto;
+import com.kkoch.user.api.service.member.dto.MemberCreateServiceRequest;
+import com.kkoch.user.api.service.member.request.MemberPwdModifyServiceRequest;
 import com.kkoch.user.domain.member.Member;
 import com.kkoch.user.domain.member.repository.MemberRepository;
+import com.kkoch.user.exception.AppException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
-@RequiredArgsConstructor
 @Service
 @Transactional
-public class MemberService implements UserDetailsService {
+@RequiredArgsConstructor
+public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<Member> findMember = memberRepository.findByEmail(email);
+    public MemberResponse createMember(MemberCreateServiceRequest request) {
+        checkDuplication(request.getEmail(), request.getTel(), request.getBusinessNumber());
 
-        if (findMember.isEmpty()) {
-            throw new UsernameNotFoundException("등록되지 않는 사용자입니다.");
-        }
-
-        Member member = findMember.get();
-        return new User(member.getEmail(), member.getPwd(),
-            true, true, true, true,
-            new ArrayList<>()); //권한
-    }
-
-    /**
-     * 회원 가입
-     * @param dto 회원 정보
-     * @return 가입된 회원의 정보
-     */
-    public MemberResponse join(JoinMemberDto dto) {
-        dto.setMemberKey(UUID.randomUUID().toString());
-        Member member = dto.toEntity(passwordEncoder.encode(dto.getPwd()));
-
+        Member member = request.toEntity(passwordEncoder.encode(request.getPwd()));
         Member savedMember = memberRepository.save(member);
 
         return MemberResponse.of(savedMember);
     }
 
-    /**
-     * 회원 비밀번호 변경
-     *
-     * @param memberKey 회원 고유키
-     * @param currentPwd 현재 비밀번호
-     * @param newPwd 변경할 비밀번호
-     * @return 변경된 회원의 정보
-     */
-    public MemberResponse setPassword(String memberKey, String currentPwd, String newPwd) {
+    public MemberResponse modifyPwd(String memberKey, MemberPwdModifyServiceRequest request) {
         Member member = getMember(memberKey);
 
-        matchCurrentPwd(currentPwd, member);
+        matchCurrentPwd(request.getCurrentPwd(), member);
 
-        member.changePwd(passwordEncoder.encode(newPwd));
+        member.changePwd(passwordEncoder.encode(request.getNextPwd()));
 
         return MemberResponse.of(member);
     }
 
-    /**
-     * 회원 탈퇴
-     *
-     * @param memberKey 회원 고유키
-     * @param pwd 현재 비밀번호
-     * @return 탈퇴한 회원의 정보
-     */
     public MemberResponse withdrawal(String memberKey, String pwd) {
         Member member = getMember(memberKey);
 
@@ -97,6 +61,23 @@ public class MemberService implements UserDetailsService {
         }
 
         return findMember.get();
+    }
+
+    private void checkDuplication(String email, String tel, String businessNumber) {
+        boolean isExistEmail = memberRepository.existsByEmail(email);
+        if (isExistEmail) {
+            throw new AppException("사용중인 이메일입니다.");
+        }
+
+        boolean isExistTel = memberRepository.existsByTel(tel);
+        if (isExistTel) {
+            throw new AppException("사용중인 연락처입니다.");
+        }
+
+        boolean isExistBusinessNumber = memberRepository.existsByBusinessNumber(businessNumber);
+        if (isExistBusinessNumber) {
+            throw new AppException("사용중인 사업자 번호입니다.");
+        }
     }
 
     private Member getMember(String memberKey) {

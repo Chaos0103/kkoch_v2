@@ -1,8 +1,7 @@
 package com.kkoch.user.docs.member;
 
 import com.kkoch.user.api.controller.member.MemberController;
-import com.kkoch.user.api.controller.member.request.LoginRequest;
-import com.kkoch.user.api.controller.member.request.SetPasswordRequest;
+import com.kkoch.user.api.controller.member.request.MemberPwdModifyRequest;
 import com.kkoch.user.api.controller.member.request.WithdrawalRequest;
 import com.kkoch.user.api.controller.member.response.MemberInfoResponse;
 import com.kkoch.user.api.controller.member.response.MemberResponse;
@@ -11,10 +10,8 @@ import com.kkoch.user.api.service.member.MemberService;
 import com.kkoch.user.docs.RestDocsSupport;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.UUID;
 
@@ -26,7 +23,6 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -42,7 +38,7 @@ class MemberControllerDocsTest extends RestDocsSupport {
 
     @DisplayName("회원 정보 조회 API")
     @Test
-    void getMyInfo() throws Exception {
+    void getMemberInfo() throws Exception {
         MemberInfoResponse response = MemberInfoResponse.builder()
             .email("ssafy@ssafy.com")
             .name("김싸피")
@@ -50,7 +46,7 @@ class MemberControllerDocsTest extends RestDocsSupport {
             .businessNumber("123-12-12345")
             .build();
 
-        given(memberQueryService.getMyInfo(anyString()))
+        given(memberQueryService.getMemberInfoBy(anyString()))
             .willReturn(response);
 
         mockMvc.perform(get("/{memberKey}", UUID.randomUUID().toString())
@@ -82,10 +78,10 @@ class MemberControllerDocsTest extends RestDocsSupport {
 
     @DisplayName("회원 비밀번호 변경 API")
     @Test
-    void setPassword() throws Exception {
+    void modifyPwd() throws Exception {
         String memberKey = UUID.randomUUID().toString();
 
-        SetPasswordRequest request = SetPasswordRequest.builder()
+        MemberPwdModifyRequest request = MemberPwdModifyRequest.builder()
             .currentPwd("ssafy1234@")
             .newPwd("ssafyc204!")
             .build();
@@ -96,7 +92,7 @@ class MemberControllerDocsTest extends RestDocsSupport {
             .memberKey(memberKey)
             .build();
 
-        given(memberService.setPassword(anyString(), anyString(), anyString()))
+        given(memberService.modifyPwd(anyString(), any()))
             .willReturn(response);
 
         mockMvc.perform(patch("/{memberKey}/pwd", memberKey)

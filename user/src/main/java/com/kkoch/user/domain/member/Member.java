@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+import java.util.UUID;
+
 import static javax.persistence.GenerationType.*;
 import static lombok.AccessLevel.*;
 
@@ -51,6 +53,15 @@ public class Member extends TimeBaseEntity {
         this.tel = tel;
         this.businessNumber = businessNumber;
         this.point = point;
+    }
+
+    public static Member of(boolean isDeleted, String memberKey, String email, String pwd, String name, String tel, String businessNumber, int point) {
+        return new Member(isDeleted, memberKey, email, pwd, name, tel, businessNumber, point);
+    }
+
+    public static Member create(String email, String pwd, String name, String tel, String businessNumber) {
+        String memberKey = UUID.randomUUID().toString();
+        return of(false, memberKey, email, pwd, name, tel, businessNumber, 0);
     }
 
     //== 비즈니스 로직 ==//

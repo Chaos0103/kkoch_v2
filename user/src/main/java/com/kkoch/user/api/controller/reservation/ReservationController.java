@@ -1,6 +1,6 @@
 package com.kkoch.user.api.controller.reservation;
 
-import com.kkoch.user.api.controller.ApiResponse;
+import com.kkoch.user.api.ApiResponse;
 import com.kkoch.user.api.controller.reservation.request.AddReservationRequest;
 import com.kkoch.user.api.controller.reservation.response.AddReservationResponse;
 import com.kkoch.user.api.controller.reservation.response.ReservationResponse;

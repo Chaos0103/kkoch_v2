@@ -7,10 +7,9 @@ import com.kkoch.user.domain.member.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
@@ -25,25 +24,25 @@ class MemberQueryRepositoryTest extends IntegrationTestSupport {
 
     @DisplayName("회원은 본인의 정보를 조회할 수 있다.")
     @Test
-    void findMyInfoByMemberKey() {
+    void findMemberInfoByMemberKey() {
         //given
         Member member = createMember();
 
         //when
-        MemberInfoResponse memberInfo = memberQueryRepository.findMyInfoByMemberKey(member.getMemberKey());
+        Optional<MemberInfoResponse> memberInfo = memberQueryRepository.findMemberInfoByMemberKey(member.getMemberKey());
 
         //then
-        assertThat(memberInfo).isNotNull();
+        assertThat(memberInfo).isPresent();
     }
 
     @DisplayName("이메일이 존재하면 true를 반환한다.")
     @Test
-    void existEmail() {
+    void existByEmail() {
         //given
         Member member = createMember();
 
         //when
-        Boolean result = memberQueryRepository.existEmail(member.getEmail());
+        Boolean result = memberQueryRepository.existByEmail(member.getEmail());
 
         //then
         assertThat(result).isTrue();

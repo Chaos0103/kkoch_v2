@@ -1,6 +1,6 @@
 package com.kkoch.user.api.controller.pointhistory;
 
-import com.kkoch.user.api.controller.ApiResponse;
+import com.kkoch.user.api.ApiResponse;
 import com.kkoch.user.api.controller.pointhistory.request.AddPointHistoryRequest;
 import com.kkoch.user.api.controller.pointhistory.response.AddPointHistoryResponse;
 import com.kkoch.user.api.controller.pointhistory.response.PointHistoryResponse;

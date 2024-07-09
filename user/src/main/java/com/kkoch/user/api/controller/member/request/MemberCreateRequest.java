@@ -1,15 +1,15 @@
 package com.kkoch.user.api.controller.member.request;
 
-import com.kkoch.user.api.service.member.dto.JoinMemberDto;
+import com.kkoch.user.api.service.member.dto.MemberCreateServiceRequest;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 
-@Data
+@Getter
 @NoArgsConstructor
-public class JoinMemberRequest {
+public class MemberCreateRequest {
 
     @NotBlank
     private String email;
@@ -27,7 +27,7 @@ public class JoinMemberRequest {
     private String businessNumber;
 
     @Builder
-    private JoinMemberRequest(String email, String loginPw, String name, String tel, String businessNumber) {
+    private MemberCreateRequest(String email, String loginPw, String name, String tel, String businessNumber) {
         this.email = email;
         this.loginPw = loginPw;
         this.name = name;
@@ -35,8 +35,8 @@ public class JoinMemberRequest {
         this.businessNumber = businessNumber;
     }
 
-    public JoinMemberDto toJoinMemberDto() {
-        return JoinMemberDto.builder()
+    public MemberCreateServiceRequest toJoinMemberDto() {
+        return MemberCreateServiceRequest.builder()
             .email(this.email)
             .pwd(this.loginPw)
             .name(this.name)

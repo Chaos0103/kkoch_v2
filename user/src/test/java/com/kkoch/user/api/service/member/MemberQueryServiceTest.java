@@ -7,8 +7,6 @@ import com.kkoch.user.domain.member.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -24,12 +22,12 @@ class MemberQueryServiceTest extends IntegrationTestSupport {
 
     @DisplayName("회원은 본인의 정보를 조회할 수 있다.")
     @Test
-    void getMyInfo() {
+    void getMemberInfoBy() {
         //given
         Member member = createMember();
 
         //when
-        MemberInfoResponse memberInfo = memberQueryService.getMyInfo(member.getMemberKey());
+        MemberInfoResponse memberInfo = memberQueryService.getMemberInfoBy(member.getMemberKey());
 
         //then
         assertThat(memberInfo).isNotNull();
@@ -37,12 +35,12 @@ class MemberQueryServiceTest extends IntegrationTestSupport {
 
     @DisplayName("이메일 존재 여부를 확인할 수 있다.")
     @Test
-    void validationEmail() {
+    void isUsedEmailBy() {
         //given
         Member member = createMember();
 
         //when
-        boolean result = memberQueryService.validationEmail(member.getEmail());
+        boolean result = memberQueryService.isUsedEmailBy(member.getEmail());
 
         //then
         assertThat(result).isTrue();

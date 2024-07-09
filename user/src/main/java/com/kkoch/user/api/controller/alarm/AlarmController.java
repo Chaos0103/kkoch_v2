@@ -1,6 +1,6 @@
 package com.kkoch.user.api.controller.alarm;
 
-import com.kkoch.user.api.controller.ApiResponse;
+import com.kkoch.user.api.ApiResponse;
 import com.kkoch.user.api.controller.alarm.response.AlarmResponse;
 import com.kkoch.user.api.service.alarm.AlamService;
 import com.kkoch.user.api.service.alarm.AlarmQueryService;
@@ -9,8 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-import static org.springframework.http.HttpStatus.MOVED_PERMANENTLY;
 
 /**
  * 알림 API 컨트롤러

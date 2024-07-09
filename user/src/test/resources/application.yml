@@ -6,7 +6,7 @@ server:
 # logging
 logging:
   level:
-    org.hibernate: debug
+    org.hibernate.SQL: debug
     com.kkoch.user: debug
 
 ---
