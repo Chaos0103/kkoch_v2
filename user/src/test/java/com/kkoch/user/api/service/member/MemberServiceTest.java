@@ -6,6 +6,7 @@ import com.kkoch.user.api.service.member.request.MemberCreateServiceRequest;
 import com.kkoch.user.api.service.member.request.MemberPwdModifyServiceRequest;
 import com.kkoch.user.api.service.member.request.MemberRemoveServiceRequest;
 import com.kkoch.user.domain.member.Member;
+import com.kkoch.user.domain.member.Point;
 import com.kkoch.user.domain.member.repository.MemberRepository;
 import com.kkoch.user.exception.AppException;
 import org.junit.jupiter.api.DisplayName;
@@ -119,9 +120,9 @@ class MemberServiceTest extends IntegrationTestSupport {
         //then
         List<Member> members = memberRepository.findAll();
         assertThat(members).hasSize(1)
-            .extracting("email", "name", "tel", "businessNumber", "point", "isDeleted")
+            .extracting("email", "name", "tel", "businessNumber", "point.value", "isDeleted")
             .containsExactlyInAnyOrder(
-                tuple("ssafy@ssafy.com", "김싸피", "010-1234-1234", "123-12-12345", 0, false)
+                tuple("ssafy@ssafy.com", "김싸피", "010-1234-1234", "123-12-12345", 0L, false)
             );
     }
 
@@ -234,7 +235,9 @@ class MemberServiceTest extends IntegrationTestSupport {
             .name("김싸피")
             .tel("010-1234-1234")
             .businessNumber("123-12-12345")
-            .point(0)
+            .point(Point.builder()
+                .value(0)
+                .build())
             .build();
         return memberRepository.save(member);
     }

@@ -2,6 +2,7 @@ package com.kkoch.user.domain.member.repository;
 
 import com.kkoch.user.IntegrationTestSupport;
 import com.kkoch.user.domain.member.Member;
+import com.kkoch.user.domain.member.Point;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,7 +123,9 @@ class MemberRepositoryTest extends IntegrationTestSupport {
             .name("김싸피")
             .tel("010-1234-1234")
             .businessNumber("123-12-12345")
-            .point(0)
+            .point(Point.builder()
+                .value(0)
+                .build())
             .build();
         return memberRepository.save(member);
     }

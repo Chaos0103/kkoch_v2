@@ -62,7 +62,7 @@ public class MemberQueryRepository {
                     member.name,
                     member.tel,
                     member.businessNumber,
-                    member.point,
+                    member.point.value.as("point"),
                     member.isDeleted
                 )
             )

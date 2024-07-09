@@ -15,7 +15,6 @@ endif::[]
 include::api/member/my_info.adoc[]
 include::api/member/my_password.adoc[]
 
-
 [[Reservation-API]]
 == Reservation API
 
@@ -27,9 +26,7 @@ include::api/reservation/reservation_search.adoc[]
 
 include::api/alarm/alarm_search.adoc[]
 
-[[Point-History-API]]
-== Point History API
+[[Point-Log-API]]
+== 포인트 내역 API
 
-include::api/pointhistory/point_history_charge.adoc[]
-include::api/pointhistory/point_history_use.adoc[]
-include::api/pointhistory/point_history_search.adoc[]
+include::api/pointlog/create-point-log.adoc[]

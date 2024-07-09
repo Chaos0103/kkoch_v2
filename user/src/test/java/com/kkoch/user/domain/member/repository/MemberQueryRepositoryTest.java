@@ -1,6 +1,7 @@
 package com.kkoch.user.domain.member.repository;
 
 import com.kkoch.user.IntegrationTestSupport;
+import com.kkoch.user.domain.member.Point;
 import com.kkoch.user.domain.member.repository.response.MemberInfoResponse;
 import com.kkoch.user.domain.member.repository.response.MemberResponseForAdmin;
 import com.kkoch.user.domain.member.Member;
@@ -67,7 +68,9 @@ class MemberQueryRepositoryTest extends IntegrationTestSupport {
             .name("김싸피")
             .tel("010-1234-1234")
             .businessNumber("123-12-12345")
-            .point(0)
+            .point(Point.builder()
+                .value(0)
+                .build())
             .isDeleted(false)
             .memberKey(UUID.randomUUID().toString())
             .build();

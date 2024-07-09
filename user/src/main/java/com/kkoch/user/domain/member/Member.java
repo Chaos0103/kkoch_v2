@@ -1,6 +1,7 @@
 package com.kkoch.user.domain.member;
 
 import com.kkoch.user.domain.TimeBaseEntity;
+import com.kkoch.user.domain.pointlog.PointStatus;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,11 +41,11 @@ public class Member extends TimeBaseEntity {
     @Column(unique = true, nullable = false, updatable = false, length = 12)
     private String businessNumber;
 
-    @Column(nullable = false, columnDefinition = "int default 0")
-    private int point;
+    @Embedded
+    private Point point;
 
     @Builder
-    private Member(boolean isDeleted, String memberKey, String email, String pwd, String name, String tel, String businessNumber, int point) {
+    private Member(boolean isDeleted, String memberKey, String email, String pwd, String name, String tel, String businessNumber, Point point) {
         super(isDeleted);
         this.memberKey = memberKey;
         this.email = email;
@@ -55,18 +56,25 @@ public class Member extends TimeBaseEntity {
         this.point = point;
     }
 
-    public static Member of(boolean isDeleted, String memberKey, String email, String pwd, String name, String tel, String businessNumber, int point) {
+    public static Member of(boolean isDeleted, String memberKey, String email, String pwd, String name, String tel, String businessNumber, Point point) {
         return new Member(isDeleted, memberKey, email, pwd, name, tel, businessNumber, point);
     }
 
     public static Member create(String email, String pwd, String name, String tel, String businessNumber) {
         String memberKey = UUID.randomUUID().toString();
-        return of(false, memberKey, email, pwd, name, tel, businessNumber, 0);
+        return of(false, memberKey, email, pwd, name, tel, businessNumber, Point.init());
     }
 
-    //== 비즈니스 로직 ==//
     public void modifyPwd(String pwd) {
         this.pwd = pwd;
+    }
+
+    public void modifyPoint(PointStatus status, int amount) {
+        if (status == PointStatus.CHARGE) {
+            point = point.add(amount);
+            return;
+        }
+        point = point.subtract(amount);
     }
 
     public void withdrawal() {

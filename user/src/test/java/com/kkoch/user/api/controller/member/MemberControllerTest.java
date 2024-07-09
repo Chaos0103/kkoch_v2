@@ -10,8 +10,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.http.MediaType;
 
-import java.util.UUID;
-
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -149,9 +147,5 @@ class MemberControllerTest extends ControllerTestSupport {
                     .with(csrf())
             )
             .andExpect(status().isOk());
-    }
-
-    private String generateMemberKey() {
-        return UUID.randomUUID().toString();
     }
 }

@@ -1,0 +1,10 @@
+[[create-point-log]]
+=== 신규 포인트 내역 등록
+
+==== HTTP Request
+include::{snippets}/create-point-log/http-request.adoc[]
+include::{snippets}/create-point-log/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/create-point-log/http-response.adoc[]
+include::{snippets}/create-point-log/response-fields.adoc[]

@@ -3,6 +3,7 @@ package com.kkoch.user.domain.alarm.repository;
 import com.kkoch.user.IntegrationTestSupport;
 import com.kkoch.user.domain.alarm.Alarm;
 import com.kkoch.user.domain.member.Member;
+import com.kkoch.user.domain.member.Point;
 import com.kkoch.user.domain.member.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -48,7 +49,9 @@ class AlarmCommandRepositoryTest extends IntegrationTestSupport {
             .name("김싸피")
             .tel("010-1234-1234")
             .businessNumber("123-12-12345")
-            .point(0)
+            .point(Point.builder()
+                .value(0)
+                .build())
             .isDeleted(false)
             .memberKey(UUID.randomUUID().toString())
             .build();

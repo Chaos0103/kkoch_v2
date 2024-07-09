@@ -9,6 +9,8 @@ import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.UUID;
+
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 
 @ExtendWith(RestDocumentationExtension.class)
@@ -20,9 +22,13 @@ public abstract class RestDocsSupport {
     @BeforeEach
     void setUp(RestDocumentationContextProvider provider) {
         this.mockMvc = MockMvcBuilders.standaloneSetup(initController())
-                .apply(documentationConfiguration(provider))
-                .build();
+            .apply(documentationConfiguration(provider))
+            .build();
     }
 
     protected abstract Object initController();
+
+    protected String generateMemberKey() {
+        return UUID.randomUUID().toString();
+    }
 }

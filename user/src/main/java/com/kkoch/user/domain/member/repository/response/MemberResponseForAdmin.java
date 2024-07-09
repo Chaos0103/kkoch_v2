@@ -13,11 +13,11 @@ public class MemberResponseForAdmin {
     private String name;
     private String tel;
     private String businessNumber;
-    private int point;
+    private long point;
     private boolean isDeleted;
 
     @Builder
-    private MemberResponseForAdmin(Long memberId, String email, String name, String tel, String businessNumber, int point, boolean isDeleted) {
+    private MemberResponseForAdmin(Long memberId, String email, String name, String tel, String businessNumber, long point, boolean isDeleted) {
         this.memberId = memberId;
         this.email = email;
         this.name = name;

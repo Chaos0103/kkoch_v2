@@ -6,6 +6,7 @@ import com.kkoch.user.api.service.reservation.dto.AddReservationDto;
 import com.kkoch.user.client.PlantServiceClient;
 import com.kkoch.user.domain.Grade;
 import com.kkoch.user.domain.member.Member;
+import com.kkoch.user.domain.member.Point;
 import com.kkoch.user.domain.member.repository.MemberRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -66,7 +67,9 @@ class ReservationServiceTest extends IntegrationTestSupport {
             .name("김싸피")
             .tel("010-1234-1234")
             .businessNumber("123-12-12345")
-            .point(0)
+            .point(Point.builder()
+                .value(0)
+                .build())
             .isDeleted(false)
             .memberKey(UUID.randomUUID().toString())
             .build();
