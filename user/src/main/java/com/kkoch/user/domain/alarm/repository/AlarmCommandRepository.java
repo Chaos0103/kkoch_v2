@@ -4,11 +4,10 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-
 import java.util.List;
 
 import static com.kkoch.user.domain.alarm.QAlarm.alarm;
-import static com.kkoch.user.domain.member.QMember.*;
+import static com.kkoch.user.domain.member.QMember.member;
 
 /**
  * Alarm bulk command Repository

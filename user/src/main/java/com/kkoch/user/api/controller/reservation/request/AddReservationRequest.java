@@ -5,7 +5,6 @@ import com.kkoch.user.domain.Grade;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 @Data
 @NoArgsConstructor

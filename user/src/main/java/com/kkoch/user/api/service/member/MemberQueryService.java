@@ -1,8 +1,8 @@
 package com.kkoch.user.api.service.member;
 
+import com.kkoch.user.domain.member.repository.MemberQueryRepository;
 import com.kkoch.user.domain.member.repository.response.MemberInfoResponse;
 import com.kkoch.user.domain.member.repository.response.MemberResponseForAdmin;
-import com.kkoch.user.domain.member.repository.MemberQueryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -3,7 +3,8 @@ package com.kkoch.user.api;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @Getter
 public class ApiResponse<T> {

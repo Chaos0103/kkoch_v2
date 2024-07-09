@@ -10,7 +10,7 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 import static com.kkoch.user.domain.member.QMember.member;
-import static com.kkoch.user.domain.pointlog.QPointLog.*;
+import static com.kkoch.user.domain.pointlog.QPointLog.pointLog;
 
 @Repository
 public class PointLogQueryRepository {

@@ -2,7 +2,6 @@ package com.kkoch.user.api.controller.member.request;
 
 import com.kkoch.user.api.service.member.request.MemberRemoveServiceRequest;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

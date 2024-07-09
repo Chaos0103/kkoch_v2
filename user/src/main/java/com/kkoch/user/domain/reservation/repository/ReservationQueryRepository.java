@@ -12,8 +12,8 @@ import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.kkoch.user.domain.member.QMember.*;
-import static com.kkoch.user.domain.reservation.QReservation.*;
+import static com.kkoch.user.domain.member.QMember.member;
+import static com.kkoch.user.domain.reservation.QReservation.reservation;
 
 @Repository
 public class ReservationQueryRepository {

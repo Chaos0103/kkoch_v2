@@ -10,7 +10,6 @@ import com.kkoch.user.api.service.pointlog.response.PointLogCreateResponse;
 import com.kkoch.user.domain.pointlog.repository.response.PointLogResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
