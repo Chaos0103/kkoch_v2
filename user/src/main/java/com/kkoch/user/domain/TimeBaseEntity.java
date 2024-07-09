@@ -24,11 +24,11 @@ public abstract class TimeBaseEntity {
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdDate;
+    private LocalDateTime createdDateTime;
 
     @LastModifiedDate
     @Column(nullable = false)
-    private LocalDateTime lastModifiedDate;
+    private LocalDateTime lastModifiedDateTime;
 
     protected TimeBaseEntity(boolean isDeleted) {
         this.isDeleted = isDeleted;

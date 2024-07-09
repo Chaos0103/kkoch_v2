@@ -37,12 +37,12 @@ public class AlarmQueryRepository {
                 alarm.id,
                 alarm.content,
                 alarm.open,
-                alarm.createdDate
+                alarm.createdDateTime
             ))
             .from(alarm)
             .join(alarm.member, member)
             .where(alarm.member.memberKey.eq(memberKey))
-            .orderBy(alarm.createdDate.desc())
+            .orderBy(alarm.createdDateTime.desc())
             .limit(10)
             .offset(0)
             .fetch();

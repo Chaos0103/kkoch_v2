@@ -30,7 +30,7 @@ public class AddReservationResponse {
             .count(reservation.getCount())
             .price(reservation.getPrice())
             .grade(reservation.getGrade().getText())
-            .createdDate(reservation.getCreatedDate())
+            .createdDate(reservation.getCreatedDateTime())
             .build();
     }
 }

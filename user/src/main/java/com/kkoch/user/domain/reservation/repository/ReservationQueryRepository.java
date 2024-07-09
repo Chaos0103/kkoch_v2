@@ -32,7 +32,7 @@ public class ReservationQueryRepository {
             .where(
                 reservation.member.memberKey.eq(memberKey)
             )
-            .orderBy(reservation.createdDate.desc())
+            .orderBy(reservation.createdDateTime.desc())
             .limit(pageable.getPageSize())
             .offset(pageable.getOffset())
             .fetch();
@@ -45,7 +45,7 @@ public class ReservationQueryRepository {
             .select(reservation)
             .from(reservation)
             .where(reservation.id.in(ids))
-            .orderBy(reservation.createdDate.desc())
+            .orderBy(reservation.createdDateTime.desc())
             .fetch();
     }
 
@@ -70,7 +70,7 @@ public class ReservationQueryRepository {
             ))
             .from(reservation)
             .where(reservation.plantId.eq(plantId))
-            .orderBy(reservation.price.desc(), reservation.createdDate.asc())
+            .orderBy(reservation.price.desc(), reservation.createdDateTime.asc())
             .fetchFirst();
     }
 }

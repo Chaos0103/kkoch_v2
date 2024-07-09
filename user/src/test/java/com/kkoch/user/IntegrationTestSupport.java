@@ -6,10 +6,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @SpringBootTest
 @Transactional
 public abstract class IntegrationTestSupport {
 
     @Autowired
     protected PasswordEncoder passwordEncoder;
+
+    protected String generateMemberKey() {
+        return UUID.randomUUID().toString();
+    }
 }

@@ -30,3 +30,4 @@ include::api/alarm/alarm_search.adoc[]
 == 포인트 내역 API
 
 include::api/pointlog/create-point-log.adoc[]
+include::api/pointlog/search-point-logs.adoc[]

@@ -241,8 +241,4 @@ class MemberServiceTest extends IntegrationTestSupport {
             .build();
         return memberRepository.save(member);
     }
-
-    private String generateMemberKey() {
-        return UUID.randomUUID().toString();
-    }
 }
