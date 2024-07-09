@@ -11,19 +11,19 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 public class MemberCreateRequest {
 
-    @NotBlank
+    @NotBlank(message = "이메일을 입력해주세요.")
     private String email;
 
-    @NotBlank
+    @NotBlank(message = "비밀번호를 입력해주세요.")
     private String loginPw;
 
-    @NotBlank
+    @NotBlank(message = "이름을 입력해주세요.")
     private String name;
 
-    @NotBlank
+    @NotBlank(message = "연락처를 입력해주세요.")
     private String tel;
 
-    @NotBlank
+    @NotBlank(message = "사업자 번호를 입력해주세요.")
     private String businessNumber;
 
     @Builder
