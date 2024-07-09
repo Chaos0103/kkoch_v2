@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @Transactional
@@ -34,19 +33,19 @@ public class MemberService {
     }
 
     public MemberResponse modifyPwd(String memberKey, MemberPwdModifyServiceRequest request) {
-        Member member = getMember(memberKey);
+        Member member = getMemberBy(memberKey);
 
-        matchCurrentPwd(request.getCurrentPwd(), member);
+        checkEqualPwd(request.getCurrentPwd(), member.getPwd());
 
-        member.changePwd(passwordEncoder.encode(request.getNextPwd()));
+        member.modifyPwd(passwordEncoder.encode(request.getNewPwd()));
 
         return MemberResponse.of(member);
     }
 
     public MemberResponse withdrawal(String memberKey, String pwd) {
-        Member member = getMember(memberKey);
+        Member member = getMemberBy(memberKey);
 
-        matchCurrentPwd(pwd, member);
+        checkEqualPwd(pwd, member.getPwd());
 
         member.withdrawal();
 
@@ -80,15 +79,18 @@ public class MemberService {
         }
     }
 
-    private Member getMember(String memberKey) {
+    private Member getMemberBy(String memberKey) {
         return memberRepository.findByMemberKey(memberKey)
             .orElseThrow(NoSuchElementException::new);
     }
 
-    private void matchCurrentPwd(String currentPwd, Member member) {
-        boolean matches = passwordEncoder.matches(currentPwd, member.getPwd());
-        if (!matches) {
-            throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
+    private void checkEqualPwd(String currentPwd, String pwd) {
+        if (isNotMatch(currentPwd, pwd)) {
+            throw new AppException("현재 비밀번호가 일치하지 않습니다.");
         }
+    }
+
+    private boolean isNotMatch(String currentPwd, String pwd) {
+        return !passwordEncoder.matches(currentPwd, pwd);
     }
 }

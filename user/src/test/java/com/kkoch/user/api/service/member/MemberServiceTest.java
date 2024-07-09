@@ -128,7 +128,7 @@ class MemberServiceTest extends IntegrationTestSupport {
             .hasFieldOrPropertyWithValue("isDeleted", false);
     }
 
-    @DisplayName("회원 비밀번호 변경시 현재 비밀번호가 일치하지 않는다면 예외가 발생한다.")
+    @DisplayName("비밀번호 변경시 입력 받은 현재 비밀번호와 등록된 비밀번호가 일치하지 않는다면 예외가 발생한다.")
     @Test
     void modifyPwdWithNotEqualCurrentPwd() {
         //given
@@ -137,13 +137,20 @@ class MemberServiceTest extends IntegrationTestSupport {
 
         MemberPwdModifyServiceRequest request = MemberPwdModifyServiceRequest.builder()
             .currentPwd("password1!")
-            .nextPwd("newPwd1!")
+            .newPwd("newPwd1!")
             .build();
 
-        //when //then
+        //when
         assertThatThrownBy(() -> memberService.modifyPwd(member.getMemberKey(), request))
-            .isInstanceOf(IllegalArgumentException.class)
+            .isInstanceOf(AppException.class)
             .hasMessage("현재 비밀번호가 일치하지 않습니다.");
+
+        //then
+        Optional<Member> findMember = memberRepository.findById(member.getId());
+        assertThat(findMember).isPresent();
+
+        boolean isMatch = passwordEncoder.matches("ssafy1234!", findMember.get().getPwd());
+        assertThat(isMatch).isTrue();
     }
 
     @DisplayName("회원은 비밀번호를 변경할 수 있다.")
@@ -155,7 +162,7 @@ class MemberServiceTest extends IntegrationTestSupport {
 
         MemberPwdModifyServiceRequest request = MemberPwdModifyServiceRequest.builder()
             .currentPwd("ssafy1234!")
-            .nextPwd("newPwd1234!")
+            .newPwd("newPwd1234!")
             .build();
 
         //when
@@ -164,7 +171,8 @@ class MemberServiceTest extends IntegrationTestSupport {
         //then
         Optional<Member> findMember = memberRepository.findByMemberKey(response.getMemberKey());
         assertThat(findMember).isPresent();
-        boolean result = passwordEncoder.matches(request.getNextPwd(), findMember.get().getPwd());
+
+        boolean result = passwordEncoder.matches(request.getNewPwd(), findMember.get().getPwd());
         assertThat(result).isTrue();
     }
 
