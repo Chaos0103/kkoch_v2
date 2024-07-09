@@ -4,7 +4,7 @@ import com.kkoch.user.api.ApiResponse;
 import com.kkoch.user.api.controller.member.request.CheckEmailRequest;
 import com.kkoch.user.api.controller.member.request.MemberCreateRequest;
 import com.kkoch.user.api.controller.member.request.MemberPwdModifyRequest;
-import com.kkoch.user.api.controller.member.request.WithdrawalRequest;
+import com.kkoch.user.api.controller.member.request.MemberRemoveRequest;
 import com.kkoch.user.api.controller.member.response.MemberInfoResponse;
 import com.kkoch.user.api.controller.member.response.MemberResponse;
 import com.kkoch.user.api.controller.member.response.MemberResponseForAdmin;
@@ -46,9 +46,10 @@ public class MemberController {
         return ApiResponse.ok(response);
     }
 
-    @DeleteMapping("/{memberKey}")
-    public ApiResponse<MemberResponse> withdrawal(@PathVariable String memberKey, @Valid @RequestBody WithdrawalRequest request) {
-        MemberResponse response = memberService.withdrawal(memberKey, request.getPwd());
+    @PatchMapping("/{memberKey}/withdrawal")
+    public ApiResponse<MemberResponse> withdrawal(@PathVariable String memberKey, @Valid @RequestBody MemberRemoveRequest request) {
+        MemberResponse response = memberService.removeMember(memberKey, request.toServiceRequest());
+
         return ApiResponse.ok(response);
     }
 

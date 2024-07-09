@@ -4,6 +4,7 @@ import com.kkoch.user.IntegrationTestSupport;
 import com.kkoch.user.api.controller.member.response.MemberResponse;
 import com.kkoch.user.api.service.member.dto.MemberCreateServiceRequest;
 import com.kkoch.user.api.service.member.request.MemberPwdModifyServiceRequest;
+import com.kkoch.user.api.service.member.request.MemberRemoveServiceRequest;
 import com.kkoch.user.domain.member.Member;
 import com.kkoch.user.domain.member.repository.MemberRepository;
 import com.kkoch.user.exception.AppException;
@@ -169,7 +170,12 @@ class MemberServiceTest extends IntegrationTestSupport {
         MemberResponse response = memberService.modifyPwd(member.getMemberKey(), request);
 
         //then
-        Optional<Member> findMember = memberRepository.findByMemberKey(response.getMemberKey());
+        assertThat(response).isNotNull()
+            .hasFieldOrPropertyWithValue("email", "ssafy@ssafy.com")
+            .hasFieldOrPropertyWithValue("name", "김싸피")
+            .hasFieldOrPropertyWithValue("memberKey", memberKey);
+
+        Optional<Member> findMember = memberRepository.findById(member.getId());
         assertThat(findMember).isPresent();
 
         boolean result = passwordEncoder.matches(request.getNewPwd(), findMember.get().getPwd());
@@ -178,32 +184,49 @@ class MemberServiceTest extends IntegrationTestSupport {
 
     @DisplayName("회원 탈퇴시 현재 비밀번호가 일치하지 않는다면 예외가 발생한다.")
     @Test
-    void withdrawalWithNotEqualCurrentPwd() {
+    void removeMemberWithNotEqualCurrentPwd() {
         //given
         String memberKey = generateMemberKey();
         Member member = createMember(memberKey);
+        MemberRemoveServiceRequest request = MemberRemoveServiceRequest.builder()
+            .pwd("password1!")
+            .build();
 
-        //when //then
-        assertThatThrownBy(() -> memberService.withdrawal(member.getMemberKey(), "password1!"))
-            .isInstanceOf(IllegalArgumentException.class)
+        //when
+        assertThatThrownBy(() -> memberService.removeMember(member.getMemberKey(), request))
+            .isInstanceOf(AppException.class)
             .hasMessage("현재 비밀번호가 일치하지 않습니다.");
+
+        //then
+        Optional<Member> findMember = memberRepository.findById(member.getId());
+        assertThat(findMember).isPresent()
+            .get()
+            .hasFieldOrPropertyWithValue("isDeleted", false);
     }
 
     @DisplayName("회원은 회원 탈퇴를 할 수 있다.")
     @Test
-    void withdrawal() {
+    void removeMember() {
         //given
         String memberKey = generateMemberKey();
         Member member = createMember(memberKey);
-        String currentPwd = "ssafy1234!";
+        MemberRemoveServiceRequest request = MemberRemoveServiceRequest.builder()
+            .pwd("ssafy1234!")
+            .build();
 
         //when
-        MemberResponse response = memberService.withdrawal(member.getMemberKey(), currentPwd);
+        MemberResponse response = memberService.removeMember(member.getMemberKey(), request);
 
         //then
-        Optional<Member> findMember = memberRepository.findByMemberKey(response.getMemberKey());
-        assertThat(findMember).isPresent();
-        assertThat(findMember.get().isDeleted()).isTrue();
+        assertThat(response).isNotNull()
+            .hasFieldOrPropertyWithValue("email", "ssafy@ssafy.com")
+            .hasFieldOrPropertyWithValue("name", "김싸피")
+            .hasFieldOrPropertyWithValue("memberKey", memberKey);
+
+        Optional<Member> findMember = memberRepository.findById(member.getId());
+        assertThat(findMember).isPresent()
+            .get()
+            .hasFieldOrPropertyWithValue("isDeleted", true);
     }
 
     private Member createMember(String memberKey) {

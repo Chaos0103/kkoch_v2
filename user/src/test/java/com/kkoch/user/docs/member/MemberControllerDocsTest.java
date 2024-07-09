@@ -2,7 +2,7 @@ package com.kkoch.user.docs.member;
 
 import com.kkoch.user.api.controller.member.MemberController;
 import com.kkoch.user.api.controller.member.request.MemberPwdModifyRequest;
-import com.kkoch.user.api.controller.member.request.WithdrawalRequest;
+import com.kkoch.user.api.controller.member.request.MemberRemoveRequest;
 import com.kkoch.user.api.controller.member.response.MemberInfoResponse;
 import com.kkoch.user.api.controller.member.response.MemberResponse;
 import com.kkoch.user.api.service.member.MemberQueryService;
@@ -135,7 +135,7 @@ class MemberControllerDocsTest extends RestDocsSupport {
     void withdrawal() throws Exception {
         String memberKey = UUID.randomUUID().toString();
 
-        WithdrawalRequest request = WithdrawalRequest.builder()
+        MemberRemoveRequest request = MemberRemoveRequest.builder()
             .pwd("ssafy1234!")
             .build();
 
@@ -145,7 +145,7 @@ class MemberControllerDocsTest extends RestDocsSupport {
             .memberKey(memberKey)
             .build();
 
-        given(memberService.withdrawal(anyString(), anyString()))
+        given(memberService.removeMember(anyString(), any()))
             .willReturn(response);
 
         mockMvc.perform(delete("/{memberKey}", memberKey)

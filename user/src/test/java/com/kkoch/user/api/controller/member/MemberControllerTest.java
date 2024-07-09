@@ -3,6 +3,7 @@ package com.kkoch.user.api.controller.member;
 import com.kkoch.user.ControllerTestSupport;
 import com.kkoch.user.api.controller.member.request.MemberCreateRequest;
 import com.kkoch.user.api.controller.member.request.MemberPwdModifyRequest;
+import com.kkoch.user.api.controller.member.request.MemberRemoveRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -106,6 +107,43 @@ class MemberControllerTest extends ControllerTestSupport {
 
         mockMvc.perform(
                 patch("/{memberKey}/pwd", memberKey)
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf())
+            )
+            .andExpect(status().isOk());
+    }
+
+    @DisplayName("회원 탈퇴시 비밀번호는 필수값이다.")
+    @Test
+    void removeMemberWithoutPwd() throws Exception {
+        String memberKey = generateMemberKey();
+        MemberRemoveRequest request = MemberRemoveRequest.builder()
+            .build();
+
+        mockMvc.perform(
+                patch("/{memberKey}/withdrawal", memberKey)
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf())
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.code").value("400"))
+            .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
+            .andExpect(jsonPath("$.message").value("비밀번호를 입력해주세요."))
+            .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @DisplayName("회원 탈퇴를 한다.")
+    @Test
+    void removeMember() throws Exception {
+        String memberKey = generateMemberKey();
+        MemberRemoveRequest request = MemberRemoveRequest.builder()
+            .pwd("ssafy1234!")
+            .build();
+
+        mockMvc.perform(
+                patch("/{memberKey}/withdrawal", memberKey)
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
                     .with(csrf())

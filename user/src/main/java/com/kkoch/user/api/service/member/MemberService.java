@@ -3,6 +3,7 @@ package com.kkoch.user.api.service.member;
 import com.kkoch.user.api.controller.member.response.MemberResponse;
 import com.kkoch.user.api.service.member.dto.MemberCreateServiceRequest;
 import com.kkoch.user.api.service.member.request.MemberPwdModifyServiceRequest;
+import com.kkoch.user.api.service.member.request.MemberRemoveServiceRequest;
 import com.kkoch.user.domain.member.Member;
 import com.kkoch.user.domain.member.repository.MemberRepository;
 import com.kkoch.user.exception.AppException;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -42,10 +42,10 @@ public class MemberService {
         return MemberResponse.of(member);
     }
 
-    public MemberResponse withdrawal(String memberKey, String pwd) {
+    public MemberResponse removeMember(String memberKey, MemberRemoveServiceRequest request) {
         Member member = getMemberBy(memberKey);
 
-        checkEqualPwd(pwd, member.getPwd());
+        checkEqualPwd(request.getPwd(), member.getPwd());
 
         member.withdrawal();
 
@@ -53,13 +53,8 @@ public class MemberService {
     }
 
     public Member getUserDetailsByEmail(String email) {
-        Optional<Member> findMember = memberRepository.findByEmail(email);
-
-        if (findMember.isEmpty()) {
-            throw new UsernameNotFoundException("등록되지 않는 사용자입니다.");
-        }
-
-        return findMember.get();
+        return memberRepository.findByEmail(email)
+            .orElseThrow(() -> new UsernameNotFoundException("등록되지 않는 사용자입니다."));
     }
 
     private void checkDuplication(String email, String tel, String businessNumber) {
