@@ -11,7 +11,6 @@ import org.springframework.restdocs.payload.JsonFieldType;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.*;
@@ -34,26 +33,27 @@ class AlarmControllerDocsTest extends RestDocsSupport {
         return new AlarmController(alamService, alarmQueryService);
     }
 
-    @DisplayName("알람 조회 API")
+    @DisplayName("알림 목록 조회 API")
     @Test
-    void getAlarms() throws Exception {
-        AlarmResponse response1 = createAlarmResponse(1L, false, LocalDateTime.of(2023, 8, 8, 7, 10));
-        AlarmResponse response2 = createAlarmResponse(2L, false, LocalDateTime.of(2023, 8, 8, 6, 30));
-        AlarmResponse response3 = createAlarmResponse(3L, false, LocalDateTime.of(2023, 8, 8, 5, 50));
-        List<AlarmResponse> responses = List.of(response1, response2, response3);
+    void searchAlarms() throws Exception {
+        AlarmResponse response1 = createAlarmResponse(1L, LocalDateTime.of(2023, 8, 8, 5, 0));
+        AlarmResponse response2 = createAlarmResponse(2L, LocalDateTime.of(2023, 8, 8, 6, 0));
+        AlarmResponse response3 = createAlarmResponse(3L, LocalDateTime.of(2023, 8, 8, 7, 0));
+        List<AlarmResponse> responses = List.of(response3, response2, response1);
+
+        given(alamService.openAllAlarm(anyString()))
+            .willReturn(3);
 
         given(alarmQueryService.searchAlarms(anyString()))
             .willReturn(responses);
 
-        given(alamService.open(anyString()))
-            .willReturn(3);
-
-
-        mockMvc.perform(get("/{memberKey}/alarms", UUID.randomUUID().toString())
-                .header("Authorization", "token"))
+        mockMvc.perform(
+                get("/{memberKey}/alarms", generateMemberKey())
+                    .header("Authorization", "token")
+            )
             .andDo(print())
             .andExpect(status().isOk())
-            .andDo(document("alarm-search",
+            .andDo(document("search-alarms",
                 preprocessResponse(prettyPrint()),
                 responseFields(
                     fieldWithPath("code").type(JsonFieldType.NUMBER)
@@ -65,23 +65,23 @@ class AlarmControllerDocsTest extends RestDocsSupport {
                     fieldWithPath("data").type(JsonFieldType.ARRAY)
                         .description("응답 데이터"),
                     fieldWithPath("data[].alarmId").type(JsonFieldType.NUMBER)
-                        .description("알림 PK"),
+                        .description("알림 식별키"),
                     fieldWithPath("data[].content").type(JsonFieldType.STRING)
                         .description("알림 내용"),
-                    fieldWithPath("data[].open").type(JsonFieldType.BOOLEAN)
+                    fieldWithPath("data[].isOpened").type(JsonFieldType.BOOLEAN)
                         .description("알림 열람 여부"),
-                    fieldWithPath("data[].createdDate").type(JsonFieldType.STRING)
-                        .description("알림 등록일")
+                    fieldWithPath("data[].createdDateTime").type(JsonFieldType.ARRAY)
+                        .description("알림 등록일시")
                 )
             ));
     }
 
-    private static AlarmResponse createAlarmResponse(Long alarmId, boolean open, LocalDateTime createdDate) {
+    private AlarmResponse createAlarmResponse(Long alarmId, LocalDateTime createdDateTime) {
         return AlarmResponse.builder()
             .alarmId(alarmId)
-            .content("알림 내용")
-            .open(open)
-            .createdDate(createdDate)
+            .content("alarm content")
+            .isOpened(false)
+            .createdDateTime(createdDateTime)
             .build();
     }
 }

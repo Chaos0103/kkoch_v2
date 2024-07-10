@@ -9,11 +9,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-/**
- * 알림 엔티티
- *
- * @author 임우택
- */
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -24,20 +19,33 @@ public class Alarm extends TimeBaseEntity {
     @Column(name = "alarm_id")
     private Long id;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, updatable = false, length = 100)
     private String content;
 
-    @Column(nullable = false)
-    private boolean open;
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private boolean isOpened;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
     @Builder
-    private Alarm(String content, boolean open, Member member) {
+    private Alarm(boolean isDeleted, String content, boolean isOpened, Member member) {
+        super(isDeleted);
         this.content = content;
-        this.open = open;
+        this.isOpened = isOpened;
         this.member = member;
+    }
+
+    public static Alarm of(boolean isDeleted, String content, boolean isOpened, Member member) {
+        return new Alarm(isDeleted, content, isOpened, member);
+    }
+
+    public static Alarm create(String content, Member member) {
+        return of(false, content, false, member);
+    }
+
+    public void open() {
+        isOpened = true;
     }
 }

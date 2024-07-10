@@ -1,24 +1,26 @@
 package com.kkoch.user.api.controller.alarm.response;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-@Data
+@Getter
+@NoArgsConstructor
 public class AlarmResponse {
 
-    private Long alarmId;
+    private long alarmId;
     private String content;
-    private boolean open;
-    private String createdDate;
+    private Boolean isOpened;
+    private LocalDateTime createdDateTime;
 
     @Builder
-    public AlarmResponse(Long alarmId, String content, boolean open, LocalDateTime createdDate) {
+    private AlarmResponse(Long alarmId, String content, boolean isOpened, LocalDateTime createdDateTime) {
         this.alarmId = alarmId;
         this.content = content;
-        this.open = open;
-        this.createdDate = createdDate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd hh:mm"));
+        this.isOpened = isOpened;
+        this.createdDateTime = createdDateTime;
     }
 }

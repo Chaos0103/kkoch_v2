@@ -1,6 +1,7 @@
 package com.kkoch.user.domain.alarm.repository;
 
 import com.kkoch.user.api.controller.alarm.response.AlarmResponse;
+import com.kkoch.user.domain.alarm.Alarm;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
@@ -11,11 +12,6 @@ import java.util.List;
 import static com.kkoch.user.domain.alarm.QAlarm.alarm;
 import static com.kkoch.user.domain.member.QMember.member;
 
-/**
- * Alarm 조회용 Repository
- *
- * @author 임우택
- */
 @Repository
 public class AlarmQueryRepository {
 
@@ -25,23 +21,34 @@ public class AlarmQueryRepository {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    /**
-     * 최근 알림 10건 조회
-     *
-     * @param memberKey 회원 고유키
-     * @return 알림 정보 리스트 객체
-     */
-    public List<AlarmResponse> findAlarmsByMemberKey(String memberKey) {
+    public List<Alarm> findAllByMemberKey(String memberKey) {
         return queryFactory
-            .select(Projections.constructor(AlarmResponse.class,
-                alarm.id,
-                alarm.content,
-                alarm.open,
-                alarm.createdDateTime
-            ))
+            .selectFrom(alarm)
+            .join(alarm.member, member)
+            .where(
+                alarm.isDeleted.isFalse(),
+                alarm.isOpened.isFalse(),
+                alarm.member.memberKey.eq(memberKey)
+            )
+            .fetch();
+    }
+
+    public List<AlarmResponse> findTop10ByMemberKey(String memberKey) {
+        return queryFactory
+            .select(
+                Projections.fields(AlarmResponse.class,
+                    alarm.id.as("alarmId"),
+                    alarm.content,
+                    alarm.isOpened,
+                    alarm.createdDateTime
+                )
+            )
             .from(alarm)
             .join(alarm.member, member)
-            .where(alarm.member.memberKey.eq(memberKey))
+            .where(
+                alarm.isDeleted.isFalse(),
+                alarm.member.memberKey.eq(memberKey)
+            )
             .orderBy(alarm.createdDateTime.desc())
             .limit(10)
             .offset(0)
