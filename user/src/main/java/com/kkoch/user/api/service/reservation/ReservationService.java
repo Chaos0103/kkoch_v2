@@ -1,7 +1,7 @@
 package com.kkoch.user.api.service.reservation;
 
-import com.kkoch.user.api.controller.reservation.response.AddReservationResponse;
-import com.kkoch.user.api.service.reservation.dto.AddReservationDto;
+import com.kkoch.user.api.controller.reservation.response.ReservationCreateResponse;
+import com.kkoch.user.api.service.reservation.dto.ReservationCreateServiceRequest;
 import com.kkoch.user.client.PlantServiceClient;
 import com.kkoch.user.domain.member.Member;
 import com.kkoch.user.domain.member.repository.MemberRepository;
@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -22,26 +21,34 @@ public class ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final MemberRepository memberRepository;
-
     private final PlantServiceClient plantServiceClient;
 
-    public AddReservationResponse addReservation(String memberKey, AddReservationDto dto) {
-        Member member = memberRepository.findByMemberKey(memberKey)
-            .orElseThrow(NoSuchElementException::new);
+    public ReservationCreateResponse createReservation(String memberKey, ReservationCreateServiceRequest request) {
+        Member member = getMemberBy(memberKey);
 
-        Map<String, String> param = new HashMap<>();
-        param.put("type", dto.getType());
-        param.put("name", dto.getName());
+        Map<String, String> param = request.generatePlantMap();
+        Integer plantId = plantServiceClient.searchPlantIdBy(param);
 
-        Long plantId = plantServiceClient.getPlantId(param);
-
-        Reservation reservation = dto.toEntity(member, plantId);
+        Reservation reservation = request.toEntity(member, plantId);
         Reservation savedReservation = reservationRepository.save(reservation);
 
-        return AddReservationResponse.of(savedReservation);
+        return ReservationCreateResponse.of(savedReservation);
     }
 
-    public void remove(Long reservationId) {
-        reservationRepository.deleteById(reservationId);
+    public long removeReservation(long reservationId) {
+        reservationRepository.findById(reservationId)
+            .ifPresentOrElse(
+                Reservation::remove,
+                () -> {
+                    throw new NoSuchElementException("등록되지 않은 거래 예약입니다.");
+                }
+            );
+
+        return reservationId;
+    }
+
+    private Member getMemberBy(String memberKey) {
+        return memberRepository.findByMemberKey(memberKey)
+            .orElseThrow(() -> new NoSuchElementException("등록되지 않은 회원입니다."));
     }
 }

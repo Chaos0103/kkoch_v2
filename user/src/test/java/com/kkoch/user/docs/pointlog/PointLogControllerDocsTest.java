@@ -138,17 +138,17 @@ class PointLogControllerDocsTest extends RestDocsSupport {
                     fieldWithPath("data").type(JsonFieldType.OBJECT)
                         .description("응답 데이터"),
                     fieldWithPath("data.content").type(JsonFieldType.ARRAY)
-                        .description("조회된 제품 목록"),
+                        .description("포인트 내역 목록"),
                     fieldWithPath("data.content[].pointLogId").type(JsonFieldType.NUMBER)
-                        .description("조회된 포인트 내역 식별키"),
+                        .description("포인트 내역 식별키"),
                     fieldWithPath("data.content[].bank").type(JsonFieldType.STRING)
-                        .description("조회된 포인트 내역 은행"),
+                        .description("포인트 내역 은행"),
                     fieldWithPath("data.content[].amount").type(JsonFieldType.NUMBER)
-                        .description("조회된 포인트 내역 금약"),
+                        .description("포인트 내역 금액"),
                     fieldWithPath("data.content[].status").type(JsonFieldType.STRING)
-                        .description("조회된 포인트 내역 상태"),
+                        .description("포인트 내역 상태"),
                     fieldWithPath("data.content[].createdDate").type(JsonFieldType.ARRAY)
-                        .description("조회된 포인트 내역 등록일시"),
+                        .description("포인트 내역 등록일시"),
                     fieldWithPath("data.currentPage").type(JsonFieldType.NUMBER)
                         .description("현재 페이지"),
                     fieldWithPath("data.size").type(JsonFieldType.NUMBER)

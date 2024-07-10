@@ -1,56 +1,55 @@
 package com.kkoch.user.api.service.reservation;
 
+import com.kkoch.user.api.PageResponse;
 import com.kkoch.user.api.controller.reservation.response.ReservationForAuctionResponse;
 import com.kkoch.user.api.controller.reservation.response.ReservationResponse;
 import com.kkoch.user.client.PlantServiceClient;
-import com.kkoch.user.client.response.PlantNameResponse;
+import com.kkoch.user.client.response.PlantResponse;
 import com.kkoch.user.domain.reservation.Reservation;
 import com.kkoch.user.domain.reservation.repository.ReservationQueryRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class ReservationQueryService {
 
     private final ReservationQueryRepository reservationQueryRepository;
     private final PlantServiceClient plantServiceClient;
 
-    public Page<ReservationResponse> getMyReservations(String memberKey, Pageable pageable) {
-        List<Reservation> reservations = reservationQueryRepository.findReservationByMemberKey(memberKey, pageable);
+    public PageResponse<ReservationResponse> searchReservations(String memberKey, Pageable pageable) {
+        int totalCount = reservationQueryRepository.countByMemberKey(memberKey);
 
-        List<Long> ids = reservations.stream()
+        List<Long> reservationIds = reservationQueryRepository.findAllIdByMemberKey(memberKey, pageable);
+        if (CollectionUtils.isEmpty(reservationIds)) {
+            return PageResponse.empty(pageable, totalCount);
+        }
+
+        List<Reservation> reservations = reservationQueryRepository.findAllByIdIn(reservationIds);
+
+        List<Integer> plantIds = reservations.stream()
             .map(Reservation::getPlantId)
             .collect(Collectors.toList());
 
-        Map<String, List<Long>> param = new HashMap<>();
-        param.put("plantIds", ids);
-        List<PlantNameResponse> plantNames = plantServiceClient.getPlantNames(param);
+        Map<String, List<Integer>> param = Map.of("plantIds", plantIds);
+        List<PlantResponse> plantNames = plantServiceClient.searchPlantsBy(param);
 
-        Map<Long, PlantNameResponse> plantNameMap = plantNames.stream()
-            .collect(Collectors.toMap(PlantNameResponse::getPlantId, plantNameResponse -> plantNameResponse, (a, b) -> b));
+        Map<Integer, PlantResponse> plantMap = plantNames.stream()
+            .collect(Collectors.toMap(PlantResponse::getPlantId, plantResponse -> plantResponse, (a, b) -> b));
 
-        List<ReservationResponse> responses = new ArrayList<>();
-        for (Reservation reservation : reservations) {
-            PlantNameResponse plantName = plantNameMap.get(reservation.getPlantId());
-            ReservationResponse response = ReservationResponse.of(reservation, plantName.getType(), plantName.getName());
-            responses.add(response);
-        }
+        List<ReservationResponse> content = reservations.stream()
+            .map(reservation -> ReservationResponse.of(reservation, plantMap.get(reservation.getPlantId())))
+            .collect(Collectors.toList());
 
-        long totalCount = reservationQueryRepository.getTotalCount(memberKey);
-
-        return new PageImpl<>(responses, pageable, totalCount);
+        return PageResponse.create(content, pageable, totalCount);
     }
 
     public ReservationForAuctionResponse getReservation(Long plantId) {

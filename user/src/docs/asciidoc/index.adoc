@@ -16,10 +16,10 @@ include::api/member/my_info.adoc[]
 include::api/member/my_password.adoc[]
 
 [[Reservation-API]]
-== Reservation API
+== 거래 예약 API
 
-include::api/reservation/reservation_create.adoc[]
-include::api/reservation/reservation_search.adoc[]
+include::api/reservation/create-reservation.adoc[]
+include::api/reservation/search-reservations.adoc[]
 
 [[Alarm-API]]
 == Alarm API

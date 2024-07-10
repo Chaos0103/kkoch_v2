@@ -1,4 +1,4 @@
-package com.kkoch.user.api.controller.pointlog.param;
+package com.kkoch.user.api.controller.reservation.param;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -12,13 +12,13 @@ import javax.validation.constraints.Positive;
 @Getter
 @Setter
 @NoArgsConstructor
-public class PointLogSearchParam {
+public class ReservationSearchParam {
 
     @Positive(message = "페이지 번호를 올바르게 입력해주세요.")
     private int page = 1;
 
     @Builder
-    private PointLogSearchParam(int page) {
+    private ReservationSearchParam(int page) {
         this.page = page;
     }
 

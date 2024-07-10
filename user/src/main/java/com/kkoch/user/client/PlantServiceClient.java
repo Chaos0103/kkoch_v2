@@ -1,6 +1,6 @@
 package com.kkoch.user.client;
 
-import com.kkoch.user.client.response.PlantNameResponse;
+import com.kkoch.user.client.response.PlantResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,8 +12,8 @@ import java.util.Map;
 public interface PlantServiceClient {
 
     @GetMapping("/admin-service/plants/reservation")
-    Long getPlantId(@SpringQueryMap Map<String, String> param);
+    Integer searchPlantIdBy(@SpringQueryMap Map<String, String> param);
 
     @GetMapping("/admin-service/plants/names")
-    List<PlantNameResponse> getPlantNames(@SpringQueryMap Map<String, List<Long>> param);
+    List<PlantResponse> searchPlantsBy(@SpringQueryMap Map<String, List<Integer>> param);
 }

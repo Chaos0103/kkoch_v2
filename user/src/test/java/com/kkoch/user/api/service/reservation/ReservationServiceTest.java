@@ -1,27 +1,25 @@
 package com.kkoch.user.api.service.reservation;
 
 import com.kkoch.user.IntegrationTestSupport;
-import com.kkoch.user.api.controller.reservation.response.AddReservationResponse;
-import com.kkoch.user.api.service.reservation.dto.AddReservationDto;
+import com.kkoch.user.api.controller.reservation.response.ReservationCreateResponse;
+import com.kkoch.user.api.service.reservation.dto.ReservationCreateServiceRequest;
 import com.kkoch.user.client.PlantServiceClient;
-import com.kkoch.user.domain.Grade;
+import com.kkoch.user.domain.reservation.PlantGrade;
 import com.kkoch.user.domain.member.Member;
 import com.kkoch.user.domain.member.Point;
 import com.kkoch.user.domain.member.repository.MemberRepository;
-import org.assertj.core.api.Assertions;
+import com.kkoch.user.domain.reservation.Reservation;
+import com.kkoch.user.domain.reservation.repository.ReservationRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
+import java.util.List;
+import java.util.Optional;
 
-import static com.kkoch.user.domain.Grade.SUPER;
-import static org.assertj.core.api.AssertionsForClassTypes.tuple;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.BDDMockito.*;
 
 class ReservationServiceTest extends IntegrationTestSupport {
@@ -30,49 +28,85 @@ class ReservationServiceTest extends IntegrationTestSupport {
     private ReservationService reservationService;
 
     @Autowired
+    private ReservationRepository reservationRepository;
+
+    @Autowired
     private MemberRepository memberRepository;
 
     @MockBean
     private PlantServiceClient plantServiceClient;
 
-    @DisplayName("회원은 예약 등록을 할 수 있다.")
+    @DisplayName("거래 예약 정보를 입력 받아 신규 거래 예약을 등록한다.")
     @Test
-    void addReservation() {
+    void createReservation() {
         //given
         Member member = createMember();
-        AddReservationDto dto = AddReservationDto.builder()
-            .type("type")
-            .name("name")
-            .count(10)
-            .price(3000)
-            .grade(SUPER)
+        ReservationCreateServiceRequest request = ReservationCreateServiceRequest.builder()
+            .plantType("")
+            .plantName("")
+            .plantCount(10)
+            .desiredPrice(3000)
+            .plantGrade("SUPER")
             .build();
 
-        given(plantServiceClient.getPlantId(anyMap()))
-            .willReturn(1L);
+        given(plantServiceClient.searchPlantIdBy(any()))
+            .willReturn(1);
 
         //when
-        AddReservationResponse response = reservationService.addReservation(member.getMemberKey(), dto);
+        ReservationCreateResponse response = reservationService.createReservation(member.getMemberKey(), request);
 
         //then
-        Assertions.assertThat(response)
-            .extracting("count", "price", "grade")
-            .containsExactlyInAnyOrder(10, 3000, SUPER.getText());
+        assertThat(response).isNotNull()
+            .hasFieldOrPropertyWithValue("plantCount", 10)
+            .hasFieldOrPropertyWithValue("desiredPrice", 3000)
+            .hasFieldOrPropertyWithValue("plantGrade", PlantGrade.SUPER);
+
+        List<Reservation> reservations = reservationRepository.findAll();
+        assertThat(reservations).hasSize(1);
+    }
+
+    @DisplayName("거래 예약 ID를 입력 받아 거래 예약을 삭제한다.")
+    @Test
+    void removeReservation() {
+        //given
+        Member member = createMember();
+        Reservation reservation = createReservation(member);
+
+        //when
+        long reservationId = reservationService.removeReservation(reservation.getId());
+
+        //then
+        Optional<Reservation> findReservation = reservationRepository.findById(reservationId);
+        assertThat(findReservation).isPresent()
+            .get()
+            .hasFieldOrPropertyWithValue("isDeleted", true);
     }
 
     private Member createMember() {
         Member member = Member.builder()
+            .isDeleted(false)
+            .memberKey(generateMemberKey())
             .email("ssafy@ssafy.com")
-            .pwd("password")
+            .pwd(passwordEncoder.encode("ssafy1234!"))
             .name("김싸피")
             .tel("010-1234-1234")
             .businessNumber("123-12-12345")
             .point(Point.builder()
                 .value(0)
-                .build())
-            .isDeleted(false)
-            .memberKey(UUID.randomUUID().toString())
-            .build();
+                .build()
+            ).build();
         return memberRepository.save(member);
+    }
+
+    private Reservation createReservation(Member member) {
+        Reservation reservation = Reservation.builder()
+            .isDeleted(false)
+            .plantCount(10)
+            .desiredPrice(3000)
+            .plantGrade(PlantGrade.SUPER)
+            .member(member)
+            .plantId(1)
+            .build();
+        return reservationRepository.save(reservation);
     }
 }

@@ -1,23 +1,21 @@
 package com.kkoch.user.domain.reservation.repository;
 
 import com.kkoch.user.IntegrationTestSupport;
-import com.kkoch.user.domain.Grade;
 import com.kkoch.user.domain.member.Member;
 import com.kkoch.user.domain.member.Point;
 import com.kkoch.user.domain.member.repository.MemberRepository;
+import com.kkoch.user.domain.reservation.PlantGrade;
 import com.kkoch.user.domain.reservation.Reservation;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
 
-import static com.kkoch.user.domain.Grade.SUPER;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.groups.Tuple.*;
 
 class ReservationQueryRepositoryTest extends IntegrationTestSupport {
 
@@ -30,37 +28,62 @@ class ReservationQueryRepositoryTest extends IntegrationTestSupport {
     @Autowired
     private MemberRepository memberRepository;
 
-    @DisplayName("회원의 예약 내역을 조회할 수 있다.")
+    @DisplayName("회원 고유키를 입력 받아 거래 예약 ID 목록을 조회한다.")
     @Test
-    void findReservationByMemberKey() {
+    void findAllIdByMemberKey() {
         //given
         Member member = createMember();
-        Reservation reservation1 = createReservation(member, 1L);
-        Reservation reservation2 = createReservation(member, 2L);
-        Reservation reservation3 = createReservation(member, 3L);
+        Reservation reservation1 = createReservation(member, 1, false);
+        Reservation reservation2 = createReservation(member, 2, false);
+        Reservation reservation3 = createReservation(member, 3, false);
+        Reservation reservation4 = createReservation(member, 1, true);
 
-        PageRequest pageRequest = PageRequest.of(0, 2);
+        PageRequest pageRequest = PageRequest.of(0, 10);
 
         //when
-        List<Reservation> reservations = reservationQueryRepository.findReservationByMemberKey(member.getMemberKey(), pageRequest);
+        List<Long> reservationIds = reservationQueryRepository.findAllIdByMemberKey(member.getMemberKey(), pageRequest);
 
         //then
-        assertThat(reservations).hasSize(2)
-            .extracting("plantId")
-            .containsExactlyInAnyOrder(2L, 3L);
+        assertThat(reservationIds).hasSize(3)
+            .containsExactly(reservation3.getId(), reservation2.getId(), reservation1.getId());
     }
 
-    @DisplayName("회원의 예약 내역 총 수를 조회할 수 있다.")
+    @DisplayName("거래 예약 ID 목록을 입력 받아 거래 예약 목록을 조회한다.")
     @Test
-    void getTotalCount() {
+    void findAllByIdIn() {
         //given
         Member member = createMember();
-        Reservation reservation1 = createReservation(member, 1L);
-        Reservation reservation2 = createReservation(member, 2L);
-        Reservation reservation3 = createReservation(member, 3L);
+        Reservation reservation1 = createReservation(member, 1, false);
+        Reservation reservation2 = createReservation(member, 2, false);
+        Reservation reservation3 = createReservation(member, 3, false);
+
+        List<Long> reservationIds = List.of(reservation3.getId(), reservation2.getId(), reservation1.getId());
 
         //when
-        long totalCount = reservationQueryRepository.getTotalCount(member.getMemberKey());
+        List<Reservation> reservations = reservationQueryRepository.findAllByIdIn(reservationIds);
+
+        //then
+        assertThat(reservations).hasSize(3)
+            .extracting("id", "plantId", "isDeleted")
+            .containsExactly(
+                tuple(reservation3.getId(), 3, false),
+                tuple(reservation2.getId(), 2, false),
+                tuple(reservation1.getId(), 1, false)
+            );
+    }
+
+    @DisplayName("회원 고유키를 입력 받아 거래 예약 총 갯수를 조회한다.")
+    @Test
+    void countByMemberKey() {
+        //given
+        Member member = createMember();
+        Reservation reservation1 = createReservation(member, 1, false);
+        Reservation reservation2 = createReservation(member, 2, false);
+        Reservation reservation3 = createReservation(member, 3, false);
+        Reservation reservation4 = createReservation(member, 3, true);
+
+        //when
+        int totalCount = reservationQueryRepository.countByMemberKey(member.getMemberKey());
 
         //then
         assertThat(totalCount).isEqualTo(3);
@@ -68,25 +91,26 @@ class ReservationQueryRepositoryTest extends IntegrationTestSupport {
 
     private Member createMember() {
         Member member = Member.builder()
+            .isDeleted(false)
+            .memberKey(generateMemberKey())
             .email("ssafy@ssafy.com")
-            .pwd("password")
+            .pwd(passwordEncoder.encode("ssafy1234!"))
             .name("김싸피")
             .tel("010-1234-1234")
             .businessNumber("123-12-12345")
             .point(Point.builder()
                 .value(0)
                 .build())
-            .isDeleted(false)
-            .memberKey(UUID.randomUUID().toString())
             .build();
         return memberRepository.save(member);
     }
 
-    private Reservation createReservation(Member member, Long plantId) {
+    private Reservation createReservation(Member member, int plantId, boolean isDeleted) {
         Reservation reservation = Reservation.builder()
-            .count(10)
-            .price(3000)
-            .grade(SUPER)
+            .isDeleted(isDeleted)
+            .plantCount(10)
+            .desiredPrice(4500)
+            .plantGrade(PlantGrade.SUPER)
             .member(member)
             .plantId(plantId)
             .build();

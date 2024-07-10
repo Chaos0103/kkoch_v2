@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/client/reservation")
-@Slf4j
 public class ReservationClientController {
 
     private final ReservationService reservationService;
@@ -18,14 +17,12 @@ public class ReservationClientController {
 
     @GetMapping("/{plantId}")
     public ReservationForAuctionResponse getReservationForAuction(@PathVariable Long plantId) {
-        log.info("<컨트롤러 호출> ReservationClientController#getReservationForAuction = {}", plantId);
         return reservationQueryService.getReservation(plantId);
     }
 
     @DeleteMapping("/{reservationId}")
     public boolean removeReservation(@PathVariable Long reservationId) {
-        log.info("예약 목록 삭제 = {}", reservationId);
-        reservationService.remove(reservationId);
+        long id = reservationService.removeReservation(reservationId);
         return true;
     }
 }

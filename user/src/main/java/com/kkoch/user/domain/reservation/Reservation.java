@@ -1,6 +1,5 @@
 package com.kkoch.user.domain.reservation;
 
-import com.kkoch.user.domain.Grade;
 import com.kkoch.user.domain.TimeBaseEntity;
 import com.kkoch.user.domain.member.Member;
 import lombok.AccessLevel;
@@ -11,7 +10,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 import static javax.persistence.EnumType.STRING;
-import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
@@ -24,28 +22,42 @@ public class Reservation extends TimeBaseEntity {
     private Long id;
 
     @Column(nullable = false)
-    private int count;
+    private int plantCount;
 
     @Column(nullable = false)
-    private int price;
+    private int desiredPrice;
 
     @Enumerated(STRING)
-    @Column(nullable = false, length = 20)
-    private Grade grade;
+    @Column(nullable = false, length = 8)
+    private PlantGrade plantGrade;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
     @Column(nullable = false)
-    private Long plantId;
+    private Integer plantId;
 
     @Builder
-    private Reservation(int count, int price, Grade grade, Member member, Long plantId) {
-        this.count = count;
-        this.price = price;
-        this.grade = grade;
+    public Reservation(boolean isDeleted, int plantCount, int desiredPrice, PlantGrade plantGrade, Member member, Integer plantId) {
+        super(isDeleted);
+        this.plantCount = plantCount;
+        this.desiredPrice = desiredPrice;
+        this.plantGrade = plantGrade;
         this.member = member;
         this.plantId = plantId;
+    }
+
+    public static Reservation of(boolean isDeleted, int plantCount, int desiredPrice, PlantGrade plantGrade, Member member, Integer plantId) {
+        return new Reservation(isDeleted, plantCount, desiredPrice, plantGrade, member, plantId);
+    }
+
+    public static Reservation create(int plantCount, int desiredPrice, PlantGrade plantGrade, Member member, Integer plantId) {
+        return of(false, plantCount, desiredPrice, plantGrade, member, plantId);
+    }
+
+    @Override
+    public void remove() {
+        super.remove();
     }
 }

@@ -2,7 +2,10 @@ package com.kkoch.user.api;
 
 import lombok.Getter;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -24,5 +27,15 @@ public class PageResponse<T> {
 
     public static <T> PageResponse<T> of(Page<T> data) {
         return new PageResponse<>(data);
+    }
+
+    public static <T> PageResponse<T> empty(Pageable pageable, long total) {
+        PageImpl<T> pageImpl = new PageImpl<>(new ArrayList<>(), pageable, total);
+        return of(pageImpl);
+    }
+
+    public static <T> PageResponse<T> create(List<T> content, Pageable pageable, long total) {
+        PageImpl<T> pageImpl = new PageImpl<>(content, pageable, total);
+        return of(pageImpl);
     }
 }

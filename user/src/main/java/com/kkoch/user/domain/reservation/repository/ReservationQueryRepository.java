@@ -2,14 +2,12 @@ package com.kkoch.user.domain.reservation.repository;
 
 import com.kkoch.user.api.controller.reservation.response.ReservationForAuctionResponse;
 import com.kkoch.user.domain.reservation.Reservation;
-import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.CollectionUtils;
 
 import javax.persistence.EntityManager;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.kkoch.user.domain.member.QMember.member;
@@ -24,37 +22,36 @@ public class ReservationQueryRepository {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    public List<Reservation> findReservationByMemberKey(String memberKey, Pageable pageable) {
-        List<Long> ids = queryFactory
+    public List<Long> findAllIdByMemberKey(String memberKey, Pageable pageable) {
+        return queryFactory
             .select(reservation.id)
             .from(reservation)
             .join(reservation.member, member)
             .where(
+                isNotDeleted(),
                 reservation.member.memberKey.eq(memberKey)
             )
             .orderBy(reservation.createdDateTime.desc())
             .limit(pageable.getPageSize())
             .offset(pageable.getOffset())
             .fetch();
+    }
 
-        if (CollectionUtils.isEmpty(ids)) {
-            return new ArrayList<>();
-        }
-
+    public List<Reservation> findAllByIdIn(List<Long> ids) {
         return queryFactory
-            .select(reservation)
-            .from(reservation)
+            .selectFrom(reservation)
             .where(reservation.id.in(ids))
             .orderBy(reservation.createdDateTime.desc())
             .fetch();
     }
 
-    public long getTotalCount(String memberKey) {
+    public int countByMemberKey(String memberKey) {
         return queryFactory
             .select(reservation.id)
             .from(reservation)
             .join(reservation.member, member)
             .where(
+                isNotDeleted(),
                 reservation.member.memberKey.eq(memberKey)
             )
             .fetch()
@@ -62,15 +59,10 @@ public class ReservationQueryRepository {
     }
 
     public ReservationForAuctionResponse findByPlantId(Long plantId) {
-        return queryFactory
-            .select(Projections.constructor(ReservationForAuctionResponse.class,
-                reservation.member.memberKey,
-                reservation.id,
-                reservation.price
-            ))
-            .from(reservation)
-            .where(reservation.plantId.eq(plantId))
-            .orderBy(reservation.price.desc(), reservation.createdDateTime.asc())
-            .fetchFirst();
+        return null;
+    }
+
+    private static BooleanExpression isNotDeleted() {
+        return reservation.isDeleted.isFalse();
     }
 }
