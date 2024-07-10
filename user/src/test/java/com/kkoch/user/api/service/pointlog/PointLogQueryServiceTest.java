@@ -1,6 +1,7 @@
 package com.kkoch.user.api.service.pointlog;
 
 import com.kkoch.user.IntegrationTestSupport;
+import com.kkoch.user.api.PageResponse;
 import com.kkoch.user.domain.member.Member;
 import com.kkoch.user.domain.member.Point;
 import com.kkoch.user.domain.member.repository.MemberRepository;
@@ -42,9 +43,15 @@ class PointLogQueryServiceTest extends IntegrationTestSupport {
         PageRequest page = PageRequest.of(0, 10);
 
         //when
-        Page<PointLogResponse> response = pointLogQueryService.getPointLogs(member.getMemberKey(), page);
+        PageResponse<PointLogResponse> response = pointLogQueryService.getPointLogs(member.getMemberKey(), page);
 
         //then
+        assertThat(response).isNotNull()
+            .hasFieldOrPropertyWithValue("currentPage", 1)
+            .hasFieldOrPropertyWithValue("size", 10)
+            .hasFieldOrPropertyWithValue("isFirst", true)
+            .hasFieldOrPropertyWithValue("isLast", true);
+
         assertThat(response.getContent()).hasSize(3)
             .extracting("pointLogId", "bank", "amount", "status")
             .containsExactly(

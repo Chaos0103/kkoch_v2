@@ -3,6 +3,7 @@ package com.kkoch.user.domain.alarm.repository;
 import com.kkoch.user.api.controller.alarm.response.AlarmResponse;
 import com.kkoch.user.domain.alarm.Alarm;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 
@@ -26,7 +27,7 @@ public class AlarmQueryRepository {
             .selectFrom(alarm)
             .join(alarm.member, member)
             .where(
-                alarm.isDeleted.isFalse(),
+                isNotDeleted(),
                 alarm.isOpened.isFalse(),
                 alarm.member.memberKey.eq(memberKey)
             )
@@ -46,12 +47,16 @@ public class AlarmQueryRepository {
             .from(alarm)
             .join(alarm.member, member)
             .where(
-                alarm.isDeleted.isFalse(),
+                isNotDeleted(),
                 alarm.member.memberKey.eq(memberKey)
             )
             .orderBy(alarm.createdDateTime.desc())
             .limit(10)
             .offset(0)
             .fetch();
+    }
+
+    private static BooleanExpression isNotDeleted() {
+        return alarm.isDeleted.isFalse();
     }
 }

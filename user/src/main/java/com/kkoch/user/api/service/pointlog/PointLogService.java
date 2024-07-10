@@ -21,12 +21,20 @@ public class PointLogService {
     private final MemberRepository memberRepository;
 
     public PointLogCreateResponse createPointLog(String memberKey, PointLogCreateServiceRequest request) {
-        Member member = memberRepository.findByMemberKey(memberKey)
-            .orElseThrow(() -> new NoSuchElementException("등록되지 않은 회원입니다."));
+        Member member = findMemberBy(memberKey);
 
-        PointLog pointLog = request.toEntity(member);
-        PointLog savedPointLog = pointLogRepository.save(pointLog);
+        PointLog savedPointLog = savePointLog(member, request);
 
         return PointLogCreateResponse.of(savedPointLog, member.getPoint().getValue());
+    }
+
+    private Member findMemberBy(String memberKey) {
+        return memberRepository.findByMemberKey(memberKey)
+            .orElseThrow(() -> new NoSuchElementException("등록되지 않은 회원입니다."));
+    }
+
+    private PointLog savePointLog(Member member, PointLogCreateServiceRequest request) {
+        PointLog pointLog = request.toEntity(member);
+        return pointLogRepository.save(pointLog);
     }
 }

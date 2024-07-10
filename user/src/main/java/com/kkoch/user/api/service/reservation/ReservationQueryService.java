@@ -8,6 +8,7 @@ import com.kkoch.user.client.response.PlantResponse;
 import com.kkoch.user.domain.reservation.Reservation;
 import com.kkoch.user.domain.reservation.repository.ReservationQueryRepository;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,33 +27,42 @@ public class ReservationQueryService {
     private final PlantServiceClient plantServiceClient;
 
     public PageResponse<ReservationResponse> searchReservations(String memberKey, Pageable pageable) {
-        int totalCount = reservationQueryRepository.countByMemberKey(memberKey);
+        int total = reservationQueryRepository.countByMemberKey(memberKey);
 
         List<Long> reservationIds = reservationQueryRepository.findAllIdByMemberKey(memberKey, pageable);
-        if (CollectionUtils.isEmpty(reservationIds)) {
-            return PageResponse.empty(pageable, totalCount);
+        if (reservationIds.isEmpty()) {
+            return PageResponse.empty(pageable, total);
         }
 
         List<Reservation> reservations = reservationQueryRepository.findAllByIdIn(reservationIds);
 
-        List<Integer> plantIds = reservations.stream()
-            .map(Reservation::getPlantId)
-            .collect(Collectors.toList());
-
+        List<Integer> plantIds = createPlantIdListBy(reservations);
         Map<String, List<Integer>> param = Map.of("plantIds", plantIds);
+
         List<PlantResponse> plantNames = plantServiceClient.searchPlantsBy(param);
 
-        Map<Integer, PlantResponse> plantMap = plantNames.stream()
-            .collect(Collectors.toMap(PlantResponse::getPlantId, plantResponse -> plantResponse, (a, b) -> b));
+        Map<Integer, PlantResponse> plantMap = createPlantMapBy(plantNames);
 
         List<ReservationResponse> content = reservations.stream()
             .map(reservation -> ReservationResponse.of(reservation, plantMap.get(reservation.getPlantId())))
             .collect(Collectors.toList());
 
-        return PageResponse.create(content, pageable, totalCount);
+        return PageResponse.create(content, pageable, total);
     }
 
     public ReservationForAuctionResponse getReservation(Long plantId) {
         return reservationQueryRepository.findByPlantId(plantId);
+    }
+
+    private List<Integer> createPlantIdListBy(List<Reservation> reservations) {
+        return reservations.stream()
+            .map(Reservation::getPlantId)
+            .distinct()
+            .collect(Collectors.toList());
+    }
+
+    private Map<Integer, PlantResponse> createPlantMapBy(List<PlantResponse> plants) {
+        return plants.stream()
+            .collect(Collectors.toMap(PlantResponse::getPlantId, plantResponse -> plantResponse, (a, b) -> b));
     }
 }

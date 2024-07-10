@@ -1,10 +1,9 @@
 package com.kkoch.user.api.service.pointlog;
 
+import com.kkoch.user.api.PageResponse;
 import com.kkoch.user.domain.pointlog.repository.PointLogQueryRepository;
 import com.kkoch.user.domain.pointlog.repository.response.PointLogResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,10 +17,16 @@ public class PointLogQueryService {
 
     private final PointLogQueryRepository pointLogQueryRepository;
 
-    public Page<PointLogResponse> getPointLogs(String memberKey, Pageable pageable) {
+    public PageResponse<PointLogResponse> getPointLogs(String memberKey, Pageable pageable) {
+        int total = pointLogQueryRepository.countByMemberKey(memberKey);
+
         List<Long> pointLogIds = pointLogQueryRepository.findAllIdByMemberKey(memberKey, pageable);
+        if (pointLogIds.isEmpty()) {
+            return PageResponse.empty(pageable, total);
+        }
+
         List<PointLogResponse> content = pointLogQueryRepository.findAllByIdIn(pointLogIds);
-        int count = pointLogQueryRepository.countByMemberKey(memberKey);
-        return new PageImpl<>(content, pageable, count);
+
+        return PageResponse.create(content, pageable, total);
     }
 }

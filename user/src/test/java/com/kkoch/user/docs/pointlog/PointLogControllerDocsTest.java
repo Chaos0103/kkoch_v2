@@ -1,5 +1,6 @@
 package com.kkoch.user.docs.pointlog;
 
+import com.kkoch.user.api.PageResponse;
 import com.kkoch.user.api.controller.pointlog.PointLogController;
 import com.kkoch.user.api.controller.pointlog.request.PointLogCreateRequest;
 import com.kkoch.user.api.service.pointlog.PointLogQueryService;
@@ -106,7 +107,7 @@ class PointLogControllerDocsTest extends RestDocsSupport {
     @DisplayName("포인트 내역 목록 조회 API")
     @Test
     void searchPointLogs() throws Exception {
-        PointLogResponse response = PointLogResponse.builder()
+        PointLogResponse pointLog = PointLogResponse.builder()
             .pointLogId(1L)
             .bank(Bank.SHINHAN)
             .amount(100000)
@@ -115,9 +116,10 @@ class PointLogControllerDocsTest extends RestDocsSupport {
             .build();
 
         PageRequest pageRequest = PageRequest.of(0, 10);
+        PageResponse<PointLogResponse> response = PageResponse.of(new PageImpl<>(List.of(pointLog), pageRequest, 1));
 
         given(pointLogQueryService.getPointLogs(anyString(), any()))
-            .willReturn(new PageImpl<>(List.of(response), pageRequest, 1));
+            .willReturn(response);
 
         mockMvc.perform(
                 get("/{memberKey}/points", generateMemberKey())

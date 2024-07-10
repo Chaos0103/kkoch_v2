@@ -2,6 +2,7 @@ package com.kkoch.user.domain.pointlog.repository;
 
 import com.kkoch.user.domain.pointlog.repository.response.PointLogResponse;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -27,8 +28,8 @@ public class PointLogQueryRepository {
             .from(pointLog)
             .join(pointLog.member, member)
             .where(
-                pointLog.isDeleted.isFalse(),
-                pointLog.member.memberKey.eq(memberKey)
+                isNotDeleted(),
+                equalMemberKey(memberKey)
             )
             .orderBy(pointLog.createdDateTime.desc())
             .limit(pageable.getPageSize())
@@ -60,10 +61,18 @@ public class PointLogQueryRepository {
             .from(pointLog)
             .join(pointLog.member, member)
             .where(
-                pointLog.isDeleted.isFalse(),
-                pointLog.member.memberKey.eq(memberKey)
+                isNotDeleted(),
+                equalMemberKey(memberKey)
             )
             .fetch()
             .size();
+    }
+
+    private BooleanExpression isNotDeleted() {
+        return pointLog.isDeleted.isFalse();
+    }
+
+    private BooleanExpression equalMemberKey(String memberKey) {
+        return pointLog.member.memberKey.eq(memberKey);
     }
 }

@@ -31,9 +31,7 @@ public class PointLogController {
 
     @GetMapping
     public ApiResponse<PageResponse<PointLogResponse>> searchPointLogs(@PathVariable String memberKey, @Valid @ModelAttribute PointLogSearchParam param) {
-        Page<PointLogResponse> content = pointLogQueryService.getPointLogs(memberKey, param.getPage());
-
-        PageResponse<PointLogResponse> response = PageResponse.of(content);
+        PageResponse<PointLogResponse> response = pointLogQueryService.getPointLogs(memberKey, param.getPage());
 
         return ApiResponse.ok(response);
     }

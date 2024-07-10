@@ -24,8 +24,7 @@ public class AlamService {
     private final MemberRepository memberRepository;
 
     public AlarmCreateResponse createAlarm(String memberKey, AlarmCreateServiceRequest request) {
-        Member member = memberRepository.findByMemberKey(memberKey)
-            .orElseThrow(() -> new NoSuchElementException("등록되지 않은 회원입니다."));
+        Member member = findMemberBy(memberKey);
 
         Alarm alarm = request.toEntity(member);
         Alarm savedAlarm = alarmRepository.save(alarm);
@@ -39,5 +38,10 @@ public class AlamService {
         alarms.forEach(Alarm::open);
 
         return alarms.size();
+    }
+
+    private Member findMemberBy(String memberKey) {
+        return memberRepository.findByMemberKey(memberKey)
+            .orElseThrow(() -> new NoSuchElementException("등록되지 않은 회원입니다."));
     }
 }

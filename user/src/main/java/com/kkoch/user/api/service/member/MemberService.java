@@ -58,18 +58,28 @@ public class MemberService {
     }
 
     private void checkDuplication(String email, String tel, String businessNumber) {
-        boolean isExistEmail = memberRepository.existsByEmail(email);
-        if (isExistEmail) {
+        checkDuplicationEmail(email);
+        checkDuplicationTel(tel);
+        checkDuplicationBusinessNumber(businessNumber);
+    }
+
+    private void checkDuplicationEmail(String email) {
+        boolean isExist = memberRepository.existsByEmail(email);
+        if (isExist) {
             throw new AppException("사용중인 이메일입니다.");
         }
+    }
 
-        boolean isExistTel = memberRepository.existsByTel(tel);
-        if (isExistTel) {
+    private void checkDuplicationTel(String tel) {
+        boolean isExist = memberRepository.existsByTel(tel);
+        if (isExist) {
             throw new AppException("사용중인 연락처입니다.");
         }
+    }
 
-        boolean isExistBusinessNumber = memberRepository.existsByBusinessNumber(businessNumber);
-        if (isExistBusinessNumber) {
+    private void checkDuplicationBusinessNumber(String businessNumber) {
+        boolean isExist = memberRepository.existsByBusinessNumber(businessNumber);
+        if (isExist) {
             throw new AppException("사용중인 사업자 번호입니다.");
         }
     }
@@ -86,6 +96,6 @@ public class MemberService {
 
     private Member getMemberBy(String memberKey) {
         return memberRepository.findByMemberKey(memberKey)
-            .orElseThrow(NoSuchElementException::new);
+            .orElseThrow(() -> new NoSuchElementException("등록되지 않은 사용자입니다."));
     }
 }

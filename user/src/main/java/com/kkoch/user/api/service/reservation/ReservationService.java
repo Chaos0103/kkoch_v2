@@ -24,9 +24,9 @@ public class ReservationService {
     private final PlantServiceClient plantServiceClient;
 
     public ReservationCreateResponse createReservation(String memberKey, ReservationCreateServiceRequest request) {
-        Member member = getMemberBy(memberKey);
+        Member member = findMemberBy(memberKey);
 
-        Map<String, String> param = request.generatePlantMap();
+        Map<String, String> param = request.createPlantMap();
         Integer plantId = plantServiceClient.searchPlantIdBy(param);
 
         Reservation reservation = request.toEntity(member, plantId);
@@ -47,7 +47,7 @@ public class ReservationService {
         return reservationId;
     }
 
-    private Member getMemberBy(String memberKey) {
+    private Member findMemberBy(String memberKey) {
         return memberRepository.findByMemberKey(memberKey)
             .orElseThrow(() -> new NoSuchElementException("등록되지 않은 회원입니다."));
     }

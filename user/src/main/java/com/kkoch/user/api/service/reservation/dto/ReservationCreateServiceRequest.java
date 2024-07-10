@@ -35,7 +35,7 @@ public class ReservationCreateServiceRequest {
         return Reservation.create(plantCount, desiredPrice, plantGrade, member, plantId);
     }
 
-    public Map<String, String> generatePlantMap() {
+    public Map<String, String> createPlantMap() {
         return Map.of(
             "type", plantGrade,
             "name", plantName
