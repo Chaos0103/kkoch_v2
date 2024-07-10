@@ -1,7 +1,7 @@
 package com.kkoch.user.api.service.reservation;
 
 import com.kkoch.user.api.controller.reservation.response.ReservationCreateResponse;
-import com.kkoch.user.api.service.reservation.dto.ReservationCreateServiceRequest;
+import com.kkoch.user.api.service.reservation.request.ReservationCreateServiceRequest;
 import com.kkoch.user.client.PlantServiceClient;
 import com.kkoch.user.domain.member.Member;
 import com.kkoch.user.domain.member.repository.MemberRepository;

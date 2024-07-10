@@ -1,4 +1,4 @@
-package com.kkoch.user.api.controller.reservation.response;
+package com.kkoch.user.api.service.reservation.response;
 
 import com.kkoch.user.client.response.PlantResponse;
 import com.kkoch.user.domain.reservation.PlantGrade;

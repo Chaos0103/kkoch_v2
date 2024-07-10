@@ -10,10 +10,12 @@ endif::[]
 :sectlinks:
 
 [[Member-API]]
-== Member API
+== 회원 API
 
-include::api/member/my_info.adoc[]
-include::api/member/my_password.adoc[]
+include::api/member/create-member.adoc[]
+include::api/member/search-member.adoc[]
+include::api/member/modify-pwd.adoc[]
+include::api/member/remove-member.adoc[]
 
 [[Reservation-API]]
 == 거래 예약 API

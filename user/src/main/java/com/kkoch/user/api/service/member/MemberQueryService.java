@@ -17,11 +17,7 @@ public class MemberQueryService {
 
     private final MemberQueryRepository memberQueryRepository;
 
-    public boolean isUsedEmailBy(String email) {
-        return memberQueryRepository.existByEmail(email);
-    }
-
-    public MemberInfoResponse getMemberInfoBy(String memberKey) {
+    public MemberInfoResponse searchMember(String memberKey) {
         return memberQueryRepository.findMemberInfoByMemberKey(memberKey)
             .orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원입니다."));
     }

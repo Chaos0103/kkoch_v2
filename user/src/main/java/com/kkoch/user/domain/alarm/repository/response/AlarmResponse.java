@@ -1,4 +1,4 @@
-package com.kkoch.user.api.controller.alarm.response;
+package com.kkoch.user.domain.alarm.repository.response;
 
 import lombok.Builder;
 import lombok.Getter;

@@ -1,7 +1,7 @@
 package com.kkoch.user.docs.alarm;
 
 import com.kkoch.user.api.controller.alarm.AlarmController;
-import com.kkoch.user.api.controller.alarm.response.AlarmResponse;
+import com.kkoch.user.domain.alarm.repository.response.AlarmResponse;
 import com.kkoch.user.api.service.alarm.AlamService;
 import com.kkoch.user.api.service.alarm.AlarmQueryService;
 import com.kkoch.user.docs.RestDocsSupport;

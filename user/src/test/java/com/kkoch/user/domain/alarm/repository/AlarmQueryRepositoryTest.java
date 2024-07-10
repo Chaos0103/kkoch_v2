@@ -1,7 +1,7 @@
 package com.kkoch.user.domain.alarm.repository;
 
 import com.kkoch.user.IntegrationTestSupport;
-import com.kkoch.user.api.controller.alarm.response.AlarmResponse;
+import com.kkoch.user.domain.alarm.repository.response.AlarmResponse;
 import com.kkoch.user.domain.alarm.Alarm;
 import com.kkoch.user.domain.member.Member;
 import com.kkoch.user.domain.member.Point;

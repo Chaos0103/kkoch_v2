@@ -1,6 +1,7 @@
 package com.kkoch.user.api.controller.pointlog;
 
 import com.kkoch.user.ControllerTestSupport;
+import com.kkoch.user.api.controller.pointlog.param.PointLogSearchParam;
 import com.kkoch.user.api.controller.pointlog.request.PointLogCreateRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.http.MediaType;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -55,6 +57,32 @@ class PointLogControllerTest extends ControllerTestSupport {
                 post("/{memberKey}/points", generateMemberKey())
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf())
+            )
+            .andExpect(status().isOk());
+    }
+
+    @DisplayName("포인트 내역 목록 조회시 페이지 번호는 양수이다.")
+    @Test
+    void searchPointLogsIsZero() throws Exception {
+        mockMvc.perform(
+                get("/{memberKey}/points", generateMemberKey())
+                    .queryParam("page", "0")
+                    .with(csrf())
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.code").value("400"))
+            .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
+            .andExpect(jsonPath("$.message").value("페이지 번호를 올바르게 입력해주세요."))
+            .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @DisplayName("포인트 내역 목록을 조회한다.")
+    @Test
+    void searchPointLogs() throws Exception {
+        mockMvc.perform(
+                get("/{memberKey}/points", generateMemberKey())
+                    .queryParam("page", "1")
                     .with(csrf())
             )
             .andExpect(status().isOk());

@@ -5,7 +5,7 @@ import com.kkoch.user.api.PageResponse;
 import com.kkoch.user.api.controller.reservation.param.ReservationSearchParam;
 import com.kkoch.user.api.controller.reservation.request.ReservationCreateRequest;
 import com.kkoch.user.api.controller.reservation.response.ReservationCreateResponse;
-import com.kkoch.user.api.controller.reservation.response.ReservationResponse;
+import com.kkoch.user.api.service.reservation.response.ReservationResponse;
 import com.kkoch.user.api.service.reservation.ReservationQueryService;
 import com.kkoch.user.api.service.reservation.ReservationService;
 import lombok.RequiredArgsConstructor;

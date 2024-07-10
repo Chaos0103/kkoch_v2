@@ -11,8 +11,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.http.MediaType;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -67,6 +66,16 @@ class MemberControllerTest extends ControllerTestSupport {
                     .with(csrf())
             )
             .andExpect(status().isCreated());
+    }
+
+    @DisplayName("회원 정보를 조회한다.")
+    @Test
+    void searchMember() throws Exception {
+        mockMvc.perform(
+                get("/join")
+                    .with(csrf())
+            )
+            .andExpect(status().isOk());
     }
 
     @DisplayName("계정 비밀번호 수정시 유효성 검사를 한다.")

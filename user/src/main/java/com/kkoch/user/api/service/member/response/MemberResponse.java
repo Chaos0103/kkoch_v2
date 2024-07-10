@@ -1,4 +1,4 @@
-package com.kkoch.user.api.controller.member.response;
+package com.kkoch.user.api.service.member.response;
 
 import com.kkoch.user.domain.member.Member;
 import lombok.Builder;

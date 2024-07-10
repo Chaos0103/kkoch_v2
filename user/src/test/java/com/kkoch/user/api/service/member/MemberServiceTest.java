@@ -1,7 +1,7 @@
 package com.kkoch.user.api.service.member;
 
 import com.kkoch.user.IntegrationTestSupport;
-import com.kkoch.user.api.controller.member.response.MemberResponse;
+import com.kkoch.user.api.service.member.response.MemberResponse;
 import com.kkoch.user.api.service.member.request.MemberCreateServiceRequest;
 import com.kkoch.user.api.service.member.request.MemberPwdModifyServiceRequest;
 import com.kkoch.user.api.service.member.request.MemberRemoveServiceRequest;
@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
 

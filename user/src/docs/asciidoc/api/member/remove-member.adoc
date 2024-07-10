@@ -1,0 +1,14 @@
+[[remove-member]]
+=== 회원 탈퇴
+
+==== HTTP Request
+
+include::{snippets}/remove-member/http-request.adoc[]
+include::{snippets}/remove-member/request-headers.adoc[]
+include::{snippets}/remove-member/path-parameters.adoc[]
+include::{snippets}/remove-member/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/remove-member/http-response.adoc[]
+include::{snippets}/remove-member/response-fields.adoc[]

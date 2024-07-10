@@ -1,11 +1,10 @@
 package com.kkoch.user.api.controller.member;
 
 import com.kkoch.user.api.ApiResponse;
-import com.kkoch.user.api.controller.member.request.CheckEmailRequest;
 import com.kkoch.user.api.controller.member.request.MemberCreateRequest;
 import com.kkoch.user.api.controller.member.request.MemberPwdModifyRequest;
 import com.kkoch.user.api.controller.member.request.MemberRemoveRequest;
-import com.kkoch.user.api.controller.member.response.MemberResponse;
+import com.kkoch.user.api.service.member.response.MemberResponse;
 import com.kkoch.user.api.service.member.MemberQueryService;
 import com.kkoch.user.api.service.member.MemberService;
 import com.kkoch.user.domain.member.repository.response.MemberInfoResponse;
@@ -33,8 +32,8 @@ public class MemberController {
     }
 
     @GetMapping("/{memberKey}")
-    public ApiResponse<MemberInfoResponse> getMemberInfo(@PathVariable String memberKey) {
-        MemberInfoResponse response = memberQueryService.getMemberInfoBy(memberKey);
+    public ApiResponse<MemberInfoResponse> searchMember(@PathVariable String memberKey) {
+        MemberInfoResponse response = memberQueryService.searchMember(memberKey);
 
         return ApiResponse.ok(response);
     }
@@ -47,16 +46,10 @@ public class MemberController {
     }
 
     @PatchMapping("/{memberKey}/withdrawal")
-    public ApiResponse<MemberResponse> withdrawal(@PathVariable String memberKey, @Valid @RequestBody MemberRemoveRequest request) {
+    public ApiResponse<MemberResponse> removeMember(@PathVariable String memberKey, @Valid @RequestBody MemberRemoveRequest request) {
         MemberResponse response = memberService.removeMember(memberKey, request.toServiceRequest());
 
         return ApiResponse.ok(response);
-    }
-
-    @PostMapping("/check-email")
-    public ApiResponse<Boolean> checkEmail(@RequestBody CheckEmailRequest request) {
-        boolean result = memberQueryService.isUsedEmailBy(request.getEmail());
-        return ApiResponse.ok(result);
     }
 
     @GetMapping("/members")

@@ -1,6 +1,6 @@
 package com.kkoch.user.api.service.member;
 
-import com.kkoch.user.api.controller.member.response.MemberResponse;
+import com.kkoch.user.api.service.member.response.MemberResponse;
 import com.kkoch.user.api.service.member.request.MemberCreateServiceRequest;
 import com.kkoch.user.api.service.member.request.MemberPwdModifyServiceRequest;
 import com.kkoch.user.api.service.member.request.MemberRemoveServiceRequest;

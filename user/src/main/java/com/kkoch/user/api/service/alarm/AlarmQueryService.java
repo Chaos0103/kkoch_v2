@@ -1,6 +1,6 @@
 package com.kkoch.user.api.service.alarm;
 
-import com.kkoch.user.api.controller.alarm.response.AlarmResponse;
+import com.kkoch.user.domain.alarm.repository.response.AlarmResponse;
 import com.kkoch.user.domain.alarm.repository.AlarmQueryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

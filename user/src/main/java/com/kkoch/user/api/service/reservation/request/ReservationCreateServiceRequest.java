@@ -1,4 +1,4 @@
-package com.kkoch.user.api.service.reservation.dto;
+package com.kkoch.user.api.service.reservation.request;
 
 import com.kkoch.user.domain.reservation.PlantGrade;
 import com.kkoch.user.domain.member.Member;

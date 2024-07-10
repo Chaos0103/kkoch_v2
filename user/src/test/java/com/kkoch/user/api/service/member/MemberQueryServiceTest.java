@@ -23,28 +23,15 @@ class MemberQueryServiceTest extends IntegrationTestSupport {
 
     @DisplayName("회원은 본인의 정보를 조회할 수 있다.")
     @Test
-    void getMemberInfoBy() {
+    void searchMember() {
         //given
         Member member = createMember();
 
         //when
-        MemberInfoResponse memberInfo = memberQueryService.getMemberInfoBy(member.getMemberKey());
+        MemberInfoResponse memberInfo = memberQueryService.searchMember(member.getMemberKey());
 
         //then
         assertThat(memberInfo).isNotNull();
-    }
-
-    @DisplayName("이메일 존재 여부를 확인할 수 있다.")
-    @Test
-    void isUsedEmailBy() {
-        //given
-        Member member = createMember();
-
-        //when
-        boolean result = memberQueryService.isUsedEmailBy(member.getEmail());
-
-        //then
-        assertThat(result).isTrue();
     }
 
     private Member createMember() {

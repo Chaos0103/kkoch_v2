@@ -1,6 +1,6 @@
 package com.kkoch.user.api.controller.reservation.request;
 
-import com.kkoch.user.api.service.reservation.dto.ReservationCreateServiceRequest;
+import com.kkoch.user.api.service.reservation.request.ReservationCreateServiceRequest;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

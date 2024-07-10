@@ -2,7 +2,7 @@ package com.kkoch.user.api.service.reservation;
 
 import com.kkoch.user.IntegrationTestSupport;
 import com.kkoch.user.api.PageResponse;
-import com.kkoch.user.api.controller.reservation.response.ReservationResponse;
+import com.kkoch.user.api.service.reservation.response.ReservationResponse;
 import com.kkoch.user.client.PlantServiceClient;
 import com.kkoch.user.client.response.PlantResponse;
 import com.kkoch.user.domain.member.Member;

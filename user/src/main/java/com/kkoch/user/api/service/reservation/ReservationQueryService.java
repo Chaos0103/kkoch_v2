@@ -2,17 +2,15 @@ package com.kkoch.user.api.service.reservation;
 
 import com.kkoch.user.api.PageResponse;
 import com.kkoch.user.api.controller.reservation.response.ReservationForAuctionResponse;
-import com.kkoch.user.api.controller.reservation.response.ReservationResponse;
+import com.kkoch.user.api.service.reservation.response.ReservationResponse;
 import com.kkoch.user.client.PlantServiceClient;
 import com.kkoch.user.client.response.PlantResponse;
 import com.kkoch.user.domain.reservation.Reservation;
 import com.kkoch.user.domain.reservation.repository.ReservationQueryRepository;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;

@@ -1,6 +1,6 @@
 package com.kkoch.user.domain.alarm.repository;
 
-import com.kkoch.user.api.controller.alarm.response.AlarmResponse;
+import com.kkoch.user.domain.alarm.repository.response.AlarmResponse;
 import com.kkoch.user.domain.alarm.Alarm;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
