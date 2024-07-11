@@ -1,0 +1,11 @@
+[[search-notice]]
+=== 공지사항 상세 조회
+
+==== HTTP Request
+
+include::{snippets}/search-notice/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/search-notice/http-response.adoc[]
+include::{snippets}/search-notice/response-fields.adoc[]

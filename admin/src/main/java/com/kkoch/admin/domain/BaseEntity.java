@@ -20,18 +20,18 @@ public abstract class BaseEntity extends TimeBaseEntity {
 
     @CreatedBy
     @Column(nullable = false, updatable = false)
-    private Integer createdBy;
+    private int createdBy;
 
     @LastModifiedBy
-    private Integer lastModifiedBy;
+    private int lastModifiedBy;
 
-    protected BaseEntity(boolean isDeleted, Integer createdBy, Integer lastModifiedBy) {
+    protected BaseEntity(boolean isDeleted, int createdBy, int lastModifiedBy) {
         super(isDeleted);
         this.createdBy = createdBy;
         this.lastModifiedBy = lastModifiedBy;
     }
 
-    protected void modify(Integer lastModifiedBy) {
+    protected void modify(int lastModifiedBy) {
         this.lastModifiedBy = lastModifiedBy;
     }
 }

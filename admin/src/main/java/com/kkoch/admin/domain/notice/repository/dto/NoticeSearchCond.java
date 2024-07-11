@@ -1,17 +1,19 @@
 package com.kkoch.admin.domain.notice.repository.dto;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 public class NoticeSearchCond {
 
-    private String title;
-    private String content;
+    private final String keyword;
 
     @Builder
-    private NoticeSearchCond(String title, String content) {
-        this.title = title;
-        this.content = content;
+    private NoticeSearchCond(String keyword) {
+        this.keyword = keyword;
+    }
+
+    public static NoticeSearchCond of(String keyword) {
+        return new NoticeSearchCond(keyword);
     }
 }

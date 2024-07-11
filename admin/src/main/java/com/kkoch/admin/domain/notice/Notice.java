@@ -1,7 +1,6 @@
 package com.kkoch.admin.domain.notice;
 
 import com.kkoch.admin.domain.BaseEntity;
-import com.kkoch.admin.domain.TimeBaseEntity;
 import com.kkoch.admin.domain.admin.Admin;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -18,7 +17,7 @@ public class Notice extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "notice_id")
-    private Long id;
+    private Integer id;
 
     @Column(nullable = false, length = 50)
     private String title;
@@ -27,26 +26,20 @@ public class Notice extends BaseEntity {
     @Column(nullable = false, columnDefinition = "text")
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "admin_id")
-    private Admin admin;
-
     @Builder
-    private Notice(boolean isDeleted, Integer createdBy, Integer lastModifiedBy, String title, String content, Admin admin) {
+    private Notice(boolean isDeleted, int createdBy, int lastModifiedBy, String title, String content) {
         super(isDeleted, createdBy, lastModifiedBy);
         this.title = title;
         this.content = content;
-        this.admin = admin;
     }
 
-    public static Notice of(boolean isDeleted, Integer createdBy, Integer lastModifiedBy, String title, String content, Admin admin) {
-        return new Notice(isDeleted, createdBy, lastModifiedBy, title, content, admin);
+    public static Notice of(boolean isDeleted, int createdBy, int lastModifiedBy, String title, String content) {
+        return new Notice(isDeleted, createdBy, lastModifiedBy, title, content);
     }
 
     public static Notice create(String title, String content, Admin admin) {
-        return of(false, admin.getId(), admin.getId(), title, content, admin);
+        return of(false, admin.getId(), admin.getId(), title, content);
     }
-
 
     //== 비즈니스 로직 ==//
     public void edit(String title, String content, Admin admin) {

@@ -1,15 +1,26 @@
 package com.kkoch.admin.docs.notice;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.kkoch.admin.api.PageResponse;
 import com.kkoch.admin.api.controller.notice.NoticeApiController;
-import com.kkoch.admin.api.controller.notice.response.NoticeResponse;
+import com.kkoch.admin.api.controller.notice.request.NoticeCreateRequest;
+import com.kkoch.admin.api.controller.notice.request.NoticeModifyRequest;
+import com.kkoch.admin.api.service.notice.response.NoticeCreateResponse;
+import com.kkoch.admin.api.service.notice.response.NoticeModifyResponse;
+import com.kkoch.admin.api.service.notice.response.NoticeRemoveResponse;
+import com.kkoch.admin.domain.notice.repository.response.NoticeDetailResponse;
+import com.kkoch.admin.domain.notice.repository.response.NoticeResponse;
 import com.kkoch.admin.api.service.notice.NoticeQueryService;
+import com.kkoch.admin.api.service.notice.NoticeService;
 import com.kkoch.admin.docs.RestDocsSupport;
 import com.kkoch.admin.domain.notice.repository.dto.NoticeSearchCond;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 import java.time.LocalDate;
@@ -20,10 +31,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -33,44 +43,46 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class NoticeApiControllerDocsTest extends RestDocsSupport {
 
+    private final NoticeService noticeService = mock(NoticeService.class);
     private final NoticeQueryService noticeQueryService = mock(NoticeQueryService.class);
 
     @Override
     protected Object initController() {
-        return new NoticeApiController(noticeQueryService);
+        return new NoticeApiController(noticeService, noticeQueryService);
     }
 
-    @DisplayName("공지사항 목록 조회 API")
+    @DisplayName("공지사항 신규 등록 API")
     @Test
-    void getNotices() throws Exception {
+    void createNotice() throws Exception {
+        NoticeCreateRequest request = NoticeCreateRequest.builder()
+            .title("공지사항 제목")
+            .content("공지사항 내용")
+            .build();
 
-        NoticeResponse response1 = createNoticeResponse("2022년 서울경기권 졸업 일정 분포", "2020년 서울경기권 주요 학교 졸업일정분포를 게시하오니 첨부파일을 확인하여 주시기 바랍니다.", LocalDate.of(2019, 12, 17).atStartOfDay());
-        NoticeResponse response2 = createNoticeResponse("2022년 학교별 졸업예정표(서울경기인천)", "2022년 학교별 졸업예정표(서울경기인천)입니다.", LocalDate.of(2022, 1, 10).atStartOfDay());
-        NoticeResponse response3 = createNoticeResponse("2023년 학교별 졸업예정표(서울,경기,인천)", "해당 일정은 예정이며, 각 학교별 상황에 따라 유동성 있게 변경 될 수 있습니다.", LocalDate.of(2022, 12, 9).atStartOfDay());
+        NoticeCreateResponse response = NoticeCreateResponse.builder()
+            .noticeId(1)
+            .title("공지사항 제목")
+            .createdDateTime(LocalDateTime.now())
+            .build();
 
-        List<NoticeResponse> content = List.of(response1, response2, response3);
-        PageRequest request = PageRequest.of(0, 10);
-
-        given(noticeQueryService.getNotices(any(NoticeSearchCond.class), any(Pageable.class)))
-            .willReturn(new PageImpl<>(content, request, content.size()));
+        given(noticeService.createNotice(anyInt(), any()))
+            .willReturn(response);
 
         mockMvc.perform(
-                get("/admin-service/notices")
-                    .param("type", "1")
-                    .param("keyword", "졸업")
-                    .param("pageNum", "1")
+                post("/admin-service/notices")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
             )
             .andDo(print())
-            .andExpect(status().isOk())
-            .andDo(document("notice-search",
+            .andExpect(status().isCreated())
+            .andDo(document("create-notice",
+                preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
-                requestParameters(
-                    parameterWithName("type")
-                        .description("검색조건(1: 제목, 2: 내용)"),
-                    parameterWithName("keyword")
-                        .description("검색 키워드"),
-                    parameterWithName("pageNum")
-                        .description("페이지 번호")
+                requestFields(
+                    fieldWithPath("title").type(JsonFieldType.STRING)
+                        .description("공지사항 제목"),
+                    fieldWithPath("content").type(JsonFieldType.STRING)
+                        .description("공지사항 내용")
                 ),
                 responseFields(
                     fieldWithPath("code").type(JsonFieldType.NUMBER)
@@ -81,75 +93,93 @@ public class NoticeApiControllerDocsTest extends RestDocsSupport {
                         .description("메시지"),
                     fieldWithPath("data").type(JsonFieldType.OBJECT)
                         .description("응답 데이터"),
-                    fieldWithPath("data.content[].title").type(JsonFieldType.STRING)
+                    fieldWithPath("data.noticeId").type(JsonFieldType.NUMBER)
+                        .description("공지사항 ID"),
+                    fieldWithPath("data.title").type(JsonFieldType.STRING)
                         .description("공지사항 제목"),
-                    fieldWithPath("data.content[].content").type(JsonFieldType.STRING)
-                        .description("공지사항 내용"),
-                    fieldWithPath("data.content[].createdDate").type(JsonFieldType.STRING)
-                        .description("작성일"),
-                    fieldWithPath("data.pageable").type(JsonFieldType.OBJECT)
-                        .description("응답 데이터"),
-                    fieldWithPath("data.pageable.sort").type(JsonFieldType.OBJECT)
-                        .description("응답 데이터"),
-                    fieldWithPath("data.pageable.sort.empty").type(JsonFieldType.BOOLEAN)
-                        .description("응답 데이터"),
-                    fieldWithPath("data.pageable.sort.sorted").type(JsonFieldType.BOOLEAN)
-                        .description("응답 데이터"),
-                    fieldWithPath("data.pageable.sort.unsorted").type(JsonFieldType.BOOLEAN)
-                        .description("응답 데이터"),
-                    fieldWithPath("data.pageable.offset").type(JsonFieldType.NUMBER)
-                        .description("응답 데이터"),
-                    fieldWithPath("data.pageable.pageNumber").type(JsonFieldType.NUMBER)
-                        .description("응답 데이터"),
-                    fieldWithPath("data.pageable.pageSize").type(JsonFieldType.NUMBER)
-                        .description("응답 데이터"),
-                    fieldWithPath("data.pageable.paged").type(JsonFieldType.BOOLEAN)
-                        .description("응답 데이터"),
-                    fieldWithPath("data.pageable.unpaged").type(JsonFieldType.BOOLEAN)
-                        .description("응답 데이터"),
-                    fieldWithPath("data.totalPages").type(JsonFieldType.NUMBER)
-                        .description("총 페이지 수"),
-                    fieldWithPath("data.totalElements").type(JsonFieldType.NUMBER)
-                        .description("DB의 전체 데이터 갯수"),
-                    fieldWithPath("data.last").type(JsonFieldType.BOOLEAN)
-                        .description("마지막 페이지라면 true"),
-                    fieldWithPath("data.size").type(JsonFieldType.NUMBER)
-                        .description("페이지 당 나타낼 수 있는 데이터의 갯수"),
-                    fieldWithPath("data.sort").type(JsonFieldType.OBJECT)
-                        .description("응답 데이터"),
-                    fieldWithPath("data.sort.empty").type(JsonFieldType.BOOLEAN)
-                        .description("응답 데이터"),
-                    fieldWithPath("data.sort.sorted").type(JsonFieldType.BOOLEAN)
-                        .description("응답 데이터"),
-                    fieldWithPath("data.sort.unsorted").type(JsonFieldType.BOOLEAN)
-                        .description("응답 데이터"),
-                    fieldWithPath("data.number").type(JsonFieldType.NUMBER)
-                        .description("현재 페이지 번호"),
-                    fieldWithPath("data.numberOfElements").type(JsonFieldType.NUMBER)
-                        .description("실제 데이터의 갯수"),
-                    fieldWithPath("data.first").type(JsonFieldType.BOOLEAN)
-                        .description("첫번째 페이지이면 true"),
-                    fieldWithPath("data.empty").type(JsonFieldType.BOOLEAN)
-                        .description("리스트가 비어있는지 여부")
+                    fieldWithPath("data.createdDateTime").type(JsonFieldType.ARRAY)
+                        .description("공지사항 등록일시")
                 )
             ));
     }
 
-    @DisplayName("공지사항 단건 조회 API")
+    @DisplayName("공지사항 목록 조회 API")
     @Test
-    void getNotice() throws Exception {
+    void searchNotices() throws Exception {
+        NoticeResponse notice = createNoticeResponse();
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        PageResponse<NoticeResponse> response = PageResponse.of(new PageImpl<>(List.of(notice), pageRequest, 1));
 
-        NoticeResponse response = createNoticeResponse("2022년 서울경기권 졸업 일정 분포", "2020년 서울경기권 주요 학교 졸업일정분포를 게시하오니 첨부파일을 확인하여 주시기 바랍니다.", LocalDate.of(2019, 12, 17).atStartOfDay());
-
-        given(noticeQueryService.getNotice(anyLong()))
+        given(noticeQueryService.searchNotices(any(), any()))
             .willReturn(response);
 
         mockMvc.perform(
-                get("/admin-service/notices/{noticeId}", 1L)
+                get("/admin-service/notices")
+                    .queryParam("page", "1")
+                    .queryParam("keyword", "점검")
             )
             .andDo(print())
             .andExpect(status().isOk())
-            .andDo(document("notice-detail-search",
+            .andDo(document("search-notices",
+                preprocessResponse(prettyPrint()),
+                requestParameters(
+                    parameterWithName("page")
+                        .optional()
+                        .description("페이지 번호(기본값: 1)"),
+                    parameterWithName("keyword")
+                        .optional()
+                        .description("검색 키워드")
+                ),
+                responseFields(
+                    fieldWithPath("code").type(JsonFieldType.NUMBER)
+                        .description("코드"),
+                    fieldWithPath("status").type(JsonFieldType.STRING)
+                        .description("상태"),
+                    fieldWithPath("message").type(JsonFieldType.STRING)
+                        .description("메시지"),
+                    fieldWithPath("data").type(JsonFieldType.OBJECT)
+                        .description("응답 데이터"),
+                    fieldWithPath("data.content").type(JsonFieldType.ARRAY)
+                        .description("공지사항 목록"),
+                    fieldWithPath("data.content[].noticeId").type(JsonFieldType.NUMBER)
+                        .description("공지사항 ID"),
+                    fieldWithPath("data.content[].title").type(JsonFieldType.STRING)
+                        .description("공지사항 제목"),
+                    fieldWithPath("data.content[].content").type(JsonFieldType.STRING)
+                        .description("공지사항 내용"),
+                    fieldWithPath("data.content[].createdDateTime").type(JsonFieldType.ARRAY)
+                        .description("공지사항 등록일시"),
+                    fieldWithPath("data.currentPage").type(JsonFieldType.NUMBER)
+                        .description("현재 페이지"),
+                    fieldWithPath("data.size").type(JsonFieldType.NUMBER)
+                        .description("조회된 데이터 갯수"),
+                    fieldWithPath("data.isFirst").type(JsonFieldType.BOOLEAN)
+                        .description("첫 페이지 여부"),
+                    fieldWithPath("data.isLast").type(JsonFieldType.BOOLEAN)
+                        .description("마지막 페이지 여부")
+                )
+            ));
+    }
+
+    @DisplayName("공지사항 상세 조회 API")
+    @Test
+    void searchNotice() throws Exception {
+        NoticeDetailResponse response = NoticeDetailResponse.builder()
+            .noticeId(1)
+            .title("점검 공지사항")
+            .content("content")
+            .createdDateTime(LocalDateTime.now())
+            .build();
+
+        given(noticeQueryService.searchNotice(anyInt()))
+            .willReturn(response);
+
+        mockMvc.perform(
+                get("/admin-service/notices/{noticeId}", 1)
+            )
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andDo(document("search-notice",
                 preprocessResponse(prettyPrint()),
                 responseFields(
                     fieldWithPath("code").type(JsonFieldType.NUMBER)
@@ -160,21 +190,108 @@ public class NoticeApiControllerDocsTest extends RestDocsSupport {
                         .description("메시지"),
                     fieldWithPath("data").type(JsonFieldType.OBJECT)
                         .description("응답 데이터"),
+                    fieldWithPath("data.noticeId").type(JsonFieldType.NUMBER)
+                        .description("공지사항 ID"),
                     fieldWithPath("data.title").type(JsonFieldType.STRING)
                         .description("공지사항 제목"),
                     fieldWithPath("data.content").type(JsonFieldType.STRING)
                         .description("공지사항 내용"),
-                    fieldWithPath("data.createdDate").type(JsonFieldType.STRING)
-                        .description("작성일")
+                    fieldWithPath("data.createdDateTime").type(JsonFieldType.ARRAY)
+                        .description("공지사항 등록일시")
                 )
             ));
     }
 
-    private NoticeResponse createNoticeResponse(String title, String content, LocalDateTime createdDate) {
+    @DisplayName("공지사항 수정 API")
+    @Test
+    void modifyNotice() throws Exception {
+        NoticeModifyRequest request = NoticeModifyRequest.builder()
+            .title("수정 공지사항 제목")
+            .content("수정 공지사항 내용")
+            .build();
+
+        NoticeModifyResponse response = NoticeModifyResponse.builder()
+            .noticeId(1)
+            .modifyDateTime(LocalDateTime.now())
+            .build();
+
+        given(noticeService.modifyNotice(anyInt(), anyInt(), any()))
+            .willReturn(response);
+
+        mockMvc.perform(
+                patch("/admin-service/notices/{noticeId}", 1)
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andDo(document("modify-notice",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestFields(
+                    fieldWithPath("title").type(JsonFieldType.STRING)
+                        .description("공지사항 제목"),
+                    fieldWithPath("content").type(JsonFieldType.STRING)
+                        .description("공지사항 내용")
+                ),
+                responseFields(
+                    fieldWithPath("code").type(JsonFieldType.NUMBER)
+                        .description("코드"),
+                    fieldWithPath("status").type(JsonFieldType.STRING)
+                        .description("상태"),
+                    fieldWithPath("message").type(JsonFieldType.STRING)
+                        .description("메시지"),
+                    fieldWithPath("data").type(JsonFieldType.OBJECT)
+                        .description("응답 데이터"),
+                    fieldWithPath("data.noticeId").type(JsonFieldType.NUMBER)
+                        .description("공지사항 ID"),
+                    fieldWithPath("data.modifyDateTime").type(JsonFieldType.ARRAY)
+                        .description("공지사항 수정일시")
+                )
+            ));
+    }
+
+    @DisplayName("공지사항 삭제 API")
+    @Test
+    void removeNotice() throws Exception {
+        NoticeRemoveResponse response = NoticeRemoveResponse.builder()
+            .noticeId(1)
+            .removedDateTime(LocalDateTime.now())
+            .build();
+
+        given(noticeService.removeNotice(anyInt(), anyInt()))
+            .willReturn(response);
+
+        mockMvc.perform(
+                delete("/admin-service/notices/{noticeId}", 1)
+            )
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andDo(document("remove-notice",
+                preprocessResponse(prettyPrint()),
+                responseFields(
+                    fieldWithPath("code").type(JsonFieldType.NUMBER)
+                        .description("코드"),
+                    fieldWithPath("status").type(JsonFieldType.STRING)
+                        .description("상태"),
+                    fieldWithPath("message").type(JsonFieldType.STRING)
+                        .description("메시지"),
+                    fieldWithPath("data").type(JsonFieldType.OBJECT)
+                        .description("응답 데이터"),
+                    fieldWithPath("data.noticeId").type(JsonFieldType.NUMBER)
+                        .description("공지사항 ID"),
+                    fieldWithPath("data.removedDateTime").type(JsonFieldType.ARRAY)
+                        .description("공지사항 삭제일시")
+                )
+            ));
+    }
+
+    private NoticeResponse createNoticeResponse() {
         return NoticeResponse.builder()
-            .title(title)
-            .content(content)
-//        (createdDate)
+            .noticeId(1)
+            .title("점검 공지사항")
+            .content("content")
+            .createdDateTime(LocalDateTime.now())
             .build();
     }
 }

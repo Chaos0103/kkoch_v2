@@ -1,92 +1,108 @@
 package com.kkoch.admin.api.service.notice;
 
 import com.kkoch.admin.IntegrationTestSupport;
-import com.kkoch.admin.api.controller.notice.response.NoticeResponse;
-import com.kkoch.admin.domain.admin.Admin;
-import com.kkoch.admin.domain.admin.repository.AdminRepository;
+import com.kkoch.admin.api.PageResponse;
+import com.kkoch.admin.domain.notice.repository.response.NoticeResponse;
 import com.kkoch.admin.domain.notice.Notice;
 import com.kkoch.admin.domain.notice.repository.NoticeRepository;
 import com.kkoch.admin.domain.notice.repository.dto.NoticeSearchCond;
+import com.kkoch.admin.domain.notice.repository.response.NoticeDetailResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
-@Transactional
 class NoticeQueryServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private NoticeQueryService noticeQueryService;
-    @Autowired
-    private AdminRepository adminRepository;
+
     @Autowired
     private NoticeRepository noticeRepository;
 
-    @DisplayName("[공지사항 전체 조회] 서비스")
+    @DisplayName("검색 조건을 입력 받아 공지사항 목록을 조회한다.")
     @Test
-    void getAllNotices() {
-        Admin admin = insertAdmin();
-        insertNotice(admin, true, "공지 사항", "공지 내용");
-        insertNotice(admin, true, "공지 사항", "공지 내용");
-        insertNotice(admin, true, "공지 사항", "공지 내용");
-        insertNotice(admin, true, "공지 사항", "공지 내용");
-        insertNotice(admin, true, "공지 사항", "공지 내용");
-        insertNotice(admin, true, "공지 사항", "공지 내용");
+    void searchNotices() {
+        //given
+        Notice notice1 = createNotice(false, "점검 공지사항");
+        Notice notice2 = createNotice(false, "서비스 점검");
+        Notice notice3 = createNotice(false, "서비스 점검 공지사항");
+        Notice notice4 = createNotice(true, "서비스 점검 공지사항");
 
-        List<NoticeResponse> list = noticeQueryService.getAllNotices();
-
-        assertThat(list).hasSize(6);
-    }
-
-    @DisplayName("[공지사항 조건 조회] 서비스")
-    @Test
-    void getNotices() {
-        Admin admin = insertAdmin();
-
-        insertNotice(admin, true, "검색", "내용검색");
-        insertNotice(admin, true, "공지 사항1", "공지 내용검색");
-        insertNotice(admin, true, "공지 사항1", "내용검색");
-        insertNotice(admin, true, "공지 사항1", "공지 내용");
-        insertNotice(admin, true, "공지 사항1", "공지 내용");
-        insertNotice(admin, true, "공지 사항1", "공지 내용");
-        insertNotice(admin, false, "공지 검색s", "공지 내용");
-        insertNotice(admin, true, "검색 사항1", "공지 내용");
-
+        PageRequest pageRequest = PageRequest.of(0, 10);
         NoticeSearchCond cond = NoticeSearchCond.builder()
-                .title("검색")
-                .content("내용검색")
-                .build();
-        PageRequest pageRequest = PageRequest.of(0, 20);
+            .keyword("점검")
+            .build();
 
+        //when
+        PageResponse<NoticeResponse> response = noticeQueryService.searchNotices(cond, pageRequest);
 
-        Page<NoticeResponse> notices = noticeQueryService.getNotices(cond, pageRequest);
-
-        assertThat(notices).hasSize(4);
+        //then
+        assertThat(response).isNotNull()
+            .hasFieldOrPropertyWithValue("currentPage", 1)
+            .hasFieldOrPropertyWithValue("size", 10)
+            .hasFieldOrPropertyWithValue("isFirst", true)
+            .hasFieldOrPropertyWithValue("isLast", true);
+        assertThat(response.getContent()).hasSize(3)
+            .extracting("noticeId", "title")
+            .containsExactly(
+                tuple(notice3.getId(), "서비스 점검 공지사항"),
+                tuple(notice2.getId(), "서비스 점검"),
+                tuple(notice1.getId(), "점검 공지사항")
+            );
     }
 
-    @DisplayName("[공지사항 상세 조회] 서비스")
+    @DisplayName("검색 조건을 입력 받아 공지사항 목록을 조회한다.")
     @Test
-    void getNotice() {
-        Admin admin = insertAdmin();
+    void searchNoticesIsEmpty() {
+        //given
+        Notice notice1 = createNotice(false, "점검 공지사항");
+        Notice notice2 = createNotice(false, "서비스 점검");
+        Notice notice3 = createNotice(false, "서비스 점검 공지사항");
+        Notice notice4 = createNotice(true, "서비스 점검 공지사항");
 
-        Notice notice = insertNotice(admin, true, "공지 사항", "공지 내용");
+        PageRequest pageRequest = PageRequest.of(1, 10);
+        NoticeSearchCond cond = NoticeSearchCond.builder()
+            .keyword("점검")
+            .build();
 
-        NoticeResponse response = noticeQueryService.getNotice(notice.getId());
+        //when
+        PageResponse<NoticeResponse> response = noticeQueryService.searchNotices(cond, pageRequest);
 
-        assertThat(response.getNoticeId()).isEqualTo(notice.getId());
+        //then
+        assertThat(response).isNotNull()
+            .hasFieldOrPropertyWithValue("currentPage", 2)
+            .hasFieldOrPropertyWithValue("size", 10)
+            .hasFieldOrPropertyWithValue("isFirst", false)
+            .hasFieldOrPropertyWithValue("isLast", true);
+        assertThat(response.getContent()).isEmpty();
     }
 
-    private Notice insertNotice(Admin admin, boolean active, String title, String content) {
-        return null;
+    @DisplayName("공지사항 ID를 입력 받아 공지사항을 조회한다.")
+    @Test
+    void searchNotice() {
+        //given
+        Notice notice = createNotice(false, "점검 공지사항");
+
+        //when
+        NoticeDetailResponse response = noticeQueryService.searchNotice(notice.getId());
+
+        //then
+        assertThat(response).isNotNull()
+            .hasFieldOrPropertyWithValue("noticeId", notice.getId())
+            .hasFieldOrPropertyWithValue("title", notice.getTitle());
     }
 
-    private Admin insertAdmin() {
-        return null;
+    private Notice createNotice(boolean isDeleted, String title) {
+        Notice notice = Notice.builder()
+            .isDeleted(isDeleted)
+            .createdBy(1)
+            .lastModifiedBy(1)
+            .title(title)
+            .content("notice content")
+            .build();
+        return noticeRepository.save(notice);
     }
 }

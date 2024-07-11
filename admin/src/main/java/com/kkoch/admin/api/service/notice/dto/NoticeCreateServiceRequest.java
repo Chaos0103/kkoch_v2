@@ -19,6 +19,10 @@ public class NoticeCreateServiceRequest {
         this.content = content;
     }
 
+    public static NoticeCreateServiceRequest of(String title, String content) {
+        return new NoticeCreateServiceRequest(title, content);
+    }
+
     public Notice toEntity(Admin admin) {
         return Notice.create(title, content, admin);
     }

@@ -2,32 +2,28 @@ package com.kkoch.admin.api.controller.notice.request;
 
 import com.kkoch.admin.api.service.notice.dto.NoticeCreateServiceRequest;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 
-@Data
+@Getter
 @NoArgsConstructor
-public class AddNoticeRequest {
+public class NoticeCreateRequest {
 
-    @NotBlank
+    @NotBlank(message = "제목을 입력해주세요.")
     private String title;
 
-    @NotBlank
+    @NotBlank(message = "내용을 입력해주세요.")
     private String content;
 
     @Builder
-    private AddNoticeRequest(String title, String content) {
+    private NoticeCreateRequest(String title, String content) {
         this.title = title;
         this.content = content;
     }
 
-    public NoticeCreateServiceRequest toAddNoticeDto() {
-        return NoticeCreateServiceRequest.builder()
-                .title(this.title)
-                .content(this.content)
-                .build();
+    public NoticeCreateServiceRequest toServiceRequest() {
+        return NoticeCreateServiceRequest.of(title, content);
     }
-
 }

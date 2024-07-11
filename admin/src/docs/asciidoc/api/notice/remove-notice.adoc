@@ -1,0 +1,11 @@
+[[remove-notice]]
+=== 공지사항 삭제
+
+==== HTTP Request
+
+include::{snippets}/remove-notice/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/remove-notice/http-response.adoc[]
+include::{snippets}/remove-notice/response-fields.adoc[]

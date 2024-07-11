@@ -15,3 +15,12 @@ endif::[]
 include::api/admin/create-admin.adoc[]
 include::api/admin/modify-pwd-member.adoc[]
 include::api/admin/remove-admin.adoc[]
+
+[[Notice-API]]
+== 공지사항 API
+
+include::api/notice/create-notice.adoc[]
+include::api/notice/search-notices.adoc[]
+include::api/notice/search-notice.adoc[]
+include::api/notice/modify-notice.adoc[]
+include::api/notice/remove-notice.adoc[]

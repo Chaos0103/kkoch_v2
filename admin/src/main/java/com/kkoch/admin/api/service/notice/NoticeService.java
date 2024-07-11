@@ -2,6 +2,9 @@ package com.kkoch.admin.api.service.notice;
 
 import com.kkoch.admin.api.service.notice.dto.NoticeCreateServiceRequest;
 import com.kkoch.admin.api.service.notice.dto.NoticeModifyServiceRequest;
+import com.kkoch.admin.api.service.notice.response.NoticeCreateResponse;
+import com.kkoch.admin.api.service.notice.response.NoticeModifyResponse;
+import com.kkoch.admin.api.service.notice.response.NoticeRemoveResponse;
 import com.kkoch.admin.domain.admin.Admin;
 import com.kkoch.admin.domain.admin.repository.AdminRepository;
 import com.kkoch.admin.domain.notice.Notice;
@@ -20,39 +23,39 @@ public class NoticeService {
     private final NoticeRepository noticeRepository;
     private final AdminRepository adminRepository;
 
-    public Long createNotice(Integer adminId, NoticeCreateServiceRequest request) {
+    public NoticeCreateResponse createNotice(int adminId, NoticeCreateServiceRequest request) {
         Admin admin = findAdminBy(adminId);
 
         Notice notice = request.toEntity(admin);
         Notice savedNotice = noticeRepository.save(notice);
 
-        return savedNotice.getId();
+        return NoticeCreateResponse.of(savedNotice);
     }
 
-    public Long modifyNotice(int adminId, Long noticeId, NoticeModifyServiceRequest request) {
+    public NoticeModifyResponse modifyNotice(int adminId, int noticeId, NoticeModifyServiceRequest request) {
         Admin admin = findAdminBy(adminId);
         Notice notice = findNoticeBy(noticeId);
 
         notice.edit(request.getTitle(), request.getContent(), admin);
 
-        return notice.getId();
+        return NoticeModifyResponse.of(notice);
     }
 
-    public Long removeNotice(int adminId, Long noticeId) {
+    public NoticeRemoveResponse removeNotice(int adminId, int noticeId) {
         Admin admin = findAdminBy(adminId);
         Notice notice = findNoticeBy(noticeId);
 
         notice.remove(admin);
 
-        return notice.getId();
+        return NoticeRemoveResponse.of(notice);
     }
 
-    private Admin findAdminBy(Integer adminId) {
+    private Admin findAdminBy(int adminId) {
         return adminRepository.findById(adminId)
-            .orElseThrow(() -> new NoSuchElementException("등록되지 않은 관계자입니다."));
+            .orElseThrow(() -> new NoSuchElementException("등록되지 않은 관리자입니다."));
     }
 
-    private Notice findNoticeBy(Long noticeId) {
+    private Notice findNoticeBy(int noticeId) {
         return noticeRepository.findById(noticeId)
             .orElseThrow(() -> new NoSuchElementException("등록되지 않은 공지사항입니다."));
     }
