@@ -1,8 +1,8 @@
 package com.kkoch.admin.domain.notice.repository;
 
-import com.kkoch.admin.domain.notice.repository.response.NoticeResponse;
 import com.kkoch.admin.domain.notice.repository.dto.NoticeSearchCond;
 import com.kkoch.admin.domain.notice.repository.response.NoticeDetailResponse;
+import com.kkoch.admin.domain.notice.repository.response.NoticeResponse;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -95,25 +95,5 @@ public class NoticeQueryRepository {
 
     private BooleanExpression titleContains(String keyword) {
         return hasText(keyword) ? notice.title.contains(keyword) : null;
-    }
-
-    public List<NoticeResponse> getAllNotices() {
-        return null;
-    }
-
-    public List<NoticeResponse> getNoticeByCondition(NoticeSearchCond cond, Pageable pageable) {
-        return null;
-    }
-
-    public long getTotalCount(NoticeSearchCond cond) {
-        return 0L;
-    }
-
-    public Optional<NoticeResponse> getNotice(Long noticeId) {
-        return Optional.empty();
-    }
-
-    private BooleanExpression eqContent(String content) {
-        return hasText(content) ? notice.content.like("%" + content + "%") : null;
     }
 }
