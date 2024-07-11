@@ -30,7 +30,7 @@ public class CategoryQueryRepository {
                 type.active.isTrue(),
                 code.name.eq(codeName)
             )
-            .orderBy(type.createdDate.asc())
+            .orderBy(type.createdDateTime.asc())
             .fetch();
     }
 
@@ -49,7 +49,7 @@ public class CategoryQueryRepository {
                 code.name.eq(codeName),
                 type.name.eq(typeName)
             )
-            .orderBy(name.createdDate.asc())
+            .orderBy(name.createdDateTime.asc())
             .fetch();
     }
 

@@ -1,6 +1,6 @@
 package com.kkoch.admin.api.controller.notice.request;
 
-import com.kkoch.admin.api.service.notice.dto.AddNoticeDto;
+import com.kkoch.admin.api.service.notice.dto.NoticeCreateServiceRequest;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,8 +23,8 @@ public class AddNoticeRequest {
         this.content = content;
     }
 
-    public AddNoticeDto toAddNoticeDto() {
-        return AddNoticeDto.builder()
+    public NoticeCreateServiceRequest toAddNoticeDto() {
+        return NoticeCreateServiceRequest.builder()
                 .title(this.title)
                 .content(this.content)
                 .build();

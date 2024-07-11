@@ -29,7 +29,7 @@ public class AuctionQueryRepository {
                         auction.code,
                         auction.status,
                         auction.startTime,
-                        auction.createdDate))
+                        auction.createdDateTime))
                 .from(auction)
                 .where(
                         auction.active.isTrue(),

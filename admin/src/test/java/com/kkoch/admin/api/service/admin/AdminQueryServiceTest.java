@@ -3,7 +3,7 @@ package com.kkoch.admin.api.service.admin;
 import com.kkoch.admin.IntegrationTestSupport;
 import com.kkoch.admin.api.controller.admin.LoginAdmin;
 import com.kkoch.admin.api.controller.admin.response.AdminResponse;
-import com.kkoch.admin.api.service.admin.dto.LoginDto;
+import com.kkoch.admin.api.service.admin.request.LoginDto;
 import com.kkoch.admin.domain.admin.Admin;
 import com.kkoch.admin.domain.admin.repository.AdminRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -63,8 +63,8 @@ class AdminQueryServiceTest extends IntegrationTestSupport {
         //given
         Admin admin = insertAdmin("admin1", "1234");
         LoginDto dto = LoginDto.builder()
-                .loginId(admin.getLoginId())
-                .loginPw(admin.getLoginPw())
+                .loginId(admin.getEmail())
+                .loginPw(admin.getPwd())
                 .build();
 
         //when
@@ -75,14 +75,6 @@ class AdminQueryServiceTest extends IntegrationTestSupport {
     }
 
     private Admin insertAdmin(String id, String phone) {
-        Admin admin = Admin.builder()
-                .name("관리자")
-                .loginId(id)
-                .loginPw("adminpw")
-                .tel("010-1234-" + phone)
-                .active(true)
-                .position("00")
-                .build();
-        return adminRepository.save(admin);
+        return null;
     }
 }

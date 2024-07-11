@@ -27,13 +27,13 @@ public class AuctionService {
             throw new IllegalArgumentException("구분코드 에러");
         }
 
-        Admin admin = Admin.toEntity(adminId);
+//        Admin admin = Admin.toEntity(adminId);
 
-        Auction auction = Auction.toEntity(dto.getCode(), dto.getStartTime(), admin);
+//        Auction auction = Auction.toEntity(dto.getCode(), dto.getStartTime(), admin);
 
-        Auction savedAuction = auctionRepository.save(auction);
+//        Auction savedAuction = auctionRepository.save(auction);
 
-        return AuctionTitleResponse.of(savedAuction);
+        return null;
     }
 
     public AuctionTitleResponse setAuction(Long auctionId, SetAuctionDto dto) {

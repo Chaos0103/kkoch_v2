@@ -34,7 +34,7 @@ public class TradeQueryRepository {
                         trade.active.isTrue(),
                         trade.tradeTime.between(cond.getStartDateTime(), cond.getEndDateTime())
                 )
-                .orderBy(trade.createdDate.desc())
+                .orderBy(trade.createdDateTime.desc())
                 .limit(pageable.getPageSize())
                 .offset(pageable.getOffset())
                 .fetch();
@@ -53,7 +53,7 @@ public class TradeQueryRepository {
                 ))
                 .from(trade)
                 .where(trade.id.in(ids))
-                .orderBy(trade.createdDate.desc())
+                .orderBy(trade.createdDateTime.desc())
                 .fetch();
     }
 

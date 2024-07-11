@@ -19,9 +19,19 @@ import static lombok.AccessLevel.PROTECTED;
 public abstract class BaseEntity extends TimeBaseEntity {
 
     @CreatedBy
-    @Column(updatable = false)
-    private Long createdBy;
+    @Column(nullable = false, updatable = false)
+    private Integer createdBy;
 
     @LastModifiedBy
-    private Long lastModifiedBy;
+    private Integer lastModifiedBy;
+
+    protected BaseEntity(boolean isDeleted, Integer createdBy, Integer lastModifiedBy) {
+        super(isDeleted);
+        this.createdBy = createdBy;
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    protected void modify(Integer lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
 }

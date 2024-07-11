@@ -1,4 +1,4 @@
-package com.kkoch.admin.api.service.admin.dto;
+package com.kkoch.admin.api.service.admin.request;
 
 import lombok.Builder;
 import lombok.Data;

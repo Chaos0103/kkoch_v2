@@ -3,6 +3,7 @@ package com.kkoch.admin.api;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 @Getter
@@ -26,6 +27,10 @@ public class ApiResponse<T> {
 
     public static <T> ApiResponse<T> ok(T data) {
         return of(OK, "SUCCESS", data);
+    }
+
+    public static <T> ApiResponse<T> created(T data) {
+        return of(CREATED, "CREATED", data);
     }
 
 }

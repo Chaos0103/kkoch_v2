@@ -1,40 +1,44 @@
 package com.kkoch.admin.api.controller.admin;
 
 import com.kkoch.admin.api.ApiResponse;
-import com.kkoch.admin.api.controller.admin.request.EditAdminRequest;
-import com.kkoch.admin.api.service.admin.AdminQueryService;
+import com.kkoch.admin.api.controller.admin.request.AdminCreateRequest;
+import com.kkoch.admin.api.controller.admin.request.AdminPwdModifyRequest;
 import com.kkoch.admin.api.service.admin.AdminService;
-import com.kkoch.admin.api.service.admin.dto.EditAdminDto;
+import com.kkoch.admin.api.service.admin.response.AdminCreateResponse;
+import com.kkoch.admin.api.service.admin.response.AdminRemoveResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import static org.springframework.http.HttpStatus.MOVED_PERMANENTLY;
+import javax.validation.Valid;
 
-@RequiredArgsConstructor
+
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/admin-service/admins")
-@Slf4j
 public class AdminApiController {
 
     private final AdminService adminService;
-    private final AdminQueryService adminQueryService;
 
-    //관게자 수정
-    @PatchMapping("/{adminId}")
-    public ApiResponse<Long> setAdmin(@PathVariable Long adminId, @RequestBody EditAdminRequest request) {
-        log.info("<관계자 정보 수정> Controller");
-        EditAdminDto dto = request.toEditAdminDto();
-        Long setId = adminService.setAdmin(adminId, dto);
-        return ApiResponse.ok(setId);
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApiResponse<AdminCreateResponse> createAdmin(@Valid @RequestBody AdminCreateRequest request) {
+        AdminCreateResponse response = adminService.createAdmin(request.toServiceRequest());
 
+        return ApiResponse.created(response);
     }
 
-    //관계자 삭제
+    @PatchMapping("/{adminId}")
+    public ApiResponse<Integer> modifyAdminPwd(@PathVariable Integer adminId, @Valid @RequestBody AdminPwdModifyRequest request) {
+        int removedAdminId = adminService.modifyPwd(adminId, request.toServiceRequest());
+
+        return ApiResponse.ok(removedAdminId);
+    }
+
     @DeleteMapping("/{adminId}")
-    public ApiResponse<Long> removeAdmin(@PathVariable Long adminId) {
-        log.info("<관계자 삭제> Controller");
-        Long deleteId = adminService.removeAdmin(adminId);
-        return ApiResponse.of(MOVED_PERMANENTLY, "관계자 정보가 삭제되었습니다.", deleteId);
+    public ApiResponse<AdminRemoveResponse> removeAdmin(@PathVariable Integer adminId) {
+        AdminRemoveResponse response = adminService.removeAdmin(adminId);
+
+        return ApiResponse.ok(response);
     }
 }

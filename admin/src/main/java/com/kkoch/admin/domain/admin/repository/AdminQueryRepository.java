@@ -22,35 +22,10 @@ public class AdminQueryRepository {
     }
 
     public List<AdminResponse> getAdmins() {
-        return queryFactory
-            .select(Projections.constructor(AdminResponse.class,
-                admin.id,
-                admin.loginId,
-                admin.loginPw,
-                admin.name,
-                admin.tel,
-                admin.position,
-                admin.createdDate,
-                admin.active)
-            )
-            .from(admin)
-            .orderBy(admin.name.asc())
-            .fetch();
+        return null;
     }
 
     public Optional<LoginAdmin> getLoginAdmin(String loginId, String loginPw) {
-        LoginAdmin content = queryFactory
-            .select(Projections.constructor(LoginAdmin.class,
-                admin.id,
-                admin.position)
-            )
-            .from(admin)
-            .where(
-                admin.loginId.eq(loginId),
-                admin.loginPw.eq(loginPw)
-            )
-            .fetchFirst();
-
-        return Optional.ofNullable(content);
+        return Optional.empty();
     }
 }

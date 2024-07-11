@@ -1,0 +1,11 @@
+[[remove-admin]]
+=== 관리자 삭제
+
+==== HTTP Request
+
+include::{snippets}/remove-admin/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/remove-admin/http-response.adoc[]
+include::{snippets}/remove-admin/response-fields.adoc[]

@@ -227,15 +227,7 @@ class AuctionArticleQueryRepositoryTest extends IntegrationTestSupport {
     }
 
     private Admin insertAdmin() {
-        Admin admin = Admin.builder()
-                .loginId("admin")
-                .loginPw("admin123!")
-                .name("관리자")
-                .position("10")
-                .tel("010-0000-0000")
-                .active(true)
-                .build();
-        return adminRepository.save(admin);
+        return null;
     }
 
     private AuctionArticle insertAuctionArticle(Plant plant, Auction auction, String region, LocalDateTime bidTime) {

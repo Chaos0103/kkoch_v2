@@ -2,7 +2,7 @@ package com.kkoch.admin.api.service.admin;
 
 import com.kkoch.admin.api.controller.admin.LoginAdmin;
 import com.kkoch.admin.api.controller.admin.response.AdminResponse;
-import com.kkoch.admin.api.service.admin.dto.LoginDto;
+import com.kkoch.admin.api.service.admin.request.LoginDto;
 import com.kkoch.admin.client.UserServiceClient;
 import com.kkoch.admin.client.response.MemberResponseForAdmin;
 import com.kkoch.admin.domain.admin.repository.AdminQueryRepository;
@@ -13,13 +13,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-@RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class AdminQueryService {
 
     private final AdminQueryRepository adminQueryRepository;
     private final UserServiceClient userServiceClient;
+
     public List<AdminResponse> getAdmins() {
         return adminQueryRepository.getAdmins();
     }
@@ -29,7 +30,7 @@ public class AdminQueryService {
             .orElseThrow(() -> new NoSuchElementException("아이디와 비밀번호를 확인하세요"));
     }
 
-    public List<MemberResponseForAdmin> getUsers(){
+    public List<MemberResponseForAdmin> getUsers() {
         return userServiceClient.getUsers();
     }
 

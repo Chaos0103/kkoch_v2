@@ -16,54 +16,47 @@ public class Admin extends TimeBaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "admin_id")
-    private Long id;
+    private Integer id;
 
-    @Column(unique = true, nullable = false, updatable = false, length = 20)
-    private String loginId;
+    @Column(unique = true, nullable = false, updatable = false, length = 100)
+    private String email;
 
-    @Column(nullable = false, length = 60)
-    private String loginPw;
+    @Column(nullable = false, columnDefinition = "char(60)", length = 60)
+    private String pwd;
 
-    @Column(nullable = false, updatable = false, length = 20)
+    @Column(nullable = false, length = 20)
     private String name;
 
-    @Column(unique = true, nullable = false, length = 13)
+    @Column(unique = true, nullable = false, columnDefinition = "char(13)", length = 13)
     private String tel;
 
     @Column(nullable = false, length = 2)
-    private String position;
-
-    @Column(nullable = false)
-    private boolean active;
+    private AdminAuth auth;
 
     @Builder
-    private Admin(Long id, String loginId, String loginPw, String name, String tel, String position, boolean active) {
-        this.id = id;
-        this.loginId = loginId;
-        this.loginPw = loginPw;
+    private Admin(boolean isDeleted, String email, String pwd, String name, String tel, AdminAuth auth) {
+        super(isDeleted);
+        this.email = email;
+        this.pwd = pwd;
         this.name = name;
         this.tel = tel;
-        this.position = position;
-        this.active = active;
+        this.auth = auth;
     }
 
-    //== 연관관계 편의 메서드 ==//
-    public static Admin toEntity(Long id) {
-        Admin admin = Admin
-                .builder()
-                .build();
-        admin.id = id;
-        return admin;
+    public static Admin of(boolean isDeleted, String email, String pwd, String name, String tel, AdminAuth auth) {
+        return new Admin(isDeleted, email, pwd, name, tel, auth);
+    }
+
+    public static Admin create(String email, String pwd, String name, String tel, AdminAuth auth) {
+        return of(false, email, pwd, name, tel, auth);
     }
 
     //== 비즈니스 로직 ==//
-    public void edit(String loginPw, String tel) {
-        this.loginPw = loginPw;
-        this.tel = tel;
-
+    public void modifyPwd(String pwd) {
+        this.pwd = pwd;
     }
 
     public void remove() {
-        this.active = false;
+        super.remove();
     }
 }

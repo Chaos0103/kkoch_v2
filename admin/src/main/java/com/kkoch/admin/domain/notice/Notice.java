@@ -1,5 +1,6 @@
 package com.kkoch.admin.domain.notice;
 
+import com.kkoch.admin.domain.BaseEntity;
 import com.kkoch.admin.domain.TimeBaseEntity;
 import com.kkoch.admin.domain.admin.Admin;
 import lombok.AccessLevel;
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Notice extends TimeBaseEntity {
+public class Notice extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,31 +24,39 @@ public class Notice extends TimeBaseEntity {
     private String title;
 
     @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "text")
     private String content;
 
-    @Column(nullable = false)
-    private boolean active;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "admin_id")
     private Admin admin;
 
     @Builder
-    private Notice(String title, String content, boolean active, Admin admin) {
+    private Notice(boolean isDeleted, Integer createdBy, Integer lastModifiedBy, String title, String content, Admin admin) {
+        super(isDeleted, createdBy, lastModifiedBy);
         this.title = title;
         this.content = content;
-        this.active = active;
         this.admin = admin;
     }
 
+    public static Notice of(boolean isDeleted, Integer createdBy, Integer lastModifiedBy, String title, String content, Admin admin) {
+        return new Notice(isDeleted, createdBy, lastModifiedBy, title, content, admin);
+    }
+
+    public static Notice create(String title, String content, Admin admin) {
+        return of(false, admin.getId(), admin.getId(), title, content, admin);
+    }
+
+
     //== 비즈니스 로직 ==//
-    public void edit(String title, String content) {
+    public void edit(String title, String content, Admin admin) {
+        super.modify(admin.getId());
         this.title = title;
         this.content = content;
     }
 
-    public void remove() {
-        this.active = false;
+    public void remove(Admin admin) {
+        super.modify(admin.getId());
+        super.remove();
     }
 }

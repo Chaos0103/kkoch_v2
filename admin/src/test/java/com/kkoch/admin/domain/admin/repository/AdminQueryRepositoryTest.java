@@ -47,7 +47,7 @@ class AdminQueryRepositoryTest extends IntegrationTestSupport {
         Admin admin = insertAdmin("admin1", "1234");
 
         //when
-        Optional<LoginAdmin> loginAdmin = adminQueryRepository.getLoginAdmin(admin.getLoginId(), admin.getLoginPw());
+        Optional<LoginAdmin> loginAdmin = adminQueryRepository.getLoginAdmin(admin.getEmail(), admin.getPwd());
 
         //then
         assertThat(loginAdmin).isPresent();
@@ -55,15 +55,7 @@ class AdminQueryRepositoryTest extends IntegrationTestSupport {
 
 
     private Admin insertAdmin(String id, String phone) {
-        Admin admin = Admin.builder()
-                .name("관리자")
-                .loginId(id)
-                .loginPw("adminpw")
-                .tel("010-1234-" + phone)
-                .active(true)
-                .position("00")
-                .build();
-        return adminRepository.save(admin);
+        return null;
     }
 
 

@@ -1,5 +1,6 @@
 package com.kkoch.admin.api;
 
+import com.kkoch.admin.exception.AppException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -28,6 +29,16 @@ public class ApiControllerAdvice {
                 HttpStatus.BAD_REQUEST,
                 e.getMessage(),
                 null
+        );
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(AppException.class)
+    public ApiResponse<Object> appException(AppException e) {
+        return ApiResponse.of(
+            HttpStatus.BAD_REQUEST,
+            e.getMessage(),
+            null
         );
     }
 

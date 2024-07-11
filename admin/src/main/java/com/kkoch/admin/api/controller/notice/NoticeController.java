@@ -6,8 +6,8 @@ import com.kkoch.admin.api.controller.notice.request.SetNoticeRequest;
 import com.kkoch.admin.api.controller.notice.response.NoticeResponse;
 import com.kkoch.admin.api.service.notice.NoticeQueryService;
 import com.kkoch.admin.api.service.notice.NoticeService;
-import com.kkoch.admin.api.service.notice.dto.AddNoticeDto;
-import com.kkoch.admin.api.service.notice.dto.SetNoticeDto;
+import com.kkoch.admin.api.service.notice.dto.NoticeCreateServiceRequest;
+import com.kkoch.admin.api.service.notice.dto.NoticeModifyServiceRequest;
 import com.kkoch.admin.login.Login;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,23 +38,20 @@ public class NoticeController {
     @PostMapping("/notice/add")
     public String addNotice(AddNoticeRequest form, @Login LoginAdmin loginAdmin) {
         log.info("<공지 글 작성> Controller");
-        AddNoticeDto dto = form.toAddNoticeDto();
-        Long noticeId = noticeService.addNotice(loginAdmin.getId(), dto);
+        NoticeCreateServiceRequest dto = form.toAddNoticeDto();
         return "redirect:/admin-service/intranet/notice";
     }
 
     @PostMapping("/{noticeId}/edit")
     public String setNotice(@PathVariable Long noticeId, SetNoticeRequest form) {
         log.info("<공지 글 수정> Controller");
-        SetNoticeDto dto = form.toSetNoticeDto();
-        Long id = noticeService.setNotice(noticeId, dto);
+        NoticeModifyServiceRequest dto = form.toSetNoticeDto();
         return "redirect:/notice";
     }
 
     @PostMapping("/{noticeId}/remove")
     public String removeNotice(@PathVariable Long noticeId) {
         log.info("<공지 글 삭제> Controller");
-        Long id = noticeService.removeNotice(noticeId);
         return "redirect:/admin-service/intranet/notice";
     }
 }

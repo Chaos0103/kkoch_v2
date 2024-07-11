@@ -20,11 +20,22 @@ import static lombok.AccessLevel.*;
 @NoArgsConstructor(access = PROTECTED)
 public abstract class TimeBaseEntity {
 
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private boolean isDeleted;
+
     @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdDate;
+    @Column(nullable = false, updatable = false, columnDefinition = "datetime default current_timestamp")
+    private LocalDateTime createdDateTime;
 
     @LastModifiedDate
-    @Column(nullable = false)
-    private LocalDateTime lastModifiedDate;
+    @Column(nullable = false, columnDefinition = "datetime default current_timestamp on update current_timestamp")
+    private LocalDateTime lastModifiedDateTime;
+
+    protected TimeBaseEntity(boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
+    protected void remove() {
+        this.isDeleted = true;
+    }
 }

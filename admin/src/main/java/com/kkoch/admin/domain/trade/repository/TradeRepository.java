@@ -12,6 +12,6 @@ import java.util.Optional;
 @Repository
 public interface TradeRepository extends JpaRepository<Trade, Long> {
 
-    @Query("select t from Trade t where t.memberKey=:memberKey and t.createdDate >= :tradeDate")
+    @Query("select t from Trade t where t.memberKey=:memberKey and t.createdDateTime >= :tradeDate")
     Optional<Trade> findByMemberKey(@Param("memberKey") String memberKey, @Param("tradeDate") LocalDateTime tradeDate);
 }

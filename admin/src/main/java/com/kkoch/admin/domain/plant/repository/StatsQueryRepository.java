@@ -51,7 +51,7 @@ public class StatsQueryRepository {
                         stats.priceMin,
                         stats.grade,
                         stats.count,
-                        stats.createdDate,
+                        stats.createdDateTime,
                         stats.plant.type.name,
                         stats.plant.name.name
                 )).from(stats)
@@ -61,7 +61,7 @@ public class StatsQueryRepository {
                 .join(plant.name, name)
                 .where(stats.plant.type.name.eq(statsSearchCond.getType()),
                         stats.plant.name.name.eq(statsSearchCond.getName()),
-                        stats.createdDate.between(
+                        stats.createdDateTime.between(
                                 LocalDateTime.now().minusDays(statsSearchCond.getSearchDay()),
                                 LocalDateTime.now()))
                 .fetch();
