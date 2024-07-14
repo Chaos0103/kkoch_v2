@@ -2,8 +2,11 @@ package com.kkoch.admin;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kkoch.admin.api.controller.admin.AdminApiController;
+import com.kkoch.admin.api.controller.auctionschedule.AuctionScheduleApiController;
 import com.kkoch.admin.api.controller.notice.NoticeApiController;
 import com.kkoch.admin.api.service.admin.AdminService;
+import com.kkoch.admin.api.service.auctionschedule.AuctionScheduleQueryService;
+import com.kkoch.admin.api.service.auctionschedule.AuctionScheduleService;
 import com.kkoch.admin.api.service.notice.NoticeQueryService;
 import com.kkoch.admin.api.service.notice.NoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +16,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = {
     AdminApiController.class,
-    NoticeApiController.class
+    NoticeApiController.class,
+    AuctionScheduleApiController.class
 })
 public abstract class ControllerTestSupport {
 
@@ -31,4 +35,10 @@ public abstract class ControllerTestSupport {
 
     @MockBean
     protected NoticeQueryService noticeQueryService;
+
+    @MockBean
+    protected AuctionScheduleService auctionScheduleService;
+
+    @MockBean
+    protected AuctionScheduleQueryService auctionScheduleQueryService;
 }

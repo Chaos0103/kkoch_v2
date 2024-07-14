@@ -1,0 +1,11 @@
+[[open-auction-schedule]]
+=== 경매 진행
+
+==== HTTP Request
+
+include::{snippets}/open-auction-schedule/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/open-auction-schedule/http-response.adoc[]
+include::{snippets}/open-auction-schedule/response-fields.adoc[]

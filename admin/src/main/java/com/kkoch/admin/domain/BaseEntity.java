@@ -34,4 +34,9 @@ public abstract class BaseEntity extends TimeBaseEntity {
     protected void modify(int lastModifiedBy) {
         this.lastModifiedBy = lastModifiedBy;
     }
+
+    protected void remove(int lastModifiedBy) {
+        super.remove();
+        this.lastModifiedBy = lastModifiedBy;
+    }
 }

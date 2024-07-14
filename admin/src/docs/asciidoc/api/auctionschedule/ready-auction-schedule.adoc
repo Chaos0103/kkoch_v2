@@ -1,0 +1,11 @@
+[[ready-auction-schedule]]
+=== 경매 준비
+
+==== HTTP Request
+
+include::{snippets}/ready-auction-schedule/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/ready-auction-schedule/http-response.adoc[]
+include::{snippets}/ready-auction-schedule/response-fields.adoc[]

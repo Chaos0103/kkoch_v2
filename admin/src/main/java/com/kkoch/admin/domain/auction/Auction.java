@@ -72,7 +72,7 @@ public class Auction extends TimeBaseEntity {
 
     //== 비즈니스 로직 ==//
     public String getTitle() {
-        List<String> types = List.of("절화", "난", "관엽", "춘화");
+        List<String> types = List.of("절화", "난", "관엽", "춘화"); //23. 9. 20. 오전 5:00 절화 진행 중
         return this.startTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)) + " " + types.get(this.code - 1) + " " + this.status.getText();
     }
 

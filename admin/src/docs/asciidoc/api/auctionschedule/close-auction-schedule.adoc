@@ -1,0 +1,11 @@
+[[close-auction-schedule]]
+=== 경매 마감
+
+==== HTTP Request
+
+include::{snippets}/close-auction-schedule/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/close-auction-schedule/http-response.adoc[]
+include::{snippets}/close-auction-schedule/response-fields.adoc[]
