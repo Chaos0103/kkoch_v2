@@ -9,7 +9,7 @@ import com.kkoch.admin.api.service.auctionschedule.response.AuctionScheduleRemov
 import com.kkoch.admin.api.service.auctionschedule.response.AuctionScheduleStatusResponse;
 import com.kkoch.admin.domain.auctionschedule.AuctionSchedule;
 import com.kkoch.admin.domain.auctionschedule.AuctionRoomStatus;
-import com.kkoch.admin.domain.auctionschedule.PlantCode;
+import com.kkoch.admin.domain.variety.PlantCategory;
 import com.kkoch.admin.domain.auctionschedule.repository.AuctionScheduleRepository;
 import com.kkoch.admin.domain.admin.Admin;
 import com.kkoch.admin.domain.admin.AdminAuth;
@@ -52,7 +52,7 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
 
         //then
         assertThat(response).isNotNull()
-            .hasFieldOrPropertyWithValue("code", PlantCode.CUT_FLOWERS)
+            .hasFieldOrPropertyWithValue("code", PlantCategory.CUT_FLOWERS)
             .hasFieldOrPropertyWithValue("roomStatus", AuctionRoomStatus.INIT)
             .hasFieldOrPropertyWithValue("auctionDateTime", LocalDateTime.of(2024, 7, 12, 5, 0));
 
@@ -77,14 +77,14 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
 
         //then
         assertThat(response).isNotNull()
-            .hasFieldOrPropertyWithValue("code", PlantCode.ORCHID)
+            .hasFieldOrPropertyWithValue("code", PlantCategory.ORCHID)
             .hasFieldOrPropertyWithValue("roomStatus", AuctionRoomStatus.INIT)
             .hasFieldOrPropertyWithValue("auctionDateTime", LocalDateTime.of(2024, 7, 12, 7, 0));
 
         Optional<AuctionSchedule> findActionSchedule = auctionScheduleRepository.findById(auctionSchedule.getId());
         assertThat(findActionSchedule).isPresent()
             .get()
-            .hasFieldOrPropertyWithValue("code", PlantCode.ORCHID)
+            .hasFieldOrPropertyWithValue("code", PlantCategory.ORCHID)
             .hasFieldOrPropertyWithValue("auctionDateTime", LocalDateTime.of(2024, 7, 12, 7, 0));
     }
 
@@ -102,7 +102,7 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
         //then
         assertThat(response).isNotNull()
             .hasFieldOrPropertyWithValue("auctionScheduleId", auctionSchedule.getId())
-            .hasFieldOrPropertyWithValue("code", PlantCode.CUT_FLOWERS)
+            .hasFieldOrPropertyWithValue("code", PlantCategory.CUT_FLOWERS)
             .hasFieldOrPropertyWithValue("roomStatus", status)
             .hasFieldOrPropertyWithValue("auctionDateTime", LocalDateTime.of(2024, 7, 12, 5, 0));
 
@@ -125,7 +125,7 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
         //then
         assertThat(response).isNotNull()
             .hasFieldOrPropertyWithValue("auctionScheduleId", auctionSchedule.getId())
-            .hasFieldOrPropertyWithValue("code", PlantCode.CUT_FLOWERS)
+            .hasFieldOrPropertyWithValue("code", PlantCategory.CUT_FLOWERS)
             .hasFieldOrPropertyWithValue("roomStatus", AuctionRoomStatus.INIT)
             .hasFieldOrPropertyWithValue("auctionDateTime", LocalDateTime.of(2024, 7, 12, 5, 0));
 
@@ -152,7 +152,7 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
             .isDeleted(false)
             .createdBy(admin.getId())
             .lastModifiedBy(admin.getId())
-            .code(PlantCode.CUT_FLOWERS)
+            .code(PlantCategory.CUT_FLOWERS)
             .roomStatus(AuctionRoomStatus.INIT)
             .auctionDateTime(LocalDateTime.of(2024, 7, 12, 5, 0))
             .build();

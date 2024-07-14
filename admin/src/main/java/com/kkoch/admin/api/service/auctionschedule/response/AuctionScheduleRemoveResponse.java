@@ -2,7 +2,7 @@ package com.kkoch.admin.api.service.auctionschedule.response;
 
 import com.kkoch.admin.domain.auctionschedule.AuctionSchedule;
 import com.kkoch.admin.domain.auctionschedule.AuctionRoomStatus;
-import com.kkoch.admin.domain.auctionschedule.PlantCode;
+import com.kkoch.admin.domain.variety.PlantCategory;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,13 +12,13 @@ import java.time.LocalDateTime;
 public class AuctionScheduleRemoveResponse {
 
     private final int auctionScheduleId;
-    private final PlantCode code;
+    private final PlantCategory code;
     private final AuctionRoomStatus roomStatus;
     private final LocalDateTime auctionDateTime;
     private final LocalDateTime removedDateTime;
 
     @Builder
-    private AuctionScheduleRemoveResponse(int auctionScheduleId, PlantCode code, AuctionRoomStatus roomStatus, LocalDateTime auctionDateTime, LocalDateTime removedDateTime) {
+    private AuctionScheduleRemoveResponse(int auctionScheduleId, PlantCategory code, AuctionRoomStatus roomStatus, LocalDateTime auctionDateTime, LocalDateTime removedDateTime) {
         this.auctionScheduleId = auctionScheduleId;
         this.code = code;
         this.roomStatus = roomStatus;

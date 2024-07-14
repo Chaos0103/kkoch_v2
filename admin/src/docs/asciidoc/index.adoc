@@ -35,3 +35,10 @@ include::api/auctionschedule/open-auction-schedule.adoc[]
 include::api/auctionschedule/close-auction-schedule.adoc[]
 include::api/auctionschedule/remove-auction-schedule.adoc[]
 include::api/auctionschedule/search-opened-auction.adoc[]
+
+[[Variety-API]]
+== 품종 API
+
+include::api/variety/create-variety.adoc[]
+include::api/variety/search-item-names.adoc[]
+include::api/variety/search-variety-names.adoc[]

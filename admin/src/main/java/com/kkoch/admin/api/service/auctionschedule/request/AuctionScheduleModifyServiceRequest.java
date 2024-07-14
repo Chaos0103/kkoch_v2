@@ -1,6 +1,6 @@
 package com.kkoch.admin.api.service.auctionschedule.request;
 
-import com.kkoch.admin.domain.auctionschedule.PlantCode;
+import com.kkoch.admin.domain.variety.PlantCategory;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
@@ -20,8 +20,8 @@ public class AuctionScheduleModifyServiceRequest {
         return new AuctionScheduleModifyServiceRequest(code, actionDateTime);
     }
 
-    public PlantCode getCode() {
-        return PlantCode.valueOf(code);
+    public PlantCategory getCode() {
+        return PlantCategory.valueOf(code);
     }
 
     public LocalDateTime getAuctionDateTime() {

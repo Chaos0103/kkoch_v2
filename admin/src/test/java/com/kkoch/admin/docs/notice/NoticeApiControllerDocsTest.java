@@ -1,34 +1,30 @@
 package com.kkoch.admin.docs.notice;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kkoch.admin.api.PageResponse;
 import com.kkoch.admin.api.controller.notice.NoticeApiController;
 import com.kkoch.admin.api.controller.notice.request.NoticeCreateRequest;
 import com.kkoch.admin.api.controller.notice.request.NoticeModifyRequest;
+import com.kkoch.admin.api.service.notice.NoticeQueryService;
+import com.kkoch.admin.api.service.notice.NoticeService;
 import com.kkoch.admin.api.service.notice.response.NoticeCreateResponse;
 import com.kkoch.admin.api.service.notice.response.NoticeModifyResponse;
 import com.kkoch.admin.api.service.notice.response.NoticeRemoveResponse;
+import com.kkoch.admin.docs.RestDocsSupport;
 import com.kkoch.admin.domain.notice.repository.response.NoticeDetailResponse;
 import com.kkoch.admin.domain.notice.repository.response.NoticeResponse;
-import com.kkoch.admin.api.service.notice.NoticeQueryService;
-import com.kkoch.admin.api.service.notice.NoticeService;
-import com.kkoch.admin.docs.RestDocsSupport;
-import com.kkoch.admin.domain.notice.repository.dto.NoticeSearchCond;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.*;
+import static org.mockito.BDDMockito.anyInt;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;

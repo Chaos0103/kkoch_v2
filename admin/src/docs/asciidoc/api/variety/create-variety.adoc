@@ -1,0 +1,12 @@
+[[create-variety]]
+=== 품종 신규 등록
+
+==== HTTP Request
+
+include::{snippets}/create-variety/http-request.adoc[]
+include::{snippets}/create-variety/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/create-variety/http-response.adoc[]
+include::{snippets}/create-variety/response-fields.adoc[]

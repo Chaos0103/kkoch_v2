@@ -3,7 +3,7 @@ package com.kkoch.admin.domain.auctionschedule.repository;
 import com.kkoch.admin.IntegrationTestSupport;
 import com.kkoch.admin.domain.auctionschedule.AuctionRoomStatus;
 import com.kkoch.admin.domain.auctionschedule.AuctionSchedule;
-import com.kkoch.admin.domain.auctionschedule.PlantCode;
+import com.kkoch.admin.domain.variety.PlantCategory;
 import com.kkoch.admin.domain.auctionschedule.repository.response.OpenedAuctionResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -59,7 +59,7 @@ class AuctionScheduleQueryRepositoryTest extends IntegrationTestSupport {
             .isDeleted(isDeleted)
             .createdBy(1)
             .lastModifiedBy(1)
-            .code(PlantCode.CUT_FLOWERS)
+            .code(PlantCategory.CUT_FLOWERS)
             .roomStatus(status)
             .auctionDateTime(LocalDateTime.of(2024, 7, 12, 5, 0))
             .build();

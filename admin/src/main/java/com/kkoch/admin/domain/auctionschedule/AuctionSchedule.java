@@ -2,6 +2,7 @@ package com.kkoch.admin.domain.auctionschedule;
 
 import com.kkoch.admin.domain.BaseEntity;
 import com.kkoch.admin.domain.admin.Admin;
+import com.kkoch.admin.domain.variety.PlantCategory;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,7 +23,7 @@ public class AuctionSchedule extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 13)
-    private PlantCode code;
+    private PlantCategory code;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 5)
@@ -32,22 +33,22 @@ public class AuctionSchedule extends BaseEntity {
     private LocalDateTime auctionDateTime;
 
     @Builder
-    private AuctionSchedule(boolean isDeleted, int createdBy, int lastModifiedBy, PlantCode code, AuctionRoomStatus roomStatus, LocalDateTime auctionDateTime) {
+    private AuctionSchedule(boolean isDeleted, int createdBy, int lastModifiedBy, PlantCategory code, AuctionRoomStatus roomStatus, LocalDateTime auctionDateTime) {
         super(isDeleted, createdBy, lastModifiedBy);
         this.code = code;
         this.roomStatus = roomStatus;
         this.auctionDateTime = auctionDateTime;
     }
 
-    public static AuctionSchedule of(boolean isDeleted, int createdBy, int lastModifiedBy, PlantCode code, AuctionRoomStatus status, LocalDateTime actionDateTime) {
+    public static AuctionSchedule of(boolean isDeleted, int createdBy, int lastModifiedBy, PlantCategory code, AuctionRoomStatus status, LocalDateTime actionDateTime) {
         return new AuctionSchedule(isDeleted, createdBy, lastModifiedBy, code, status, actionDateTime);
     }
 
-    public static AuctionSchedule create(PlantCode code, LocalDateTime actionDateTime, Admin admin) {
+    public static AuctionSchedule create(PlantCategory code, LocalDateTime actionDateTime, Admin admin) {
         return of(false, admin.getId(), admin.getId(), code, AuctionRoomStatus.INIT, actionDateTime);
     }
 
-    public void modify(PlantCode code, LocalDateTime actionDateTime, Admin admin) {
+    public void modify(PlantCategory code, LocalDateTime actionDateTime, Admin admin) {
         super.modify(admin.getId());
         this.code = code;
         this.auctionDateTime = actionDateTime;

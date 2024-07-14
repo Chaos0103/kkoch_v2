@@ -1,6 +1,5 @@
 package com.kkoch.admin.docs.auctionschedule;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kkoch.admin.api.controller.auctionschedule.AuctionScheduleApiController;
 import com.kkoch.admin.api.controller.auctionschedule.request.AuctionScheduleCreateRequest;
 import com.kkoch.admin.api.controller.auctionschedule.request.AuctionScheduleModifyRequest;
@@ -12,7 +11,7 @@ import com.kkoch.admin.api.service.auctionschedule.response.AuctionScheduleRemov
 import com.kkoch.admin.api.service.auctionschedule.response.AuctionScheduleStatusResponse;
 import com.kkoch.admin.docs.RestDocsSupport;
 import com.kkoch.admin.domain.auctionschedule.AuctionRoomStatus;
-import com.kkoch.admin.domain.auctionschedule.PlantCode;
+import com.kkoch.admin.domain.variety.PlantCategory;
 import com.kkoch.admin.domain.auctionschedule.repository.response.OpenedAuctionResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -52,7 +51,7 @@ public class ActionScheduleApiControllerDocsTest extends RestDocsSupport {
 
         AuctionScheduleCreateResponse response = AuctionScheduleCreateResponse.builder()
             .auctionScheduleId(1)
-            .code(PlantCode.CUT_FLOWERS)
+            .code(PlantCategory.CUT_FLOWERS)
             .roomStatus(AuctionRoomStatus.INIT)
             .auctionDateTime(LocalDateTime.of(2024, 7, 12, 5, 0))
             .createdDateTime(LocalDateTime.now())
@@ -110,7 +109,7 @@ public class ActionScheduleApiControllerDocsTest extends RestDocsSupport {
 
         AuctionScheduleModifyResponse response = AuctionScheduleModifyResponse.builder()
             .auctionScheduleId(1)
-            .code(PlantCode.CUT_FLOWERS)
+            .code(PlantCategory.CUT_FLOWERS)
             .roomStatus(AuctionRoomStatus.INIT)
             .auctionDateTime(LocalDateTime.of(2024, 7, 12, 5, 0))
             .modifiedDateTime(LocalDateTime.now())
@@ -163,7 +162,7 @@ public class ActionScheduleApiControllerDocsTest extends RestDocsSupport {
     void readyAuctionSchedule() throws Exception {
         AuctionScheduleStatusResponse response = AuctionScheduleStatusResponse.builder()
             .auctionScheduleId(1)
-            .code(PlantCode.CUT_FLOWERS)
+            .code(PlantCategory.CUT_FLOWERS)
             .roomStatus(AuctionRoomStatus.READY)
             .auctionDateTime(LocalDateTime.of(2024, 7, 12, 5, 0))
             .modifiedDateTime(LocalDateTime.now())
@@ -207,7 +206,7 @@ public class ActionScheduleApiControllerDocsTest extends RestDocsSupport {
     void openAuctionSchedule() throws Exception {
         AuctionScheduleStatusResponse response = AuctionScheduleStatusResponse.builder()
             .auctionScheduleId(1)
-            .code(PlantCode.CUT_FLOWERS)
+            .code(PlantCategory.CUT_FLOWERS)
             .roomStatus(AuctionRoomStatus.OPEN)
             .auctionDateTime(LocalDateTime.of(2024, 7, 12, 5, 0))
             .modifiedDateTime(LocalDateTime.now())
@@ -251,7 +250,7 @@ public class ActionScheduleApiControllerDocsTest extends RestDocsSupport {
     void closeAuctionSchedule() throws Exception {
         AuctionScheduleStatusResponse response = AuctionScheduleStatusResponse.builder()
             .auctionScheduleId(1)
-            .code(PlantCode.CUT_FLOWERS)
+            .code(PlantCategory.CUT_FLOWERS)
             .roomStatus(AuctionRoomStatus.CLOSE)
             .auctionDateTime(LocalDateTime.of(2024, 7, 12, 5, 0))
             .modifiedDateTime(LocalDateTime.now())
@@ -295,7 +294,7 @@ public class ActionScheduleApiControllerDocsTest extends RestDocsSupport {
     void removeAuctionSchedule() throws Exception {
         AuctionScheduleRemoveResponse response = AuctionScheduleRemoveResponse.builder()
             .auctionScheduleId(1)
-            .code(PlantCode.CUT_FLOWERS)
+            .code(PlantCategory.CUT_FLOWERS)
             .roomStatus(AuctionRoomStatus.READY)
             .auctionDateTime(LocalDateTime.of(2024, 7, 12, 5, 0))
             .removedDateTime(LocalDateTime.now())
@@ -339,7 +338,7 @@ public class ActionScheduleApiControllerDocsTest extends RestDocsSupport {
     void searchOpenedAuction() throws Exception {
         OpenedAuctionResponse response = OpenedAuctionResponse.builder()
             .auctionScheduleId(1)
-            .code(PlantCode.CUT_FLOWERS)
+            .code(PlantCategory.CUT_FLOWERS)
             .roomStatus(AuctionRoomStatus.OPEN)
             .auctionDateTime(LocalDateTime.of(2024, 7, 12, 5, 0))
             .build();

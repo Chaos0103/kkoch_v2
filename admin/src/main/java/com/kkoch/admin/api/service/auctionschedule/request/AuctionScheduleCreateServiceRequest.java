@@ -1,7 +1,7 @@
 package com.kkoch.admin.api.service.auctionschedule.request;
 
 import com.kkoch.admin.domain.auctionschedule.AuctionSchedule;
-import com.kkoch.admin.domain.auctionschedule.PlantCode;
+import com.kkoch.admin.domain.variety.PlantCategory;
 import com.kkoch.admin.domain.admin.Admin;
 import lombok.Builder;
 
@@ -23,6 +23,6 @@ public class AuctionScheduleCreateServiceRequest {
     }
 
     public AuctionSchedule toEntity(Admin admin) {
-        return AuctionSchedule.create(PlantCode.valueOf(code), auctionDateTime, admin);
+        return AuctionSchedule.create(PlantCategory.valueOf(code), auctionDateTime, admin);
     }
 }
