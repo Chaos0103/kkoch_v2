@@ -1,7 +1,7 @@
 package com.kkoch.admin.api.controller;
 
 import com.kkoch.admin.ControllerTestSupport;
-import com.kkoch.admin.api.controller.request.VarietyCreateRequest;
+import com.kkoch.admin.api.controller.variety.request.VarietyCreateRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

@@ -34,6 +34,7 @@ include::api/auctionschedule/ready-auction-schedule.adoc[]
 include::api/auctionschedule/open-auction-schedule.adoc[]
 include::api/auctionschedule/close-auction-schedule.adoc[]
 include::api/auctionschedule/remove-auction-schedule.adoc[]
+include::api/auctionschedule/search-auction-schedules.adoc[]
 include::api/auctionschedule/search-opened-auction.adoc[]
 
 [[Variety-API]]
@@ -42,3 +43,20 @@ include::api/auctionschedule/search-opened-auction.adoc[]
 include::api/variety/create-variety.adoc[]
 include::api/variety/search-item-names.adoc[]
 include::api/variety/search-variety-names.adoc[]
+
+[[Auction-Variety-API]]
+== 경매 품종 API
+
+include::api/auctionvariety/create-auction-variety.adoc[]
+include::api/auctionvariety/search-auction-varieties.adoc[]
+
+[[Bid-Result-API]]
+== 낙찰 결과 API
+
+include::api/bidresult/create-bid-result.adoc[]
+include::api/bidresult/search-bid-results.adoc[]
+
+[[Stats-API]]
+== 통계 API
+
+include::api/stats/search-stats.adoc[]

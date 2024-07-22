@@ -84,7 +84,7 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
         Optional<AuctionSchedule> findActionSchedule = auctionScheduleRepository.findById(auctionSchedule.getId());
         assertThat(findActionSchedule).isPresent()
             .get()
-            .hasFieldOrPropertyWithValue("code", PlantCategory.ORCHID)
+            .hasFieldOrPropertyWithValue("plantCategory", PlantCategory.ORCHID)
             .hasFieldOrPropertyWithValue("auctionDateTime", LocalDateTime.of(2024, 7, 12, 7, 0));
     }
 
@@ -152,7 +152,7 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
             .isDeleted(false)
             .createdBy(admin.getId())
             .lastModifiedBy(admin.getId())
-            .code(PlantCategory.CUT_FLOWERS)
+            .plantCategory(PlantCategory.CUT_FLOWERS)
             .roomStatus(AuctionRoomStatus.INIT)
             .auctionDateTime(LocalDateTime.of(2024, 7, 12, 5, 0))
             .build();

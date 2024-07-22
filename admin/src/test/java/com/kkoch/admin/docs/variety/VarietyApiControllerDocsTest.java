@@ -1,7 +1,7 @@
 package com.kkoch.admin.docs.variety;
 
-import com.kkoch.admin.api.controller.VarietyApiController;
-import com.kkoch.admin.api.controller.request.VarietyCreateRequest;
+import com.kkoch.admin.api.controller.variety.VarietyApiController;
+import com.kkoch.admin.api.controller.variety.request.VarietyCreateRequest;
 import com.kkoch.admin.api.service.variety.VarietyQueryService;
 import com.kkoch.admin.api.service.variety.VarietyService;
 import com.kkoch.admin.api.service.variety.response.VarietyCreateResponse;

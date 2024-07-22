@@ -1,0 +1,12 @@
+[[create-bid-result]]
+=== 낙찰 결과 신규 등록
+
+==== HTTP Request
+
+include::{snippets}/create-bid-result/http-request.adoc[]
+include::{snippets}/create-bid-result/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/create-bid-result/http-response.adoc[]
+include::{snippets}/create-bid-result/response-fields.adoc[]

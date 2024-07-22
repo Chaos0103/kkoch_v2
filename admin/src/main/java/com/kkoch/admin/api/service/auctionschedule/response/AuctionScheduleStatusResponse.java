@@ -29,7 +29,7 @@ public class AuctionScheduleStatusResponse {
     public static AuctionScheduleStatusResponse of(AuctionSchedule auctionSchedule) {
         return AuctionScheduleStatusResponse.builder()
             .auctionScheduleId(auctionSchedule.getId())
-            .code(auctionSchedule.getCode())
+            .code(auctionSchedule.getPlantCategory())
             .roomStatus(auctionSchedule.getRoomStatus())
             .auctionDateTime(auctionSchedule.getAuctionDateTime())
             .modifiedDateTime(auctionSchedule.getLastModifiedDateTime())

@@ -29,7 +29,7 @@ public class AuctionScheduleRemoveResponse {
     public static AuctionScheduleRemoveResponse of(AuctionSchedule auctionSchedule) {
         return AuctionScheduleRemoveResponse.builder()
             .auctionScheduleId(auctionSchedule.getId())
-            .code(auctionSchedule.getCode())
+            .code(auctionSchedule.getPlantCategory())
             .roomStatus(auctionSchedule.getRoomStatus())
             .auctionDateTime(auctionSchedule.getAuctionDateTime())
             .removedDateTime(auctionSchedule.getLastModifiedDateTime())

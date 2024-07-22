@@ -1,6 +1,8 @@
 package com.kkoch.admin.api.controller.auctionschedule;
 
 import com.kkoch.admin.api.ApiResponse;
+import com.kkoch.admin.api.PageResponse;
+import com.kkoch.admin.api.controller.auctionschedule.param.AuctionScheduleSearchParam;
 import com.kkoch.admin.api.controller.auctionschedule.request.AuctionScheduleCreateRequest;
 import com.kkoch.admin.api.controller.auctionschedule.request.AuctionScheduleModifyRequest;
 import com.kkoch.admin.api.service.auctionschedule.AuctionScheduleQueryService;
@@ -10,6 +12,7 @@ import com.kkoch.admin.api.service.auctionschedule.response.AuctionScheduleModif
 import com.kkoch.admin.api.service.auctionschedule.response.AuctionScheduleRemoveResponse;
 import com.kkoch.admin.api.service.auctionschedule.response.AuctionScheduleStatusResponse;
 import com.kkoch.admin.domain.auctionschedule.AuctionRoomStatus;
+import com.kkoch.admin.domain.auctionschedule.repository.response.AuctionScheduleResponse;
 import com.kkoch.admin.domain.auctionschedule.repository.response.OpenedAuctionResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -76,6 +79,13 @@ public class AuctionScheduleApiController {
         int adminId = 0;
 
         AuctionScheduleRemoveResponse response = auctionScheduleService.removeAuctionSchedule(adminId, auctionSchedule);
+
+        return ApiResponse.ok(response);
+    }
+
+    @GetMapping
+    public ApiResponse<PageResponse<AuctionScheduleResponse>> searchAuctionSchedules(@Valid @ModelAttribute AuctionScheduleSearchParam param) {
+        PageResponse<AuctionScheduleResponse> response = auctionScheduleQueryService.searchAuctionSchedules(param.toPageable());
 
         return ApiResponse.ok(response);
     }

@@ -13,14 +13,14 @@ import java.time.LocalDateTime;
 public class OpenedAuctionResponse {
 
     private int auctionScheduleId;
-    private PlantCategory code;
+    private PlantCategory plantCategory;
     private AuctionRoomStatus roomStatus;
     private LocalDateTime auctionDateTime;
 
     @Builder
-    private OpenedAuctionResponse(int auctionScheduleId, PlantCategory code, AuctionRoomStatus roomStatus, LocalDateTime auctionDateTime) {
+    private OpenedAuctionResponse(int auctionScheduleId, PlantCategory plantCategory, AuctionRoomStatus roomStatus, LocalDateTime auctionDateTime) {
         this.auctionScheduleId = auctionScheduleId;
-        this.code = code;
+        this.plantCategory = plantCategory;
         this.roomStatus = roomStatus;
         this.auctionDateTime = auctionDateTime;
     }

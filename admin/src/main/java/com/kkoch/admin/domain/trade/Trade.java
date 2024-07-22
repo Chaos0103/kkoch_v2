@@ -1,7 +1,6 @@
 package com.kkoch.admin.domain.trade;
 
 import com.kkoch.admin.domain.TimeBaseEntity;
-import com.kkoch.admin.domain.auction.AuctionArticle;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,8 +8,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -22,66 +19,39 @@ public class Trade extends TimeBaseEntity {
     @Column(name = "trade_id")
     private Long id;
 
+    @Column(nullable = false, updatable = false, columnDefinition = "char(36)", length = 36)
+    private String memberKey;
+
     @Column(nullable = false)
     private int totalPrice;
 
-    @Column(nullable = false)
-    private LocalDateTime tradeTime;
+    private LocalDateTime tradeDateTime;
 
-    @Column(nullable = false)
-    private boolean pickupStatus;
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private boolean isPickUp;
 
-    @Column(nullable = false)
-    private boolean active;
-
-    private String memberKey;
-
-    @OneToMany(mappedBy = "trade", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AuctionArticle> articles = new ArrayList<>();
+    @Column(nullable = false, updatable = false)
+    private int auctionScheduleId;
 
     @Builder
-    private Trade(int totalPrice, LocalDateTime tradeTime, boolean pickupStatus, boolean active, String memberKey, List<AuctionArticle> articles) {
-        this.totalPrice = totalPrice;
-        this.tradeTime = tradeTime;
-        this.pickupStatus = pickupStatus;
-        this.active = active;
+    private Trade(boolean isDeleted, String memberKey, int totalPrice, LocalDateTime tradeDateTime, boolean isPickUp, int auctionScheduleId) {
+        super(isDeleted);
         this.memberKey = memberKey;
-        this.articles = articles;
+        this.totalPrice = totalPrice;
+        this.tradeDateTime = tradeDateTime;
+        this.isPickUp = isPickUp;
+        this.auctionScheduleId = auctionScheduleId;
     }
 
-    //== 연관관계 편의 메서드 ==//
-    public static Trade createTrade(int totalPrice, String memberKey, List<AuctionArticle> auctionArticles) {
-        Trade trade = Trade.builder()
-                .totalPrice(totalPrice)
-                .tradeTime(LocalDateTime.now())
-                .pickupStatus(false)
-                .active(true)
-                .memberKey(memberKey)
-                .articles(auctionArticles)
-                .build();
-
-        auctionArticles.forEach(auctionArticle -> auctionArticle.updateTrade(trade));
-
-        return trade;
+    public static Trade of(boolean isDeleted, String memberKey, int totalPrice, LocalDateTime tradeDateTime, boolean isPickUp, int auctionScheduleId) {
+        return new Trade(isDeleted, memberKey, totalPrice, tradeDateTime, isPickUp, auctionScheduleId);
     }
 
-    //== 비즈니스 로직 ==//
-    public void pickup() {
-        if (this.pickupStatus) {
-            throw new IllegalArgumentException("이미 픽업한 상품입니다.");
-        }
-        this.pickupStatus = true;
+    public static Trade create(String memberKey, int auctionScheduleId) {
+        return of(false, memberKey, 0, null, false, auctionScheduleId);
     }
 
-    public void setTotalPrice(int price) {
-        this.totalPrice += price;
-    }
-
-    public void addAuctionArticle(AuctionArticle auctionArticle) {
-        articles.add(auctionArticle);
-    }
-
-    public void remove() {
-        this.active = false;
+    public void addPrice(int price) {
+        totalPrice += price;
     }
 }

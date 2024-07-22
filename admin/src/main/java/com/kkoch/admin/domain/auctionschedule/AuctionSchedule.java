@@ -3,6 +3,7 @@ package com.kkoch.admin.domain.auctionschedule;
 import com.kkoch.admin.domain.BaseEntity;
 import com.kkoch.admin.domain.admin.Admin;
 import com.kkoch.admin.domain.variety.PlantCategory;
+import com.kkoch.admin.domain.variety.Variety;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,7 +24,7 @@ public class AuctionSchedule extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 13)
-    private PlantCategory code;
+    private PlantCategory plantCategory;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 5)
@@ -33,24 +34,24 @@ public class AuctionSchedule extends BaseEntity {
     private LocalDateTime auctionDateTime;
 
     @Builder
-    private AuctionSchedule(boolean isDeleted, int createdBy, int lastModifiedBy, PlantCategory code, AuctionRoomStatus roomStatus, LocalDateTime auctionDateTime) {
+    private AuctionSchedule(boolean isDeleted, int createdBy, int lastModifiedBy, PlantCategory plantCategory, AuctionRoomStatus roomStatus, LocalDateTime auctionDateTime) {
         super(isDeleted, createdBy, lastModifiedBy);
-        this.code = code;
+        this.plantCategory = plantCategory;
         this.roomStatus = roomStatus;
         this.auctionDateTime = auctionDateTime;
     }
 
-    public static AuctionSchedule of(boolean isDeleted, int createdBy, int lastModifiedBy, PlantCategory code, AuctionRoomStatus status, LocalDateTime actionDateTime) {
-        return new AuctionSchedule(isDeleted, createdBy, lastModifiedBy, code, status, actionDateTime);
+    public static AuctionSchedule of(boolean isDeleted, int createdBy, int lastModifiedBy, PlantCategory plantCategory, AuctionRoomStatus status, LocalDateTime actionDateTime) {
+        return new AuctionSchedule(isDeleted, createdBy, lastModifiedBy, plantCategory, status, actionDateTime);
     }
 
-    public static AuctionSchedule create(PlantCategory code, LocalDateTime actionDateTime, Admin admin) {
-        return of(false, admin.getId(), admin.getId(), code, AuctionRoomStatus.INIT, actionDateTime);
+    public static AuctionSchedule create(PlantCategory plantCategory, LocalDateTime actionDateTime, Admin admin) {
+        return of(false, admin.getId(), admin.getId(), plantCategory, AuctionRoomStatus.INIT, actionDateTime);
     }
 
-    public void modify(PlantCategory code, LocalDateTime actionDateTime, Admin admin) {
+    public void modify(PlantCategory plantCategory, LocalDateTime actionDateTime, Admin admin) {
         super.modify(admin.getId());
-        this.code = code;
+        this.plantCategory = plantCategory;
         this.auctionDateTime = actionDateTime;
     }
 
@@ -68,6 +69,14 @@ public class AuctionSchedule extends BaseEntity {
 
     public void remove(Admin admin) {
         super.remove(admin.getId());
+    }
+
+    public boolean isEqualPlantCategory(Variety variety) {
+        return plantCategory == variety.getPlantCategory();
+    }
+
+    public boolean isNotEqualPlantCategory(Variety variety) {
+        return !isEqualPlantCategory(variety);
     }
 
     private void modifyAuctionRoomStatus(Admin admin, AuctionRoomStatus ready) {

@@ -29,7 +29,7 @@ public class AuctionScheduleCreateResponse {
     public static AuctionScheduleCreateResponse of(AuctionSchedule auctionSchedule) {
         return AuctionScheduleCreateResponse.builder()
             .auctionScheduleId(auctionSchedule.getId())
-            .code(auctionSchedule.getCode())
+            .code(auctionSchedule.getPlantCategory())
             .roomStatus(auctionSchedule.getRoomStatus())
             .auctionDateTime(auctionSchedule.getAuctionDateTime())
             .createdDateTime(auctionSchedule.getCreatedDateTime())

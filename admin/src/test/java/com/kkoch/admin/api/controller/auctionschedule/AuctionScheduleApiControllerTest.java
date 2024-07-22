@@ -174,6 +174,15 @@ class AuctionScheduleApiControllerTest extends ControllerTestSupport {
             .andExpect(jsonPath("$.data").isEmpty());
     }
 
+    @DisplayName("경매 일정 목록을 조회한다.")
+    @Test
+    void searchAuctionSchedules() throws Exception {
+        mockMvc.perform(
+                get("/admin-service/auction-schedules")
+            )
+            .andExpect(status().isOk());
+    }
+
     @DisplayName("진행중인 경매 일정을 조회한다.")
     @Test
     void searchOpenedAuction() throws Exception {
