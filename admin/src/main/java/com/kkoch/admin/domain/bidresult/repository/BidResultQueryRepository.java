@@ -1,9 +1,11 @@
 package com.kkoch.admin.domain.bidresult.repository;
 
-import com.kkoch.admin.domain.bidresult.repository.dto.BidResultSearchCond;
+import com.kkoch.admin.domain.bidresult.BidResult;
 import com.kkoch.admin.domain.bidresult.repository.dto.BidResultDto;
+import com.kkoch.admin.domain.bidresult.repository.dto.BidResultSearchCond;
 import com.kkoch.admin.domain.bidresult.repository.dto.BidResults;
 import com.kkoch.admin.domain.bidresult.repository.response.BidResultResponse;
+import com.kkoch.admin.domain.bidresult.repository.vo.BidResultCountVo;
 import com.kkoch.admin.domain.variety.PlantCategory;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -107,6 +109,31 @@ public class BidResultQueryRepository {
             )
             .fetch();
         return BidResults.of(bidResults);
+    }
+
+    public List<BidResultCountVo> findAllByTradeIdIn(List<Long> tradeIds) {
+        return queryFactory
+            .select(
+                Projections.fields(
+                    BidResultCountVo.class,
+                    bidResult.trade.id.as("tradeId"),
+                    bidResult.id.count().as("count")
+                )
+            )
+            .from(bidResult)
+            .groupBy(bidResult.trade.id)
+            .having(bidResult.trade.id.in(tradeIds))
+            .fetch();
+    }
+
+    public List<BidResult> findAllByTradeId(long tradeId) {
+        return queryFactory
+            .select(bidResult)
+            .from(bidResult)
+            .join(bidResult.auctionVariety, auctionVariety).fetchJoin()
+            .join(auctionVariety.variety, variety).fetchJoin()
+            .where(bidResult.trade.id.eq(tradeId))
+            .fetch();
     }
 
     private BooleanExpression eqPlantCategory(PlantCategory plantCategory) {

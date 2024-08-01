@@ -3,6 +3,7 @@ package com.kkoch.admin.domain.auctionschedule.repository;
 import com.kkoch.admin.IntegrationTestSupport;
 import com.kkoch.admin.domain.auctionschedule.AuctionRoomStatus;
 import com.kkoch.admin.domain.auctionschedule.AuctionSchedule;
+import com.kkoch.admin.domain.auctionschedule.repository.response.AuctionDateTimeVo;
 import com.kkoch.admin.domain.auctionschedule.repository.response.AuctionScheduleResponse;
 import com.kkoch.admin.domain.variety.PlantCategory;
 import com.kkoch.admin.domain.auctionschedule.repository.response.OpenedAuctionResponse;
@@ -100,6 +101,24 @@ class AuctionScheduleQueryRepositoryTest extends IntegrationTestSupport {
 
         //then
         assertThat(content).isEmpty();
+    }
+
+    @DisplayName("경매 일정 ID 목록으로 경매일시 목록을 조회한다.")
+    @Test
+    void findAllAuctionDataTimeByIdIn() {
+        //given
+        AuctionSchedule auctionSchedule1 = createAuctionSchedule(false, AuctionRoomStatus.INIT);
+        AuctionSchedule auctionSchedule2 = createAuctionSchedule(false, AuctionRoomStatus.READY);
+        AuctionSchedule auctionSchedule3 = createAuctionSchedule(false, AuctionRoomStatus.OPEN);
+        AuctionSchedule auctionSchedule4 = createAuctionSchedule(false, AuctionRoomStatus.CLOSE);
+
+        List<Integer> auctionScheduleIds = List.of(auctionSchedule4.getId(), auctionSchedule3.getId(), auctionSchedule2.getId(), auctionSchedule1.getId());
+
+        //when
+        List<AuctionDateTimeVo> auctionDateTimes = auctionScheduleQueryRepository.findAllAuctionDataTimeByIdIn(auctionScheduleIds);
+
+        //then
+        assertThat(auctionDateTimes).hasSize(4);
     }
 
     private AuctionSchedule createAuctionSchedule(boolean isDeleted, AuctionRoomStatus status) {

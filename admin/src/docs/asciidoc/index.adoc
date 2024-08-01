@@ -60,3 +60,9 @@ include::api/bidresult/search-bid-results.adoc[]
 == 통계 API
 
 include::api/stats/search-stats.adoc[]
+
+[[Trade-API]]
+== 거래 내역 API
+
+include::api/trade/search-trades.adoc[]
+include::api/trade/search-trade.adoc[]

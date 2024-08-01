@@ -2,6 +2,7 @@ package com.kkoch.admin;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kkoch.admin.api.controller.stats.StatsApiController;
+import com.kkoch.admin.api.controller.trade.TradeApiController;
 import com.kkoch.admin.api.controller.variety.VarietyApiController;
 import com.kkoch.admin.api.controller.admin.AdminApiController;
 import com.kkoch.admin.api.controller.auctionschedule.AuctionScheduleApiController;
@@ -18,6 +19,7 @@ import com.kkoch.admin.api.service.bidresult.BidResultService;
 import com.kkoch.admin.api.service.notice.NoticeQueryService;
 import com.kkoch.admin.api.service.notice.NoticeService;
 import com.kkoch.admin.api.service.stats.StatsQueryService;
+import com.kkoch.admin.api.service.trade.TradeQueryService;
 import com.kkoch.admin.api.service.variety.VarietyQueryService;
 import com.kkoch.admin.api.service.variety.VarietyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +34,8 @@ import org.springframework.test.web.servlet.MockMvc;
     VarietyApiController.class,
     BidResultApiController.class,
     AuctionVarietyApiController.class,
-    StatsApiController.class
+    StatsApiController.class,
+    TradeApiController.class
 })
 public abstract class ControllerTestSupport {
 
@@ -65,6 +68,9 @@ public abstract class ControllerTestSupport {
 
     @MockBean
     protected BidResultService bidResultService;
+
+    @MockBean
+    protected TradeQueryService tradeQueryService;
 
     @MockBean
     protected BidResultQueryService bidResultQueryService;

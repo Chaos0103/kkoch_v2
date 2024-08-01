@@ -1,6 +1,7 @@
 package com.kkoch.admin.domain.auctionschedule.repository;
 
 import com.kkoch.admin.domain.auctionschedule.AuctionRoomStatus;
+import com.kkoch.admin.domain.auctionschedule.repository.response.AuctionDateTimeVo;
 import com.kkoch.admin.domain.auctionschedule.repository.response.AuctionScheduleResponse;
 import com.kkoch.admin.domain.auctionschedule.repository.response.OpenedAuctionResponse;
 import com.querydsl.core.types.Projections;
@@ -82,6 +83,22 @@ public class AuctionScheduleQueryRepository {
             .where(isNotDeleted())
             .fetch()
             .size();
+    }
+
+    public List<AuctionDateTimeVo> findAllAuctionDataTimeByIdIn(List<Integer> ids) {
+        return queryFactory
+            .select(
+                Projections.fields(
+                    AuctionDateTimeVo.class,
+                    auctionSchedule.id,
+                    auctionSchedule.auctionDateTime
+                )
+            )
+            .from(auctionSchedule)
+            .where(
+                auctionSchedule.id.in(ids)
+            )
+            .fetch();
     }
 
     private BooleanExpression isNotDeleted() {
