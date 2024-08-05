@@ -3,6 +3,7 @@ package com.ssafy.user_service.domain.member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Embeddable
@@ -15,6 +16,7 @@ public class BankAccount {
     @Column(nullable = false, length = 14)
     private final String accountNumber;
 
+    @Builder
     private BankAccount(String bankCode, String accountNumber) {
         this.bankCode = bankCode;
         this.accountNumber = accountNumber;

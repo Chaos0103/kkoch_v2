@@ -5,6 +5,7 @@ import jakarta.persistence.Embeddable;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Embeddable
@@ -18,6 +19,7 @@ public class MemberSpecificInfo {
     @Column(nullable = false, length = 10)
     private final Role role;
 
+    @Builder
     private MemberSpecificInfo(String memberKey, Role role) {
         this.memberKey = memberKey;
         this.role = role;

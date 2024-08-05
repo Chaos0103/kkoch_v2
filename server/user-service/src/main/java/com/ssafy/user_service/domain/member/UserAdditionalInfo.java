@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Embeddable
@@ -16,6 +17,7 @@ public class UserAdditionalInfo {
     @Embedded
     private final BankAccount bankAccount;
 
+    @Builder
     private UserAdditionalInfo(String businessNumber, BankAccount bankAccount) {
         this.businessNumber = businessNumber;
         this.bankAccount = bankAccount;
