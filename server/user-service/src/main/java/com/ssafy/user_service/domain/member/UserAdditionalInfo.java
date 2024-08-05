@@ -26,4 +26,8 @@ public class UserAdditionalInfo {
     public static UserAdditionalInfo of(String businessNumber, BankAccount bankAccount) {
         return new UserAdditionalInfo(businessNumber, bankAccount);
     }
+
+    public static UserAdditionalInfo init(String businessNumber) {
+        return of(businessNumber, null);
+    }
 }

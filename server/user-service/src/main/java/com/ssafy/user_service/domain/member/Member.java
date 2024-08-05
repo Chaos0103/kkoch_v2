@@ -49,4 +49,10 @@ public class Member extends TimeBaseEntity {
     public static Member of(boolean isDeleted, MemberSpecificInfo specificInfo, String email, String pwd, String name, String tel, UserAdditionalInfo userAdditionalInfo) {
         return new Member(isDeleted, specificInfo, email, pwd, name, tel, userAdditionalInfo);
     }
+
+    public static Member createUser(String email, String pwd, String name, String tel, String businessNumber) {
+        MemberSpecificInfo userSpecificInfo = MemberSpecificInfo.generateUser();
+        UserAdditionalInfo additionalInfo = UserAdditionalInfo.init(businessNumber);
+        return of(false, userSpecificInfo, email, pwd, name, tel, additionalInfo);
+    }
 }

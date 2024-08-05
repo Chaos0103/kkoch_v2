@@ -1,5 +1,7 @@
 package com.ssafy.user_service.api.service.member.response;
 
+import com.ssafy.user_service.api.service.member.Masking;
+import com.ssafy.user_service.domain.member.Member;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -17,5 +19,10 @@ public class MemberCreateResponse {
         this.email = email;
         this.name = name;
         this.createdDateTime = createdDateTime;
+    }
+
+    public static MemberCreateResponse of(Member member) {
+        String maskingEmail = Masking.maskingEmail(member.getEmail());
+        return new MemberCreateResponse(maskingEmail, member.getName(), member.getCreatedDateTime());
     }
 }

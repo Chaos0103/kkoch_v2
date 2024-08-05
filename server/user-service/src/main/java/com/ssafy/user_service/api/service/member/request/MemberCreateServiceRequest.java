@@ -1,7 +1,10 @@
 package com.ssafy.user_service.api.service.member.request;
 
+import com.ssafy.user_service.domain.member.Member;
 import lombok.Builder;
+import lombok.Getter;
 
+@Getter
 public class MemberCreateServiceRequest {
 
     private final String email;
@@ -17,5 +20,9 @@ public class MemberCreateServiceRequest {
         this.name = name;
         this.tel = tel;
         this.businessNumber = businessNumber;
+    }
+
+    public Member toEntity(String encodedPwd) {
+        return Member.createUser(email, encodedPwd, name, tel, businessNumber);
     }
 }

@@ -8,6 +8,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 public class MemberSpecificInfo {
@@ -27,5 +29,13 @@ public class MemberSpecificInfo {
 
     public static MemberSpecificInfo of(String memberKey, Role role) {
         return new MemberSpecificInfo(memberKey, role);
+    }
+
+    public static MemberSpecificInfo generateUser() {
+        return of(generateMemberKey(), Role.USER);
+    }
+
+    private static String generateMemberKey() {
+        return UUID.randomUUID().toString();
     }
 }

@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 public class BankAccount {
 
-    @Column(nullable = false, columnDefinition = "char(3)", length = 3)
+    @Column(columnDefinition = "char(3)", length = 3)
     private final String bankCode;
 
-    @Column(nullable = false, length = 14)
+    @Column(length = 14)
     private final String accountNumber;
 
     @Builder
