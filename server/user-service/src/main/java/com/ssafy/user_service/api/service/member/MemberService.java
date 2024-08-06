@@ -10,6 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.ssafy.user_service.api.service.member.MemberValidate.*;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -33,6 +35,12 @@ public class MemberService {
         if (isExistBusinessNumber) {
             throw new AppException("이미 가입된 사업자 번호입니다.");
         }
+
+        validateEmail(request.getEmail());
+        validatePassword(request.getPassword());
+        validateName(request.getName());
+        validateTel(request.getTel());
+        validateBusinessNumber(request.getBusinessNumber());
 
         Member member = request.toEntity(passwordEncoder.encode(request.getPassword()));
         Member savedMember = memberRepository.save(member);

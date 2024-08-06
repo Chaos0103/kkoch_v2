@@ -101,7 +101,7 @@ class MemberValidateTest {
         //when //then
         assertThatThrownBy(() -> MemberValidate.validateName(name))
             .isInstanceOf(LengthOutOfRangeException.class)
-            .hasMessage("이름의 길이는 최대 100자리 입니다.");
+            .hasMessage("이름의 길이는 최대 20자리 입니다.");
     }
 
     @DisplayName("이름에 한글 이외의 문자가 포함되어 있다면 예외가 발생한다.")
