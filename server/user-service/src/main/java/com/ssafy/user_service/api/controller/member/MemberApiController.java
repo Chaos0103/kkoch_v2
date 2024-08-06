@@ -21,6 +21,8 @@ public class MemberApiController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<MemberCreateResponse> createUserMember(@Valid @RequestBody MemberCreateRequest request) {
-        return null;
+        MemberCreateResponse response = memberService.createUserMember(request.toServiceRequest());
+
+        return ApiResponse.ok(response);
     }
 }

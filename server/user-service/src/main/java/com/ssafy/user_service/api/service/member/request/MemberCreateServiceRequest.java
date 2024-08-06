@@ -22,6 +22,10 @@ public class MemberCreateServiceRequest {
         this.businessNumber = businessNumber;
     }
 
+    public static MemberCreateServiceRequest of(String email, String password, String name, String tel, String businessNumber) {
+        return new MemberCreateServiceRequest(email, password, name, tel, businessNumber);
+    }
+
     public Member toEntity(String encodedPwd) {
         return Member.createUser(email, encodedPwd, name, tel, businessNumber);
     }
