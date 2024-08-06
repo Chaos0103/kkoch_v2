@@ -1,0 +1,12 @@
+[[create-user-member]]
+=== 일반 회원 가입 API
+
+==== HTTP Request
+
+include::{snippets}/create-user-member/http-request.adoc[]
+include::{snippets}/create-user-member/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/create-user-member/http-response.adoc[]
+include::{snippets}/create-user-member/response-fields.adoc[]

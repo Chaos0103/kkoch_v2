@@ -1,0 +1,16 @@
+ifndef::snippets[]
+:snippets: ../../build/generated-snippets
+endif::[]
+= 꽃향기(User-Service) REST API 문서
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+include::overview.adoc[]
+
+[[Member-API]]
+== 회원 API
+
