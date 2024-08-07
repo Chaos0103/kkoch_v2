@@ -1,6 +1,7 @@
 package com.ssafy.user_service.api.controller.member;
 
 import com.ssafy.user_service.api.ApiResponse;
+import com.ssafy.user_service.api.controller.member.request.AdminMemberCreateRequest;
 import com.ssafy.user_service.api.controller.member.request.MemberCreateRequest;
 import com.ssafy.user_service.api.service.member.MemberService;
 import com.ssafy.user_service.api.service.member.response.MemberCreateResponse;
@@ -22,6 +23,14 @@ public class MemberApiController {
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<MemberCreateResponse> createUserMember(@Valid @RequestBody MemberCreateRequest request) {
         MemberCreateResponse response = memberService.createUserMember(request.toServiceRequest());
+
+        return ApiResponse.ok(response);
+    }
+
+    @PostMapping("/admin")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApiResponse<MemberCreateResponse> createAdminMember(@Valid @RequestBody AdminMemberCreateRequest request) {
+        MemberCreateResponse response = memberService.createAdminMember(request.toServiceRequest());
 
         return ApiResponse.ok(response);
     }
