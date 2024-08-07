@@ -1,0 +1,12 @@
+[[create-admin-member]]
+=== 관리자 회원 가입 API
+
+==== HTTP Request
+
+include::{snippets}/create-admin-member/http-request.adoc[]
+include::{snippets}/create-admin-member/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/create-admin-member/http-response.adoc[]
+include::{snippets}/create-admin-member/response-fields.adoc[]

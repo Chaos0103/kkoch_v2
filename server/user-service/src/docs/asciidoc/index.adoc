@@ -14,3 +14,5 @@ include::overview.adoc[]
 [[Member-API]]
 == 회원 API
 
+include::api/member/create-user-member.adoc[]
+include::api/member/create-admin-member.adoc[]
