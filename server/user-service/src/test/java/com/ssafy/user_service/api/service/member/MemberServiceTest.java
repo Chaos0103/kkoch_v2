@@ -116,6 +116,72 @@ class MemberServiceTest extends IntegrationTestSupport {
             .hasFieldOrPropertyWithValue("name", "김싸피");
     }
 
+    @DisplayName("관리자 회원 등록시 입력 받은 이메일을 사용중인 회원이 존재하면 예외가 발생한다.")
+    @Test
+    void createAdminMemberDuplicatedEmail() {
+        //given
+        Member member = generateMember();
+
+        MemberCreateServiceRequest request = MemberCreateServiceRequest.builder()
+            .email("ssafy@ssafy.com")
+            .password("ssafy1234!")
+            .name("김관리")
+            .tel("01056785678")
+            .build();
+
+        //when
+        assertThatThrownBy(() -> memberService.createAdminMember(request))
+            .isInstanceOf(AppException.class)
+            .hasMessage("이미 가입된 이메일입니다.");
+
+        //then
+        List<Member> members = memberRepository.findAll();
+        assertThat(members).hasSize(1);
+    }
+
+    @DisplayName("관리자 회원 등록시 입력 받은 연락처를 사용중인 회원이 존재하면 예외가 발생한다.")
+    @Test
+    void createAdminMemberDuplicatedTel() {
+        //given
+        Member member = generateMember();
+
+        MemberCreateServiceRequest request = MemberCreateServiceRequest.builder()
+            .email("ssafy@gmail.com")
+            .password("ssafy1234!")
+            .name("김싸피")
+            .tel("01012341234")
+            .build();
+
+        //when
+        assertThatThrownBy(() -> memberService.createAdminMember(request))
+            .isInstanceOf(AppException.class)
+            .hasMessage("이미 가입된 연락처입니다.");
+
+        //then
+        List<Member> members = memberRepository.findAll();
+        assertThat(members).hasSize(1);
+    }
+
+    @DisplayName("회원 정보를 입력 받아 관리자 회원 등록을 한다.")
+    @Test
+    void createAdminMember() {
+        //given
+        MemberCreateServiceRequest request = MemberCreateServiceRequest.builder()
+            .email("ssafy@ssafy.com")
+            .password("ssafy1234!")
+            .name("김싸피")
+            .tel("01012341234")
+            .build();
+
+        //when
+        MemberCreateResponse response = memberService.createAdminMember(request);
+
+        //then
+        assertThat(response).isNotNull()
+            .hasFieldOrPropertyWithValue("email", "ss***@ssafy.com")
+            .hasFieldOrPropertyWithValue("name", "김싸피");
+    }
+
     private Member generateMember() {
         Member member = Member.builder()
             .isDeleted(false)

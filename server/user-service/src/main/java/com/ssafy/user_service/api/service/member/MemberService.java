@@ -33,6 +33,10 @@ public class MemberService {
         return MemberCreateResponse.of(savedMember);
     }
 
+    public MemberCreateResponse createAdminMember(MemberCreateServiceRequest request) {
+        return null;
+    }
+
     private void checkEmail(String email) {
         checkDuplicateEmail(email);
         validateEmail(email);
