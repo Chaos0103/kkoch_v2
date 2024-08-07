@@ -55,4 +55,9 @@ public class Member extends TimeBaseEntity {
         UserAdditionalInfo additionalInfo = UserAdditionalInfo.init(businessNumber);
         return of(false, userSpecificInfo, email, pwd, name, tel, additionalInfo);
     }
+
+    public static Member createAdmin(String email, String pwd, String name, String tel) {
+        MemberSpecificInfo adminSpecificInfo = MemberSpecificInfo.generateAdmin();
+        return of(false, adminSpecificInfo, email, pwd, name, tel, null);
+    }
 }

@@ -35,6 +35,10 @@ public class MemberSpecificInfo {
         return of(generateMemberKey(), Role.USER);
     }
 
+    public static MemberSpecificInfo generateAdmin() {
+        return of(generateMemberKey(), Role.ADMIN);
+    }
+
     private static String generateMemberKey() {
         return UUID.randomUUID().toString();
     }

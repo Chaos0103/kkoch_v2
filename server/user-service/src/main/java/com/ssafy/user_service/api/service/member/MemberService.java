@@ -34,7 +34,15 @@ public class MemberService {
     }
 
     public MemberCreateResponse createAdminMember(MemberCreateServiceRequest request) {
-        return null;
+        checkEmail(request.getEmail());
+        checkPassword(request.getPassword());
+        checkName(request.getName());
+        checkTel(request.getTel());
+
+        Member member = request.toAdminEntity(passwordEncoder.encode(request.getPassword()));
+        Member savedMember = memberRepository.save(member);
+
+        return MemberCreateResponse.of(savedMember);
     }
 
     private void checkEmail(String email) {

@@ -29,4 +29,8 @@ public class MemberCreateServiceRequest {
     public Member toEntity(String encodedPwd) {
         return Member.createUser(email, encodedPwd, name, tel, businessNumber);
     }
+
+    public Member toAdminEntity(String encodedPwd) {
+        return Member.createAdmin(email, encodedPwd, name, tel);
+    }
 }
