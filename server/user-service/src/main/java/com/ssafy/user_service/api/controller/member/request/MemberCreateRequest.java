@@ -6,23 +6,25 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import static com.ssafy.user_service.api.controller.member.message.MemberBindingMessage.*;
+
 @Getter
 @NoArgsConstructor
 public class MemberCreateRequest {
 
-    @NotBlank(message = "이메일을 입력해주세요.")
+    @NotBlank(message = NOT_BLANK_EMAIL)
     private String email;
 
-    @NotBlank(message = "비밀번호를 입력해주세요.")
+    @NotBlank(message = NOT_BLANK_PASSWORD)
     private String password;
 
-    @NotBlank(message = "이름을 입력해주세요.")
+    @NotBlank(message = NOT_BLANK_NAME)
     private String name;
 
-    @NotBlank(message = "연락처를 입력해주세요.")
+    @NotBlank(message = NOT_BLANK_TEL)
     private String tel;
 
-    @NotBlank(message = "사업자 번호를 입력해주세요.")
+    @NotBlank(message = NOT_BLANK_BUSINESS_NUMBER)
     private String businessNumber;
 
     @Builder
