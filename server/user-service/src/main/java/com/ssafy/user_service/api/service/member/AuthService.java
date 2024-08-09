@@ -16,7 +16,7 @@ public class AuthService {
 
     private final RedisRepository<String, String> redisRepository;
 
-    public EmailAuthResponse sendEmailAuthNumber(String email, String authNumber, LocalDateTime currentDateTime) {
+    public EmailAuthResponse sendAuthNumberToEmail(String email, String authNumber, LocalDateTime currentDateTime) {
         redisRepository.save(email, authNumber, 5, TimeUnit.MINUTES);
 
         LocalDateTime expiredDateTime = currentDateTime.plusMinutes(5);

@@ -21,12 +21,12 @@ class AuthServiceTest extends IntegrationTestSupport {
 
     @DisplayName("이메일로 5분간 유효한 랜덤으로 생성된 6자리 숫자로 만들어진 인증 번호를 발송한다.")
     @Test
-    void sendEmailAuthNumber() {
+    void sendAuthNumberToEmail() {
         //given
         LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
 
         //when
-        EmailAuthResponse response = authService.sendEmailAuthNumber("ssafy@ssafy.com", "123456", currentDateTime);
+        EmailAuthResponse response = authService.sendAuthNumberToEmail("ssafy@ssafy.com", "123456", currentDateTime);
 
         //then
         assertThat(response).isNotNull()
