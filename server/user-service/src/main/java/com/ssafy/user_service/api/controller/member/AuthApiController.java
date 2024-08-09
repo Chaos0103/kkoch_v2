@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+
+import static com.ssafy.user_service.api.controller.member.AuthNumberGenerator.generateAuthNumber;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -22,6 +26,12 @@ public class AuthApiController {
 
     @PostMapping("/email")
     public ApiResponse<EmailAuthResponse> sendAuthNumber(@Valid @RequestBody SendAuthNumberRequest request) {
-        return null;
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        String authNumber = generateAuthNumber(6);
+
+        EmailAuthResponse response = authService.sendAuthNumberToEmail(request.getEmail(), authNumber, currentDateTime);
+
+        return ApiResponse.ok(response);
     }
 }
