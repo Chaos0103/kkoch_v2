@@ -1,18 +1,26 @@
 package com.ssafy.user_service.api.service.member;
 
 import com.ssafy.user_service.api.service.member.response.EmailAuthResponse;
+import com.ssafy.user_service.common.redis.RedisRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class AuthService {
 
+    private final RedisRepository<String, String> redisRepository;
+
     public EmailAuthResponse sendEmailAuthNumber(String email, String authNumber, LocalDateTime currentDateTime) {
-        return null;
+        redisRepository.save(email, authNumber, 5, TimeUnit.MINUTES);
+
+        LocalDateTime expiredDateTime = currentDateTime.plusMinutes(5);
+
+        return EmailAuthResponse.of(expiredDateTime);
     }
 }
