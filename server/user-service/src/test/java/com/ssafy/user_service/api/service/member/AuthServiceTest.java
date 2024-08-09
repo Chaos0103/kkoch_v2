@@ -2,6 +2,8 @@ package com.ssafy.user_service.api.service.member;
 
 import com.ssafy.user_service.IntegrationTestSupport;
 import com.ssafy.user_service.api.service.member.response.EmailAuthResponse;
+import com.ssafy.user_service.api.service.member.response.EmailValidateResponse;
+import com.ssafy.user_service.common.exception.AppException;
 import com.ssafy.user_service.common.redis.RedisRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class AuthServiceTest extends IntegrationTestSupport {
 
@@ -36,4 +39,57 @@ class AuthServiceTest extends IntegrationTestSupport {
         assertThat(authNumber).isEqualTo("123456");
     }
 
+    @DisplayName("인증 번호 유효성 검사시 입력 받은 이메일로 발급된 인증 번호가 존재하지 않으면 예외가 발생한다.")
+    @Test
+    void validateAuthNumberToEmailWithoutAuthNumber() {
+        //given
+        LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
+        String email = "ssafy@ssafy.com";
+        String authNumber = "123456";
+
+        //when //then
+        assertThatThrownBy(() -> authService.validateAuthNumberToEmail(email, authNumber, currentDateTime))
+            .isInstanceOf(AppException.class)
+            .hasMessage("인증 번호가 만료되었습니다.");
+    }
+
+    @DisplayName("인증 번호 유효성 검사시 입력 받은 인증 번호와 서버에 저장된 인증 번호가 일치하지 않으면 예외가 발생한다.")
+    @Test
+    void validateAuthNumberToEmailNotEqualsAuthNumber() {
+        //given
+        LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
+        String email = "ssafy@ssafy.com";
+        String authNumber = "123456";
+
+        redisRepository.save(email, authNumber);
+
+        //when
+        assertThatThrownBy(() -> authService.validateAuthNumberToEmail(email, "654321", currentDateTime))
+            .isInstanceOf(AppException.class)
+            .hasMessage("인증 번호가 일치하지 않습니다.");
+
+        //then
+        String findAuthNumber = redisRepository.findByKey(email);
+        assertThat(findAuthNumber).isEqualTo(authNumber);
+    }
+
+    @DisplayName("이메일로 발송한 인증 번호의 유효성을 검사하고, 이메일 중복 여부를 확인한다.")
+    @Test
+    void validateAuthNumberToEmail() {
+        //given
+        LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
+        String email = "ssafy@ssafy.com";
+        String authNumber = "123456";
+
+        redisRepository.save(email, authNumber);
+
+        //when
+        EmailValidateResponse response = authService.validateAuthNumberToEmail(email, authNumber, currentDateTime);
+
+        //then
+        assertThat(response).isNotNull()
+            .hasFieldOrPropertyWithValue("email", email)
+            .hasFieldOrPropertyWithValue("isAvailable", true)
+            .hasFieldOrPropertyWithValue("validatedDateTime", currentDateTime);
+    }
 }

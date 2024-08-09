@@ -1,6 +1,7 @@
 package com.ssafy.user_service.api.service.member;
 
 import com.ssafy.user_service.api.service.member.response.EmailAuthResponse;
+import com.ssafy.user_service.api.service.member.response.EmailValidateResponse;
 import com.ssafy.user_service.common.redis.RedisRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,5 +27,9 @@ public class AuthService {
         LocalDateTime expiredDateTime = currentDateTime.plusMinutes(5);
 
         return EmailAuthResponse.of(expiredDateTime);
+    }
+
+    public EmailValidateResponse validateAuthNumberToEmail(String email, String authNumber, LocalDateTime currentDateTime) {
+        return null;
     }
 }
