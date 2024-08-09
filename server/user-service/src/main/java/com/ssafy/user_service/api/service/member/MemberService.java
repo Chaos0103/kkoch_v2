@@ -21,25 +21,22 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     public MemberCreateResponse createUserMember(MemberCreateServiceRequest request) {
-        checkEmail(request.getEmail());
-        checkPassword(request.getPassword());
-        checkName(request.getName());
-        checkTel(request.getTel());
         checkBusinessNumber(request.getBusinessNumber());
 
-        Member member = request.toEntity(passwordEncoder.encode(request.getPassword()));
-        Member savedMember = memberRepository.save(member);
-
-        return MemberCreateResponse.of(savedMember);
+        return createMember(request);
     }
 
     public MemberCreateResponse createAdminMember(MemberCreateServiceRequest request) {
+        return createMember(request);
+    }
+
+    private MemberCreateResponse createMember(MemberCreateServiceRequest request) {
         checkEmail(request.getEmail());
         checkPassword(request.getPassword());
         checkName(request.getName());
         checkTel(request.getTel());
 
-        Member member = request.toAdminEntity(passwordEncoder.encode(request.getPassword()));
+        Member member = request.toEntity(generateEncodedPassword(request));
         Member savedMember = memberRepository.save(member);
 
         return MemberCreateResponse.of(savedMember);
@@ -87,5 +84,9 @@ public class MemberService {
         if (isExistBusinessNumber) {
             throw new AppException("이미 가입된 사업자 번호입니다.");
         }
+    }
+
+    private String generateEncodedPassword(MemberCreateServiceRequest request) {
+        return passwordEncoder.encode(request.getPassword());
     }
 }
