@@ -1,0 +1,12 @@
+[[send-auth-number]]
+=== 이메일 인증 번호 발송 API
+
+==== HTTP Request
+
+include::{snippets}/send-auth-number/http-request.adoc[]
+include::{snippets}/send-auth-number/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/send-auth-number/http-response.adoc[]
+include::{snippets}/send-auth-number/response-fields.adoc[]

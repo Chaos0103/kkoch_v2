@@ -11,6 +11,11 @@ endif::[]
 
 include::overview.adoc[]
 
+[[Auth-API]]
+== 인증 API
+
+include::api/auth/send-auth-number.adoc[]
+
 [[Member-API]]
 == 회원 API
 
