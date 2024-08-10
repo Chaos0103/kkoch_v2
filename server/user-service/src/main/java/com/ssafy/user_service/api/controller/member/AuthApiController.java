@@ -2,8 +2,10 @@ package com.ssafy.user_service.api.controller.member;
 
 import com.ssafy.user_service.api.ApiResponse;
 import com.ssafy.user_service.api.controller.member.request.SendAuthNumberRequest;
+import com.ssafy.user_service.api.controller.member.request.ValidateAuthNumberRequest;
 import com.ssafy.user_service.api.service.member.AuthService;
 import com.ssafy.user_service.api.service.member.response.EmailAuthResponse;
+import com.ssafy.user_service.api.service.member.response.EmailValidateResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,5 +35,10 @@ public class AuthApiController {
         EmailAuthResponse response = authService.sendAuthNumberToEmail(request.getEmail(), authNumber, currentDateTime);
 
         return ApiResponse.ok(response);
+    }
+
+    @PostMapping("/email/validate")
+    public ApiResponse<EmailValidateResponse> validateAuthNumber(@Valid @RequestBody ValidateAuthNumberRequest request) {
+        return null;
     }
 }
