@@ -39,6 +39,10 @@ public class AuthApiController {
 
     @PostMapping("/email/validate")
     public ApiResponse<EmailValidateResponse> validateAuthNumber(@Valid @RequestBody ValidateAuthNumberRequest request) {
-        return null;
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        EmailValidateResponse response = authService.validateAuthNumberToEmail(request.getEmail(), request.getAuthNumber(), currentDateTime);
+
+        return ApiResponse.ok(response);
     }
 }
