@@ -5,6 +5,7 @@ import com.ssafy.user_service.api.service.member.response.EmailAuthResponse;
 import com.ssafy.user_service.api.service.member.response.EmailValidateResponse;
 import com.ssafy.user_service.common.exception.AppException;
 import com.ssafy.user_service.common.redis.RedisRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,11 @@ class AuthServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private RedisRepository<String, String> redisRepository;
+
+    @AfterEach
+    void tearDown() {
+        redisRepository.remove("ssafy@ssafy.com");
+    }
 
     @DisplayName("이메일로 5분간 유효한 랜덤으로 생성된 6자리 숫자로 만들어진 인증 번호를 발송한다.")
     @Test

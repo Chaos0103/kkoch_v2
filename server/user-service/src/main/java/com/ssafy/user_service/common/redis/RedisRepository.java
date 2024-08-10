@@ -26,4 +26,8 @@ public class RedisRepository<K, V> {
     public V findByKey(K key) {
         return operations.get(key);
     }
+
+    public void remove(K key) {
+        operations.getAndDelete(key);
+    }
 }
