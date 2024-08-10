@@ -1,0 +1,12 @@
+[[validate-auth-number]]
+=== 이메일 인증 번호 검증 API
+
+==== HTTP Request
+
+include::{snippets}/validate-auth-number/http-request.adoc[]
+include::{snippets}/validate-auth-number/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/validate-auth-number/http-response.adoc[]
+include::{snippets}/validate-auth-number/response-fields.adoc[]

@@ -15,6 +15,7 @@ include::overview.adoc[]
 == 인증 API
 
 include::api/auth/send-auth-number.adoc[]
+include::api/auth/validate-auth-number.adoc[]
 
 [[Member-API]]
 == 회원 API
