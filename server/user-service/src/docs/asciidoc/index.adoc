@@ -24,3 +24,4 @@ include::api/auth/validate-business-number.adoc[]
 
 include::api/member/create-user-member.adoc[]
 include::api/member/create-admin-member.adoc[]
+include::api/member/modify-password.adoc[]
