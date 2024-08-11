@@ -10,14 +10,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.concurrent.TimeUnit;
 
-import static com.ssafy.user_service.api.service.member.MemberValidate.*;
+import static com.ssafy.user_service.api.service.member.MemberValidate.validateEmail;
+import static java.util.concurrent.TimeUnit.MINUTES;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class AuthService {
+
+    private static final int AUTH_NUMBER_TIMEOUT = 5;
 
     private final MemberRepository memberRepository;
     private final RedisRepository<String, String> redisRepository;
@@ -25,27 +27,46 @@ public class AuthService {
     public EmailAuthResponse sendAuthNumberToEmail(String email, String authNumber, LocalDateTime currentDateTime) {
         validateEmail(email);
 
-        redisRepository.save(email, authNumber, 5, TimeUnit.MINUTES);
-
-        LocalDateTime expiredDateTime = currentDateTime.plusMinutes(5);
+        LocalDateTime expiredDateTime = saveAuthNumber(email, authNumber, currentDateTime);
 
         return EmailAuthResponse.of(expiredDateTime);
     }
 
     public EmailValidateResponse validateAuthNumberToEmail(String email, String authNumber, LocalDateTime currentDateTime) {
-        String findAuthNumber = redisRepository.findByKey(email);
-
-        if (findAuthNumber == null) {
-            throw new AppException("인증 번호가 만료되었습니다.");
-        }
-
-        if (!findAuthNumber.equals(authNumber)) {
-            throw new AppException("인증 번호가 일치하지 않습니다.");
-        }
-
-        redisRepository.remove(email);
-        boolean isAvailable = memberRepository.existsByEmail(email);
+        boolean isAvailable = validateAuthNumber(email, authNumber);
 
         return EmailValidateResponse.of(email, !isAvailable, currentDateTime);
+    }
+
+    private LocalDateTime saveAuthNumber(String email, String authNumber, LocalDateTime currentDateTime) {
+        redisRepository.save(email, authNumber, AUTH_NUMBER_TIMEOUT, MINUTES);
+
+        return currentDateTime.plusMinutes(AUTH_NUMBER_TIMEOUT);
+    }
+
+    private boolean validateAuthNumber(String email, String authNumber) {
+        String issuedAuthNumber = redisRepository.findByKey(email);
+
+        checkExpiredOn(issuedAuthNumber);
+        checkEqualTo(issuedAuthNumber, authNumber);
+
+        redisRepository.remove(email);
+        return memberRepository.existsByEmail(email);
+    }
+
+    private void checkExpiredOn(String authNumber) {
+        if (authNumber == null) {
+            throw new AppException("인증 번호가 만료되었습니다.");
+        }
+    }
+
+    private void checkEqualTo(String issuedAuthNumber, String requestedAuthNumber) {
+        if (isNotEquals(issuedAuthNumber, requestedAuthNumber)) {
+            throw new AppException("인증 번호가 일치하지 않습니다.");
+        }
+    }
+
+    private static boolean isNotEquals(String str1, String str2) {
+        return !str1.equals(str2);
     }
 }
