@@ -52,6 +52,10 @@ public class AuthApiController {
 
     @PostMapping("/tel/validate")
     public ApiResponse<TelValidateResponse> validateTel(@Valid @RequestBody ValidateTelRequest request) {
-        return null;
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        TelValidateResponse response = authService.validateTel(request.getTel(), currentDateTime);
+
+        return ApiResponse.ok(response);
     }
 }
