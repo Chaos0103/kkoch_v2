@@ -63,6 +63,10 @@ public class AuthApiController {
 
     @PostMapping("/business-number/validate")
     public ApiResponse<BusinessNumberValidateResponse> validateBusinessNumber(@Valid @RequestBody ValidateBusinessNumberRequest request) {
-        return null;
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        BusinessNumberValidateResponse response = authService.validateBusinessNumber(request.getBusinessNumber(), currentDateTime);
+
+        return ApiResponse.ok(response);
     }
 }
