@@ -6,6 +6,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 class MemberRepositoryTest extends IntegrationTestSupport {
@@ -17,7 +19,7 @@ class MemberRepositoryTest extends IntegrationTestSupport {
     @Test
     void existsByEmail() {
         //given
-        Member member = generateMember();
+        Member member = createMember();
 
         //when
         boolean isExistEmail = memberRepository.existsByEmail("ssafy@ssafy.com");
@@ -30,7 +32,7 @@ class MemberRepositoryTest extends IntegrationTestSupport {
     @Test
     void existsByTel() {
         //given
-        Member member = generateMember();
+        Member member = createMember();
 
         //when
         boolean isExistTel = memberRepository.existsByTel("01012341234");
@@ -43,7 +45,7 @@ class MemberRepositoryTest extends IntegrationTestSupport {
     @Test
     void existsByUserAdditionalInfoBusinessNumber() {
         //given
-        Member member = generateMember();
+        Member member = createMember();
 
         //when
         boolean isExistBusinessNumber = memberRepository.existsByUserAdditionalInfoBusinessNumber("1231212345");
@@ -52,7 +54,22 @@ class MemberRepositoryTest extends IntegrationTestSupport {
         assertThat(isExistBusinessNumber).isTrue();
     }
 
-    private Member generateMember() {
+    @DisplayName("회원 고유키를 입력 받아 회원을 조회한다.")
+    @Test
+    void findBySpecificInfoMemberKey() {
+        //given
+        Member member = createMember();
+
+        //when
+        Optional<Member> findMember = memberRepository.findBySpecificInfoMemberKey(member.getMemberKey());
+
+        //then
+        assertThat(findMember).isPresent()
+            .get()
+            .hasFieldOrPropertyWithValue("id", member.getId());
+    }
+
+    private Member createMember() {
         Member member = Member.builder()
             .isDeleted(false)
             .specificInfo(MemberSpecificInfo.builder()

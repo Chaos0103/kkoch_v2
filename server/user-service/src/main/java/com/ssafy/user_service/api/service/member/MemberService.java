@@ -12,6 +12,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
+
 import static com.ssafy.user_service.api.service.member.MemberValidate.*;
 
 @Service
@@ -32,8 +35,22 @@ public class MemberService {
         return createMember(request);
     }
 
-    public MemberPasswordModifyResponse modifyPassword(String memberKey, MemberPasswordModifyServiceRequest request) {
-        return null;
+    public MemberPasswordModifyResponse modifyPassword(String memberKey, LocalDateTime currentDateTime, MemberPasswordModifyServiceRequest request) {
+        Member member = memberRepository.findBySpecificInfoMemberKey(memberKey)
+            .orElseThrow(() -> new NoSuchElementException("등록되지 않은 회원입니다."));
+
+        String encodedPassword = member.getPwd();
+        boolean matches = passwordEncoder.matches(request.getCurrentPassword(), encodedPassword);
+        if (!matches) {
+            throw new AppException("비밀번호가 일치하지 않습니다.");
+        }
+
+        checkPassword(request.getNewPassword());
+
+        String newEncodedPassword = passwordEncoder.encode(request.getNewPassword());
+        member.modifyPassword(newEncodedPassword);
+
+        return MemberPasswordModifyResponse.of(currentDateTime);
     }
 
     private MemberCreateResponse createMember(MemberCreateServiceRequest request) {

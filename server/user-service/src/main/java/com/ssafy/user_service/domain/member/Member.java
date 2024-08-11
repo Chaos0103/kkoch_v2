@@ -64,4 +64,8 @@ public class Member extends TimeBaseEntity {
     public String getMemberKey() {
         return specificInfo.getMemberKey();
     }
+
+    public void modifyPassword(String pwd) {
+        this.pwd = pwd;
+    }
 }

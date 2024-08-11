@@ -12,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -189,6 +190,8 @@ class MemberServiceTest extends IntegrationTestSupport {
     @Test
     void modifyPasswordNotMatchCurrentPassword() {
         //given
+        LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
+
         Member member = createMember();
         MemberPasswordModifyServiceRequest request = MemberPasswordModifyServiceRequest.builder()
             .currentPassword("ssafy1111!")
@@ -196,7 +199,7 @@ class MemberServiceTest extends IntegrationTestSupport {
             .build();
 
         //when
-        assertThatThrownBy(() -> memberService.modifyPassword(member.getMemberKey(), request))
+        assertThatThrownBy(() -> memberService.modifyPassword(member.getMemberKey(), currentDateTime, request))
             .isInstanceOf(AppException.class)
             .hasMessage("비밀번호가 일치하지 않습니다.");
 
@@ -204,7 +207,7 @@ class MemberServiceTest extends IntegrationTestSupport {
         Optional<Member> findMember = memberRepository.findById(member.getId());
         assertThat(findMember).isPresent();
 
-        boolean matches = passwordEncoder.matches(request.getCurrentPassword(), findMember.get().getPwd());
+        boolean matches = passwordEncoder.matches("ssafy1234!", findMember.get().getPwd());
         assertThat(matches).isTrue();
     }
 
@@ -212,6 +215,8 @@ class MemberServiceTest extends IntegrationTestSupport {
     @Test
     void modifyPassword() {
         //given
+        LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
+
         Member member = createMember();
         MemberPasswordModifyServiceRequest request = MemberPasswordModifyServiceRequest.builder()
             .currentPassword("ssafy1234!")
@@ -219,7 +224,7 @@ class MemberServiceTest extends IntegrationTestSupport {
             .build();
 
         //when
-        MemberPasswordModifyResponse response = memberService.modifyPassword(member.getMemberKey(), request);
+        MemberPasswordModifyResponse response = memberService.modifyPassword(member.getMemberKey(), currentDateTime, request);
 
         //then
         Optional<Member> findMember = memberRepository.findById(member.getId());
@@ -229,7 +234,7 @@ class MemberServiceTest extends IntegrationTestSupport {
         assertThat(matches).isTrue();
 
         assertThat(response).isNotNull()
-            .hasFieldOrPropertyWithValue("passwordModifiedDateTime", findMember.get().getLastModifiedDateTime());
+            .hasFieldOrPropertyWithValue("passwordModifiedDateTime", currentDateTime);
     }
 
     private Member createMember() {

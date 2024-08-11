@@ -17,7 +17,7 @@ public class MemberPasswordModifyResponse {
         this.passwordModifiedDateTime = passwordModifiedDateTime;
     }
 
-    public static MemberPasswordModifyResponse of(LocalDateTime passwordModifiedDateTime) {
-        return new MemberPasswordModifyResponse(passwordModifiedDateTime);
+    public static MemberPasswordModifyResponse of(LocalDateTime currentDateTime) {
+        return new MemberPasswordModifyResponse(currentDateTime);
     }
 }
