@@ -3,8 +3,10 @@ package com.ssafy.user_service.docs.member;
 import com.ssafy.user_service.api.controller.member.AuthApiController;
 import com.ssafy.user_service.api.controller.member.request.SendAuthNumberRequest;
 import com.ssafy.user_service.api.controller.member.request.ValidateAuthNumberRequest;
+import com.ssafy.user_service.api.controller.member.request.ValidateBusinessNumberRequest;
 import com.ssafy.user_service.api.controller.member.request.ValidateTelRequest;
 import com.ssafy.user_service.api.service.member.AuthService;
+import com.ssafy.user_service.api.service.member.response.BusinessNumberValidateResponse;
 import com.ssafy.user_service.api.service.member.response.EmailAuthResponse;
 import com.ssafy.user_service.api.service.member.response.EmailValidateResponse;
 import com.ssafy.user_service.api.service.member.response.TelValidateResponse;
@@ -172,6 +174,55 @@ public class AuthApiControllerDocsTest extends RestDocsSupport {
                         .description("응답 데이터"),
                     fieldWithPath("data.tel").type(JsonFieldType.STRING)
                         .description("검증한 연락처"),
+                    fieldWithPath("data.isAvailable").type(JsonFieldType.BOOLEAN)
+                        .description("연락처 사용 가능 여부"),
+                    fieldWithPath("data.validatedDateTime").type(JsonFieldType.ARRAY)
+                        .description("검증 일시")
+                )
+            ));
+    }
+
+    @DisplayName("사업자 번호 검증 API")
+    @Test
+    void validateBusinessNumber() throws Exception {
+        ValidateBusinessNumberRequest request = ValidateBusinessNumberRequest.builder()
+            .businessNumber("1231212345")
+            .build();
+
+        BusinessNumberValidateResponse response = BusinessNumberValidateResponse.builder()
+            .businessNumber("1231212345")
+            .isAvailable(true)
+            .validatedDateTime(LocalDateTime.now())
+            .build();
+
+        given(authService.validateBusinessNumber(anyString(), any()))
+            .willReturn(response);
+
+        mockMvc.perform(
+                post("/auth/business-number/validate")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andDo(document("validate-business-number",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestFields(
+                    fieldWithPath("businessNumber").type(JsonFieldType.STRING)
+                        .description("사업자 번호")
+                ),
+                responseFields(
+                    fieldWithPath("code").type(JsonFieldType.NUMBER)
+                        .description("코드"),
+                    fieldWithPath("status").type(JsonFieldType.STRING)
+                        .description("상태"),
+                    fieldWithPath("message").type(JsonFieldType.STRING)
+                        .description("메시지"),
+                    fieldWithPath("data").type(JsonFieldType.OBJECT)
+                        .description("응답 데이터"),
+                    fieldWithPath("data.businessNumber").type(JsonFieldType.STRING)
+                        .description("사업자 번호"),
                     fieldWithPath("data.isAvailable").type(JsonFieldType.BOOLEAN)
                         .description("연락처 사용 가능 여부"),
                     fieldWithPath("data.validatedDateTime").type(JsonFieldType.ARRAY)
