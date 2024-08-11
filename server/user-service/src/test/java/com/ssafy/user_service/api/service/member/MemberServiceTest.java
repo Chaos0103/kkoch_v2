@@ -2,7 +2,9 @@ package com.ssafy.user_service.api.service.member;
 
 import com.ssafy.user_service.IntegrationTestSupport;
 import com.ssafy.user_service.api.service.member.request.MemberCreateServiceRequest;
+import com.ssafy.user_service.api.service.member.request.MemberPasswordModifyServiceRequest;
 import com.ssafy.user_service.api.service.member.response.MemberCreateResponse;
+import com.ssafy.user_service.api.service.member.response.MemberPasswordModifyResponse;
 import com.ssafy.user_service.common.exception.AppException;
 import com.ssafy.user_service.domain.member.*;
 import com.ssafy.user_service.domain.member.repository.MemberRepository;
@@ -11,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -27,7 +30,7 @@ class MemberServiceTest extends IntegrationTestSupport {
     @Test
     void createUserMemberDuplicatedEmail() {
         //given
-        Member member = generateMember();
+        Member member = createMember();
 
         MemberCreateServiceRequest request = MemberCreateServiceRequest.builder()
             .email("ssafy@ssafy.com")
@@ -51,7 +54,7 @@ class MemberServiceTest extends IntegrationTestSupport {
     @Test
     void createUserMemberDuplicatedTel() {
         //given
-        Member member = generateMember();
+        Member member = createMember();
 
         MemberCreateServiceRequest request = MemberCreateServiceRequest.builder()
             .email("ssafy@gmail.com")
@@ -75,7 +78,7 @@ class MemberServiceTest extends IntegrationTestSupport {
     @Test
     void createUserMemberDuplicatedBusinessNumber() {
         //given
-        Member member = generateMember();
+        Member member = createMember();
 
         MemberCreateServiceRequest request = MemberCreateServiceRequest.builder()
             .email("ssafy@gmail.com")
@@ -120,7 +123,7 @@ class MemberServiceTest extends IntegrationTestSupport {
     @Test
     void createAdminMemberDuplicatedEmail() {
         //given
-        Member member = generateMember();
+        Member member = createMember();
 
         MemberCreateServiceRequest request = MemberCreateServiceRequest.builder()
             .email("ssafy@ssafy.com")
@@ -143,7 +146,7 @@ class MemberServiceTest extends IntegrationTestSupport {
     @Test
     void createAdminMemberDuplicatedTel() {
         //given
-        Member member = generateMember();
+        Member member = createMember();
 
         MemberCreateServiceRequest request = MemberCreateServiceRequest.builder()
             .email("ssafy@gmail.com")
@@ -182,7 +185,54 @@ class MemberServiceTest extends IntegrationTestSupport {
             .hasFieldOrPropertyWithValue("name", "김싸피");
     }
 
-    private Member generateMember() {
+    @DisplayName("비밀번호 수정시 현재 비밀번호가 일치하지 않으면 예외가 발생한다.")
+    @Test
+    void modifyPasswordNotMatchCurrentPassword() {
+        //given
+        Member member = createMember();
+        MemberPasswordModifyServiceRequest request = MemberPasswordModifyServiceRequest.builder()
+            .currentPassword("ssafy1111!")
+            .newPassword("ssafy5678@")
+            .build();
+
+        //when
+        assertThatThrownBy(() -> memberService.modifyPassword(member.getMemberKey(), request))
+            .isInstanceOf(AppException.class)
+            .hasMessage("비밀번호가 일치하지 않습니다.");
+
+        //then
+        Optional<Member> findMember = memberRepository.findById(member.getId());
+        assertThat(findMember).isPresent();
+
+        boolean matches = passwordEncoder.matches(request.getCurrentPassword(), findMember.get().getPwd());
+        assertThat(matches).isTrue();
+    }
+
+    @DisplayName("비밀번호 정보를 입력 받아 비밀번호 수정을 한다.")
+    @Test
+    void modifyPassword() {
+        //given
+        Member member = createMember();
+        MemberPasswordModifyServiceRequest request = MemberPasswordModifyServiceRequest.builder()
+            .currentPassword("ssafy1234!")
+            .newPassword("ssafy5678@")
+            .build();
+
+        //when
+        MemberPasswordModifyResponse response = memberService.modifyPassword(member.getMemberKey(), request);
+
+        //then
+        Optional<Member> findMember = memberRepository.findById(member.getId());
+        assertThat(findMember).isPresent();
+
+        boolean matches = passwordEncoder.matches(request.getNewPassword(), findMember.get().getPwd());
+        assertThat(matches).isTrue();
+
+        assertThat(response).isNotNull()
+            .hasFieldOrPropertyWithValue("passwordModifiedDateTime", findMember.get().getLastModifiedDateTime());
+    }
+
+    private Member createMember() {
         Member member = Member.builder()
             .isDeleted(false)
             .specificInfo(MemberSpecificInfo.builder()

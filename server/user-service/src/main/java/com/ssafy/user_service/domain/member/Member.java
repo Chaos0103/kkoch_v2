@@ -60,4 +60,8 @@ public class Member extends TimeBaseEntity {
         MemberSpecificInfo adminSpecificInfo = MemberSpecificInfo.generateAdmin();
         return of(false, adminSpecificInfo, email, pwd, name, tel, null);
     }
+
+    public String getMemberKey() {
+        return specificInfo.getMemberKey();
+    }
 }

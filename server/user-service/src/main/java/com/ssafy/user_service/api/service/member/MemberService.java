@@ -1,7 +1,9 @@
 package com.ssafy.user_service.api.service.member;
 
 import com.ssafy.user_service.api.service.member.request.MemberCreateServiceRequest;
+import com.ssafy.user_service.api.service.member.request.MemberPasswordModifyServiceRequest;
 import com.ssafy.user_service.api.service.member.response.MemberCreateResponse;
+import com.ssafy.user_service.api.service.member.response.MemberPasswordModifyResponse;
 import com.ssafy.user_service.common.exception.AppException;
 import com.ssafy.user_service.domain.member.Member;
 import com.ssafy.user_service.domain.member.repository.MemberRepository;
@@ -28,6 +30,10 @@ public class MemberService {
 
     public MemberCreateResponse createAdminMember(MemberCreateServiceRequest request) {
         return createMember(request);
+    }
+
+    public MemberPasswordModifyResponse modifyPassword(String memberKey, MemberPasswordModifyServiceRequest request) {
+        return null;
     }
 
     private MemberCreateResponse createMember(MemberCreateServiceRequest request) {
