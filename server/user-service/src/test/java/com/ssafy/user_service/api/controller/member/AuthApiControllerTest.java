@@ -3,6 +3,7 @@ package com.ssafy.user_service.api.controller.member;
 import com.ssafy.user_service.ControllerTestSupport;
 import com.ssafy.user_service.api.controller.member.request.SendAuthNumberRequest;
 import com.ssafy.user_service.api.controller.member.request.ValidateAuthNumberRequest;
+import com.ssafy.user_service.api.controller.member.request.ValidateTelRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -99,6 +100,41 @@ class AuthApiControllerTest extends ControllerTestSupport {
 
         mockMvc.perform(
                 post("/auth/email/validate")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf())
+            )
+            .andExpect(status().isOk());
+    }
+
+    @DisplayName("연락처 검증시 연락처는 필수값이다.")
+    @Test
+    void validateTelWithoutTel() throws Exception {
+        ValidateTelRequest request = ValidateTelRequest.builder()
+            .build();
+
+        mockMvc.perform(
+                post("/auth/tel/validate")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf())
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.code").value("400"))
+            .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
+            .andExpect(jsonPath("$.message").value("연락처를 입력해주세요."))
+            .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @DisplayName("연락처를 검증한다.")
+    @Test
+    void validateTel() throws Exception {
+        ValidateTelRequest request = ValidateTelRequest.builder()
+            .tel("01012341234")
+            .build();
+
+        mockMvc.perform(
+                post("/auth/tel/validate")
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
                     .with(csrf())

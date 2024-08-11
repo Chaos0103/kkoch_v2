@@ -3,9 +3,11 @@ package com.ssafy.user_service.api.controller.member;
 import com.ssafy.user_service.api.ApiResponse;
 import com.ssafy.user_service.api.controller.member.request.SendAuthNumberRequest;
 import com.ssafy.user_service.api.controller.member.request.ValidateAuthNumberRequest;
+import com.ssafy.user_service.api.controller.member.request.ValidateTelRequest;
 import com.ssafy.user_service.api.service.member.AuthService;
 import com.ssafy.user_service.api.service.member.response.EmailAuthResponse;
 import com.ssafy.user_service.api.service.member.response.EmailValidateResponse;
+import com.ssafy.user_service.api.service.member.response.TelValidateResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,5 +48,10 @@ public class AuthApiController {
         EmailValidateResponse response = authService.validateAuthNumberToEmail(request.getEmail(), request.getAuthNumber(), currentDateTime);
 
         return ApiResponse.ok(response);
+    }
+
+    @PostMapping("/tel/validate")
+    public ApiResponse<TelValidateResponse> validateTel(@Valid @RequestBody ValidateTelRequest request) {
+        return null;
     }
 }
