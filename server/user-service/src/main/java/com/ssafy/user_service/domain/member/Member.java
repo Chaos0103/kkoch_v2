@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Getter
@@ -61,11 +62,19 @@ public class Member extends TimeBaseEntity {
         return of(false, adminSpecificInfo, email, pwd, name, tel, null);
     }
 
-    public String getMemberKey() {
-        return specificInfo.getMemberKey();
-    }
-
     public void modifyPassword(String pwd) {
         this.pwd = pwd;
+    }
+
+    public boolean isMatchesPwd(PasswordEncoder encoder, String pwd) {
+        return encoder.matches(pwd, this.pwd);
+    }
+
+    public boolean isNotMatchesPwd(PasswordEncoder encoder, String pwd) {
+        return !isMatchesPwd(encoder, pwd);
+    }
+
+    public String getMemberKey() {
+        return specificInfo.getMemberKey();
     }
 }

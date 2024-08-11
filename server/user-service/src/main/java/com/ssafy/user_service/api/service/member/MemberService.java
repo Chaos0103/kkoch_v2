@@ -36,21 +36,26 @@ public class MemberService {
     }
 
     public MemberPasswordModifyResponse modifyPassword(String memberKey, LocalDateTime currentDateTime, MemberPasswordModifyServiceRequest request) {
-        Member member = memberRepository.findBySpecificInfoMemberKey(memberKey)
-            .orElseThrow(() -> new NoSuchElementException("등록되지 않은 회원입니다."));
+        Member member = findMemberBy(memberKey);
 
-        String encodedPassword = member.getPwd();
-        boolean matches = passwordEncoder.matches(request.getCurrentPassword(), encodedPassword);
-        if (!matches) {
-            throw new AppException("비밀번호가 일치하지 않습니다.");
-        }
+        checkMatchesPassword(member, request.getCurrentPassword());
 
         checkPassword(request.getNewPassword());
 
-        String newEncodedPassword = passwordEncoder.encode(request.getNewPassword());
-        member.modifyPassword(newEncodedPassword);
+        modifyPassword(member, request.getNewPassword());
 
         return MemberPasswordModifyResponse.of(currentDateTime);
+    }
+
+    private void modifyPassword(Member member, String newPassword) {
+        String encodedPassword = generateEncodedPassword(newPassword);
+        member.modifyPassword(encodedPassword);
+    }
+
+    private void checkMatchesPassword(Member member, String currentPassword) {
+        if (member.isNotMatchesPwd(passwordEncoder, currentPassword)) {
+            throw new AppException("비밀번호가 일치하지 않습니다.");
+        }
     }
 
     private MemberCreateResponse createMember(MemberCreateServiceRequest request) {
@@ -59,7 +64,7 @@ public class MemberService {
         checkName(request.getName());
         checkTel(request.getTel());
 
-        Member member = request.toEntity(generateEncodedPassword(request));
+        Member member = request.toEntity(generateEncodedPassword(request.getPassword()));
         Member savedMember = memberRepository.save(member);
 
         return MemberCreateResponse.of(savedMember);
@@ -109,7 +114,12 @@ public class MemberService {
         }
     }
 
-    private String generateEncodedPassword(MemberCreateServiceRequest request) {
-        return passwordEncoder.encode(request.getPassword());
+    private String generateEncodedPassword(String password) {
+        return passwordEncoder.encode(password);
+    }
+
+    private Member findMemberBy(String memberKey) {
+        return memberRepository.findBySpecificInfoMemberKey(memberKey)
+            .orElseThrow(() -> new NoSuchElementException("등록되지 않은 회원입니다."));
     }
 }
