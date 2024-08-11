@@ -7,11 +7,14 @@ import com.ssafy.user_service.api.controller.member.request.MemberPasswordModify
 import com.ssafy.user_service.api.service.member.MemberService;
 import com.ssafy.user_service.api.service.member.response.MemberCreateResponse;
 import com.ssafy.user_service.api.service.member.response.MemberPasswordModifyResponse;
+import com.ssafy.user_service.common.security.SecurityUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 
 @Slf4j
 @RestController
@@ -37,8 +40,14 @@ public class MemberApiController {
         return ApiResponse.ok(response);
     }
 
-    @PatchMapping
+    @PatchMapping("/password")
     public ApiResponse<MemberPasswordModifyResponse> modifyPassword(@Valid @RequestBody MemberPasswordModifyRequest request) {
-        return null;
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        String memberKey = SecurityUtils.findMemberKeyByToken();
+
+        MemberPasswordModifyResponse response = memberService.modifyPassword(memberKey, currentDateTime, request.toServiceRequest());
+
+        return ApiResponse.ok(response);
     }
 }
