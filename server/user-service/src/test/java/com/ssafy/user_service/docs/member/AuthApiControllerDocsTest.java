@@ -3,9 +3,11 @@ package com.ssafy.user_service.docs.member;
 import com.ssafy.user_service.api.controller.member.AuthApiController;
 import com.ssafy.user_service.api.controller.member.request.SendAuthNumberRequest;
 import com.ssafy.user_service.api.controller.member.request.ValidateAuthNumberRequest;
+import com.ssafy.user_service.api.controller.member.request.ValidateTelRequest;
 import com.ssafy.user_service.api.service.member.AuthService;
 import com.ssafy.user_service.api.service.member.response.EmailAuthResponse;
 import com.ssafy.user_service.api.service.member.response.EmailValidateResponse;
+import com.ssafy.user_service.api.service.member.response.TelValidateResponse;
 import com.ssafy.user_service.docs.RestDocsSupport;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -124,7 +126,56 @@ public class AuthApiControllerDocsTest extends RestDocsSupport {
                     fieldWithPath("data.isAvailable").type(JsonFieldType.BOOLEAN)
                         .description("이메일 사용 가능 여부"),
                     fieldWithPath("data.validatedDateTime").type(JsonFieldType.ARRAY)
-                        .description("검증 만료일시")
+                        .description("검증 일시")
+                )
+            ));
+    }
+
+    @DisplayName("연락처 검증 API")
+    @Test
+    void validateTel() throws Exception {
+        ValidateTelRequest request = ValidateTelRequest.builder()
+            .tel("01012341234")
+            .build();
+
+        TelValidateResponse response = TelValidateResponse.builder()
+            .tel("01012341234")
+            .isAvailable(true)
+            .validatedDateTime(LocalDateTime.now())
+            .build();
+
+        given(authService.validateTel(anyString(), any()))
+            .willReturn(response);
+
+        mockMvc.perform(
+                post("/auth/tel/validate")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andDo(document("validate-tel",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestFields(
+                    fieldWithPath("tel").type(JsonFieldType.STRING)
+                        .description("연락처")
+                ),
+                responseFields(
+                    fieldWithPath("code").type(JsonFieldType.NUMBER)
+                        .description("코드"),
+                    fieldWithPath("status").type(JsonFieldType.STRING)
+                        .description("상태"),
+                    fieldWithPath("message").type(JsonFieldType.STRING)
+                        .description("메시지"),
+                    fieldWithPath("data").type(JsonFieldType.OBJECT)
+                        .description("응답 데이터"),
+                    fieldWithPath("data.tel").type(JsonFieldType.STRING)
+                        .description("검증한 연락처"),
+                    fieldWithPath("data.isAvailable").type(JsonFieldType.BOOLEAN)
+                        .description("연락처 사용 가능 여부"),
+                    fieldWithPath("data.validatedDateTime").type(JsonFieldType.ARRAY)
+                        .description("검증 일시")
                 )
             ));
     }
