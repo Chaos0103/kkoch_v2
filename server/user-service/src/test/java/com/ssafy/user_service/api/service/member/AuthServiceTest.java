@@ -1,6 +1,7 @@
 package com.ssafy.user_service.api.service.member;
 
 import com.ssafy.user_service.IntegrationTestSupport;
+import com.ssafy.user_service.api.service.member.response.BusinessNumberValidateResponse;
 import com.ssafy.user_service.api.service.member.response.EmailAuthResponse;
 import com.ssafy.user_service.api.service.member.response.EmailValidateResponse;
 import com.ssafy.user_service.api.service.member.response.TelValidateResponse;
@@ -113,6 +114,23 @@ class AuthServiceTest extends IntegrationTestSupport {
         //then
         assertThat(response).isNotNull()
             .hasFieldOrPropertyWithValue("tel", tel)
+            .hasFieldOrPropertyWithValue("isAvailable", true)
+            .hasFieldOrPropertyWithValue("validatedDateTime", currentDateTime);
+    }
+
+    @DisplayName("사업자 번호 사용 가능 여부를 확인한다.")
+    @Test
+    void validateBusinessNumber() {
+        //given
+        LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
+        String businessNumber = "1231212345";
+
+        //when
+        BusinessNumberValidateResponse response = authService.validateBusinessNumber(businessNumber, currentDateTime);
+
+        //then
+        assertThat(response).isNotNull()
+            .hasFieldOrPropertyWithValue("businessNumber", businessNumber)
             .hasFieldOrPropertyWithValue("isAvailable", true)
             .hasFieldOrPropertyWithValue("validatedDateTime", currentDateTime);
     }

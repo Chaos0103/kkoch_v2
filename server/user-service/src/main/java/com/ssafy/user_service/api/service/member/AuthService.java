@@ -1,5 +1,6 @@
 package com.ssafy.user_service.api.service.member;
 
+import com.ssafy.user_service.api.service.member.response.BusinessNumberValidateResponse;
 import com.ssafy.user_service.api.service.member.response.EmailAuthResponse;
 import com.ssafy.user_service.api.service.member.response.EmailValidateResponse;
 import com.ssafy.user_service.api.service.member.response.TelValidateResponse;
@@ -45,6 +46,10 @@ public class AuthService {
         boolean isAvailable = memberRepository.existsByTel(tel);
 
         return TelValidateResponse.of(tel, !isAvailable, currentDateTime);
+    }
+
+    public BusinessNumberValidateResponse validateBusinessNumber(String businessNumber, LocalDateTime currentDateTime) {
+        return null;
     }
 
     private LocalDateTime saveAuthNumber(String email, String authNumber, LocalDateTime currentDateTime) {
