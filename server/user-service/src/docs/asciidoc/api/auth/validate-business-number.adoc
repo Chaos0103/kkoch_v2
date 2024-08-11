@@ -1,0 +1,12 @@
+[[validate-business-number]]
+=== 사업자 번호 검증 API
+
+==== HTTP Request
+
+include::{snippets}/validate-business-number/http-request.adoc[]
+include::{snippets}/validate-business-number/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/validate-business-number/http-response.adoc[]
+include::{snippets}/validate-business-number/response-fields.adoc[]
