@@ -3,6 +3,7 @@ package com.ssafy.user_service.api.service.member;
 import com.ssafy.user_service.IntegrationTestSupport;
 import com.ssafy.user_service.api.service.member.response.EmailAuthResponse;
 import com.ssafy.user_service.api.service.member.response.EmailValidateResponse;
+import com.ssafy.user_service.api.service.member.response.TelValidateResponse;
 import com.ssafy.user_service.common.exception.AppException;
 import com.ssafy.user_service.common.redis.RedisRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -95,6 +96,23 @@ class AuthServiceTest extends IntegrationTestSupport {
         //then
         assertThat(response).isNotNull()
             .hasFieldOrPropertyWithValue("email", email)
+            .hasFieldOrPropertyWithValue("isAvailable", true)
+            .hasFieldOrPropertyWithValue("validatedDateTime", currentDateTime);
+    }
+
+    @DisplayName("연락처 사용 가능 여부를 확인한다.")
+    @Test
+    void validateTel() {
+        //given
+        LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
+        String tel = "01012341234";
+
+        //when
+        TelValidateResponse response = authService.validateTel(tel, currentDateTime);
+
+        //then
+        assertThat(response).isNotNull()
+            .hasFieldOrPropertyWithValue("tel", tel)
             .hasFieldOrPropertyWithValue("isAvailable", true)
             .hasFieldOrPropertyWithValue("validatedDateTime", currentDateTime);
     }

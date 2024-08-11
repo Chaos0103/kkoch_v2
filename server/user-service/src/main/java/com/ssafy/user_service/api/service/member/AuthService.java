@@ -2,6 +2,7 @@ package com.ssafy.user_service.api.service.member;
 
 import com.ssafy.user_service.api.service.member.response.EmailAuthResponse;
 import com.ssafy.user_service.api.service.member.response.EmailValidateResponse;
+import com.ssafy.user_service.api.service.member.response.TelValidateResponse;
 import com.ssafy.user_service.common.exception.AppException;
 import com.ssafy.user_service.common.redis.RedisRepository;
 import com.ssafy.user_service.domain.member.repository.MemberRepository;
@@ -36,6 +37,10 @@ public class AuthService {
         boolean isAvailable = validateAuthNumber(email, authNumber);
 
         return EmailValidateResponse.of(email, !isAvailable, currentDateTime);
+    }
+
+    public TelValidateResponse validateTel(String tel, LocalDateTime currentDateTime) {
+        return null;
     }
 
     private LocalDateTime saveAuthNumber(String email, String authNumber, LocalDateTime currentDateTime) {
