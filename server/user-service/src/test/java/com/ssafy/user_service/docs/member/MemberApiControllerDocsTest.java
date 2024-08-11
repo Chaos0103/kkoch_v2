@@ -3,8 +3,10 @@ package com.ssafy.user_service.docs.member;
 import com.ssafy.user_service.api.controller.member.MemberApiController;
 import com.ssafy.user_service.api.controller.member.request.AdminMemberCreateRequest;
 import com.ssafy.user_service.api.controller.member.request.MemberCreateRequest;
+import com.ssafy.user_service.api.controller.member.request.MemberPasswordModifyRequest;
 import com.ssafy.user_service.api.service.member.MemberService;
 import com.ssafy.user_service.api.service.member.response.MemberCreateResponse;
+import com.ssafy.user_service.api.service.member.response.MemberPasswordModifyResponse;
 import com.ssafy.user_service.docs.RestDocsSupport;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,11 +16,13 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import java.time.LocalDateTime;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -147,6 +151,52 @@ public class MemberApiControllerDocsTest extends RestDocsSupport {
                         .description("회원 가입된 이름"),
                     fieldWithPath("data.createdDateTime").type(JsonFieldType.ARRAY)
                         .description("회원 가입 일시")
+                )
+            ));
+    }
+
+    @DisplayName("비밀번호 수정 API")
+    @Test
+    void modifyPassword() throws Exception {
+        MemberPasswordModifyRequest request = MemberPasswordModifyRequest.builder()
+            .currentPassword("ssafy1234!")
+            .newPassword("ssafy5678@")
+            .build();
+
+        MemberPasswordModifyResponse response = MemberPasswordModifyResponse.builder()
+            .passwordModifiedDateTime(LocalDateTime.now())
+            .build();
+
+        given(memberService.modifyPassword(anyString(), any(), any()))
+            .willReturn(response);
+
+        mockMvc.perform(
+                patch("/members/password")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andDo(document("modify-password",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestFields(
+                    fieldWithPath("currentPassword").type(JsonFieldType.STRING)
+                        .description("현재 비밀번호"),
+                    fieldWithPath("newPassword").type(JsonFieldType.STRING)
+                        .description("신규 비밀번호")
+                ),
+                responseFields(
+                    fieldWithPath("code").type(JsonFieldType.NUMBER)
+                        .description("코드"),
+                    fieldWithPath("status").type(JsonFieldType.STRING)
+                        .description("상태"),
+                    fieldWithPath("message").type(JsonFieldType.STRING)
+                        .description("메시지"),
+                    fieldWithPath("data").type(JsonFieldType.OBJECT)
+                        .description("응답 데이터"),
+                    fieldWithPath("data.passwordModifiedDateTime").type(JsonFieldType.ARRAY)
+                        .description("비밀번호 변경 일시")
                 )
             ));
     }
