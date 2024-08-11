@@ -3,11 +3,13 @@ package com.ssafy.user_service.api.controller.member;
 import com.ssafy.user_service.ControllerTestSupport;
 import com.ssafy.user_service.api.controller.member.request.AdminMemberCreateRequest;
 import com.ssafy.user_service.api.controller.member.request.MemberCreateRequest;
+import com.ssafy.user_service.api.controller.member.request.MemberPasswordModifyRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -254,5 +256,62 @@ class MemberApiControllerTest extends ControllerTestSupport {
                     .with(csrf())
             )
             .andExpect(status().isCreated());
+    }
+
+    @DisplayName("비밀번호 수정시 현재 비밀번호는 필수값이다.")
+    @Test
+    void modifyPasswordWithoutCurrentPassword() throws Exception {
+        MemberPasswordModifyRequest request = MemberPasswordModifyRequest.builder()
+            .newPassword("ssafy5678@")
+            .build();
+
+        mockMvc.perform(
+                patch("/members/password")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf())
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.code").value("400"))
+            .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
+            .andExpect(jsonPath("$.message").value("현재 비밀번호를 입력해주세요."))
+            .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @DisplayName("비밀번호 수정시 현재 비밀번호는 필수값이다.")
+    @Test
+    void modifyPasswordWithoutNewPassword() throws Exception {
+        MemberPasswordModifyRequest request = MemberPasswordModifyRequest.builder()
+            .currentPassword("ssafy1234!")
+            .build();
+
+        mockMvc.perform(
+                patch("/members/password")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf())
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.code").value("400"))
+            .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
+            .andExpect(jsonPath("$.message").value("신규 비밀번호를 입력해주세요."))
+            .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @DisplayName("비밀번호 수정을 한다.")
+    @Test
+    void modifyPassword() throws Exception {
+        MemberPasswordModifyRequest request = MemberPasswordModifyRequest.builder()
+            .currentPassword("ssafy1234!")
+            .newPassword("ssafy5678@")
+            .build();
+
+        mockMvc.perform(
+                patch("/members/password")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf())
+            )
+            .andExpect(status().isOk());
     }
 }

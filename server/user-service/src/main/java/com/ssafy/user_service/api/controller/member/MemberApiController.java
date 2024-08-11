@@ -3,8 +3,10 @@ package com.ssafy.user_service.api.controller.member;
 import com.ssafy.user_service.api.ApiResponse;
 import com.ssafy.user_service.api.controller.member.request.AdminMemberCreateRequest;
 import com.ssafy.user_service.api.controller.member.request.MemberCreateRequest;
+import com.ssafy.user_service.api.controller.member.request.MemberPasswordModifyRequest;
 import com.ssafy.user_service.api.service.member.MemberService;
 import com.ssafy.user_service.api.service.member.response.MemberCreateResponse;
+import com.ssafy.user_service.api.service.member.response.MemberPasswordModifyResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,5 +35,10 @@ public class MemberApiController {
         MemberCreateResponse response = memberService.createAdminMember(request.toServiceRequest());
 
         return ApiResponse.ok(response);
+    }
+
+    @PatchMapping
+    public ApiResponse<MemberPasswordModifyResponse> modifyPassword(@Valid @RequestBody MemberPasswordModifyRequest request) {
+        return null;
     }
 }
