@@ -49,7 +49,11 @@ public class AuthService {
     }
 
     public BusinessNumberValidateResponse validateBusinessNumber(String businessNumber, LocalDateTime currentDateTime) {
-        return null;
+        MemberValidate.validateBusinessNumber(businessNumber);
+
+        boolean isAvailable = memberRepository.existsByUserAdditionalInfoBusinessNumber(businessNumber);
+
+        return BusinessNumberValidateResponse.of(businessNumber, !isAvailable, currentDateTime);
     }
 
     private LocalDateTime saveAuthNumber(String email, String authNumber, LocalDateTime currentDateTime) {

@@ -10,18 +10,18 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class BusinessNumberValidateResponse {
 
-    private String tel;
+    private String businessNumber;
     private Boolean isAvailable;
     private LocalDateTime validatedDateTime;
 
     @Builder
-    private BusinessNumberValidateResponse(String tel, Boolean isAvailable, LocalDateTime validatedDateTime) {
-        this.tel = tel;
+    private BusinessNumberValidateResponse(String businessNumber, Boolean isAvailable, LocalDateTime validatedDateTime) {
+        this.businessNumber = businessNumber;
         this.isAvailable = isAvailable;
         this.validatedDateTime = validatedDateTime;
     }
 
-    public static BusinessNumberValidateResponse of(String tel, Boolean isAvailable, LocalDateTime validatedDateTime) {
-        return new BusinessNumberValidateResponse(tel, isAvailable, validatedDateTime);
+    public static BusinessNumberValidateResponse of(String businessNumber, Boolean isAvailable, LocalDateTime validatedDateTime) {
+        return new BusinessNumberValidateResponse(businessNumber, isAvailable, validatedDateTime);
     }
 }
