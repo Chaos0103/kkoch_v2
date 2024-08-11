@@ -1,0 +1,12 @@
+[[validate-tel]]
+=== 연락처 검증 API
+
+==== HTTP Request
+
+include::{snippets}/validate-tel/http-request.adoc[]
+include::{snippets}/validate-tel/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/validate-tel/http-response.adoc[]
+include::{snippets}/validate-tel/response-fields.adoc[]
