@@ -3,8 +3,10 @@ package com.ssafy.user_service.api.controller.member;
 import com.ssafy.user_service.api.ApiResponse;
 import com.ssafy.user_service.api.controller.member.request.SendAuthNumberRequest;
 import com.ssafy.user_service.api.controller.member.request.ValidateAuthNumberRequest;
+import com.ssafy.user_service.api.controller.member.request.ValidateBusinessNumberRequest;
 import com.ssafy.user_service.api.controller.member.request.ValidateTelRequest;
 import com.ssafy.user_service.api.service.member.AuthService;
+import com.ssafy.user_service.api.service.member.response.BusinessNumberValidateResponse;
 import com.ssafy.user_service.api.service.member.response.EmailAuthResponse;
 import com.ssafy.user_service.api.service.member.response.EmailValidateResponse;
 import com.ssafy.user_service.api.service.member.response.TelValidateResponse;
@@ -57,5 +59,10 @@ public class AuthApiController {
         TelValidateResponse response = authService.validateTel(request.getTel(), currentDateTime);
 
         return ApiResponse.ok(response);
+    }
+
+    @PostMapping("/business-number/validate")
+    public ApiResponse<BusinessNumberValidateResponse> validateBusinessNumber(@Valid @RequestBody ValidateBusinessNumberRequest request) {
+        return null;
     }
 }

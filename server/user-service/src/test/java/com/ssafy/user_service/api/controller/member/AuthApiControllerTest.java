@@ -3,6 +3,7 @@ package com.ssafy.user_service.api.controller.member;
 import com.ssafy.user_service.ControllerTestSupport;
 import com.ssafy.user_service.api.controller.member.request.SendAuthNumberRequest;
 import com.ssafy.user_service.api.controller.member.request.ValidateAuthNumberRequest;
+import com.ssafy.user_service.api.controller.member.request.ValidateBusinessNumberRequest;
 import com.ssafy.user_service.api.controller.member.request.ValidateTelRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -135,6 +136,41 @@ class AuthApiControllerTest extends ControllerTestSupport {
 
         mockMvc.perform(
                 post("/auth/tel/validate")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf())
+            )
+            .andExpect(status().isOk());
+    }
+
+    @DisplayName("사업자 번호 검증시 사업자 번호는 필수값이다.")
+    @Test
+    void validateBusinessNumberWithoutBusinessNumber() throws Exception {
+        ValidateBusinessNumberRequest request = ValidateBusinessNumberRequest.builder()
+            .build();
+
+        mockMvc.perform(
+                post("/auth/business-number/validate")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf())
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.code").value("400"))
+            .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
+            .andExpect(jsonPath("$.message").value("사업자 번호를 입력해주세요."))
+            .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @DisplayName("사업자 번호 검증한다.")
+    @Test
+    void validateBusinessNumber() throws Exception {
+        ValidateBusinessNumberRequest request = ValidateBusinessNumberRequest.builder()
+            .businessNumber("1231212345")
+            .build();
+
+        mockMvc.perform(
+                post("/auth/business-number/validate")
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
                     .with(csrf())
