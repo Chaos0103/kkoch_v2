@@ -40,7 +40,11 @@ public class AuthService {
     }
 
     public TelValidateResponse validateTel(String tel, LocalDateTime currentDateTime) {
-        return null;
+        MemberValidate.validateTel(tel);
+
+        boolean isAvailable = memberRepository.existsByTel(tel);
+
+        return TelValidateResponse.of(tel, !isAvailable, currentDateTime);
     }
 
     private LocalDateTime saveAuthNumber(String email, String authNumber, LocalDateTime currentDateTime) {
