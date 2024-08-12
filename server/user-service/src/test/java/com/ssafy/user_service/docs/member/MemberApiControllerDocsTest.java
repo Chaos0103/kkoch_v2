@@ -4,10 +4,7 @@ import com.ssafy.user_service.api.controller.member.MemberApiController;
 import com.ssafy.user_service.api.controller.member.request.*;
 import com.ssafy.user_service.api.service.member.AuthService;
 import com.ssafy.user_service.api.service.member.MemberService;
-import com.ssafy.user_service.api.service.member.response.BankAccountAuthResponse;
-import com.ssafy.user_service.api.service.member.response.MemberCreateResponse;
-import com.ssafy.user_service.api.service.member.response.MemberPasswordModifyResponse;
-import com.ssafy.user_service.api.service.member.response.MemberTelModifyResponse;
+import com.ssafy.user_service.api.service.member.response.*;
 import com.ssafy.user_service.docs.RestDocsSupport;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -291,6 +288,64 @@ public class MemberApiControllerDocsTest extends RestDocsSupport {
                         .description("응답 데이터"),
                     fieldWithPath("data.expiredDateTime").type(JsonFieldType.ARRAY)
                         .description("인증 번호 만료 일시")
+                )
+            ));
+    }
+
+    @DisplayName("은행 계좌 수정 API")
+    @Test
+    void modifyBankAccount() throws Exception {
+        MemberBankAccountModifyRequest request = MemberBankAccountModifyRequest.builder()
+            .bankCode("088")
+            .accountNumber("123123123456")
+            .authNumber("012")
+            .build();
+
+        MemberBankAccountModifyResponse response = MemberBankAccountModifyResponse.builder()
+            .bankCode("088")
+            .accountNumber("123***123456")
+            .bankAccountModifiedDateTime(LocalDateTime.now())
+            .build();
+
+        given(authService.validateAuthNumberToBankAccount(any(), anyString()))
+            .willReturn(true);
+
+        given(memberService.modifyBankAccount(anyString(), any(), any()))
+            .willReturn(response);
+
+        mockMvc.perform(
+                patch("/members/bank-account")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andDo(document("modify-bank-account",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestFields(
+                    fieldWithPath("bankCode").type(JsonFieldType.STRING)
+                        .description("은행 코드"),
+                    fieldWithPath("accountNumber").type(JsonFieldType.STRING)
+                        .description("은행 계좌"),
+                    fieldWithPath("authNumber").type(JsonFieldType.STRING)
+                        .description("인증 번호")
+                ),
+                responseFields(
+                    fieldWithPath("code").type(JsonFieldType.NUMBER)
+                        .description("코드"),
+                    fieldWithPath("status").type(JsonFieldType.STRING)
+                        .description("상태"),
+                    fieldWithPath("message").type(JsonFieldType.STRING)
+                        .description("메시지"),
+                    fieldWithPath("data").type(JsonFieldType.OBJECT)
+                        .description("응답 데이터"),
+                    fieldWithPath("data.bankCode").type(JsonFieldType.STRING)
+                        .description("은행 코드"),
+                    fieldWithPath("data.accountNumber").type(JsonFieldType.STRING)
+                        .description("은행 계좌"),
+                    fieldWithPath("data.bankAccountModifiedDateTime").type(JsonFieldType.ARRAY)
+                        .description("은행 계좌 수정 일시")
                 )
             ));
     }
