@@ -1,11 +1,15 @@
 package com.ssafy.user_service.domain.member.repository;
 
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.user_service.domain.member.QMember;
 import com.ssafy.user_service.domain.member.repository.response.MemberInfoResponse;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+
+import static com.ssafy.user_service.domain.member.QMember.*;
 
 @Repository
 public class MemberQueryRepository {
@@ -17,6 +21,22 @@ public class MemberQueryRepository {
     }
 
     public Optional<MemberInfoResponse> findByMemberKey(String memberKey) {
-        return Optional.empty();
+        MemberInfoResponse content = queryFactory
+            .select(
+                Projections.fields(
+                    MemberInfoResponse.class,
+                    member.email,
+                    member.name,
+                    member.tel,
+                    member.userAdditionalInfo.businessNumber
+                )
+            )
+            .from(member)
+            .where(
+                member.isDeleted.isFalse(),
+                member.specificInfo.memberKey.eq(memberKey)
+            )
+            .fetchFirst();
+        return Optional.ofNullable(content);
     }
 }
