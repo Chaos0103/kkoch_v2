@@ -30,4 +30,9 @@ public class UserAdditionalInfo {
     public static UserAdditionalInfo init(String businessNumber) {
         return of(businessNumber, null);
     }
+
+    public UserAdditionalInfo withBankAccount(String bankCode, String accountNumber) {
+        BankAccount bankAccount = BankAccount.of(bankCode, accountNumber);
+        return of(businessNumber, bankAccount);
+    }
 }

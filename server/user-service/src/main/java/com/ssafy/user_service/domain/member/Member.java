@@ -70,6 +70,10 @@ public class Member extends TimeBaseEntity {
         this.tel = tel;
     }
 
+    public void modifyBankAccount(String bankCode, String accountNumber) {
+        this.userAdditionalInfo = userAdditionalInfo.withBankAccount(bankCode, accountNumber);
+    }
+
     public boolean isMatchesPwd(PasswordEncoder encoder, String pwd) {
         return encoder.matches(pwd, this.pwd);
     }

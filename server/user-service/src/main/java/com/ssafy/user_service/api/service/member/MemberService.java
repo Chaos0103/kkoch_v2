@@ -62,7 +62,14 @@ public class MemberService {
     }
 
     public MemberBankAccountModifyResponse modifyBankAccount(String memberKey, LocalDateTime currentDateTime, MemberBankAccountModifyServiceRequest request) {
-        return null;
+        validateBankCode(request.getBankCode());
+        validateAccountNumber(request.getAccountNumber());
+
+        Member member = findMemberBy(memberKey);
+
+        member.modifyBankAccount(request.getBankCode(), request.getAccountNumber());
+
+        return MemberBankAccountModifyResponse.of(request.getBankCode(), request.getAccountNumber(), currentDateTime);
     }
 
     private void modifyPassword(Member member, String newPassword) {

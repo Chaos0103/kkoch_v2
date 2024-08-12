@@ -13,4 +13,13 @@ public abstract class Masking {
 
         return nonMaskingInfo + masking + "@" + domain;
     }
+
+    public static String maskingAccountNumber(String accountNumber) {
+        String front = accountNumber.substring(0, 3);
+        String end = accountNumber.substring(accountNumber.length() - 6);
+
+        String masking = "*".repeat(accountNumber.length() - front.length() - end.length());
+
+        return front + masking + end;
+    }
 }
