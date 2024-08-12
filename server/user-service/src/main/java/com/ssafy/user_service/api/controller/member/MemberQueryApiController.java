@@ -2,6 +2,7 @@ package com.ssafy.user_service.api.controller.member;
 
 import com.ssafy.user_service.api.ApiResponse;
 import com.ssafy.user_service.api.service.member.MemberQueryService;
+import com.ssafy.user_service.common.security.SecurityUtils;
 import com.ssafy.user_service.domain.member.repository.response.MemberInfoResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,10 @@ public class MemberQueryApiController {
 
     @GetMapping("/info")
     public ApiResponse<MemberInfoResponse> searchMemberInfo() {
-        return null;
+        String memberKey = SecurityUtils.findMemberKeyByToken();
+
+        MemberInfoResponse response = memberQueryService.searchMemberInfo(memberKey);
+
+        return ApiResponse.ok(response);
     }
 }
