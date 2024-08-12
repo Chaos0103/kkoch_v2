@@ -4,10 +4,7 @@ import com.ssafy.user_service.api.ApiResponse;
 import com.ssafy.user_service.api.controller.member.request.*;
 import com.ssafy.user_service.api.service.member.AuthService;
 import com.ssafy.user_service.api.service.member.MemberService;
-import com.ssafy.user_service.api.service.member.response.BankAccountAuthResponse;
-import com.ssafy.user_service.api.service.member.response.MemberCreateResponse;
-import com.ssafy.user_service.api.service.member.response.MemberPasswordModifyResponse;
-import com.ssafy.user_service.api.service.member.response.MemberTelModifyResponse;
+import com.ssafy.user_service.api.service.member.response.*;
 import com.ssafy.user_service.common.security.SecurityUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -75,5 +72,10 @@ public class MemberApiController {
         BankAccountAuthResponse response = authService.sendAuthNumberToBankAccount(request.toServiceRequest(), authNumber, currentDateTime);
 
         return ApiResponse.ok(response);
+    }
+
+    @PatchMapping("/bank-account")
+    public ApiResponse<MemberBankAccountModifyResponse> modifyBankAccount(@Valid @RequestBody MemberBankAccountModifyRequest request) {
+        return null;
     }
 }

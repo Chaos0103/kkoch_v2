@@ -404,4 +404,85 @@ class MemberApiControllerTest extends ControllerTestSupport {
             )
             .andExpect(status().isOk());
     }
+
+    @DisplayName("은행 계좌 수정시 은행 코드는 필수값이다.")
+    @Test
+    void modifyBankAccountWithoutBankCode() throws Exception {
+        MemberBankAccountModifyRequest request = MemberBankAccountModifyRequest.builder()
+            .accountNumber("123123123456")
+            .authNumber("012")
+            .build();
+
+        mockMvc.perform(
+                patch("/members/bank-account")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf())
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.code").value("400"))
+            .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
+            .andExpect(jsonPath("$.message").value("은행 코드를 입력해주세요."))
+            .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @DisplayName("은행 계좌 수정시 은행 계좌는 필수값이다.")
+    @Test
+    void modifyBankAccountWithoutAccountNumber() throws Exception {
+        MemberBankAccountModifyRequest request = MemberBankAccountModifyRequest.builder()
+            .bankCode("088")
+            .authNumber("012")
+            .build();
+
+        mockMvc.perform(
+                patch("/members/bank-account")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf())
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.code").value("400"))
+            .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
+            .andExpect(jsonPath("$.message").value("은행 계좌를 입력해주세요."))
+            .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @DisplayName("은행 계좌 수정시 인증 번호는 필수값이다.")
+    @Test
+    void modifyBankAccountWithoutAuthNumber() throws Exception {
+        MemberBankAccountModifyRequest request = MemberBankAccountModifyRequest.builder()
+            .bankCode("088")
+            .accountNumber("123123123456")
+            .build();
+
+        mockMvc.perform(
+                patch("/members/bank-account")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf())
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.code").value("400"))
+            .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
+            .andExpect(jsonPath("$.message").value("인증 번호를 입력해주세요."))
+            .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @DisplayName("은행 계좌를 수정한다.")
+    @Test
+    void modifyBankAccount() throws Exception {
+        MemberBankAccountModifyRequest request = MemberBankAccountModifyRequest.builder()
+            .bankCode("088")
+            .accountNumber("123123123456")
+            .authNumber("012")
+            .build();
+
+        mockMvc.perform(
+                patch("/members/bank-account")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf())
+            )
+            .andExpect(status().isOk());
+    }
 }
