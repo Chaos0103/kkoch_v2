@@ -1,5 +1,6 @@
 package com.ssafy.user_service.domain.member.repository.response;
 
+import com.ssafy.user_service.api.service.member.Masking;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,5 +20,13 @@ public class MemberInfoResponse {
         this.name = name;
         this.tel = tel;
         this.businessNumber = businessNumber;
+    }
+
+    public MemberInfoResponse toMasking() {
+        String maskingEmail = Masking.maskingEmail(email);
+        String maskingTel = Masking.maskingTel(tel);
+        String maskingBusinessNumber = Masking.maskingBusinessNumber(businessNumber);
+
+        return new MemberInfoResponse(maskingEmail, name, maskingTel, maskingBusinessNumber);
     }
 }

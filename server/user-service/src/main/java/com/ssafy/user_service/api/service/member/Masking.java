@@ -14,6 +14,15 @@ public abstract class Masking {
         return nonMaskingInfo + masking + "@" + domain;
     }
 
+    public static String maskingTel(String tel) {
+        String front = tel.substring(0, 3);
+        String back = tel.substring(tel.length() - 4);
+
+        String masking = "*".repeat(tel.length() - front.length() - back.length());
+
+        return front + masking + back;
+    }
+
     public static String maskingAccountNumber(String accountNumber) {
         String front = accountNumber.substring(0, 3);
         String end = accountNumber.substring(accountNumber.length() - 6);
@@ -21,5 +30,14 @@ public abstract class Masking {
         String masking = "*".repeat(accountNumber.length() - front.length() - end.length());
 
         return front + masking + end;
+    }
+
+    public static String maskingBusinessNumber(String businessNumber) {
+        String front = businessNumber.substring(0, 3);
+        String back = businessNumber.substring(businessNumber.length() - 2);
+
+        String masking = "*".repeat(businessNumber.length() - front.length() - back.length());
+
+        return front + masking + back;
     }
 }
