@@ -4,9 +4,11 @@ import com.ssafy.user_service.api.ApiResponse;
 import com.ssafy.user_service.api.controller.member.request.AdminMemberCreateRequest;
 import com.ssafy.user_service.api.controller.member.request.MemberCreateRequest;
 import com.ssafy.user_service.api.controller.member.request.MemberPasswordModifyRequest;
+import com.ssafy.user_service.api.controller.member.request.MemberTelModifyRequest;
 import com.ssafy.user_service.api.service.member.MemberService;
 import com.ssafy.user_service.api.service.member.response.MemberCreateResponse;
 import com.ssafy.user_service.api.service.member.response.MemberPasswordModifyResponse;
+import com.ssafy.user_service.api.service.member.response.MemberTelModifyResponse;
 import com.ssafy.user_service.common.security.SecurityUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -49,5 +51,10 @@ public class MemberApiController {
         MemberPasswordModifyResponse response = memberService.modifyPassword(memberKey, currentDateTime, request.toServiceRequest());
 
         return ApiResponse.ok(response);
+    }
+
+    @PatchMapping("/tel")
+    public ApiResponse<MemberTelModifyResponse> modifyTel(@Valid @RequestBody MemberTelModifyRequest request) {
+        return null;
     }
 }

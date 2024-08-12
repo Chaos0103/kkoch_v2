@@ -4,6 +4,7 @@ import com.ssafy.user_service.ControllerTestSupport;
 import com.ssafy.user_service.api.controller.member.request.AdminMemberCreateRequest;
 import com.ssafy.user_service.api.controller.member.request.MemberCreateRequest;
 import com.ssafy.user_service.api.controller.member.request.MemberPasswordModifyRequest;
+import com.ssafy.user_service.api.controller.member.request.MemberTelModifyRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -308,6 +309,41 @@ class MemberApiControllerTest extends ControllerTestSupport {
 
         mockMvc.perform(
                 patch("/members/password")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf())
+            )
+            .andExpect(status().isOk());
+    }
+
+    @DisplayName("연락처 수정시 연락처는 필수값이다.")
+    @Test
+    void modifyTelWithoutTel() throws Exception {
+        MemberTelModifyRequest request = MemberTelModifyRequest.builder()
+            .build();
+
+        mockMvc.perform(
+                patch("/members/tel")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf())
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.code").value("400"))
+            .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
+            .andExpect(jsonPath("$.message").value("연락처를 입력해주세요."))
+            .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @DisplayName("연락처 수정을 한다.")
+    @Test
+    void modifyTel() throws Exception {
+        MemberTelModifyRequest request = MemberTelModifyRequest.builder()
+            .tel("01056785678")
+            .build();
+
+        mockMvc.perform(
+                patch("/members/tel")
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
                     .with(csrf())
