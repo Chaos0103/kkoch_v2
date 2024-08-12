@@ -2,8 +2,10 @@ package com.ssafy.user_service.api.service.member;
 
 import com.ssafy.user_service.api.service.member.request.MemberCreateServiceRequest;
 import com.ssafy.user_service.api.service.member.request.MemberPasswordModifyServiceRequest;
+import com.ssafy.user_service.api.service.member.request.MemberTelModifyServiceRequest;
 import com.ssafy.user_service.api.service.member.response.MemberCreateResponse;
 import com.ssafy.user_service.api.service.member.response.MemberPasswordModifyResponse;
+import com.ssafy.user_service.api.service.member.response.MemberTelModifyResponse;
 import com.ssafy.user_service.common.exception.AppException;
 import com.ssafy.user_service.domain.member.Member;
 import com.ssafy.user_service.domain.member.repository.MemberRepository;
@@ -45,6 +47,10 @@ public class MemberService {
         modifyPassword(member, request.getNewPassword());
 
         return MemberPasswordModifyResponse.of(currentDateTime);
+    }
+
+    public MemberTelModifyResponse modifyTel(String memberKey, LocalDateTime currentDateTime, MemberTelModifyServiceRequest request) {
+        return null;
     }
 
     private void modifyPassword(Member member, String newPassword) {
