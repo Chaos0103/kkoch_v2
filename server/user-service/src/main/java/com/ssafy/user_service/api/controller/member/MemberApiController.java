@@ -76,6 +76,15 @@ public class MemberApiController {
 
     @PatchMapping("/bank-account")
     public ApiResponse<MemberBankAccountModifyResponse> modifyBankAccount(@Valid @RequestBody MemberBankAccountModifyRequest request) {
-        return null;
+        authService.validateAuthNumberToBankAccount(request.toAuthServiceRequest(), request.getAuthNumber());
+
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        String memberKey = SecurityUtils.findMemberKeyByToken();
+
+        MemberBankAccountModifyResponse response = memberService.modifyBankAccount(memberKey, currentDateTime, request.toServiceRequest());
+
+        return ApiResponse.ok(response);
     }
+
 }
