@@ -349,4 +349,47 @@ public class MemberApiControllerDocsTest extends RestDocsSupport {
                 )
             ));
     }
+
+    @DisplayName("회원 탈퇴 API")
+    @Test
+    void removeMember() throws Exception {
+        MemberRemoveRequest request = MemberRemoveRequest.builder()
+            .password("ssafy1234!")
+            .build();
+
+        MemberRemoveResponse response = MemberRemoveResponse.builder()
+            .withdrawnDateTime(LocalDateTime.now())
+            .build();
+
+        given(memberService.removeMember(anyString(), anyString(), any()))
+            .willReturn(response);
+
+        mockMvc.perform(
+                post("/members/withdraw")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andDo(document("remove-member",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestFields(
+                    fieldWithPath("password").type(JsonFieldType.STRING)
+                        .description("비밀번호")
+                ),
+                responseFields(
+                    fieldWithPath("code").type(JsonFieldType.NUMBER)
+                        .description("코드"),
+                    fieldWithPath("status").type(JsonFieldType.STRING)
+                        .description("상태"),
+                    fieldWithPath("message").type(JsonFieldType.STRING)
+                        .description("메시지"),
+                    fieldWithPath("data").type(JsonFieldType.OBJECT)
+                        .description("응답 데이터"),
+                    fieldWithPath("data.withdrawnDateTime").type(JsonFieldType.ARRAY)
+                        .description("회원 탈퇴 일시")
+                )
+            ));
+    }
 }
