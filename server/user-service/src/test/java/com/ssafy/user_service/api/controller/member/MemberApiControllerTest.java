@@ -1,10 +1,7 @@
 package com.ssafy.user_service.api.controller.member;
 
 import com.ssafy.user_service.ControllerTestSupport;
-import com.ssafy.user_service.api.controller.member.request.AdminMemberCreateRequest;
-import com.ssafy.user_service.api.controller.member.request.MemberCreateRequest;
-import com.ssafy.user_service.api.controller.member.request.MemberPasswordModifyRequest;
-import com.ssafy.user_service.api.controller.member.request.MemberTelModifyRequest;
+import com.ssafy.user_service.api.controller.member.request.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -344,6 +341,63 @@ class MemberApiControllerTest extends ControllerTestSupport {
 
         mockMvc.perform(
                 patch("/members/tel")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf())
+            )
+            .andExpect(status().isOk());
+    }
+
+    @DisplayName("은행 계좌 1원 인증 요청시 은행 코드는 필수값이다.")
+    @Test
+    void sendOneCoinAuthNumberWithoutBankCode() throws Exception {
+        BankAccountRequest request = BankAccountRequest.builder()
+            .accountNumber("123123123456")
+            .build();
+
+        mockMvc.perform(
+                post("/members/bank-account")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf())
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.code").value("400"))
+            .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
+            .andExpect(jsonPath("$.message").value("은행 코드를 입력해주세요."))
+            .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @DisplayName("은행 계좌 1원 인증 요청시 은행 계좌는 필수값이다.")
+    @Test
+    void sendOneCoinAuthNumberWithoutAccountNumber() throws Exception {
+        BankAccountRequest request = BankAccountRequest.builder()
+            .bankCode("088")
+            .build();
+
+        mockMvc.perform(
+                post("/members/bank-account")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf())
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.code").value("400"))
+            .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
+            .andExpect(jsonPath("$.message").value("은행 계좌를 입력해주세요."))
+            .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @DisplayName("은행 계좌 1원 인증을 요청한다.")
+    @Test
+    void sendOneCoinAuthNumber() throws Exception {
+        BankAccountRequest request = BankAccountRequest.builder()
+            .bankCode("088")
+            .accountNumber("123123123456")
+            .build();
+
+        mockMvc.perform(
+                post("/members/bank-account")
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
                     .with(csrf())

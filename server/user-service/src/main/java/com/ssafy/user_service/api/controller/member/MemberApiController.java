@@ -1,11 +1,9 @@
 package com.ssafy.user_service.api.controller.member;
 
 import com.ssafy.user_service.api.ApiResponse;
-import com.ssafy.user_service.api.controller.member.request.AdminMemberCreateRequest;
-import com.ssafy.user_service.api.controller.member.request.MemberCreateRequest;
-import com.ssafy.user_service.api.controller.member.request.MemberPasswordModifyRequest;
-import com.ssafy.user_service.api.controller.member.request.MemberTelModifyRequest;
+import com.ssafy.user_service.api.controller.member.request.*;
 import com.ssafy.user_service.api.service.member.MemberService;
+import com.ssafy.user_service.api.service.member.response.BankAccountAuthResponse;
 import com.ssafy.user_service.api.service.member.response.MemberCreateResponse;
 import com.ssafy.user_service.api.service.member.response.MemberPasswordModifyResponse;
 import com.ssafy.user_service.api.service.member.response.MemberTelModifyResponse;
@@ -62,5 +60,10 @@ public class MemberApiController {
         MemberTelModifyResponse response = memberService.modifyTel(memberKey, currentDateTime, request.toServiceRequest());
 
         return ApiResponse.ok(response);
+    }
+
+    @PostMapping("/bank-account")
+    public ApiResponse<BankAccountAuthResponse> sendOneCoinAuthNumber(@Valid @RequestBody BankAccountRequest request) {
+        return null;
     }
 }
