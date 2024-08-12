@@ -3,7 +3,9 @@ package com.ssafy.user_service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.user_service.api.controller.member.AuthApiController;
 import com.ssafy.user_service.api.controller.member.MemberApiController;
+import com.ssafy.user_service.api.controller.member.MemberQueryApiController;
 import com.ssafy.user_service.api.service.member.AuthService;
+import com.ssafy.user_service.api.service.member.MemberQueryService;
 import com.ssafy.user_service.api.service.member.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -14,7 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @WithMockUser
 @WebMvcTest(controllers = {
     AuthApiController.class,
-    MemberApiController.class
+    MemberApiController.class, MemberQueryApiController.class
 })
 public abstract class ControllerTestSupport {
 
@@ -29,4 +31,7 @@ public abstract class ControllerTestSupport {
 
     @MockBean
     protected MemberService memberService;
+
+    @MockBean
+    protected MemberQueryService memberQueryService;
 }
