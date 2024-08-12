@@ -168,7 +168,7 @@ class AuthServiceTest extends IntegrationTestSupport {
             .build();
 
         //when //then
-        assertThatThrownBy(() -> authService.validateAuthNumberToBankAccount(request, "012", currentDateTime))
+        assertThatThrownBy(() -> authService.validateAuthNumberToBankAccount(request, "012"))
             .isInstanceOf(AppException.class)
             .hasMessage("인증 번호가 만료되었습니다.");
     }
@@ -188,7 +188,7 @@ class AuthServiceTest extends IntegrationTestSupport {
         redisRepository.save(request.getAccountNumber(), authNumber);
 
         //when
-        assertThatThrownBy(() -> authService.validateAuthNumberToBankAccount(request, "111", currentDateTime))
+        assertThatThrownBy(() -> authService.validateAuthNumberToBankAccount(request, "111"))
             .isInstanceOf(AppException.class)
             .hasMessage("인증 번호가 일치하지 않습니다.");
 
@@ -212,7 +212,7 @@ class AuthServiceTest extends IntegrationTestSupport {
         redisRepository.save(request.getAccountNumber(), authNumber);
 
         //when
-        boolean result = authService.validateAuthNumberToBankAccount(request, authNumber, currentDateTime);
+        boolean result = authService.validateAuthNumberToBankAccount(request, authNumber);
 
         //then
         assertThat(result).isTrue();
