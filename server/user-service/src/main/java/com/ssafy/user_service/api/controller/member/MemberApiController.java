@@ -89,6 +89,12 @@ public class MemberApiController {
 
     @PostMapping("/withdraw")
     public ApiResponse<MemberRemoveResponse> removeMember(@Valid @RequestBody MemberRemoveRequest request) {
-        return null;
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        String memberKey = SecurityUtils.findMemberKeyByToken();
+
+        MemberRemoveResponse response = memberService.removeMember(memberKey, request.getPassword(), currentDateTime);
+
+        return ApiResponse.ok(response);
     }
 }
