@@ -55,6 +55,12 @@ public class MemberApiController {
 
     @PatchMapping("/tel")
     public ApiResponse<MemberTelModifyResponse> modifyTel(@Valid @RequestBody MemberTelModifyRequest request) {
-        return null;
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        String memberKey = SecurityUtils.findMemberKeyByToken();
+
+        MemberTelModifyResponse response = memberService.modifyTel(memberKey, currentDateTime, request.toServiceRequest());
+
+        return ApiResponse.ok(response);
     }
 }
