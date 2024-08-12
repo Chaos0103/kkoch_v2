@@ -70,7 +70,13 @@ public class MemberService {
     }
 
     public MemberRemoveResponse removeMember(String memberKey, String password, LocalDateTime currentDateTime) {
-        return null;
+        Member member = findMemberBy(memberKey);
+
+        checkMatchesPassword(member, password);
+
+        member.remove();
+
+        return MemberRemoveResponse.of(currentDateTime);
     }
 
     private void modifyPassword(Member member, String newPassword) {

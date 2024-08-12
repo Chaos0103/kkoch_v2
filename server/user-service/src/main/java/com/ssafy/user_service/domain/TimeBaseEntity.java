@@ -32,4 +32,8 @@ public class TimeBaseEntity {
     protected TimeBaseEntity(boolean isDeleted) {
         this.isDeleted = isDeleted;
     }
+
+    public void remove() {
+        isDeleted = true;
+    }
 }
