@@ -1,0 +1,60 @@
+package com.ssafy.user_service.api.service.member;
+
+import com.ssafy.user_service.IntegrationTestSupport;
+import com.ssafy.user_service.domain.member.*;
+import com.ssafy.user_service.domain.member.repository.MemberRepository;
+import com.ssafy.user_service.domain.member.repository.response.MemberInfoResponse;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import static org.assertj.core.api.Assertions.*;
+
+class MemberQueryServiceTest extends IntegrationTestSupport {
+
+    @Autowired
+    private MemberQueryService memberQueryService;
+
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @DisplayName("회원 고유키를 입력 받아 회원 정보를 조회한다.")
+    @Test
+    void searchMemberInfo() {
+        //given
+        Member member = createMember();
+
+        //when
+        MemberInfoResponse response = memberQueryService.searchMemberInfo(member.getMemberKey());
+
+        //then
+        assertThat(response).isNotNull()
+            .hasFieldOrPropertyWithValue("email", "ss***@ssafy.com")
+            .hasFieldOrPropertyWithValue("name", "김싸피")
+            .hasFieldOrPropertyWithValue("tel", "010****1234")
+            .hasFieldOrPropertyWithValue("businessNumber", "123*****45");
+    }
+
+    private Member createMember() {
+        Member member = Member.builder()
+            .isDeleted(false)
+            .specificInfo(MemberSpecificInfo.builder()
+                .memberKey(generateMemberKey())
+                .role(Role.USER)
+                .build())
+            .email("ssafy@ssafy.com")
+            .pwd(passwordEncoder.encode("ssafy1234!"))
+            .name("김싸피")
+            .tel("01012341234")
+            .userAdditionalInfo(UserAdditionalInfo.builder()
+                .businessNumber("1231212345")
+                .bankAccount(BankAccount.builder()
+                    .bankCode("088")
+                    .accountNumber("123123123456")
+                    .build())
+                .build())
+            .build();
+        return memberRepository.save(member);
+    }
+}
