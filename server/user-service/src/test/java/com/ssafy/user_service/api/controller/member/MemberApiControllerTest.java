@@ -485,4 +485,39 @@ class MemberApiControllerTest extends ControllerTestSupport {
             )
             .andExpect(status().isOk());
     }
+
+    @DisplayName("회원 탈퇴시 비밀번호는 필수값이다.")
+    @Test
+    void removeMemberWithoutPassword() throws Exception {
+        MemberRemoveRequest request = MemberRemoveRequest.builder()
+            .build();
+
+        mockMvc.perform(
+                post("/members/withdraw")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf())
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.code").value("400"))
+            .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
+            .andExpect(jsonPath("$.message").value("비밀번호를 입력해주세요."))
+            .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @DisplayName("회원 탈퇴를 한다.")
+    @Test
+    void removeMember() throws Exception {
+        MemberRemoveRequest request = MemberRemoveRequest.builder()
+            .password("ssafy1234!")
+            .build();
+
+        mockMvc.perform(
+                post("/members/withdraw")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf())
+            )
+            .andExpect(status().isOk());
+    }
 }

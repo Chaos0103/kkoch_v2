@@ -87,4 +87,8 @@ public class MemberApiController {
         return ApiResponse.ok(response);
     }
 
+    @PostMapping("/withdraw")
+    public ApiResponse<MemberRemoveResponse> removeMember(@Valid @RequestBody MemberRemoveRequest request) {
+        return null;
+    }
 }
