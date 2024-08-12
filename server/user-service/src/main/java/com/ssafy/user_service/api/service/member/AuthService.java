@@ -72,6 +72,10 @@ public class AuthService {
         return BankAccountAuthResponse.of(expiredDateTime);
     }
 
+    public boolean validateAuthNumberToBankAccount(BankAccountServiceRequest request, String authNumber, LocalDateTime currentDateTime) {
+        return false;
+    }
+
     private LocalDateTime saveAuthNumber(String email, String authNumber, LocalDateTime currentDateTime) {
         redisRepository.save(email, authNumber, EMAIL_AUTH_NUMBER_TIMEOUT, MINUTES);
 

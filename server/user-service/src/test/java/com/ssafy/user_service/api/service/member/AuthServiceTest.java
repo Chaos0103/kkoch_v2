@@ -155,4 +155,69 @@ class AuthServiceTest extends IntegrationTestSupport {
         String authNumber = redisRepository.findByKey("123123123456");
         assertThat(authNumber).isEqualTo("012");
     }
+
+    @DisplayName("인증 번호 유효성 검사시 입력 받은 은행 계좌로 발급된 인증 번호가 존재하지 않으면 예외가 발생한다.")
+    @Test
+    void validateAuthNumberToBankAccountWithoutAuthNumber() {
+        //given
+        LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
+
+        BankAccountServiceRequest request = BankAccountServiceRequest.builder()
+            .bankCode("088")
+            .accountNumber("123123123456")
+            .build();
+
+        //when //then
+        assertThatThrownBy(() -> authService.validateAuthNumberToBankAccount(request, "012", currentDateTime))
+            .isInstanceOf(AppException.class)
+            .hasMessage("인증 번호가 만료되었습니다.");
+    }
+
+    @DisplayName("인증 번호 유효성 검사시 입력 받은 인증 번호와 서버에 저장된 인증 번호가 일치하지 않으면 예외가 발생한다.")
+    @Test
+    void validateAuthNumberToBankAccountNotEqualsAuthNumber() {
+        //given
+        LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
+
+        BankAccountServiceRequest request = BankAccountServiceRequest.builder()
+            .bankCode("088")
+            .accountNumber("123123123456")
+            .build();
+
+        String authNumber = "012";
+        redisRepository.save(request.getAccountNumber(), authNumber);
+
+        //when
+        assertThatThrownBy(() -> authService.validateAuthNumberToBankAccount(request, "111", currentDateTime))
+            .isInstanceOf(AppException.class)
+            .hasMessage("인증 번호가 일치하지 않습니다.");
+
+        //then
+        String findAuthNumber = redisRepository.findByKey(request.getAccountNumber());
+        assertThat(findAuthNumber).isEqualTo(authNumber);
+    }
+
+    @DisplayName("은행 계좌로 발송한 인증 번호의 유효성을 검사한다.")
+    @Test
+    void validateAuthNumberToBankAccount() {
+        //given
+        LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
+
+        BankAccountServiceRequest request = BankAccountServiceRequest.builder()
+            .bankCode("088")
+            .accountNumber("123123123456")
+            .build();
+
+        String authNumber = "012";
+        redisRepository.save(request.getAccountNumber(), authNumber);
+
+        //when
+        boolean result = authService.validateAuthNumberToBankAccount(request, authNumber, currentDateTime);
+
+        //then
+        assertThat(result).isTrue();
+
+        String findAuthNumber = redisRepository.findByKey(request.getAccountNumber());
+        assertThat(findAuthNumber).isNull();
+    }
 }
