@@ -1,0 +1,12 @@
+[[send-one-coin-auth-number]]
+=== 은행 계좌 1원 인증 요청 API
+
+==== HTTP Request
+
+include::{snippets}/send-one-coin-auth-number/http-request.adoc[]
+include::{snippets}/send-one-coin-auth-number/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/send-one-coin-auth-number/http-response.adoc[]
+include::{snippets}/send-one-coin-auth-number/response-fields.adoc[]

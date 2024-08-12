@@ -1,12 +1,10 @@
 package com.ssafy.user_service.docs.member;
 
 import com.ssafy.user_service.api.controller.member.MemberApiController;
-import com.ssafy.user_service.api.controller.member.request.AdminMemberCreateRequest;
-import com.ssafy.user_service.api.controller.member.request.MemberCreateRequest;
-import com.ssafy.user_service.api.controller.member.request.MemberPasswordModifyRequest;
-import com.ssafy.user_service.api.controller.member.request.MemberTelModifyRequest;
+import com.ssafy.user_service.api.controller.member.request.*;
 import com.ssafy.user_service.api.service.member.AuthService;
 import com.ssafy.user_service.api.service.member.MemberService;
+import com.ssafy.user_service.api.service.member.response.BankAccountAuthResponse;
 import com.ssafy.user_service.api.service.member.response.MemberCreateResponse;
 import com.ssafy.user_service.api.service.member.response.MemberPasswordModifyResponse;
 import com.ssafy.user_service.api.service.member.response.MemberTelModifyResponse;
@@ -247,6 +245,52 @@ public class MemberApiControllerDocsTest extends RestDocsSupport {
                         .description("변경된 연락처"),
                     fieldWithPath("data.telModifiedDateTime").type(JsonFieldType.ARRAY)
                         .description("비밀번호 변경 일시")
+                )
+            ));
+    }
+
+    @DisplayName("은행 계좌 1원 인증 요청 API")
+    @Test
+    void sendOneCoinAuthNumber() throws Exception {
+        BankAccountRequest request = BankAccountRequest.builder()
+            .bankCode("088")
+            .accountNumber("123123123456")
+            .build();
+
+        BankAccountAuthResponse response = BankAccountAuthResponse.builder()
+            .expiredDateTime(LocalDateTime.now())
+            .build();
+
+        given(authService.sendAuthNumberToBankAccount(any(), anyString(), any()))
+            .willReturn(response);
+
+        mockMvc.perform(
+                post("/members/bank-account")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andDo(document("send-one-coin-auth-number",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestFields(
+                    fieldWithPath("bankCode").type(JsonFieldType.STRING)
+                        .description("은행 코드"),
+                    fieldWithPath("accountNumber").type(JsonFieldType.STRING)
+                        .description("은행 계좌")
+                ),
+                responseFields(
+                    fieldWithPath("code").type(JsonFieldType.NUMBER)
+                        .description("코드"),
+                    fieldWithPath("status").type(JsonFieldType.STRING)
+                        .description("상태"),
+                    fieldWithPath("message").type(JsonFieldType.STRING)
+                        .description("메시지"),
+                    fieldWithPath("data").type(JsonFieldType.OBJECT)
+                        .description("응답 데이터"),
+                    fieldWithPath("data.expiredDateTime").type(JsonFieldType.ARRAY)
+                        .description("인증 번호 만료 일시")
                 )
             ));
     }
