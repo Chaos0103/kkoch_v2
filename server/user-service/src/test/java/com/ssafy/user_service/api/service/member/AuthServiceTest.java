@@ -1,10 +1,8 @@
 package com.ssafy.user_service.api.service.member;
 
 import com.ssafy.user_service.IntegrationTestSupport;
-import com.ssafy.user_service.api.service.member.response.BusinessNumberValidateResponse;
-import com.ssafy.user_service.api.service.member.response.EmailAuthResponse;
-import com.ssafy.user_service.api.service.member.response.EmailValidateResponse;
-import com.ssafy.user_service.api.service.member.response.TelValidateResponse;
+import com.ssafy.user_service.api.service.member.request.BankAccountServiceRequest;
+import com.ssafy.user_service.api.service.member.response.*;
 import com.ssafy.user_service.common.exception.AppException;
 import com.ssafy.user_service.common.redis.RedisRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -28,6 +26,7 @@ class AuthServiceTest extends IntegrationTestSupport {
     @AfterEach
     void tearDown() {
         redisRepository.remove("ssafy@ssafy.com");
+        redisRepository.remove("123123123456");
     }
 
     @DisplayName("이메일로 5분간 유효한 랜덤으로 생성된 6자리 숫자로 만들어진 인증 번호를 발송한다.")
@@ -133,5 +132,27 @@ class AuthServiceTest extends IntegrationTestSupport {
             .hasFieldOrPropertyWithValue("businessNumber", businessNumber)
             .hasFieldOrPropertyWithValue("isAvailable", true)
             .hasFieldOrPropertyWithValue("validatedDateTime", currentDateTime);
+    }
+
+    @DisplayName("은행 계좌로 5분간 유효한 랜덤으로 생성된 3자리 숫자로 만들어진 인증 번호를 발송한다.")
+    @Test
+    void sendAuthNumberToBankAccount() {
+        //given
+        LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
+
+        BankAccountServiceRequest request = BankAccountServiceRequest.builder()
+            .bankCode("088")
+            .accountNumber("123123123456")
+            .build();
+
+        //when
+        BankAccountAuthResponse response = authService.sendAuthNumberToBankAccount(request, "012", currentDateTime);
+
+        //then
+        assertThat(response).isNotNull()
+            .hasFieldOrPropertyWithValue("expiredDateTime", LocalDateTime.of(2024, 1, 1, 0, 5, 0));
+
+        String authNumber = redisRepository.findByKey("123123123456");
+        assertThat(authNumber).isEqualTo("012");
     }
 }
