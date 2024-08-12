@@ -1,9 +1,11 @@
 package com.ssafy.user_service.api.service.member;
 
 import com.ssafy.user_service.IntegrationTestSupport;
+import com.ssafy.user_service.api.service.member.request.MemberBankAccountModifyServiceRequest;
 import com.ssafy.user_service.api.service.member.request.MemberCreateServiceRequest;
 import com.ssafy.user_service.api.service.member.request.MemberPasswordModifyServiceRequest;
 import com.ssafy.user_service.api.service.member.request.MemberTelModifyServiceRequest;
+import com.ssafy.user_service.api.service.member.response.MemberBankAccountModifyResponse;
 import com.ssafy.user_service.api.service.member.response.MemberCreateResponse;
 import com.ssafy.user_service.api.service.member.response.MemberPasswordModifyResponse;
 import com.ssafy.user_service.api.service.member.response.MemberTelModifyResponse;
@@ -287,6 +289,34 @@ class MemberServiceTest extends IntegrationTestSupport {
         assertThat(findMember).isPresent()
             .get()
             .hasFieldOrPropertyWithValue("tel", "01056785678");
+    }
+
+    @DisplayName("은행 계좌 정보를 입력 받아 은행 계좌 수정을 한다.")
+    @Test
+    void modifyBankAccount() {
+        //given
+        LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
+
+        Member member = createMember("ssafy@ssafy.com", "01012341234", "1231212345");
+
+        MemberBankAccountModifyServiceRequest request = MemberBankAccountModifyServiceRequest.builder()
+            .bankCode("088")
+            .accountNumber("123123123456")
+            .build();
+
+        //when
+        MemberBankAccountModifyResponse response = memberService.modifyBankAccount(member.getMemberKey(), currentDateTime, request);
+
+        //then
+        assertThat(response).isNotNull()
+            .hasFieldOrPropertyWithValue("bankCode", "088")
+            .hasFieldOrPropertyWithValue("accountNumber", "123***123456")
+            .hasFieldOrPropertyWithValue("bankAccountModifiedDateTime", currentDateTime);
+
+        Member findMember = memberRepository.findById(member.getId()).orElse(null);
+        assertThat(findMember).isNotNull()
+            .hasFieldOrPropertyWithValue("userAdditionalInfo.bankAccount.bankCode", "088")
+            .hasFieldOrPropertyWithValue("userAdditionalInfo.bankAccount.accountNumber", "123123123456");
     }
 
     private Member createMember(String email, String tel, String businessNumber) {
