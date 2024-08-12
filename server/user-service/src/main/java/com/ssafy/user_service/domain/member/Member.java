@@ -66,6 +66,10 @@ public class Member extends TimeBaseEntity {
         this.pwd = pwd;
     }
 
+    public void modifyTel(String tel) {
+        this.tel = tel;
+    }
+
     public boolean isMatchesPwd(PasswordEncoder encoder, String pwd) {
         return encoder.matches(pwd, this.pwd);
     }

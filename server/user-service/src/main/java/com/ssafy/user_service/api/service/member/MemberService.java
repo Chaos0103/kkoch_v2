@@ -50,7 +50,13 @@ public class MemberService {
     }
 
     public MemberTelModifyResponse modifyTel(String memberKey, LocalDateTime currentDateTime, MemberTelModifyServiceRequest request) {
-        return null;
+        Member member = findMemberBy(memberKey);
+
+        checkTel(request.getTel());
+
+        member.modifyTel(request.getTel());
+
+        return MemberTelModifyResponse.of(member.getTel(), currentDateTime);
     }
 
     private void modifyPassword(Member member, String newPassword) {
