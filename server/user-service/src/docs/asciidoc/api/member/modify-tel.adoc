@@ -1,0 +1,12 @@
+[[modify-tel]]
+=== 연락처 수정 API
+
+==== HTTP Request
+
+include::{snippets}/modify-tel/http-request.adoc[]
+include::{snippets}/modify-tel/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/modify-tel/http-response.adoc[]
+include::{snippets}/modify-tel/response-fields.adoc[]
