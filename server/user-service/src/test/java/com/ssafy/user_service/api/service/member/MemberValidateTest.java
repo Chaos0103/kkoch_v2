@@ -1,6 +1,7 @@
 package com.ssafy.user_service.api.service.member;
 
 import com.ssafy.user_service.common.exception.LengthOutOfRangeException;
+import com.ssafy.user_service.common.exception.NotSupportedException;
 import com.ssafy.user_service.common.exception.StringFormatException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -210,6 +211,66 @@ class MemberValidateTest {
 
         //when
         boolean result = MemberValidate.validateBusinessNumber(businessNumber);
+
+        //then
+        assertThat(result).isTrue();
+    }
+
+    @DisplayName("지원하지 않는 은행 코드라면 예외가 발생한다.")
+    @Test
+    void bankCodeIsNotSupported() {
+        //given
+        String bankCode = "000";
+
+        //when //then
+        assertThatThrownBy(() -> MemberValidate.validateBankCode(bankCode))
+            .isInstanceOf(NotSupportedException.class)
+            .hasMessage("지원하지 않는 은행 코드입니다.");
+    }
+
+    @DisplayName("은행 코드의 유효성을 검증한다.")
+    @CsvSource({"088", "004", "081", "020", "011"})
+    @ParameterizedTest
+    void validateBankCode(String bankCode) {
+        //given //when
+        boolean result = MemberValidate.validateBankCode(bankCode);
+
+        //then
+        assertThat(result).isTrue();
+    }
+
+    @DisplayName("은행 계좌의 길이가 최대 범위를 벗어나면 예외가 발생한다.")
+    @Test
+    void accountNumberLengthMoreThanMaxLength() {
+        //given
+        String accountNumber = "012345678901234";
+
+        //when //then
+        assertThatThrownBy(() -> MemberValidate.validateAccountNumber(accountNumber))
+            .isInstanceOf(LengthOutOfRangeException.class)
+            .hasMessage("은행 계좌의 길이는 최대 14자리 입니다.");
+    }
+
+    @DisplayName("은행 계좌에 숫자 이외의 문자가 포함되어 있다면 예외가 발생한다.")
+    @Test
+    void accountNumberNotMatchesRegex() {
+        //given
+        String accountNumber = "123-123-123456";
+
+        //when //then
+        assertThatThrownBy(() -> MemberValidate.validateAccountNumber(accountNumber))
+            .isInstanceOf(StringFormatException.class)
+            .hasMessage("은행 계좌를 올바르게 입력해주세요.");
+    }
+
+    @DisplayName("은행 계좌의 유효성을 검증한다.")
+    @Test
+    void validateAccountNumber() {
+        //given
+        String accountNumber = "01234567890123";
+
+        //when
+        boolean result = MemberValidate.validateAccountNumber(accountNumber);
 
         //then
         assertThat(result).isTrue();

@@ -6,20 +6,23 @@ import com.ssafy.user_service.common.exception.AppException;
 import com.ssafy.user_service.common.redis.RedisRepository;
 import com.ssafy.user_service.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
-import static com.ssafy.user_service.api.service.member.MemberValidate.validateEmail;
+import static com.ssafy.user_service.api.service.member.MemberValidate.*;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class AuthService {
 
-    private static final int AUTH_NUMBER_TIMEOUT = 5;
+    private static final int EMAIL_AUTH_NUMBER_TIMEOUT = 5;
+    private static final int ACCOUNT_AUTH_NUMBER_TIMEOUT = 5;
 
     private final MemberRepository memberRepository;
     private final RedisRepository<String, String> redisRepository;
@@ -28,6 +31,8 @@ public class AuthService {
         validateEmail(email);
 
         LocalDateTime expiredDateTime = saveAuthNumber(email, authNumber, currentDateTime);
+
+        log.info("{}로 이메일 인증 번호 전송", email);
 
         return EmailAuthResponse.of(expiredDateTime);
     }
@@ -55,13 +60,22 @@ public class AuthService {
     }
 
     public BankAccountAuthResponse sendAuthNumberToBankAccount(BankAccountServiceRequest request, String authNumber, LocalDateTime currentDateTime) {
-        return null;
+        validateBankCode(request.getBankCode());
+        validateAccountNumber(request.getAccountNumber());
+
+        redisRepository.save(request.getAccountNumber(), authNumber, ACCOUNT_AUTH_NUMBER_TIMEOUT, MINUTES);
+
+        LocalDateTime expiredDateTime = currentDateTime.plusMinutes(ACCOUNT_AUTH_NUMBER_TIMEOUT);
+
+        log.info("{} 계좌로 1원 인증 번호 전송", request.getAccountNumber());
+
+        return BankAccountAuthResponse.of(expiredDateTime);
     }
 
     private LocalDateTime saveAuthNumber(String email, String authNumber, LocalDateTime currentDateTime) {
-        redisRepository.save(email, authNumber, AUTH_NUMBER_TIMEOUT, MINUTES);
+        redisRepository.save(email, authNumber, EMAIL_AUTH_NUMBER_TIMEOUT, MINUTES);
 
-        return currentDateTime.plusMinutes(AUTH_NUMBER_TIMEOUT);
+        return currentDateTime.plusMinutes(EMAIL_AUTH_NUMBER_TIMEOUT);
     }
 
     private boolean validateAuthNumber(String email, String authNumber) {

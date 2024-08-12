@@ -2,7 +2,9 @@ package com.ssafy.user_service.api.service.member;
 
 import com.ssafy.user_service.api.service.StringValidate;
 import com.ssafy.user_service.common.exception.LengthOutOfRangeException;
+import com.ssafy.user_service.common.exception.NotSupportedException;
 import com.ssafy.user_service.common.exception.StringFormatException;
+import com.ssafy.user_service.domain.member.Bank;
 
 public abstract class MemberValidate {
 
@@ -12,6 +14,7 @@ public abstract class MemberValidate {
     private static final int MAX_NAME_LENGTH = 20;
     private static final int TEL_LENGTH = 11;
     private static final int MAX_BUSINESS_NUMBER_LENGTH = 12;
+    private static final int MAX_ACCOUNT_NUMBER_LENGTH = 14;
 
     private static final String EMAIL_REGEX = "\\w+@\\w+\\.\\w+(\\.\\w+)?";
     private static final String PASSWORD_REGEX = "^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$";
@@ -81,6 +84,28 @@ public abstract class MemberValidate {
 
         if (businessNumber.isNotNumber()) {
             throw new StringFormatException("사업자 번호를 올바르게 입력해주세요.");
+        }
+
+        return true;
+    }
+
+    public static boolean validateBankCode(String bankCode) {
+        if (Bank.isNotSupported(bankCode)) {
+            throw new NotSupportedException("지원하지 않는 은행 코드입니다.");
+        }
+
+        return true;
+    }
+
+    public static boolean validateAccountNumber(String targetAccountNumber) {
+        StringValidate accountNumber = StringValidate.of(targetAccountNumber);
+
+        if (accountNumber.isLengthMoreThan(MAX_ACCOUNT_NUMBER_LENGTH)) {
+            throw new LengthOutOfRangeException("은행 계좌의 길이는 최대 14자리 입니다.");
+        }
+
+        if (accountNumber.isNotNumber()) {
+            throw new StringFormatException("은행 계좌를 올바르게 입력해주세요.");
         }
 
         return true;
