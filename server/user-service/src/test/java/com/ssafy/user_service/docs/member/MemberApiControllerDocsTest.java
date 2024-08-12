@@ -4,9 +4,11 @@ import com.ssafy.user_service.api.controller.member.MemberApiController;
 import com.ssafy.user_service.api.controller.member.request.AdminMemberCreateRequest;
 import com.ssafy.user_service.api.controller.member.request.MemberCreateRequest;
 import com.ssafy.user_service.api.controller.member.request.MemberPasswordModifyRequest;
+import com.ssafy.user_service.api.controller.member.request.MemberTelModifyRequest;
 import com.ssafy.user_service.api.service.member.MemberService;
 import com.ssafy.user_service.api.service.member.response.MemberCreateResponse;
 import com.ssafy.user_service.api.service.member.response.MemberPasswordModifyResponse;
+import com.ssafy.user_service.api.service.member.response.MemberTelModifyResponse;
 import com.ssafy.user_service.docs.RestDocsSupport;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -196,6 +198,52 @@ public class MemberApiControllerDocsTest extends RestDocsSupport {
                     fieldWithPath("data").type(JsonFieldType.OBJECT)
                         .description("응답 데이터"),
                     fieldWithPath("data.passwordModifiedDateTime").type(JsonFieldType.ARRAY)
+                        .description("비밀번호 변경 일시")
+                )
+            ));
+    }
+
+    @DisplayName("연락처 수정 API")
+    @Test
+    void modifyTel() throws Exception {
+        MemberTelModifyRequest request = MemberTelModifyRequest.builder()
+            .tel("01056785678")
+            .build();
+
+        MemberTelModifyResponse response = MemberTelModifyResponse.builder()
+            .modifiedTel("01056785678")
+            .telModifiedDateTime(LocalDateTime.now())
+            .build();
+
+        given(memberService.modifyTel(anyString(), any(), any()))
+            .willReturn(response);
+
+        mockMvc.perform(
+                patch("/members/tel")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andDo(document("modify-tel",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestFields(
+                    fieldWithPath("tel").type(JsonFieldType.STRING)
+                        .description("연락처")
+                ),
+                responseFields(
+                    fieldWithPath("code").type(JsonFieldType.NUMBER)
+                        .description("코드"),
+                    fieldWithPath("status").type(JsonFieldType.STRING)
+                        .description("상태"),
+                    fieldWithPath("message").type(JsonFieldType.STRING)
+                        .description("메시지"),
+                    fieldWithPath("data").type(JsonFieldType.OBJECT)
+                        .description("응답 데이터"),
+                    fieldWithPath("data.modifiedTel").type(JsonFieldType.STRING)
+                        .description("변경된 연락처"),
+                    fieldWithPath("data.telModifiedDateTime").type(JsonFieldType.ARRAY)
                         .description("비밀번호 변경 일시")
                 )
             ));
