@@ -2,6 +2,7 @@ package com.ssafy.user_service.api.controller.member;
 
 import com.ssafy.user_service.api.ApiResponse;
 import com.ssafy.user_service.api.controller.member.request.*;
+import com.ssafy.user_service.api.service.member.AuthService;
 import com.ssafy.user_service.api.service.member.MemberService;
 import com.ssafy.user_service.api.service.member.response.BankAccountAuthResponse;
 import com.ssafy.user_service.api.service.member.response.MemberCreateResponse;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
+import static com.ssafy.user_service.api.controller.member.AuthNumberGenerator.*;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -23,6 +26,7 @@ import java.time.LocalDateTime;
 public class MemberApiController {
 
     private final MemberService memberService;
+    private final AuthService authService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -64,6 +68,12 @@ public class MemberApiController {
 
     @PostMapping("/bank-account")
     public ApiResponse<BankAccountAuthResponse> sendOneCoinAuthNumber(@Valid @RequestBody BankAccountRequest request) {
-        return null;
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        String authNumber = generateAuthNumber(3);
+
+        BankAccountAuthResponse response = authService.sendAuthNumberToBankAccount(request.toServiceRequest(), authNumber, currentDateTime);
+
+        return ApiResponse.ok(response);
     }
 }

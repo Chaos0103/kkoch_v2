@@ -5,6 +5,7 @@ import com.ssafy.user_service.api.controller.member.request.AdminMemberCreateReq
 import com.ssafy.user_service.api.controller.member.request.MemberCreateRequest;
 import com.ssafy.user_service.api.controller.member.request.MemberPasswordModifyRequest;
 import com.ssafy.user_service.api.controller.member.request.MemberTelModifyRequest;
+import com.ssafy.user_service.api.service.member.AuthService;
 import com.ssafy.user_service.api.service.member.MemberService;
 import com.ssafy.user_service.api.service.member.response.MemberCreateResponse;
 import com.ssafy.user_service.api.service.member.response.MemberPasswordModifyResponse;
@@ -32,10 +33,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class MemberApiControllerDocsTest extends RestDocsSupport {
 
     private final MemberService memberService = mock(MemberService.class);
+    private final AuthService authService = mock(AuthService.class);
 
     @Override
     protected Object initController() {
-        return new MemberApiController(memberService);
+        return new MemberApiController(memberService, authService);
     }
 
     @DisplayName("일반 회원 가입 API")
