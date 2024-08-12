@@ -5,10 +5,7 @@ import com.ssafy.user_service.api.service.member.request.MemberBankAccountModify
 import com.ssafy.user_service.api.service.member.request.MemberCreateServiceRequest;
 import com.ssafy.user_service.api.service.member.request.MemberPasswordModifyServiceRequest;
 import com.ssafy.user_service.api.service.member.request.MemberTelModifyServiceRequest;
-import com.ssafy.user_service.api.service.member.response.MemberBankAccountModifyResponse;
-import com.ssafy.user_service.api.service.member.response.MemberCreateResponse;
-import com.ssafy.user_service.api.service.member.response.MemberPasswordModifyResponse;
-import com.ssafy.user_service.api.service.member.response.MemberTelModifyResponse;
+import com.ssafy.user_service.api.service.member.response.*;
 import com.ssafy.user_service.common.exception.AppException;
 import com.ssafy.user_service.domain.member.*;
 import com.ssafy.user_service.domain.member.repository.MemberRepository;
@@ -317,6 +314,45 @@ class MemberServiceTest extends IntegrationTestSupport {
         assertThat(findMember).isNotNull()
             .hasFieldOrPropertyWithValue("userAdditionalInfo.bankAccount.bankCode", "088")
             .hasFieldOrPropertyWithValue("userAdditionalInfo.bankAccount.accountNumber", "123123123456");
+    }
+
+    @DisplayName("회원 삭제시 비밀번호가 일치하지 않으면 예외가 발생한다.")
+    @Test
+    void removeMemberNotMatchesPassword() {
+        //given
+        LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
+
+        Member member = createMember("ssafy@ssafy.com", "01012341234", "1231212345");
+
+        //when
+        assertThatThrownBy(() -> memberService.removeMember(member.getMemberKey(), "ssafy5678@", currentDateTime))
+            .isInstanceOf(AppException.class)
+            .hasMessage("비밀번호가 일치하지 않습니다.");
+
+        //then
+        Member findMember = memberRepository.findById(member.getId()).orElse(null);
+        assertThat(findMember).isNotNull()
+            .hasFieldOrPropertyWithValue("isDeleted", false);
+    }
+
+    @DisplayName("회원 정보를 입력 받아 회원 삭제를 한다.")
+    @Test
+    void removeMember() {
+        //given
+        LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
+
+        Member member = createMember("ssafy@ssafy.com", "01012341234", "1231212345");
+
+        //when
+        MemberRemoveResponse response = memberService.removeMember(member.getMemberKey(), "ssafy1234!", currentDateTime);
+
+        //then
+        assertThat(response).isNotNull()
+            .hasFieldOrPropertyWithValue("withdrawnDateTime", currentDateTime);
+
+        Member findMember = memberRepository.findById(member.getId()).orElse(null);
+        assertThat(findMember).isNotNull()
+            .hasFieldOrPropertyWithValue("isDeleted", true);
     }
 
     private Member createMember(String email, String tel, String businessNumber) {

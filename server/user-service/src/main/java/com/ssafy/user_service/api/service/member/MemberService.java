@@ -4,10 +4,7 @@ import com.ssafy.user_service.api.service.member.request.MemberBankAccountModify
 import com.ssafy.user_service.api.service.member.request.MemberCreateServiceRequest;
 import com.ssafy.user_service.api.service.member.request.MemberPasswordModifyServiceRequest;
 import com.ssafy.user_service.api.service.member.request.MemberTelModifyServiceRequest;
-import com.ssafy.user_service.api.service.member.response.MemberBankAccountModifyResponse;
-import com.ssafy.user_service.api.service.member.response.MemberCreateResponse;
-import com.ssafy.user_service.api.service.member.response.MemberPasswordModifyResponse;
-import com.ssafy.user_service.api.service.member.response.MemberTelModifyResponse;
+import com.ssafy.user_service.api.service.member.response.*;
 import com.ssafy.user_service.common.exception.AppException;
 import com.ssafy.user_service.domain.member.Member;
 import com.ssafy.user_service.domain.member.repository.MemberRepository;
@@ -70,6 +67,10 @@ public class MemberService {
         member.modifyBankAccount(request.getBankCode(), request.getAccountNumber());
 
         return MemberBankAccountModifyResponse.of(request.getBankCode(), request.getAccountNumber(), currentDateTime);
+    }
+
+    public MemberRemoveResponse removeMember(String memberKey, String password, LocalDateTime currentDateTime) {
+        return null;
     }
 
     private void modifyPassword(Member member, String newPassword) {
