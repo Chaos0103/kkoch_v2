@@ -32,7 +32,7 @@ public class UserAdditionalInfo {
     }
 
     public UserAdditionalInfo withBankAccount(String bankCode, String accountNumber) {
-        BankAccount bankAccount = BankAccount.of(bankCode, accountNumber);
-        return of(businessNumber, bankAccount);
+        BankAccount modifiedBackAccount = BankAccount.of(bankCode, accountNumber);
+        return of(businessNumber, modifiedBackAccount);
     }
 }

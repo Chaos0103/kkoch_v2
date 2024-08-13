@@ -6,14 +6,17 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import static com.ssafy.user_service.api.controller.member.message.MemberBindingMessage.NOT_BLANK_CURRENT_PASSWORD;
+import static com.ssafy.user_service.api.controller.member.message.MemberBindingMessage.NOT_BLANK_NEW_PASSWORD;
+
 @Getter
 @NoArgsConstructor
 public class MemberPasswordModifyRequest {
 
-    @NotBlank(message = "현재 비밀번호를 입력해주세요.")
+    @NotBlank(message = NOT_BLANK_CURRENT_PASSWORD)
     private String currentPassword;
 
-    @NotBlank(message = "신규 비밀번호를 입력해주세요.")
+    @NotBlank(message = NOT_BLANK_NEW_PASSWORD)
     private String newPassword;
 
     @Builder

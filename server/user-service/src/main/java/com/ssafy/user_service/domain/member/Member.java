@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import static com.ssafy.user_service.api.service.member.Masking.maskingEmail;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -84,5 +86,9 @@ public class Member extends TimeBaseEntity {
 
     public String getMemberKey() {
         return specificInfo.getMemberKey();
+    }
+
+    public String getMaskingEmail() {
+        return maskingEmail(email);
     }
 }

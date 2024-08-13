@@ -3,6 +3,8 @@ package com.ssafy.user_service.api.service.member.request;
 import lombok.Builder;
 import lombok.Getter;
 
+import static com.ssafy.user_service.api.service.member.MemberValidate.validatePassword;
+
 @Getter
 public class MemberPasswordModifyServiceRequest {
 
@@ -16,6 +18,8 @@ public class MemberPasswordModifyServiceRequest {
     }
 
     public static MemberPasswordModifyServiceRequest of(String currentPassword, String newPassword) {
+        validatePassword(newPassword);
+
         return new MemberPasswordModifyServiceRequest(currentPassword, newPassword);
     }
 }

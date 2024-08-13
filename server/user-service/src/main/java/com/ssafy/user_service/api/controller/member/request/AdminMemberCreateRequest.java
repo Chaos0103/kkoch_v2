@@ -33,6 +33,6 @@ public class AdminMemberCreateRequest {
     }
 
     public MemberCreateServiceRequest toServiceRequest() {
-        return MemberCreateServiceRequest.of(email, password, name, tel, null);
+        return MemberCreateServiceRequest.createAdmin(email, password, name, tel);
     }
 }

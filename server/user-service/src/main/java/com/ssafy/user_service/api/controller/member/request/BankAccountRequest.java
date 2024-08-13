@@ -6,14 +6,17 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import static com.ssafy.user_service.api.controller.member.message.MemberBindingMessage.NOT_BLANK_ACCOUNT_NUMBER;
+import static com.ssafy.user_service.api.controller.member.message.MemberBindingMessage.NOT_BLANK_BANK_CODE;
+
 @Getter
 @NoArgsConstructor
 public class BankAccountRequest {
 
-    @NotBlank(message = "은행 코드를 입력해주세요.")
+    @NotBlank(message = NOT_BLANK_BANK_CODE)
     private String bankCode;
 
-    @NotBlank(message = "은행 계좌를 입력해주세요.")
+    @NotBlank(message = NOT_BLANK_ACCOUNT_NUMBER)
     private String accountNumber;
 
     @Builder

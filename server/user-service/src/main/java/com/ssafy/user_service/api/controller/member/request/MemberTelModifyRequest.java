@@ -6,11 +6,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import static com.ssafy.user_service.api.controller.member.message.MemberBindingMessage.NOT_BLANK_TEL;
+
 @Getter
 @NoArgsConstructor
 public class MemberTelModifyRequest {
 
-    @NotBlank(message = "연락처를 입력해주세요.")
+    @NotBlank(message = NOT_BLANK_TEL)
     private String tel;
 
     @Builder

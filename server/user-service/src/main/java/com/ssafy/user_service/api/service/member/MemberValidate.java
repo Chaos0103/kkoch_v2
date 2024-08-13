@@ -5,8 +5,11 @@ import com.ssafy.user_service.common.exception.LengthOutOfRangeException;
 import com.ssafy.user_service.common.exception.NotSupportedException;
 import com.ssafy.user_service.common.exception.StringFormatException;
 import com.ssafy.user_service.domain.member.Bank;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-public abstract class MemberValidate {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class MemberValidate {
 
     private static final int MAX_EMAIL_LENGTH = 100;
     private static final int MIN_PASSWORD_LENGTH = 8;

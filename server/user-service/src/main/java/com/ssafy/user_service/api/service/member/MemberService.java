@@ -16,8 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 
-import static com.ssafy.user_service.api.service.member.MemberValidate.*;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -27,7 +25,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     public MemberCreateResponse createUserMember(MemberCreateServiceRequest request) {
-        checkBusinessNumber(request.getBusinessNumber());
+        checkDuplicateBusinessNumber(request.getBusinessNumber());
 
         return createMember(request);
     }
@@ -41,8 +39,6 @@ public class MemberService {
 
         checkMatchesPassword(member, request.getCurrentPassword());
 
-        checkPassword(request.getNewPassword());
-
         modifyPassword(member, request.getNewPassword());
 
         return MemberPasswordModifyResponse.of(currentDateTime);
@@ -51,7 +47,7 @@ public class MemberService {
     public MemberTelModifyResponse modifyTel(String memberKey, LocalDateTime currentDateTime, MemberTelModifyServiceRequest request) {
         Member member = findMemberBy(memberKey);
 
-        checkTel(request.getTel());
+        checkDuplicateTel(request.getTel());
 
         member.modifyTel(request.getTel());
 
@@ -59,9 +55,6 @@ public class MemberService {
     }
 
     public MemberBankAccountModifyResponse modifyBankAccount(String memberKey, LocalDateTime currentDateTime, MemberBankAccountModifyServiceRequest request) {
-        validateBankCode(request.getBankCode());
-        validateAccountNumber(request.getAccountNumber());
-
         Member member = findMemberBy(memberKey);
 
         member.modifyBankAccount(request.getBankCode(), request.getAccountNumber());
@@ -91,20 +84,13 @@ public class MemberService {
     }
 
     private MemberCreateResponse createMember(MemberCreateServiceRequest request) {
-        checkEmail(request.getEmail());
-        checkPassword(request.getPassword());
-        checkName(request.getName());
-        checkTel(request.getTel());
+        checkDuplicateEmail(request.getEmail());
+        checkDuplicateTel(request.getTel());
 
-        Member member = request.toEntity(generateEncodedPassword(request.getPassword()));
+        Member member = request.toEntity(passwordEncoder);
         Member savedMember = memberRepository.save(member);
 
         return MemberCreateResponse.of(savedMember);
-    }
-
-    private void checkEmail(String email) {
-        checkDuplicateEmail(email);
-        validateEmail(email);
     }
 
     private void checkDuplicateEmail(String email) {
@@ -114,29 +100,11 @@ public class MemberService {
         }
     }
 
-    private static void checkPassword(String password) {
-        validatePassword(password);
-    }
-
-    private static void checkName(String name) {
-        validateName(name);
-    }
-
-    private void checkTel(String tel) {
-        checkDuplicateTel(tel);
-        validateTel(tel);
-    }
-
     private void checkDuplicateTel(String tel) {
         boolean isExistTel = memberRepository.existsByTel(tel);
         if (isExistTel) {
             throw new AppException("이미 가입된 연락처입니다.");
         }
-    }
-
-    private void checkBusinessNumber(String businessNumber) {
-        checkDuplicateBusinessNumber(businessNumber);
-        validateBusinessNumber(businessNumber);
     }
 
     private void checkDuplicateBusinessNumber(String businessNumber) {
@@ -146,12 +114,12 @@ public class MemberService {
         }
     }
 
-    private String generateEncodedPassword(String password) {
-        return passwordEncoder.encode(password);
-    }
-
     private Member findMemberBy(String memberKey) {
         return memberRepository.findBySpecificInfoMemberKey(memberKey)
             .orElseThrow(() -> new NoSuchElementException("등록되지 않은 회원입니다."));
+    }
+
+    private String generateEncodedPassword(String password) {
+        return passwordEncoder.encode(password);
     }
 }

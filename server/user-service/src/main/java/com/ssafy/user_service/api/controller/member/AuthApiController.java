@@ -34,7 +34,7 @@ public class AuthApiController {
 
     @PostMapping("/email")
     public ApiResponse<EmailAuthResponse> sendAuthNumber(@Valid @RequestBody SendAuthNumberRequest request) {
-        LocalDateTime currentDateTime = LocalDateTime.now();
+        LocalDateTime currentDateTime = getCurrentDateTime();
 
         String authNumber = generateAuthNumber(EMAIL_AUTH_NUMBER_SIZE);
 
@@ -45,7 +45,7 @@ public class AuthApiController {
 
     @PostMapping("/email/validate")
     public ApiResponse<EmailValidateResponse> validateAuthNumber(@Valid @RequestBody ValidateAuthNumberRequest request) {
-        LocalDateTime currentDateTime = LocalDateTime.now();
+        LocalDateTime currentDateTime = getCurrentDateTime();
 
         EmailValidateResponse response = authService.validateAuthNumberToEmail(request.getEmail(), request.getAuthNumber(), currentDateTime);
 
@@ -54,7 +54,7 @@ public class AuthApiController {
 
     @PostMapping("/tel/validate")
     public ApiResponse<TelValidateResponse> validateTel(@Valid @RequestBody ValidateTelRequest request) {
-        LocalDateTime currentDateTime = LocalDateTime.now();
+        LocalDateTime currentDateTime = getCurrentDateTime();
 
         TelValidateResponse response = authService.validateTel(request.getTel(), currentDateTime);
 
@@ -63,10 +63,14 @@ public class AuthApiController {
 
     @PostMapping("/business-number/validate")
     public ApiResponse<BusinessNumberValidateResponse> validateBusinessNumber(@Valid @RequestBody ValidateBusinessNumberRequest request) {
-        LocalDateTime currentDateTime = LocalDateTime.now();
+        LocalDateTime currentDateTime = getCurrentDateTime();
 
         BusinessNumberValidateResponse response = authService.validateBusinessNumber(request.getBusinessNumber(), currentDateTime);
 
         return ApiResponse.ok(response);
+    }
+
+    private static LocalDateTime getCurrentDateTime() {
+        return LocalDateTime.now();
     }
 }

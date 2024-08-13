@@ -5,7 +5,6 @@ import com.ssafy.user_service.api.controller.member.request.*;
 import com.ssafy.user_service.api.service.member.AuthService;
 import com.ssafy.user_service.api.service.member.MemberService;
 import com.ssafy.user_service.api.service.member.response.*;
-import com.ssafy.user_service.common.security.SecurityUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,13 +13,16 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
-import static com.ssafy.user_service.api.controller.member.AuthNumberGenerator.*;
+import static com.ssafy.user_service.api.controller.member.AuthNumberGenerator.generateAuthNumber;
+import static com.ssafy.user_service.common.security.SecurityUtils.findMemberKeyByToken;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/members")
 public class MemberApiController {
+
+    private static final int BANK_ACCOUNT_AUTH_NUMBER_SIZE = 3;
 
     private final MemberService memberService;
     private final AuthService authService;
@@ -43,9 +45,9 @@ public class MemberApiController {
 
     @PatchMapping("/password")
     public ApiResponse<MemberPasswordModifyResponse> modifyPassword(@Valid @RequestBody MemberPasswordModifyRequest request) {
-        LocalDateTime currentDateTime = LocalDateTime.now();
+        LocalDateTime currentDateTime = getCurrentDateTime();
 
-        String memberKey = SecurityUtils.findMemberKeyByToken();
+        String memberKey = findMemberKeyByToken();
 
         MemberPasswordModifyResponse response = memberService.modifyPassword(memberKey, currentDateTime, request.toServiceRequest());
 
@@ -54,9 +56,9 @@ public class MemberApiController {
 
     @PatchMapping("/tel")
     public ApiResponse<MemberTelModifyResponse> modifyTel(@Valid @RequestBody MemberTelModifyRequest request) {
-        LocalDateTime currentDateTime = LocalDateTime.now();
+        LocalDateTime currentDateTime = getCurrentDateTime();
 
-        String memberKey = SecurityUtils.findMemberKeyByToken();
+        String memberKey = findMemberKeyByToken();
 
         MemberTelModifyResponse response = memberService.modifyTel(memberKey, currentDateTime, request.toServiceRequest());
 
@@ -65,9 +67,9 @@ public class MemberApiController {
 
     @PostMapping("/bank-account")
     public ApiResponse<BankAccountAuthResponse> sendOneCoinAuthNumber(@Valid @RequestBody BankAccountRequest request) {
-        LocalDateTime currentDateTime = LocalDateTime.now();
+        LocalDateTime currentDateTime = getCurrentDateTime();
 
-        String authNumber = generateAuthNumber(3);
+        String authNumber = generateAuthNumber(BANK_ACCOUNT_AUTH_NUMBER_SIZE);
 
         BankAccountAuthResponse response = authService.sendAuthNumberToBankAccount(request.toServiceRequest(), authNumber, currentDateTime);
 
@@ -78,9 +80,9 @@ public class MemberApiController {
     public ApiResponse<MemberBankAccountModifyResponse> modifyBankAccount(@Valid @RequestBody MemberBankAccountModifyRequest request) {
         authService.validateAuthNumberToBankAccount(request.toAuthServiceRequest(), request.getAuthNumber());
 
-        LocalDateTime currentDateTime = LocalDateTime.now();
+        LocalDateTime currentDateTime = getCurrentDateTime();
 
-        String memberKey = SecurityUtils.findMemberKeyByToken();
+        String memberKey = findMemberKeyByToken();
 
         MemberBankAccountModifyResponse response = memberService.modifyBankAccount(memberKey, currentDateTime, request.toServiceRequest());
 
@@ -89,12 +91,16 @@ public class MemberApiController {
 
     @PostMapping("/withdraw")
     public ApiResponse<MemberRemoveResponse> removeMember(@Valid @RequestBody MemberRemoveRequest request) {
-        LocalDateTime currentDateTime = LocalDateTime.now();
+        LocalDateTime currentDateTime = getCurrentDateTime();
 
-        String memberKey = SecurityUtils.findMemberKeyByToken();
+        String memberKey = findMemberKeyByToken();
 
         MemberRemoveResponse response = memberService.removeMember(memberKey, request.getPassword(), currentDateTime);
 
         return ApiResponse.ok(response);
+    }
+
+    private static LocalDateTime getCurrentDateTime() {
+        return LocalDateTime.now();
     }
 }

@@ -2,14 +2,13 @@ package com.ssafy.user_service.domain.member.repository;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.user_service.domain.member.QMember;
 import com.ssafy.user_service.domain.member.repository.response.MemberInfoResponse;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-import static com.ssafy.user_service.domain.member.QMember.*;
+import static com.ssafy.user_service.domain.member.QMember.member;
 
 @Repository
 public class MemberQueryRepository {

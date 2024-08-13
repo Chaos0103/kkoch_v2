@@ -37,6 +37,6 @@ public class MemberCreateRequest {
     }
 
     public MemberCreateServiceRequest toServiceRequest() {
-        return MemberCreateServiceRequest.of(email, password, name, tel, businessNumber);
+        return MemberCreateServiceRequest.createUser(email, password, name, tel, businessNumber);
     }
 }

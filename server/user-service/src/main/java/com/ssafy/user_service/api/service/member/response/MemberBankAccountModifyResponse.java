@@ -1,6 +1,5 @@
 package com.ssafy.user_service.api.service.member.response;
 
-import com.ssafy.user_service.domain.member.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

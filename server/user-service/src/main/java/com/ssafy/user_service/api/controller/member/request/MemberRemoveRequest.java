@@ -5,11 +5,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import static com.ssafy.user_service.api.controller.member.message.MemberBindingMessage.NOT_BLANK_PASSWORD;
+
 @Getter
 @NoArgsConstructor
 public class MemberRemoveRequest {
 
-    @NotBlank(message = "비밀번호를 입력해주세요.")
+    @NotBlank(message = NOT_BLANK_PASSWORD)
     private String password;
 
     @Builder

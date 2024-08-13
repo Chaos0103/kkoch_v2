@@ -3,6 +3,9 @@ package com.ssafy.user_service.api.service.member.request;
 import lombok.Builder;
 import lombok.Getter;
 
+import static com.ssafy.user_service.api.service.member.MemberValidate.validateAccountNumber;
+import static com.ssafy.user_service.api.service.member.MemberValidate.validateBankCode;
+
 @Getter
 public class MemberBankAccountModifyServiceRequest {
 
@@ -16,6 +19,9 @@ public class MemberBankAccountModifyServiceRequest {
     }
 
     public static MemberBankAccountModifyServiceRequest of(String bankCode, String accountNumber) {
+        validateBankCode(bankCode);
+        validateAccountNumber(accountNumber);
+
         return new MemberBankAccountModifyServiceRequest(bankCode, accountNumber);
     }
 }

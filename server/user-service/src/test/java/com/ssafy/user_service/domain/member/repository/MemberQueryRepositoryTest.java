@@ -3,14 +3,13 @@ package com.ssafy.user_service.domain.member.repository;
 import com.ssafy.user_service.IntegrationTestSupport;
 import com.ssafy.user_service.domain.member.*;
 import com.ssafy.user_service.domain.member.repository.response.MemberInfoResponse;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class MemberQueryRepositoryTest extends IntegrationTestSupport {
 
