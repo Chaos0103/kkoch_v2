@@ -2,6 +2,7 @@ package com.ssafy.user_service.api.service.notification;
 
 import com.ssafy.user_service.IntegrationTestSupport;
 import com.ssafy.user_service.api.service.notification.response.NotificationOpenResponse;
+import com.ssafy.user_service.api.service.notification.response.NotificationRemoveResponse;
 import com.ssafy.user_service.domain.member.*;
 import com.ssafy.user_service.domain.member.repository.MemberRepository;
 import com.ssafy.user_service.domain.membernotification.MemberNotification;
@@ -66,6 +67,43 @@ class NotificationServiceTest extends IntegrationTestSupport {
         List<MemberNotification> memberNotifications = memberNotificationRepository.findAll();
         assertThat(memberNotifications).hasSize(2)
             .extracting("isOpened")
+            .containsExactlyInAnyOrder(true, true);
+    }
+
+    @DisplayName("알림 ID 목록을 입력 받아 알림을 삭제한다.")
+    @Test
+    void removeNotifications() {
+        //given
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        Member user = createMember(Role.USER, "ssafy@ssafy.com", "01012341234", UserAdditionalInfo.builder()
+            .businessNumber("1231212345")
+            .bankAccount(BankAccount.builder()
+                .bankCode("088")
+                .accountNumber("123123123456")
+                .build())
+            .build());
+        Member admin = createMember(Role.ADMIN, "admin@ssafy.com", "01056785678", null);
+
+        Notification notification1 = createNotification(admin, NotificationCategory.PAYMENT, "1,000,000원이 결제되었습니다.");
+        MemberNotification memberNotification1 = createMemberNotification(user, notification1);
+
+        Notification notification2 = createNotification(admin, NotificationCategory.AUCTION, "2024년 7월 12일 오전 5:00에 절화 경매가 진행될 예정입니다.");
+        MemberNotification memberNotification2 = createMemberNotification(user, notification2);
+
+        List<Long> notificationIds = List.of(memberNotification1.getId(), memberNotification2.getId());
+
+        //when
+        NotificationRemoveResponse response = notificationService.removeNotifications(notificationIds, currentDateTime);
+
+        //then
+        assertThat(response).isNotNull()
+            .hasFieldOrPropertyWithValue("removedNotificationCount", 2)
+            .hasFieldOrPropertyWithValue("removedDateTime", currentDateTime);
+
+        List<MemberNotification> memberNotifications = memberNotificationRepository.findAll();
+        assertThat(memberNotifications).hasSize(2)
+            .extracting("isDeleted")
             .containsExactlyInAnyOrder(true, true);
     }
 

@@ -1,6 +1,7 @@
 package com.ssafy.user_service.api.service.notification;
 
 import com.ssafy.user_service.api.service.notification.response.NotificationOpenResponse;
+import com.ssafy.user_service.api.service.notification.response.NotificationRemoveResponse;
 import com.ssafy.user_service.domain.membernotification.MemberNotification;
 import com.ssafy.user_service.domain.membernotification.repository.MemberNotificationRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,5 +24,9 @@ public class NotificationService {
         memberNotifications.forEach(MemberNotification::open);
 
         return NotificationOpenResponse.of(memberNotifications, currentDateTime);
+    }
+
+    public NotificationRemoveResponse removeNotifications(List<Long> notificationIds, LocalDateTime currentDateTime) {
+        return null;
     }
 }
