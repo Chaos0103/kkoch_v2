@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -22,6 +24,10 @@ public class NotificationApiController {
 
     @PostMapping("/open")
     public ApiResponse<NotificationOpenResponse> openNotifications(@Valid @RequestBody NotificationOpenRequest request) {
-        return null;
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        NotificationOpenResponse response = notificationService.openNotifications(request.getIds(), currentDateTime);
+
+        return ApiResponse.ok(response);
     }
 }
