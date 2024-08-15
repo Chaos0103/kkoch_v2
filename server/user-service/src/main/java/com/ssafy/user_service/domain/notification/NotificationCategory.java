@@ -10,4 +10,13 @@ public enum NotificationCategory {
     SERVICE("서비스");
 
     private final String description;
+
+    public static NotificationCategory of(String notificationCategory) {
+        for (NotificationCategory category : values()) {
+            if (category.name().equals(notificationCategory)) {
+                return category;
+            }
+        }
+        return null;
+    }
 }
