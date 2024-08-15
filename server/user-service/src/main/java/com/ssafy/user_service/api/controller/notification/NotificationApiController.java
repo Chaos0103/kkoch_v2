@@ -35,6 +35,10 @@ public class NotificationApiController {
 
     @PostMapping("/remove")
     public ApiResponse<NotificationRemoveResponse> removeNotifications(@Valid @RequestBody NotificationRemoveRequest request) {
-        return null;
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        NotificationRemoveResponse response = notificationService.removeNotifications(request.getIds(), currentDateTime);
+
+        return ApiResponse.ok(response);
     }
 }
