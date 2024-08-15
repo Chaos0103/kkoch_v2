@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class MemberQueryApiControllerDocsTest extends RestDocsSupport {
+class MemberQueryApiControllerDocsTest extends RestDocsSupport {
 
     private final MemberQueryService memberQueryService = mock(MemberQueryService.class);
 

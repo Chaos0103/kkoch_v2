@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class MemberApiControllerDocsTest extends RestDocsSupport {
+class MemberApiControllerDocsTest extends RestDocsSupport {
 
     private final MemberService memberService = mock(MemberService.class);
     private final AuthService authService = mock(AuthService.class);
