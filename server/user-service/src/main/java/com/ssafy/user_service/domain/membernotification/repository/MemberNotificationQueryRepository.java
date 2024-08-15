@@ -47,7 +47,16 @@ public class MemberNotificationQueryRepository {
     }
 
     public int countByMemberKeyAndCond(String memberKey, NotificationCategory category) {
-        return 0;
+        return queryFactory
+            .select(memberNotification.id)
+            .from(memberNotification)
+            .where(
+                memberNotification.isDeleted.isFalse(),
+                memberNotification.member.specificInfo.memberKey.eq(memberKey),
+                eqNotificationCategory(category)
+            )
+            .fetch()
+            .size();
     }
 
     private BooleanExpression eqNotificationCategory(NotificationCategory category) {
