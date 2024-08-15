@@ -96,6 +96,58 @@ class MemberNotificationQueryRepositoryTest extends IntegrationTestSupport {
             );
     }
 
+    @DisplayName("회원 고유키와 검색 조건과 일치하는 알림 목록의 갯수를 조회한다.")
+    @Test
+    void countByMemberKeyAndCond() {
+        //given
+        Member user = createMember(Role.USER, "ssafy@ssafy.com", "01012341234", UserAdditionalInfo.builder()
+            .businessNumber("1231212345")
+            .bankAccount(BankAccount.builder()
+                .bankCode("088")
+                .accountNumber("123123123456")
+                .build())
+            .build());
+        Member admin = createMember(Role.ADMIN, "admin@ssafy.com", "01056785678", null);
+
+        Notification notification1 = createNotification(admin, NotificationCategory.PAYMENT, "1,000,000원이 결제되었습니다.");
+        createMemberNotification(user, notification1);
+
+        Notification notification2 = createNotification(admin, NotificationCategory.AUCTION, "2024년 7월 12일 오전 5:00에 절화 경매가 진행될 예정입니다.");
+        createMemberNotification(user, notification2);
+
+        //when
+        int count = memberNotificationQueryRepository.countByMemberKeyAndCond(user.getMemberKey(), NotificationCategory.AUCTION);
+
+        //then
+        assertThat(count).isOne();
+    }
+
+    @DisplayName("회원 고유키와 검색 조건과 일치하는 알림 목록의 갯수를 조회한다.")
+    @Test
+    void countByMemberKeyAndCondWithoutNotificationCategory() {
+        //given
+        Member user = createMember(Role.USER, "ssafy@ssafy.com", "01012341234", UserAdditionalInfo.builder()
+            .businessNumber("1231212345")
+            .bankAccount(BankAccount.builder()
+                .bankCode("088")
+                .accountNumber("123123123456")
+                .build())
+            .build());
+        Member admin = createMember(Role.ADMIN, "admin@ssafy.com", "01056785678", null);
+
+        Notification notification1 = createNotification(admin, NotificationCategory.PAYMENT, "1,000,000원이 결제되었습니다.");
+        createMemberNotification(user, notification1);
+
+        Notification notification2 = createNotification(admin, NotificationCategory.AUCTION, "2024년 7월 12일 오전 5:00에 절화 경매가 진행될 예정입니다.");
+        createMemberNotification(user, notification2);
+
+        //when
+        int count = memberNotificationQueryRepository.countByMemberKeyAndCond(user.getMemberKey(), null);
+
+        //then
+        assertThat(count).isEqualTo(2);
+    }
+
     private Member createMember(Role role, String email, String tel, UserAdditionalInfo userAdditionalInfo) {
         Member member = Member.builder()
             .isDeleted(false)
