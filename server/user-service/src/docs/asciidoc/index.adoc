@@ -36,3 +36,4 @@ include::api/member/search-member-info.adoc[]
 
 include::api/notification/search-notifications.adoc[]
 include::api/notification/open-notifications.adoc[]
+include::api/notification/remove-notifications.adoc[]

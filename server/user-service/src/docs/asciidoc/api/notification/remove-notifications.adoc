@@ -1,0 +1,13 @@
+[[remove-notifications]]
+=== 알림 다중 삭제 API
+
+==== HTTP Request
+
+include::{snippets}/remove-notifications/http-request.adoc[]
+include::{snippets}/remove-notifications/request-headers.adoc[]
+include::{snippets}/remove-notifications/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/remove-notifications/http-response.adoc[]
+include::{snippets}/remove-notifications/response-fields.adoc[]
