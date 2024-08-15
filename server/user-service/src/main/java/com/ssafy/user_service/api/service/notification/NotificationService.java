@@ -1,6 +1,7 @@
 package com.ssafy.user_service.api.service.notification;
 
 import com.ssafy.user_service.api.service.notification.response.NotificationOpenResponse;
+import com.ssafy.user_service.domain.membernotification.MemberNotification;
 import com.ssafy.user_service.domain.membernotification.repository.MemberNotificationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,10 @@ public class NotificationService {
     private final MemberNotificationRepository memberNotificationRepository;
 
     public NotificationOpenResponse openNotifications(List<Long> notificationIds, LocalDateTime currentDateTime) {
-        return null;
+        List<MemberNotification> memberNotifications = memberNotificationRepository.findAllByIdInAndIsOpenedFalse(notificationIds);
+
+        memberNotifications.forEach(MemberNotification::open);
+
+        return NotificationOpenResponse.of(memberNotifications, currentDateTime);
     }
 }

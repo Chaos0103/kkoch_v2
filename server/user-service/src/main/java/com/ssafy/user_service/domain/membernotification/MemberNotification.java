@@ -28,7 +28,7 @@ public class MemberNotification extends TimeBaseEntity {
     private Notification notification;
 
     @Column(nullable = false, columnDefinition = "boolean default false")
-    private boolean isOpened;
+    private Boolean isOpened;
 
     @Builder
     private MemberNotification(boolean isDeleted, Member member, Notification notification, boolean isOpened) {
@@ -40,5 +40,9 @@ public class MemberNotification extends TimeBaseEntity {
 
     public static MemberNotification of(boolean isDeleted, Member member, Notification notification, boolean isOpened) {
         return new MemberNotification(isDeleted, member, notification, isOpened);
+    }
+
+    public void open() {
+        isOpened = true;
     }
 }
