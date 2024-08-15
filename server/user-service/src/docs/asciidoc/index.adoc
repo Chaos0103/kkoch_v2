@@ -30,3 +30,8 @@ include::api/member/send-one-coin-auth-number.adoc[]
 include::api/member/modify-bank-account.adoc[]
 include::api/member/remove-member.adoc[]
 include::api/member/search-member-info.adoc[]
+
+[[Notification-API]]
+== 알림 API
+
+include::api/notification/search-notifications.adoc[]
