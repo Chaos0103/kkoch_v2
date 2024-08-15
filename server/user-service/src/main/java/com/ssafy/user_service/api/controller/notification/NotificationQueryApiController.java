@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import static com.ssafy.user_service.common.security.SecurityUtils.findMemberKeyByToken;
+import static com.ssafy.user_service.common.util.PageUtils.parsePageNumber;
 
 @Slf4j
 @RestController
@@ -27,7 +28,9 @@ public class NotificationQueryApiController {
     public ApiResponse<PageResponse<NotificationResponse>> searchNotifications(@Valid @ModelAttribute NotificationSearchParam param) {
         String memberKey = findMemberKeyByToken();
 
-        PageResponse<NotificationResponse> response = notificationQueryService.searchNotifications(memberKey, param.getCategory(), param.toNumberPage());
+        int pageNumber = parsePageNumber(param.getPage());
+
+        PageResponse<NotificationResponse> response = notificationQueryService.searchNotifications(memberKey, param.getCategory(), pageNumber);
 
         return ApiResponse.ok(response);
     }

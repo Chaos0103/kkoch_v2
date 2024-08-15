@@ -1,11 +1,12 @@
 package com.ssafy.user_service.api.service.notification;
 
 import com.ssafy.user_service.api.PageResponse;
+import com.ssafy.user_service.common.util.PageUtils;
 import com.ssafy.user_service.domain.membernotification.repository.MemberNotificationQueryRepository;
 import com.ssafy.user_service.domain.membernotification.repository.response.NotificationResponse;
 import com.ssafy.user_service.domain.notification.NotificationCategory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,15 +19,15 @@ public class NotificationQueryService {
 
     private final MemberNotificationQueryRepository memberNotificationQueryRepository;
 
-    public PageResponse<NotificationResponse> searchNotifications(String memberKey, String notificationCategory, int page) {
+    public PageResponse<NotificationResponse> searchNotifications(String memberKey, String notificationCategory, int pageNumber) {
         NotificationCategory category = NotificationCategory.of(notificationCategory);
 
-        PageRequest pageRequest = PageRequest.of(page, 10);
+        Pageable pageable = PageUtils.of(pageNumber);
 
-        List<NotificationResponse> content = memberNotificationQueryRepository.findAllByMemberKeyAndCond(memberKey, category, pageRequest);
+        List<NotificationResponse> content = memberNotificationQueryRepository.findAllByMemberKeyAndCond(memberKey, category, pageable);
 
         int total = memberNotificationQueryRepository.countByMemberKeyAndCond(memberKey, category);
 
-        return PageResponse.create(content, pageRequest, total);
+        return PageResponse.create(content, pageable, total);
     }
 }

@@ -36,8 +36,8 @@ public class MemberNotificationQueryRepository {
             )
             .from(memberNotification)
             .where(
-                memberNotification.isDeleted.isFalse(),
-                memberNotification.member.specificInfo.memberKey.eq(memberKey),
+                isNotDeleted(),
+                eqMemberKey(memberKey),
                 eqNotificationCategory(category)
             )
             .orderBy(memberNotification.createdDateTime.desc())
@@ -51,12 +51,20 @@ public class MemberNotificationQueryRepository {
             .select(memberNotification.id)
             .from(memberNotification)
             .where(
-                memberNotification.isDeleted.isFalse(),
-                memberNotification.member.specificInfo.memberKey.eq(memberKey),
+                isNotDeleted(),
+                eqMemberKey(memberKey),
                 eqNotificationCategory(category)
             )
             .fetch()
             .size();
+    }
+
+    private static BooleanExpression isNotDeleted() {
+        return memberNotification.isDeleted.isFalse();
+    }
+
+    private static BooleanExpression eqMemberKey(String memberKey) {
+        return memberNotification.member.specificInfo.memberKey.eq(memberKey);
     }
 
     private BooleanExpression eqNotificationCategory(NotificationCategory category) {
