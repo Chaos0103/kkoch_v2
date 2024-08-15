@@ -35,3 +35,4 @@ include::api/member/search-member-info.adoc[]
 == 알림 API
 
 include::api/notification/search-notifications.adoc[]
+include::api/notification/open-notifications.adoc[]

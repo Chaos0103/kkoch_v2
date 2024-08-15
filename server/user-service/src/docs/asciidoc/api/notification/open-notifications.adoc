@@ -1,0 +1,13 @@
+[[open-notifications]]
+=== 알림 다중 열기 API
+
+==== HTTP Request
+
+include::{snippets}/open-notifications/http-request.adoc[]
+include::{snippets}/open-notifications/request-headers.adoc[]
+include::{snippets}/open-notifications/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/open-notifications/http-response.adoc[]
+include::{snippets}/open-notifications/response-fields.adoc[]
