@@ -15,6 +15,10 @@ public class StringValidate {
         return new StringValidate(value);
     }
 
+    public boolean isBlank() {
+        return value == null || value.isBlank();
+    }
+
     public boolean isLengthLessThan(int minLength) {
         return value.length() < minLength;
     }

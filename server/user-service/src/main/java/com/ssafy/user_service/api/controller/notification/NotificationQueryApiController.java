@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.ssafy.user_service.common.security.SecurityUtils.findMemberKeyByToken;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -23,6 +25,10 @@ public class NotificationQueryApiController {
 
     @GetMapping
     public ApiResponse<PageResponse<NotificationResponse>> searchNotifications(@Valid @ModelAttribute NotificationSearchParam param) {
-        return null;
+        String memberKey = findMemberKeyByToken();
+
+        PageResponse<NotificationResponse> response = notificationQueryService.searchNotifications(memberKey, param.getCategory(), param.toNumberPage());
+
+        return ApiResponse.ok(response);
     }
 }
