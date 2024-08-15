@@ -10,4 +10,6 @@ import java.util.List;
 public interface MemberNotificationRepository extends JpaRepository<MemberNotification, Long> {
 
     List<MemberNotification> findAllByIdInAndIsOpenedFalse(List<Long> ids);
+
+    List<MemberNotification> findAllByIdInAndIsDeletedFalse(List<Long> ids);
 }

@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 public class TimeBaseEntity {
 
     @Column(nullable = false, columnDefinition = "boolean default false")
-    private boolean isDeleted;
+    private Boolean isDeleted;
 
     @CreatedDate
     @Column(nullable = false, updatable = false, columnDefinition = "datetime default current_timestamp")

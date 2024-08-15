@@ -27,6 +27,10 @@ public class NotificationService {
     }
 
     public NotificationRemoveResponse removeNotifications(List<Long> notificationIds, LocalDateTime currentDateTime) {
-        return null;
+        List<MemberNotification> memberNotifications = memberNotificationRepository.findAllByIdInAndIsDeletedFalse(notificationIds);
+
+        memberNotifications.forEach(MemberNotification::remove);
+
+        return NotificationRemoveResponse.of(memberNotifications, currentDateTime);
     }
 }

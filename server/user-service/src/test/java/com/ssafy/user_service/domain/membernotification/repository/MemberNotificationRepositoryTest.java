@@ -41,9 +41,9 @@ class MemberNotificationRepositoryTest extends IntegrationTestSupport {
         Member admin = createMember(Role.ADMIN, "admin@ssafy.com", "01056785678", null);
 
         Notification notification = createNotification(admin);
-        MemberNotification memberNotification1 = createMemberNotification(user, notification, false);
-        MemberNotification memberNotification2 = createMemberNotification(user, notification, true);
-        MemberNotification memberNotification3 = createMemberNotification(user, notification, false);
+        MemberNotification memberNotification1 = createMemberNotification(user, notification, false, false);
+        MemberNotification memberNotification2 = createMemberNotification(user, notification, true, false);
+        MemberNotification memberNotification3 = createMemberNotification(user, notification, false, false);
 
         List<Long> notificationIds = List.of(memberNotification1.getId(), memberNotification2.getId(), memberNotification3.getId());
 
@@ -53,6 +53,38 @@ class MemberNotificationRepositoryTest extends IntegrationTestSupport {
         //then
         assertThat(memberNotifications).hasSize(2)
             .extracting("id", "isOpened")
+            .containsExactlyInAnyOrder(
+                tuple(memberNotification1.getId(), false),
+                tuple(memberNotification3.getId(), false)
+            );
+    }
+
+    @DisplayName("알림 ID 목록을 입력 받아 삭제되지 않은 알림 목록을 조회한다.")
+    @Test
+    void findAllByIdInAndIsDeletedFalse() {
+        //given
+        Member user = createMember(Role.USER, "ssafy@ssafy.com", "01012341234", UserAdditionalInfo.builder()
+            .businessNumber("1231212345")
+            .bankAccount(BankAccount.builder()
+                .bankCode("088")
+                .accountNumber("123123123456")
+                .build())
+            .build());
+        Member admin = createMember(Role.ADMIN, "admin@ssafy.com", "01056785678", null);
+
+        Notification notification = createNotification(admin);
+        MemberNotification memberNotification1 = createMemberNotification(user, notification, false, false);
+        MemberNotification memberNotification2 = createMemberNotification(user, notification, true, true);
+        MemberNotification memberNotification3 = createMemberNotification(user, notification, false, false);
+
+        List<Long> notificationIds = List.of(memberNotification1.getId(), memberNotification2.getId(), memberNotification3.getId());
+
+        //when
+        List<MemberNotification> memberNotifications = memberNotificationRepository.findAllByIdInAndIsDeletedFalse(notificationIds);
+
+        //then
+        assertThat(memberNotifications).hasSize(2)
+            .extracting("id", "isDeleted")
             .containsExactlyInAnyOrder(
                 tuple(memberNotification1.getId(), false),
                 tuple(memberNotification3.getId(), false)
@@ -86,9 +118,9 @@ class MemberNotificationRepositoryTest extends IntegrationTestSupport {
         return notificationRepository.save(notification);
     }
 
-    private MemberNotification createMemberNotification(Member member, Notification notification, boolean isOpened) {
+    private MemberNotification createMemberNotification(Member member, Notification notification, boolean isOpened, boolean isDeleted) {
         MemberNotification memberNotification = MemberNotification.builder()
-            .isDeleted(false)
+            .isDeleted(isDeleted)
             .member(member)
             .notification(notification)
             .isOpened(isOpened)
