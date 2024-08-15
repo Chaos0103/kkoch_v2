@@ -2,8 +2,10 @@ package com.ssafy.user_service.api.controller.notification;
 
 import com.ssafy.user_service.api.ApiResponse;
 import com.ssafy.user_service.api.controller.notification.request.NotificationOpenRequest;
+import com.ssafy.user_service.api.controller.notification.request.NotificationRemoveRequest;
 import com.ssafy.user_service.api.service.notification.NotificationService;
 import com.ssafy.user_service.api.service.notification.response.NotificationOpenResponse;
+import com.ssafy.user_service.api.service.notification.response.NotificationRemoveResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,5 +31,10 @@ public class NotificationApiController {
         NotificationOpenResponse response = notificationService.openNotifications(request.getIds(), currentDateTime);
 
         return ApiResponse.ok(response);
+    }
+
+    @PostMapping("/remove")
+    public ApiResponse<NotificationRemoveResponse> removeNotifications(@Valid @RequestBody NotificationRemoveRequest request) {
+        return null;
     }
 }
