@@ -2,8 +2,10 @@ package com.ssafy.user_service.docs.notification;
 
 import com.ssafy.user_service.api.controller.notification.NotificationApiController;
 import com.ssafy.user_service.api.controller.notification.request.NotificationOpenRequest;
+import com.ssafy.user_service.api.controller.notification.request.NotificationRemoveRequest;
 import com.ssafy.user_service.api.service.notification.NotificationService;
 import com.ssafy.user_service.api.service.notification.response.NotificationOpenResponse;
+import com.ssafy.user_service.api.service.notification.response.NotificationRemoveResponse;
 import com.ssafy.user_service.docs.RestDocsSupport;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -83,6 +85,57 @@ class NotificationApiControllerDocsTest extends RestDocsSupport {
                         .description("오픈 알림 갯수"),
                     fieldWithPath("data.openStatusModifiedDateTime").type(JsonFieldType.ARRAY)
                         .description("알림 오픈 일시")
+                )
+            ));
+    }
+
+    @DisplayName("알림 다중 삭제 API")
+    @Test
+    void removeNotifications() throws Exception {
+        NotificationRemoveRequest request = NotificationRemoveRequest.builder()
+            .ids(List.of(1L, 2L, 3L))
+            .build();
+
+        NotificationRemoveResponse response = NotificationRemoveResponse.builder()
+            .removedNotificationCount(3)
+            .removedDateTime(LocalDateTime.now())
+            .build();
+
+        given(notificationService.removeNotifications(anyList(), any()))
+            .willReturn(response);
+
+        mockMvc.perform(
+                post("/notifications/remove")
+                    .header(HttpHeaders.AUTHORIZATION, "issued.access.token")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andDo(document("remove-notifications",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName(HttpHeaders.AUTHORIZATION)
+                        .description("회원 토큰")
+                ),
+                requestFields(
+                    fieldWithPath("ids").type(JsonFieldType.ARRAY)
+                        .description("알림 ID 목록")
+                ),
+                responseFields(
+                    fieldWithPath("code").type(JsonFieldType.NUMBER)
+                        .description("코드"),
+                    fieldWithPath("status").type(JsonFieldType.STRING)
+                        .description("상태"),
+                    fieldWithPath("message").type(JsonFieldType.STRING)
+                        .description("메시지"),
+                    fieldWithPath("data").type(JsonFieldType.OBJECT)
+                        .description("응답 데이터"),
+                    fieldWithPath("data.removedNotificationCount").type(JsonFieldType.NUMBER)
+                        .description("삭제 알림 갯수"),
+                    fieldWithPath("data.removedDateTime").type(JsonFieldType.ARRAY)
+                        .description("알림 삭제 일시")
                 )
             ));
     }
