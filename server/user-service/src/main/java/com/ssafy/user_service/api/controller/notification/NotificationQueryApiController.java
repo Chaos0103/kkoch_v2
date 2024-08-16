@@ -39,6 +39,10 @@ public class NotificationQueryApiController {
 
     @GetMapping("/sent")
     public ApiResponse<PageResponse<SentNotificationResponse>> searchSentNotifications(@Valid @ModelAttribute SentNotificationSearchParam param) {
-        return null;
+        int pageNumber = parsePageNumber(param.getPage());
+
+        PageResponse<SentNotificationResponse> response = notificationQueryService.searchSentNotifications(param.toSearchPeriod(), pageNumber);
+
+        return ApiResponse.ok(response);
     }
 }

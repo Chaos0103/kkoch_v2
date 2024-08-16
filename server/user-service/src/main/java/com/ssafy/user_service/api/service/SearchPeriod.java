@@ -20,7 +20,7 @@ public class SearchPeriod {
     }
 
     public static SearchPeriod of(LocalDate fromDate, LocalDate toDate) {
-        if (toDate.isAfter(fromDate)) {
+        if (toDate.isBefore(fromDate)) {
             throw new AppException();
         }
 
