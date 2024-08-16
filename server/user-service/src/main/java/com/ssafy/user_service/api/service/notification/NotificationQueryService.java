@@ -1,10 +1,12 @@
 package com.ssafy.user_service.api.service.notification;
 
 import com.ssafy.user_service.api.PageResponse;
+import com.ssafy.user_service.api.service.SearchPeriod;
 import com.ssafy.user_service.common.util.PageUtils;
 import com.ssafy.user_service.domain.membernotification.repository.MemberNotificationQueryRepository;
 import com.ssafy.user_service.domain.membernotification.repository.response.NotificationResponse;
 import com.ssafy.user_service.domain.notification.NotificationCategory;
+import com.ssafy.user_service.domain.notification.repository.response.SentNotificationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,5 +31,9 @@ public class NotificationQueryService {
         int total = memberNotificationQueryRepository.countByMemberKeyAndCond(memberKey, category);
 
         return PageResponse.create(content, pageable, total);
+    }
+
+    public PageResponse<SentNotificationResponse> searchSentNotifications(SearchPeriod period, int pageNumber) {
+        return null;
     }
 }
