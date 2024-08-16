@@ -57,6 +57,7 @@ class NotificationQueryRepositoryTest extends IntegrationTestSupport {
         LocalDateTime searchStartDateTime = LocalDateTime.of(2024, 8, 15, 0, 0, 0);
         LocalDateTime searchEndDateTime = LocalDateTime.of(2024, 8, 16, 0, 0, 0);
         PageRequest pageRequest = PageRequest.of(0, 10);
+
         //when
         List<SentNotificationResponse> content = notificationQueryRepository.findAllByNotificationSentDateTimeBetween(searchStartDateTime, searchEndDateTime, pageRequest);
 
@@ -67,6 +68,27 @@ class NotificationQueryRepositoryTest extends IntegrationTestSupport {
                 tuple(notification2.getId(), NotificationCategory.PAYMENT, 1L),
                 tuple(notification1.getId(), NotificationCategory.PAYMENT, 1L)
             );
+    }
+
+    @DisplayName("시작일과 종료일 사이에 보낸 알림 목록의 갯수를 조회한다.")
+    @Test
+    void countByNotificationSentDateTimeBetween() {
+        //given
+        Member admin = createMember(Role.ADMIN, "admin@ssafy.com", "01056785678", null);
+
+        createNotification(admin, LocalDateTime.of(2024, 8, 14, 23, 59, 59));
+        createNotification(admin, LocalDateTime.of(2024, 8, 15, 0, 0, 0));
+        createNotification(admin, LocalDateTime.of(2024, 8, 15, 23, 59, 59));
+        createNotification(admin, LocalDateTime.of(2024, 8, 16, 0, 0, 0));
+
+        LocalDateTime searchStartDateTime = LocalDateTime.of(2024, 8, 15, 0, 0, 0);
+        LocalDateTime searchEndDateTime = LocalDateTime.of(2024, 8, 16, 0, 0, 0);
+
+        //when
+        int total = notificationQueryRepository.countByNotificationSentDateTimeBetween(searchStartDateTime, searchEndDateTime);
+
+        //then
+        assertThat(total).isEqualTo(2);
     }
 
     private Member createMember(Role role, String email, String tel, UserAdditionalInfo userAdditionalInfo) {

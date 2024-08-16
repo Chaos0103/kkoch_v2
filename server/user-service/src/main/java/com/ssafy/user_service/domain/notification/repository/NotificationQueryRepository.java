@@ -45,4 +45,8 @@ public class NotificationQueryRepository {
             .offset(pageable.getOffset())
             .fetch();
     }
+
+    public int countByNotificationSentDateTimeBetween(LocalDateTime from, LocalDateTime to) {
+        return 0;
+    }
 }
