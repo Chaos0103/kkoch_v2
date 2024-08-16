@@ -55,7 +55,7 @@ class NotificationQueryRepositoryTest extends IntegrationTestSupport {
         createMemberNotification(user, notification2);
 
         LocalDateTime searchStartDateTime = LocalDateTime.of(2024, 8, 15, 0, 0, 0);
-        LocalDateTime searchEndDateTime = LocalDateTime.of(2024, 8, 16, 0, 0, 0);
+        LocalDateTime searchEndDateTime = LocalDateTime.of(2024, 8, 15, 23, 59, 59);
         PageRequest pageRequest = PageRequest.of(0, 10);
 
         //when
@@ -82,7 +82,7 @@ class NotificationQueryRepositoryTest extends IntegrationTestSupport {
         createNotification(admin, LocalDateTime.of(2024, 8, 16, 0, 0, 0));
 
         LocalDateTime searchStartDateTime = LocalDateTime.of(2024, 8, 15, 0, 0, 0);
-        LocalDateTime searchEndDateTime = LocalDateTime.of(2024, 8, 16, 0, 0, 0);
+        LocalDateTime searchEndDateTime = LocalDateTime.of(2024, 8, 15, 23, 59, 59);
 
         //when
         int total = notificationQueryRepository.countByNotificationSentDateTimeBetween(searchStartDateTime, searchEndDateTime);

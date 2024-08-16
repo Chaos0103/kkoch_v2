@@ -47,6 +47,11 @@ public class NotificationQueryRepository {
     }
 
     public int countByNotificationSentDateTimeBetween(LocalDateTime from, LocalDateTime to) {
-        return 0;
+        return queryFactory
+            .select(notification.id)
+            .from(notification)
+            .where(notification.notificationSentDateTime.between(from, to))
+            .fetch()
+            .size();
     }
 }
