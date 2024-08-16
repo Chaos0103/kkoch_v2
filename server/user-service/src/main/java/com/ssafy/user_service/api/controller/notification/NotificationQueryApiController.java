@@ -3,8 +3,10 @@ package com.ssafy.user_service.api.controller.notification;
 import com.ssafy.user_service.api.ApiResponse;
 import com.ssafy.user_service.api.PageResponse;
 import com.ssafy.user_service.api.controller.notification.param.NotificationSearchParam;
+import com.ssafy.user_service.api.controller.notification.param.SentNotificationSearchParam;
 import com.ssafy.user_service.api.service.notification.NotificationQueryService;
 import com.ssafy.user_service.domain.membernotification.repository.response.NotificationResponse;
+import com.ssafy.user_service.domain.notification.repository.response.SentNotificationResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,5 +35,10 @@ public class NotificationQueryApiController {
         PageResponse<NotificationResponse> response = notificationQueryService.searchNotifications(memberKey, param.getCategory(), pageNumber);
 
         return ApiResponse.ok(response);
+    }
+
+    @GetMapping("/sent")
+    public ApiResponse<PageResponse<SentNotificationResponse>> searchSentNotifications(@Valid @ModelAttribute SentNotificationSearchParam param) {
+        return null;
     }
 }
