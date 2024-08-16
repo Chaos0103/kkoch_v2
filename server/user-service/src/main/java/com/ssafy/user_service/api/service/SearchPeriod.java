@@ -10,21 +10,22 @@ import java.time.LocalDateTime;
 @Getter
 public class SearchPeriod {
 
-    private final LocalDateTime startDateTime;
-    private final LocalDateTime endDateTime;
+    private final LocalDateTime from;
+    private final LocalDateTime to;
 
     @Builder
-    private SearchPeriod(LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        this.startDateTime = startDateTime;
-        this.endDateTime = endDateTime;
+    private SearchPeriod(LocalDateTime from, LocalDateTime to) {
+        this.from = from;
+        this.to = to;
     }
 
-    public static SearchPeriod of(LocalDate startDate, LocalDate endDate) {
-        if (endDate.isAfter(startDate)) {
+    public static SearchPeriod of(LocalDate fromDate, LocalDate toDate) {
+        if (toDate.isAfter(fromDate)) {
             throw new AppException();
         }
-        LocalDateTime startDateTime = startDate.atStartOfDay();
-        LocalDateTime endDateTime = endDate.atStartOfDay().plusDays(1);
-        return new SearchPeriod(startDateTime, endDateTime);
+
+        LocalDateTime from = fromDate.atStartOfDay();
+        LocalDateTime to = toDate.atStartOfDay().plusDays(1).minusSeconds(1);
+        return new SearchPeriod(from, to);
     }
 }

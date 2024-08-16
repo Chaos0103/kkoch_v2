@@ -128,8 +128,8 @@ class NotificationQueryServiceTest extends IntegrationTestSupport {
         createMemberNotification(user, notification2);
 
         SearchPeriod searchPeriod = SearchPeriod.builder()
-            .startDateTime(LocalDateTime.of(2024, 8, 15, 0, 0, 0))
-            .endDateTime(LocalDateTime.of(2024, 8, 16, 0, 0, 0))
+            .from(LocalDateTime.of(2024, 8, 15, 0, 0, 0))
+            .to(LocalDateTime.of(2024, 8, 15, 23, 59, 59))
             .build();
 
         //when
