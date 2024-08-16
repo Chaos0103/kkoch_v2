@@ -1,0 +1,13 @@
+[[search-sent-notifications]]
+=== 보낸 알림 목록 조회 API
+
+==== HTTP Request
+
+include::{snippets}/search-sent-notifications/http-request.adoc[]
+include::{snippets}/search-sent-notifications/request-headers.adoc[]
+include::{snippets}/search-sent-notifications/query-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/search-sent-notifications/http-response.adoc[]
+include::{snippets}/search-sent-notifications/response-fields.adoc[]
