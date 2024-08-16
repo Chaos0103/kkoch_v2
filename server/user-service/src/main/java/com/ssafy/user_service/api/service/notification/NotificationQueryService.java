@@ -6,6 +6,7 @@ import com.ssafy.user_service.common.util.PageUtils;
 import com.ssafy.user_service.domain.membernotification.repository.MemberNotificationQueryRepository;
 import com.ssafy.user_service.domain.membernotification.repository.response.NotificationResponse;
 import com.ssafy.user_service.domain.notification.NotificationCategory;
+import com.ssafy.user_service.domain.notification.repository.NotificationQueryRepository;
 import com.ssafy.user_service.domain.notification.repository.response.SentNotificationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NotificationQueryService {
 
+    private final NotificationQueryRepository notificationQueryRepository;
     private final MemberNotificationQueryRepository memberNotificationQueryRepository;
 
     public PageResponse<NotificationResponse> searchNotifications(String memberKey, String notificationCategory, int pageNumber) {
@@ -34,6 +36,12 @@ public class NotificationQueryService {
     }
 
     public PageResponse<SentNotificationResponse> searchSentNotifications(SearchPeriod period, int pageNumber) {
-        return null;
+        Pageable pageable = PageUtils.of(pageNumber);
+
+        List<SentNotificationResponse> content = notificationQueryRepository.findAllByNotificationSentDateTimeBetween(period.getFrom(), period.getTo(), pageable);
+
+        int total = notificationQueryRepository.countByNotificationSentDateTimeBetween(period.getFrom(), period.getTo());
+
+        return PageResponse.create(content, pageable, total);
     }
 }
