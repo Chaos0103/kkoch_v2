@@ -64,8 +64,8 @@ class NotificationQueryRepositoryTest extends IntegrationTestSupport {
         assertThat(content).hasSize(2)
             .extracting("id", "category", "sentMemberCount")
             .containsExactly(
-                tuple(notification2.getId(), NotificationCategory.PAYMENT, 1),
-                tuple(notification1.getId(), NotificationCategory.PAYMENT, 1)
+                tuple(notification2.getId(), NotificationCategory.PAYMENT, 1L),
+                tuple(notification1.getId(), NotificationCategory.PAYMENT, 1L)
             );
     }
 
