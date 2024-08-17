@@ -25,6 +25,9 @@ import java.util.*;
 
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
+    private static final String CONTENT_TYPE = "application/json";
+    private static final String CHARACTER_ENCODING = "utf-8";
+
     private final MemberRepository memberRepository;
     private final Environment environment;
 
@@ -49,14 +52,43 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication auth) throws IOException {
-        String memberKey = ((User) auth.getPrincipal()).getUsername();
-        Member member = memberRepository.findBySpecificInfoMemberKey(memberKey)
-            .orElseThrow(() -> new NoSuchElementException("등록되지 않은 회원입니다."));
+        Member member = findMember(auth);
 
         if (member.isDelete()) {
             throw new AppException("탈퇴된 계정입니다.");
         }
 
+        String accessToken = generateAccessToken(member);
+
+        Map<String, String> map = generateResponseBodyMap(accessToken, member);
+
+        response.setContentType(CONTENT_TYPE);
+        response.setCharacterEncoding(CHARACTER_ENCODING);
+        String value = new ObjectMapper().writeValueAsString(map);
+        response.getWriter().write(value);
+    }
+
+    private Member findMember(Authentication auth) {
+        String memberKey = ((User) auth.getPrincipal()).getUsername();
+        return memberRepository.findBySpecificInfoMemberKey(memberKey)
+            .orElseThrow(() -> new NoSuchElementException("등록되지 않은 회원입니다."));
+    }
+
+    private String generateAccessToken(Member member) {
+        Instant currentInstance = Instant.now();
+
+        SecretKey secretKey = generateSecretKey();
+        Instant expirationInstance = generateExpirationInstance(currentInstance);
+
+        return Jwts.builder()
+            .subject(member.getMemberKey())
+            .expiration(Date.from(expirationInstance))
+            .issuedAt(Date.from(currentInstance))
+            .signWith(secretKey)
+            .compact();
+    }
+
+    private SecretKey generateSecretKey() {
         String tokenSecret = environment.getProperty("token.secret");
         if (tokenSecret == null) {
             throw new IllegalArgumentException("잠시 서버에 문제가 발생했습니다.");
@@ -64,29 +96,22 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
         byte[] secretKeyBytes = Base64.getEncoder().encode(tokenSecret.getBytes());
 
-        SecretKey secretKey = Keys.hmacShaKeyFor(secretKeyBytes);
+        return Keys.hmacShaKeyFor(secretKeyBytes);
+    }
 
-        Instant now = Instant.now();
-
+    private Instant generateExpirationInstance(Instant current) {
         String tokenExpirationTime = environment.getProperty("token.expiration_time");
         if (tokenExpirationTime == null) {
             throw new IllegalArgumentException("잠시 서버에 문제가 발생했습니다.");
         }
 
-        String token = Jwts.builder()
-            .subject(member.getMemberKey())
-            .expiration(Date.from(now.plusMillis(Long.parseLong(tokenExpirationTime))))
-            .issuedAt(Date.from(now))
-            .signWith(secretKey)
-            .compact();
+        return current.plusMillis(Long.parseLong(tokenExpirationTime));
+    }
 
-        Map<String, String> map = new HashMap<>();
-        map.put("token", token);
-        map.put("memberKey", member.getEmail());
-
-        response.setContentType("application/json");
-        response.setCharacterEncoding("utf-8");
-        String value = new ObjectMapper().writeValueAsString(map);
-        response.getWriter().write(value);
+    private Map<String, String> generateResponseBodyMap(String accessToken, Member member) {
+        return Map.of(
+            "accessToken", accessToken,
+            "memberKey", member.getMemberKey()
+        );
     }
 }
