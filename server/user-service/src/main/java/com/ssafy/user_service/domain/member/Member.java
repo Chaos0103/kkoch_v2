@@ -84,6 +84,10 @@ public class Member extends TimeBaseEntity {
         return !isMatchesPwd(encoder, pwd);
     }
 
+    public boolean isDelete() {
+        return getIsDeleted();
+    }
+
     public String getMemberKey() {
         return specificInfo.getMemberKey();
     }

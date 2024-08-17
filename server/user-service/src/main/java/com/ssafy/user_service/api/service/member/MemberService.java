@@ -9,6 +9,10 @@ import com.ssafy.user_service.common.exception.AppException;
 import com.ssafy.user_service.domain.member.Member;
 import com.ssafy.user_service.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +23,7 @@ import java.util.NoSuchElementException;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class MemberService {
+public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
@@ -70,6 +74,18 @@ public class MemberService {
         member.remove();
 
         return MemberRemoveResponse.of(currentDateTime);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Member member = memberRepository.findByEmail(email)
+            .orElseThrow(() -> new UsernameNotFoundException("계정을 확인해주세요."));
+
+        return User.builder()
+            .username(member.getMemberKey())
+            .password(member.getPwd())
+            .roles(member.getSpecificInfo().getRole().toString())
+            .build();
     }
 
     private void modifyPassword(Member member, String newPassword) {

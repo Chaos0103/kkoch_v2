@@ -46,6 +46,9 @@ eureka:
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
+token:
+  secret: ${token.secret}
+  expiration_time: ${token.expiration_time}
 
 management:
   endpoints:
