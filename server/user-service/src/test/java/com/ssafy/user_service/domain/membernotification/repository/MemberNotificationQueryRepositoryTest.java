@@ -13,9 +13,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 
 class MemberNotificationQueryRepositoryTest extends IntegrationTestSupport {
 
@@ -48,7 +50,7 @@ class MemberNotificationQueryRepositoryTest extends IntegrationTestSupport {
         createMemberNotification(user, notification1);
 
         Notification notification2 = createNotification(admin, NotificationCategory.AUCTION, "2024년 7월 12일 오전 5:00에 절화 경매가 진행될 예정입니다.");
-        createMemberNotification(user, notification2);
+        MemberNotification memberNotification = createMemberNotification(user, notification2);
 
         PageRequest pageRequest = PageRequest.of(0, 10);
 
@@ -59,7 +61,7 @@ class MemberNotificationQueryRepositoryTest extends IntegrationTestSupport {
         assertThat(content).hasSize(1)
             .extracting("id", "category", "content", "isOpened", "notificationDateTime")
             .containsExactly(
-                tuple(notification2.getId(), NotificationCategory.AUCTION, "2024년 7월 12일 오전 5:00에 절화 경매가 진행될 예정입니다.", false, notification2.getLastModifiedDateTime())
+                tuple(memberNotification.getId(), NotificationCategory.AUCTION, "2024년 7월 12일 오전 5:00에 절화 경매가 진행될 예정입니다.", false, notification2.getCreatedDateTime())
             );
     }
 
@@ -77,10 +79,10 @@ class MemberNotificationQueryRepositoryTest extends IntegrationTestSupport {
         Member admin = createMember(Role.ADMIN, "admin@ssafy.com", "01056785678", null);
 
         Notification notification1 = createNotification(admin, NotificationCategory.PAYMENT, "1,000,000원이 결제되었습니다.");
-        createMemberNotification(user, notification1);
+        MemberNotification memberNotification1 = createMemberNotification(user, notification1);
 
         Notification notification2 = createNotification(admin, NotificationCategory.AUCTION, "2024년 7월 12일 오전 5:00에 절화 경매가 진행될 예정입니다.");
-        createMemberNotification(user, notification2);
+        MemberNotification memberNotification2 = createMemberNotification(user, notification2);
 
         PageRequest pageRequest = PageRequest.of(0, 10);
 
@@ -91,8 +93,8 @@ class MemberNotificationQueryRepositoryTest extends IntegrationTestSupport {
         assertThat(content).hasSize(2)
             .extracting("id", "category", "content", "isOpened", "notificationDateTime")
             .containsExactly(
-                tuple(notification2.getId(), NotificationCategory.AUCTION, "2024년 7월 12일 오전 5:00에 절화 경매가 진행될 예정입니다.", false, notification2.getLastModifiedDateTime()),
-                tuple(notification1.getId(), NotificationCategory.PAYMENT, "1,000,000원이 결제되었습니다.", false, notification1.getLastModifiedDateTime())
+                tuple(memberNotification2.getId(), NotificationCategory.AUCTION, "2024년 7월 12일 오전 5:00에 절화 경매가 진행될 예정입니다.", false, notification2.getLastModifiedDateTime()),
+                tuple(memberNotification1.getId(), NotificationCategory.PAYMENT, "1,000,000원이 결제되었습니다.", false, notification1.getLastModifiedDateTime())
             );
     }
 
@@ -170,6 +172,7 @@ class MemberNotificationQueryRepositoryTest extends IntegrationTestSupport {
             .member(member)
             .notificationCategory(notificationCategory)
             .notificationContent(notificationContent)
+            .notificationSentDateTime(LocalDateTime.of(2024, 1, 1, 0, 0))
             .build();
         return notificationRepository.save(notification);
     }

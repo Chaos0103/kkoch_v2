@@ -9,8 +9,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.time.LocalDate;
-
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -76,34 +74,34 @@ class NotificationQueryApiControllerTest extends ControllerTestSupport {
     void searchSentNotificationsIsNotPositiveNumberPage(String page) throws Exception {
         SentNotificationSearchParam param = SentNotificationSearchParam.builder()
             .page(page)
-            .from(LocalDate.of(2024, 1, 1))
-            .to(LocalDate.of(2024, 2, 1))
+            .from("2024-01-01")
+            .to("2024-02-01")
             .build();
 
         mockMvc.perform(
                 get("/notifications/sent")
                     .queryParam("page", param.getPage())
-                    .queryParam("from", String.valueOf(param.getFrom()))
-                    .queryParam("to", String.valueOf(param.getTo()))
+                    .queryParam("from", param.getFrom())
+                    .queryParam("to", param.getTo())
                     .with(csrf())
             )
             .andExpect(status().isOk());
     }
 
-    @DisplayName("보낸 알림 목록 조회시 페이지 번호가 양수가 아니라면 1로 조회한다.")
+    @DisplayName("보낸 알림 목록을 조회한다.")
     @Test
     void searchSentNotifications() throws Exception {
         SentNotificationSearchParam param = SentNotificationSearchParam.builder()
             .page("1")
-            .from(LocalDate.of(2024, 1, 1))
-            .to(LocalDate.of(2024, 2, 1))
+            .from("2024-01-01")
+            .to("2024-02-01")
             .build();
 
         mockMvc.perform(
                 get("/notifications/sent")
                     .queryParam("page", param.getPage())
-                    .queryParam("from", String.valueOf(param.getFrom()))
-                    .queryParam("to", String.valueOf(param.getTo()))
+                    .queryParam("from", param.getFrom())
+                    .queryParam("to", param.getTo())
                     .with(csrf())
             )
             .andExpect(status().isOk());

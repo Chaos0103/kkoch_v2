@@ -129,6 +129,7 @@ class NotificationServiceTest extends IntegrationTestSupport {
             .member(member)
             .notificationCategory(notificationCategory)
             .notificationContent(notificationContent)
+            .notificationSentDateTime(LocalDateTime.of(2024, 1, 1, 0, 0))
             .build();
         return notificationRepository.save(notification);
     }

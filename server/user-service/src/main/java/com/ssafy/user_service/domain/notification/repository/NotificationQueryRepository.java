@@ -1,6 +1,7 @@
 package com.ssafy.user_service.domain.notification.repository;
 
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.user_service.domain.notification.repository.response.SentNotificationResponse;
 import jakarta.persistence.EntityManager;
@@ -22,7 +23,7 @@ public class NotificationQueryRepository {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    public List<SentNotificationResponse> findAllByNotificationSentDateTimeBetween(LocalDateTime searchStartDateTime, LocalDateTime searchEndDateTime, Pageable pageable) {
+    public List<SentNotificationResponse> findAllByNotificationSentDateTimeBetween(LocalDateTime from, LocalDateTime to, Pageable pageable) {
         return queryFactory
             .select(
                 Projections.fields(
@@ -37,7 +38,7 @@ public class NotificationQueryRepository {
             .from(memberNotification)
             .join(memberNotification.notification, notification)
             .where(
-                notification.notificationSentDateTime.between(searchStartDateTime, searchEndDateTime)
+                betweenSentDateTime(from, to)
             )
             .groupBy(memberNotification.notification.id)
             .orderBy(notification.notificationSentDateTime.desc())
@@ -50,8 +51,14 @@ public class NotificationQueryRepository {
         return queryFactory
             .select(notification.id)
             .from(notification)
-            .where(notification.notificationSentDateTime.between(from, to))
+            .where(
+                betweenSentDateTime(from, to)
+            )
             .fetch()
             .size();
+    }
+
+    private BooleanExpression betweenSentDateTime(LocalDateTime from, LocalDateTime to) {
+        return from == null && to == null ? null : notification.notificationSentDateTime.between(from, to);
     }
 }

@@ -15,7 +15,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.restdocs.payload.JsonFieldType;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -134,8 +133,8 @@ class NotificationQueryApiControllerDocsTest extends RestDocsSupport {
     void searchSentNotifications() throws Exception {
         SentNotificationSearchParam param = SentNotificationSearchParam.builder()
             .page("1")
-            .from(LocalDate.of(2024, 1, 1))
-            .to(LocalDate.of(2024, 2, 1))
+            .from("2024-01-01")
+            .to("2024-02-01")
             .build();
 
         SentNotificationResponse response2 = SentNotificationResponse.builder()
@@ -164,8 +163,8 @@ class NotificationQueryApiControllerDocsTest extends RestDocsSupport {
                 get("/notifications/sent")
                     .header(HttpHeaders.AUTHORIZATION, "issued.access.token")
                     .queryParam("page", param.getPage())
-                    .queryParam("from", String.valueOf(param.getFrom()))
-                    .queryParam("to", String.valueOf(param.getTo()))
+                    .queryParam("from", param.getFrom())
+                    .queryParam("to", param.getTo())
             )
             .andDo(print())
             .andExpect(status().isOk())
@@ -181,10 +180,10 @@ class NotificationQueryApiControllerDocsTest extends RestDocsSupport {
                         .description("페이지 번호(default: 1)"),
                     parameterWithName("from")
                         .optional()
-                        .description("조회 시작일"),
+                        .description("조회 시작일(yyyy-MM-dd)"),
                     parameterWithName("to")
                         .optional()
-                        .description("조회 종료일")
+                        .description("조회 종료일(yyyy-MM-dd)")
                 ),
                 responseFields(
                     fieldWithPath("code").type(JsonFieldType.NUMBER)

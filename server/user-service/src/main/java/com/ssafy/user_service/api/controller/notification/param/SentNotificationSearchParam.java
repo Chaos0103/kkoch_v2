@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
-
 import static com.ssafy.user_service.common.util.PageUtils.PARAM_DEFAULT_PAGE_SIZE;
 
 @Getter
@@ -16,11 +14,11 @@ import static com.ssafy.user_service.common.util.PageUtils.PARAM_DEFAULT_PAGE_SI
 public class SentNotificationSearchParam {
 
     private String page = PARAM_DEFAULT_PAGE_SIZE;
-    private LocalDate from;
-    private LocalDate to;
+    private String from;
+    private String to;
 
     @Builder
-    private SentNotificationSearchParam(String page, LocalDate from, LocalDate to) {
+    private SentNotificationSearchParam(String page, String from, String to) {
         this.page = page;
         this.from = from;
         this.to = to;

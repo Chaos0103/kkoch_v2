@@ -11,6 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -114,6 +115,7 @@ class MemberNotificationRepositoryTest extends IntegrationTestSupport {
             .member(member)
             .notificationCategory(NotificationCategory.PAYMENT)
             .notificationContent("1,000,000원이 결제되었습니다.")
+            .notificationSentDateTime(LocalDateTime.of(2024, 1, 1, 0, 0))
             .build();
         return notificationRepository.save(notification);
     }

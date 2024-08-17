@@ -38,6 +38,8 @@ public class NotificationQueryService {
     public PageResponse<SentNotificationResponse> searchSentNotifications(SearchPeriod period, int pageNumber) {
         Pageable pageable = PageUtils.of(pageNumber);
 
+        period.valid();
+
         List<SentNotificationResponse> content = notificationQueryRepository.findAllByNotificationSentDateTimeBetween(period.getFrom(), period.getTo(), pageable);
 
         int total = notificationQueryRepository.countByNotificationSentDateTimeBetween(period.getFrom(), period.getTo());

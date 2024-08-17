@@ -46,13 +46,15 @@ class NotificationQueryRepositoryTest extends IntegrationTestSupport {
             .build());
         Member admin = createMember(Role.ADMIN, "admin@ssafy.com", "01056785678", null);
 
-        createNotification(admin, LocalDateTime.of(2024, 8, 14, 23, 59, 59));
-        Notification notification1 = createNotification(admin, LocalDateTime.of(2024, 8, 15, 0, 0, 0));
-        Notification notification2 = createNotification(admin, LocalDateTime.of(2024, 8, 15, 23, 59, 59));
-        createNotification(admin, LocalDateTime.of(2024, 8, 16, 0, 0, 0));
+        Notification notification1 = createNotification(admin, LocalDateTime.of(2024, 8, 14, 23, 59, 59));
+        Notification notification2 = createNotification(admin, LocalDateTime.of(2024, 8, 15, 0, 0, 0));
+        Notification notification3 = createNotification(admin, LocalDateTime.of(2024, 8, 15, 23, 59, 59));
+        Notification notification4 = createNotification(admin, LocalDateTime.of(2024, 8, 16, 0, 0, 0));
 
         createMemberNotification(user, notification1);
         createMemberNotification(user, notification2);
+        createMemberNotification(user, notification3);
+        createMemberNotification(user, notification4);
 
         LocalDateTime searchStartDateTime = LocalDateTime.of(2024, 8, 15, 0, 0, 0);
         LocalDateTime searchEndDateTime = LocalDateTime.of(2024, 8, 15, 23, 59, 59);
@@ -65,6 +67,45 @@ class NotificationQueryRepositoryTest extends IntegrationTestSupport {
         assertThat(content).hasSize(2)
             .extracting("id", "category", "sentMemberCount")
             .containsExactly(
+                tuple(notification3.getId(), NotificationCategory.PAYMENT, 1L),
+                tuple(notification2.getId(), NotificationCategory.PAYMENT, 1L)
+            );
+    }
+
+    @DisplayName("보낸 알림 목록 조회시 일자가 null이라면 전체 조회를 한다.")
+    @Test
+    void findAllByNotificationSentDateTimeBetweenWithoutSentDate() {
+        //given
+        Member user = createMember(Role.USER, "ssafy@ssafy.com", "01012341234", UserAdditionalInfo.builder()
+            .businessNumber("1231212345")
+            .bankAccount(BankAccount.builder()
+                .bankCode("088")
+                .accountNumber("123123123456")
+                .build())
+            .build());
+        Member admin = createMember(Role.ADMIN, "admin@ssafy.com", "01056785678", null);
+
+        Notification notification1 = createNotification(admin, LocalDateTime.of(2024, 8, 14, 23, 59, 59));
+        Notification notification2 = createNotification(admin, LocalDateTime.of(2024, 8, 15, 0, 0, 0));
+        Notification notification3 = createNotification(admin, LocalDateTime.of(2024, 8, 15, 23, 59, 59));
+        Notification notification4 = createNotification(admin, LocalDateTime.of(2024, 8, 16, 0, 0, 0));
+
+        createMemberNotification(user, notification1);
+        createMemberNotification(user, notification2);
+        createMemberNotification(user, notification3);
+        createMemberNotification(user, notification4);
+
+        PageRequest pageRequest = PageRequest.of(0, 10);
+
+        //when
+        List<SentNotificationResponse> content = notificationQueryRepository.findAllByNotificationSentDateTimeBetween(null, null, pageRequest);
+
+        //then
+        assertThat(content).hasSize(4)
+            .extracting("id", "category", "sentMemberCount")
+            .containsExactly(
+                tuple(notification4.getId(), NotificationCategory.PAYMENT, 1L),
+                tuple(notification3.getId(), NotificationCategory.PAYMENT, 1L),
                 tuple(notification2.getId(), NotificationCategory.PAYMENT, 1L),
                 tuple(notification1.getId(), NotificationCategory.PAYMENT, 1L)
             );
@@ -89,6 +130,24 @@ class NotificationQueryRepositoryTest extends IntegrationTestSupport {
 
         //then
         assertThat(total).isEqualTo(2);
+    }
+
+    @DisplayName("보낸 알림 목록의 갯수 조회시 일자가 null이라면 전체 조회를 한다.")
+    @Test
+    void countByNotificationSentDateTimeBetweenWithoutSentDate() {
+        //given
+        Member admin = createMember(Role.ADMIN, "admin@ssafy.com", "01056785678", null);
+
+        createNotification(admin, LocalDateTime.of(2024, 8, 14, 23, 59, 59));
+        createNotification(admin, LocalDateTime.of(2024, 8, 15, 0, 0, 0));
+        createNotification(admin, LocalDateTime.of(2024, 8, 15, 23, 59, 59));
+        createNotification(admin, LocalDateTime.of(2024, 8, 16, 0, 0, 0));
+
+        //when
+        int total = notificationQueryRepository.countByNotificationSentDateTimeBetween(null, null);
+
+        //then
+        assertThat(total).isEqualTo(4);
     }
 
     private Member createMember(Role role, String email, String tel, UserAdditionalInfo userAdditionalInfo) {
