@@ -37,7 +37,7 @@ public class NoticeQueryRepository {
             )
             .from(notice)
             .where(
-                isDeleted(),
+                isNotDeleted(),
                 isNotFixed(currentDateTime),
                 containsNoticeTitle(keyword)
             )
@@ -60,7 +60,7 @@ public class NoticeQueryRepository {
             )
             .from(notice)
             .where(
-                isDeleted(),
+                isNotDeleted(),
                 isFixed(currentDateTime)
             )
             .orderBy(notice.createdDateTime.desc())
@@ -68,10 +68,19 @@ public class NoticeQueryRepository {
     }
 
     public int countNotFixedByNoticeTitleContaining(String keyword, LocalDateTime currentDateTime) {
-        return 0;
+        return queryFactory
+            .select(notice.id)
+            .from(notice)
+            .where(
+                isNotDeleted(),
+                isNotFixed(currentDateTime),
+                containsNoticeTitle(keyword)
+            )
+            .fetch()
+            .size();
     }
 
-    private BooleanExpression isDeleted() {
+    private BooleanExpression isNotDeleted() {
         return notice.isDeleted.isFalse();
     }
 
