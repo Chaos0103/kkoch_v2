@@ -1,3 +1,51 @@
+server:
+  port: ${server.port}
+
 spring:
   application:
     name: board-service
+  config:
+    import: "optional:configserver:"
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: ${datasource.url}
+    username: ${datasource.username}
+    password: ${datasource.password}
+  rabbitmq:
+    host: 127.0.0.1
+    port: ${rabbitmq.port}
+    username: ${rabbitmq.username}
+    password: ${rabbitmq.password}
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        default_batch_fetch_size: 100
+    open-in-view: true
+  h2:
+    console:
+      enabled: true
+
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    com.ssafy.board_service: debug
+
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans, info, metrics, prometheus, busrefresh
