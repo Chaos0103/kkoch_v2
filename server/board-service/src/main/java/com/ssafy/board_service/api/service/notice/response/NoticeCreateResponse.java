@@ -25,10 +25,6 @@ public class NoticeCreateResponse {
     }
 
     public static NoticeCreateResponse of(Notice notice, LocalDateTime currentDateTime) {
-        boolean isFixed = false;
-        if (notice.getToFixedDateTime().isAfter(currentDateTime)) {
-            isFixed = true;
-        }
-        return new NoticeCreateResponse(notice.getId(), notice.getNoticeTitle(), isFixed, currentDateTime);
+        return new NoticeCreateResponse(notice.getId(), notice.getNoticeTitle(), notice.isFixed(currentDateTime), currentDateTime);
     }
 }

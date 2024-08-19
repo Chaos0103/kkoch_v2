@@ -21,7 +21,6 @@ public class NoticeApiController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<NoticeCreateResponse> createNotice(@Valid @RequestBody NoticeCreateRequest request) {
-
         LocalDateTime currentDateTime = LocalDateTime.now();
 
         NoticeCreateResponse response = noticeService.createNotice(currentDateTime, request.toServiceRequest());

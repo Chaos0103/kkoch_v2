@@ -22,11 +22,16 @@ public class NoticeService {
     private final MemberServiceClient memberServiceClient;
 
     public NoticeCreateResponse createNotice(LocalDateTime currentDateTime, NoticeCreateServiceRequest request) {
-        ApiResponse<MemberIdResponse> response = memberServiceClient.searchMemberId();
+        Long memberId = findMemberId();
 
-        Notice notice = request.toEntity(response.getData().getMemberId(), currentDateTime);
+        Notice notice = request.toEntity(memberId, currentDateTime);
         Notice savedNotice = noticeRepository.save(notice);
 
         return NoticeCreateResponse.of(savedNotice, currentDateTime);
+    }
+
+    private Long findMemberId() {
+        ApiResponse<MemberIdResponse> response = memberServiceClient.searchMemberId();
+        return response.getData().getMemberId();
     }
 }

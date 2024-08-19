@@ -44,4 +44,8 @@ public class Notice extends BaseEntity {
     public static Notice create(Long createdBy, String noticeTitle, String noticeContent, LocalDateTime toFixedDateTime) {
         return of(false, createdBy, createdBy, noticeTitle, noticeContent, toFixedDateTime);
     }
+
+    public boolean isFixed(LocalDateTime currentDateTime) {
+        return toFixedDateTime.isAfter(currentDateTime);
+    }
 }
