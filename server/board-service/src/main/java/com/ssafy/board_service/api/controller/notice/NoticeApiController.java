@@ -2,8 +2,10 @@ package com.ssafy.board_service.api.controller.notice;
 
 import com.ssafy.board_service.api.ApiResponse;
 import com.ssafy.board_service.api.controller.notice.request.NoticeCreateRequest;
+import com.ssafy.board_service.api.controller.notice.request.NoticeModifyRequest;
 import com.ssafy.board_service.api.service.notice.NoticeService;
 import com.ssafy.board_service.api.service.notice.response.NoticeCreateResponse;
+import com.ssafy.board_service.api.service.notice.response.NoticeModifyResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,4 +30,8 @@ public class NoticeApiController {
         return ApiResponse.created(response);
     }
 
+    @PatchMapping("/{noticeId}")
+    public ApiResponse<NoticeModifyResponse> modifyNotice(@PathVariable Long noticeId, @Valid @RequestBody NoticeModifyRequest request) {
+        return null;
+    }
 }
