@@ -1,0 +1,13 @@
+[[create-notice]]
+=== 공지사항 등록 API
+
+==== HTTP Request
+
+include::{snippets}/create-notice/http-request.adoc[]
+include::{snippets}/create-notice/request-headers.adoc[]
+include::{snippets}/create-notice/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/create-notice/http-response.adoc[]
+include::{snippets}/create-notice/response-fields.adoc[]
