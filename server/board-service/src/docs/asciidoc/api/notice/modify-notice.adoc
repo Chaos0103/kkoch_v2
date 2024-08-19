@@ -1,0 +1,14 @@
+[[modify-notice]]
+=== 공지사항 등록 API
+
+==== HTTP Request
+
+include::{snippets}/modify-notice/http-request.adoc[]
+include::{snippets}/modify-notice/request-headers.adoc[]
+include::{snippets}/modify-notice/path-parameters.adoc[]
+include::{snippets}/modify-notice/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/modify-notice/http-response.adoc[]
+include::{snippets}/modify-notice/response-fields.adoc[]

@@ -1,7 +1,7 @@
 ifndef::snippets[]
 :snippets: ../../build/generated-snippets
 endif::[]
-= 꽃향기(User-Service) REST API 문서
+= 꽃향기(Board-Service) REST API 문서
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs
@@ -15,3 +15,4 @@ include::overview.adoc[]
 == 공지사항 API
 
 include::api/notice/create-notice.adoc[]
+include::api/notice/modify-notice.adoc[]
