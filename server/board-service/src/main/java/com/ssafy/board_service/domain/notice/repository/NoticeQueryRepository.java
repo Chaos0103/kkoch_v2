@@ -38,7 +38,7 @@ public class NoticeQueryRepository {
             .from(notice)
             .where(
                 isDeleted(),
-                isFixed(currentDateTime),
+                isNotFixed(currentDateTime),
                 containsNoticeTitle(keyword)
             )
             .orderBy(notice.createdDateTime.desc())
@@ -48,7 +48,23 @@ public class NoticeQueryRepository {
     }
 
     public List<NoticeResponse> findFixedAll(LocalDateTime currentDateTime) {
-        return null;
+        return queryFactory
+            .select(
+                Projections.fields(
+                    NoticeResponse.class,
+                    notice.id,
+                    notice.noticeTitle.as("title"),
+                    Expressions.asBoolean(true).as("isFixed"),
+                    notice.createdDateTime
+                )
+            )
+            .from(notice)
+            .where(
+                isDeleted(),
+                isFixed(currentDateTime)
+            )
+            .orderBy(notice.createdDateTime.desc())
+            .fetch();
     }
 
     public int countNotFixedByNoticeTitleContaining() {
@@ -59,8 +75,12 @@ public class NoticeQueryRepository {
         return notice.isDeleted.isFalse();
     }
 
-    private BooleanExpression isFixed(LocalDateTime currentDateTime) {
+    private BooleanExpression isNotFixed(LocalDateTime currentDateTime) {
         return notice.toFixedDateTime.before(currentDateTime);
+    }
+
+    private BooleanExpression isFixed(LocalDateTime currentDateTime) {
+        return isNotFixed(currentDateTime).not();
     }
 
     private BooleanExpression containsNoticeTitle(String keyword) {
