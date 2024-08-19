@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
 class NoticeServiceTest extends IntegrationTestSupport {
@@ -35,7 +34,6 @@ class NoticeServiceTest extends IntegrationTestSupport {
     @Test
     void createNoticeWithoutToFixedDateTime() {
         //given
-        String memberKey = generateMemberKey();
         LocalDateTime currentDateTime = LocalDateTime.of(2024, 8, 10, 9, 0, 0);
 
         NoticeCreateServiceRequest request = NoticeCreateServiceRequest.builder()
@@ -49,11 +47,11 @@ class NoticeServiceTest extends IntegrationTestSupport {
             .build();
         ApiResponse<MemberIdResponse> clientResponse = ApiResponse.ok(memberId);
 
-        given(memberServiceClient.searchMemberId(anyString()))
+        given(memberServiceClient.searchMemberId())
             .willReturn(clientResponse);
 
         //when
-        NoticeCreateResponse response = noticeService.createNotice(memberKey, currentDateTime, request);
+        NoticeCreateResponse response = noticeService.createNotice(currentDateTime, request);
 
         //then
         assertThat(response).isNotNull()
@@ -69,13 +67,12 @@ class NoticeServiceTest extends IntegrationTestSupport {
     @Test
     void createNotice() {
         //given
-        String memberKey = generateMemberKey();
         LocalDateTime currentDateTime = LocalDateTime.of(2024, 8, 10, 9, 0, 0);
 
         NoticeCreateServiceRequest request = NoticeCreateServiceRequest.builder()
             .title("서비스 점검 안내")
             .content("2024.08.15 00:00 ~ 07:00 서비스 점검 예정입니다.")
-            .toFixedDateTime(LocalDateTime.of(2024, 8, 15, 7, 0, 0))
+            .toFixedDateTime("2024-08-15T07:00:00")
             .build();
 
         MemberIdResponse memberId = MemberIdResponse.builder()
@@ -83,11 +80,11 @@ class NoticeServiceTest extends IntegrationTestSupport {
             .build();
         ApiResponse<MemberIdResponse> clientResponse = ApiResponse.ok(memberId);
 
-        given(memberServiceClient.searchMemberId(anyString()))
+        given(memberServiceClient.searchMemberId())
             .willReturn(clientResponse);
 
         //when
-        NoticeCreateResponse response = noticeService.createNotice(memberKey, currentDateTime, request);
+        NoticeCreateResponse response = noticeService.createNotice(currentDateTime, request);
 
         //then
         assertThat(response).isNotNull()

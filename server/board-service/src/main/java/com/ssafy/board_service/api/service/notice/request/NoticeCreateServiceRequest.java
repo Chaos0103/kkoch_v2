@@ -12,27 +12,33 @@ public class NoticeCreateServiceRequest {
 
     private final String title;
     private final String content;
-    private final LocalDateTime toFixedDateTime;
+    private final String toFixedDateTime;
 
     @Builder
-    private NoticeCreateServiceRequest(String title, String content, LocalDateTime toFixedDateTime) {
+    private NoticeCreateServiceRequest(String title, String content, String toFixedDateTime) {
         this.title = title;
         this.content = content;
         this.toFixedDateTime = toFixedDateTime;
     }
 
-    public static NoticeCreateServiceRequest of(String title, String content, LocalDateTime toFixedDateTime) {
+    public static NoticeCreateServiceRequest of(String title, String content, String toFixedDateTime) {
         return new NoticeCreateServiceRequest(title, content, toFixedDateTime);
     }
 
     public Notice toEntity(Long createdBy, LocalDateTime currentDateTime) {
-        validateNoticeTitle(title);
-        validateToFixedDateTime(toFixedDateTime, currentDateTime);
+        LocalDateTime to = getToFixedDateTime(currentDateTime);
 
-        LocalDateTime to = this.toFixedDateTime;
-        if (to == null) {
-            to = currentDateTime;
-        }
+        validateNoticeTitle(title);
+        validateToFixedDateTime(to, currentDateTime);
+
         return Notice.create(createdBy, title, content, to);
+    }
+
+    private LocalDateTime getToFixedDateTime(LocalDateTime currentDateTime) {
+        if (toFixedDateTime == null) {
+            return currentDateTime;
+        }
+
+        return LocalDateTime.parse(toFixedDateTime);
     }
 }

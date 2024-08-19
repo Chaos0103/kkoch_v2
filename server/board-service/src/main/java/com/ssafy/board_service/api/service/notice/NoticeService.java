@@ -21,8 +21,8 @@ public class NoticeService {
     private final NoticeRepository noticeRepository;
     private final MemberServiceClient memberServiceClient;
 
-    public NoticeCreateResponse createNotice(String memberKey, LocalDateTime currentDateTime, NoticeCreateServiceRequest request) {
-        ApiResponse<MemberIdResponse> response = memberServiceClient.searchMemberId(memberKey);
+    public NoticeCreateResponse createNotice(LocalDateTime currentDateTime, NoticeCreateServiceRequest request) {
+        ApiResponse<MemberIdResponse> response = memberServiceClient.searchMemberId();
 
         Notice notice = request.toEntity(response.getData().getMemberId(), currentDateTime);
         Notice savedNotice = noticeRepository.save(notice);
