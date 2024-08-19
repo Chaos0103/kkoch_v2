@@ -108,6 +108,50 @@ class NoticeQueryRepositoryTest extends IntegrationTestSupport {
             );
     }
 
+    @DisplayName("공지사항 제목에 조회할 키워드가 포함된 고정되지 않은 공지사항 목록 갯수를 조회한다.")
+    @Test
+    void countNotFixedByNoticeTitleContaining() {
+        //given
+        LocalDateTime currentDateTime = LocalDateTime.of(2024, 8, 15, 7, 0, 0);
+        String keyword = "공지사항";
+
+        createNotice(false, "서비스 공지사항 제목", LocalDateTime.of(2024, 8, 15, 0, 0, 0));
+        createNotice(false, "서비스 공지사항", LocalDateTime.of(2024, 8, 15, 0, 0, 0));
+        createNotice(false, "공지사항 제목", LocalDateTime.of(2024, 8, 15, 0, 0, 0));
+        createNotice(false, "공지사항", LocalDateTime.of(2024, 8, 15, 6, 59, 59));
+        createNotice(false, "서비스", LocalDateTime.of(2024, 8, 15, 0, 0, 0));
+        createNotice(false, "공지사항", LocalDateTime.of(2024, 8, 15, 7, 0, 0));
+        createNotice(true, "공지사항", LocalDateTime.of(2024, 8, 15, 0, 0, 0));
+
+        //when
+        int total = noticeQueryRepository.countNotFixedByNoticeTitleContaining(keyword, currentDateTime);
+
+        //then
+        assertThat(total).isEqualTo(4);
+    }
+
+    @DisplayName("고정되지 않은 공지사항 갯수 조회시 조회할 키워드가 빈 값이면 검색 조건에서 제외한다.")
+    @NullAndEmptySource
+    @ParameterizedTest
+    void countNotFixedByNoticeTitleContaining(String keyword) {
+        //given
+        LocalDateTime currentDateTime = LocalDateTime.of(2024, 8, 15, 7, 0, 0);
+
+        createNotice(false, "서비스 공지사항 제목", LocalDateTime.of(2024, 8, 15, 0, 0, 0));
+        createNotice(false, "서비스 공지사항", LocalDateTime.of(2024, 8, 15, 0, 0, 0));
+        createNotice(false, "공지사항 제목", LocalDateTime.of(2024, 8, 15, 0, 0, 0));
+        createNotice(false, "공지사항", LocalDateTime.of(2024, 8, 15, 6, 59, 59));
+        createNotice(false, "서비스", LocalDateTime.of(2024, 8, 15, 0, 0, 0));
+        createNotice(false, "공지사항", LocalDateTime.of(2024, 8, 15, 7, 0, 0));
+        createNotice(true, "공지사항", LocalDateTime.of(2024, 8, 15, 0, 0, 0));
+
+        //when
+        int total = noticeQueryRepository.countNotFixedByNoticeTitleContaining(keyword, currentDateTime);
+
+        //then
+        assertThat(total).isEqualTo(5);
+    }
+
     private Notice createNotice(boolean isDeleted, String noticeTitle, LocalDateTime toFixedDateTime) {
         Notice notice = Notice.builder()
             .isDeleted(isDeleted)

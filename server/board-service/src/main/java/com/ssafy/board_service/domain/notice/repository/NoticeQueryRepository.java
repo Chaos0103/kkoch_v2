@@ -67,7 +67,7 @@ public class NoticeQueryRepository {
             .fetch();
     }
 
-    public int countNotFixedByNoticeTitleContaining() {
+    public int countNotFixedByNoticeTitleContaining(String keyword, LocalDateTime currentDateTime) {
         return 0;
     }
 
