@@ -4,7 +4,9 @@ import com.ssafy.board_service.api.ApiResponse;
 import com.ssafy.board_service.api.client.MemberIdResponse;
 import com.ssafy.board_service.api.client.MemberServiceClient;
 import com.ssafy.board_service.api.service.notice.request.NoticeCreateServiceRequest;
+import com.ssafy.board_service.api.service.notice.request.NoticeModifyServiceRequest;
 import com.ssafy.board_service.api.service.notice.response.NoticeCreateResponse;
+import com.ssafy.board_service.api.service.notice.response.NoticeModifyResponse;
 import com.ssafy.board_service.domain.notice.Notice;
 import com.ssafy.board_service.domain.notice.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,10 @@ public class NoticeService {
         Notice savedNotice = noticeRepository.save(notice);
 
         return NoticeCreateResponse.of(savedNotice, currentDateTime);
+    }
+
+    public NoticeModifyResponse modifyNotice(long noticeId, LocalDateTime currentDateTime, NoticeModifyServiceRequest request) {
+        return null;
     }
 
     private Long findMemberId() {
