@@ -152,7 +152,7 @@ class NoticeApiControllerTest extends ControllerTestSupport {
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
             )
-            .andExpect(status().isCreated());
+            .andExpect(status().isOk());
     }
 
     @DisplayName("공지사항 수정을 한다.")
@@ -169,6 +169,6 @@ class NoticeApiControllerTest extends ControllerTestSupport {
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
             )
-            .andExpect(status().isCreated());
+            .andExpect(status().isOk());
     }
 }

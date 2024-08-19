@@ -31,7 +31,11 @@ public class NoticeApiController {
     }
 
     @PatchMapping("/{noticeId}")
-    public ApiResponse<NoticeModifyResponse> modifyNotice(@PathVariable Long noticeId, @Valid @RequestBody NoticeModifyRequest request) {
-        return null;
+    public ApiResponse<NoticeModifyResponse> modifyNotice(@PathVariable Integer noticeId, @Valid @RequestBody NoticeModifyRequest request) {
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        NoticeModifyResponse response = noticeService.modifyNotice(noticeId, currentDateTime, request.toServiceRequest());
+
+        return ApiResponse.ok(response);
     }
 }
