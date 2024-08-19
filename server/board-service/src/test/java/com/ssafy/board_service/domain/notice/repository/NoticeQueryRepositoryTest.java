@@ -5,6 +5,8 @@ import com.ssafy.board_service.domain.notice.Notice;
 import com.ssafy.board_service.domain.notice.repository.response.NoticeResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 
@@ -34,6 +36,7 @@ class NoticeQueryRepositoryTest extends IntegrationTestSupport {
         Notice notice2 = createNotice(false, "서비스 공지사항", LocalDateTime.of(2024, 8, 15, 0, 0, 0));
         Notice notice3 = createNotice(false, "공지사항 제목", LocalDateTime.of(2024, 8, 15, 0, 0, 0));
         Notice notice4 = createNotice(false, "공지사항", LocalDateTime.of(2024, 8, 15, 6, 59, 59));
+        createNotice(false, "서비스", LocalDateTime.of(2024, 8, 15, 0, 0, 0));
         createNotice(false, "공지사항", LocalDateTime.of(2024, 8, 15, 7, 0, 0));
         createNotice(true, "공지사항", LocalDateTime.of(2024, 8, 15, 0, 0, 0));
 
@@ -44,6 +47,37 @@ class NoticeQueryRepositoryTest extends IntegrationTestSupport {
         assertThat(content).hasSize(4)
             .extracting("id", "title", "isFixed", "createdDateTime")
             .containsExactly(
+                tuple(notice4.getId(), notice4.getNoticeTitle(), false, notice4.getCreatedDateTime()),
+                tuple(notice3.getId(), notice3.getNoticeTitle(), false, notice3.getCreatedDateTime()),
+                tuple(notice2.getId(), notice2.getNoticeTitle(), false, notice2.getCreatedDateTime()),
+                tuple(notice1.getId(), notice1.getNoticeTitle(), false, notice1.getCreatedDateTime())
+            );
+    }
+
+    @DisplayName("고정되지 않은 공지사항 조회시 조회할 키워드가 빈 값이면 검색 조건에서 제외한다.")
+    @NullAndEmptySource
+    @ParameterizedTest
+    void findNotFixedAllByNoticeTitleContaining(String keyword) {
+        //given
+        LocalDateTime currentDateTime = LocalDateTime.of(2024, 8, 15, 7, 0, 0);
+        PageRequest pageable = PageRequest.of(0, 10);
+
+        Notice notice1 = createNotice(false, "서비스 공지사항 제목", LocalDateTime.of(2024, 8, 15, 0, 0, 0));
+        Notice notice2 = createNotice(false, "서비스 공지사항", LocalDateTime.of(2024, 8, 15, 0, 0, 0));
+        Notice notice3 = createNotice(false, "공지사항 제목", LocalDateTime.of(2024, 8, 15, 0, 0, 0));
+        Notice notice4 = createNotice(false, "공지사항", LocalDateTime.of(2024, 8, 15, 6, 59, 59));
+        Notice notice5 = createNotice(false, "서비스", LocalDateTime.of(2024, 8, 15, 0, 0, 0));
+        createNotice(false, "공지사항", LocalDateTime.of(2024, 8, 15, 7, 0, 0));
+        createNotice(true, "공지사항", LocalDateTime.of(2024, 8, 15, 0, 0, 0));
+
+        //when
+        List<NoticeResponse> content = noticeQueryRepository.findNotFixedAllByNoticeTitleContaining(keyword, currentDateTime, pageable);
+
+        //then
+        assertThat(content).hasSize(5)
+            .extracting("id", "title", "isFixed", "createdDateTime")
+            .containsExactly(
+                tuple(notice5.getId(), notice5.getNoticeTitle(), false, notice5.getCreatedDateTime()),
                 tuple(notice4.getId(), notice4.getNoticeTitle(), false, notice4.getCreatedDateTime()),
                 tuple(notice3.getId(), notice3.getNoticeTitle(), false, notice3.getCreatedDateTime()),
                 tuple(notice2.getId(), notice2.getNoticeTitle(), false, notice2.getCreatedDateTime()),
