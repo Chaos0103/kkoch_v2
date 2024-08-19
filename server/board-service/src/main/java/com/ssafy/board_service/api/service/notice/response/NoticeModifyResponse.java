@@ -1,5 +1,6 @@
 package com.ssafy.board_service.api.service.notice.response;
 
+import com.ssafy.board_service.domain.notice.Notice;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,5 +22,9 @@ public class NoticeModifyResponse {
         this.title = title;
         this.isFixed = isFixed;
         this.modifiedDateTime = modifiedDateTime;
+    }
+
+    public static NoticeModifyResponse of(Notice notice, LocalDateTime currentDateTime) {
+        return new NoticeModifyResponse(notice.getId(), notice.getNoticeTitle(), notice.isFixed(currentDateTime), currentDateTime);
     }
 }
