@@ -40,4 +40,8 @@ public class Notice extends BaseEntity {
     public static Notice of(boolean isDeleted, Long createdBy, Long lastModifiedBy, String noticeTitle, String noticeContent, LocalDateTime toFixedDateTime) {
         return new Notice(isDeleted, createdBy, lastModifiedBy, noticeTitle, noticeContent, toFixedDateTime);
     }
+
+    public static Notice create(Long createdBy, String noticeTitle, String noticeContent, LocalDateTime toFixedDateTime) {
+        return of(false, createdBy, createdBy, noticeTitle, noticeContent, toFixedDateTime);
+    }
 }
