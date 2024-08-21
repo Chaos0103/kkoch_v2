@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+
+import static com.ssafy.board_service.common.util.PageUtils.parsePageNumber;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/board-service/notices")
@@ -21,6 +25,12 @@ public class NoticeQueryApiController {
 
     @GetMapping
     public ApiResponse<PageResponse<NoticeResponse>> searchNotFixedNotices(@Valid @ModelAttribute NoticeSearchParam param) {
-        return null;
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        int pageNumber = parsePageNumber(param.getPage());
+
+        PageResponse<NoticeResponse> response = noticeQueryService.searchNotFixedNotices(pageNumber, param.getKeyword(), currentDateTime);
+
+        return ApiResponse.ok(response);
     }
 }
