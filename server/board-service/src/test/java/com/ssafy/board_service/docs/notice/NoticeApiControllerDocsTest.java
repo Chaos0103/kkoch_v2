@@ -6,6 +6,7 @@ import com.ssafy.board_service.api.controller.notice.request.NoticeModifyRequest
 import com.ssafy.board_service.api.service.notice.NoticeService;
 import com.ssafy.board_service.api.service.notice.response.NoticeCreateResponse;
 import com.ssafy.board_service.api.service.notice.response.NoticeModifyResponse;
+import com.ssafy.board_service.api.service.notice.response.NoticeRemoveResponse;
 import com.ssafy.board_service.docs.RestDocsSupport;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,7 @@ import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -168,6 +170,53 @@ class NoticeApiControllerDocsTest extends RestDocsSupport {
                         .description("상단 고정 여부"),
                     fieldWithPath("data.modifiedDateTime").type(JsonFieldType.ARRAY)
                         .description("공지사항 수정일시")
+                )
+            ));
+    }
+
+    @DisplayName("공지사항 삭제 API")
+    @Test
+    void removeNotice() throws Exception {
+        NoticeRemoveResponse response = NoticeRemoveResponse.builder()
+            .id(1)
+            .title("서비스 점검 안내")
+            .removedDateTime(LocalDateTime.now())
+            .build();
+
+        given(noticeService.removeNotice(anyInt(), any()))
+            .willReturn(response);
+
+        mockMvc.perform(
+                delete("/board-service/notices/{noticeId}", 1)
+                    .header(HttpHeaders.AUTHORIZATION, "issued.access.token")
+            )
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andDo(document("remove-notice",
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName(HttpHeaders.AUTHORIZATION)
+                        .description("회원 토큰")
+                ),
+                pathParameters(
+                    parameterWithName("noticeId")
+                        .description("공지사항 ID")
+                ),
+                responseFields(
+                    fieldWithPath("code").type(JsonFieldType.NUMBER)
+                        .description("코드"),
+                    fieldWithPath("status").type(JsonFieldType.STRING)
+                        .description("상태"),
+                    fieldWithPath("message").type(JsonFieldType.STRING)
+                        .description("메시지"),
+                    fieldWithPath("data").type(JsonFieldType.OBJECT)
+                        .description("응답 데이터"),
+                    fieldWithPath("data.id").type(JsonFieldType.NUMBER)
+                        .description("공지사항 ID"),
+                    fieldWithPath("data.title").type(JsonFieldType.STRING)
+                        .description("공지사항 제목"),
+                    fieldWithPath("data.removedDateTime").type(JsonFieldType.ARRAY)
+                        .description("공지사항 삭제일시")
                 )
             ));
     }
