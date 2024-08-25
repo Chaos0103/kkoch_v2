@@ -37,6 +37,10 @@ public class NoticeQueryApiController {
 
     @GetMapping("/fixed")
     public ApiResponse<FixedNoticeResponse> searchFixedNotices() {
-        return null;
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        FixedNoticeResponse response = noticeQueryService.searchFixedNotices(currentDateTime);
+
+        return ApiResponse.ok(response);
     }
 }
