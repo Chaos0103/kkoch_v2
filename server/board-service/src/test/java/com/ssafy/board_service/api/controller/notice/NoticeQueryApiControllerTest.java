@@ -61,4 +61,13 @@ class NoticeQueryApiControllerTest extends ControllerTestSupport {
             )
             .andExpect(status().isOk());
     }
+
+    @DisplayName("고정된 공지사항 목록을 조회한다.")
+    @Test
+    void searchFixedNotices() throws Exception {
+        mockMvc.perform(
+                get("/board-service/notices/fixed")
+            )
+            .andExpect(status().isOk());
+    }
 }
