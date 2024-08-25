@@ -44,6 +44,8 @@ public class NoticeQueryApiController {
 
     @GetMapping("/{noticeId}")
     public ApiResponse<NoticeDetailResponse> searchNotice(@PathVariable int noticeId) {
-        return null;
+        NoticeDetailResponse response = noticeQueryService.searchNotice(noticeId);
+
+        return ApiResponse.ok(response);
     }
 }
