@@ -1,5 +1,6 @@
 package com.ssafy.board_service.api.service.notice.response;
 
+import com.ssafy.board_service.domain.notice.Notice;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,5 +20,9 @@ public class NoticeRemoveResponse {
         this.id = id;
         this.title = title;
         this.removedDateTime = removedDateTime;
+    }
+
+    public static NoticeRemoveResponse of(Notice notice, LocalDateTime currentDateTime) {
+        return new NoticeRemoveResponse(notice.getId(), notice.getNoticeTitle(), currentDateTime);
     }
 }

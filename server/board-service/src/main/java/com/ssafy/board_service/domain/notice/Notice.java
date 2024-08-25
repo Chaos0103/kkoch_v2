@@ -52,6 +52,11 @@ public class Notice extends BaseEntity {
         this.toFixedDateTime = toFixedDateTime;
     }
 
+    public void remove(Long modifiedBy) {
+        updateModifiedBy(modifiedBy);
+        remove();
+    }
+
     public boolean isFixed(LocalDateTime currentDateTime) {
         return toFixedDateTime.isAfter(currentDateTime);
     }

@@ -44,7 +44,12 @@ public class NoticeService {
     }
 
     public NoticeRemoveResponse removeNotice(int noticeId, LocalDateTime currentDateTime) {
-        return null;
+        Long memberId = findMemberId();
+
+        Notice notice = findNoticeById(noticeId);
+        notice.remove(memberId);
+
+        return NoticeRemoveResponse.of(notice, currentDateTime);
     }
 
     private Long findMemberId() {
