@@ -9,8 +9,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.http.MediaType;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -168,6 +167,15 @@ class NoticeApiControllerTest extends ControllerTestSupport {
                 patch("/board-service/notices/{noticeId}", 1)
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().isOk());
+    }
+
+    @DisplayName("공지사항 삭제를 한다.")
+    @Test
+    void removeNotice() throws Exception {
+        mockMvc.perform(
+                delete("/board-service/notices/{noticeId}", 1)
             )
             .andExpect(status().isOk());
     }

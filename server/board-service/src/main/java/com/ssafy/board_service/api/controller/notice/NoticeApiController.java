@@ -6,6 +6,7 @@ import com.ssafy.board_service.api.controller.notice.request.NoticeModifyRequest
 import com.ssafy.board_service.api.service.notice.NoticeService;
 import com.ssafy.board_service.api.service.notice.response.NoticeCreateResponse;
 import com.ssafy.board_service.api.service.notice.response.NoticeModifyResponse;
+import com.ssafy.board_service.api.service.notice.response.NoticeRemoveResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,5 +38,10 @@ public class NoticeApiController {
         NoticeModifyResponse response = noticeService.modifyNotice(noticeId, currentDateTime, request.toServiceRequest());
 
         return ApiResponse.ok(response);
+    }
+
+    @DeleteMapping("/{noticeId}")
+    public ApiResponse<NoticeRemoveResponse> removeNotice(@PathVariable Integer noticeId) {
+        return null;
     }
 }
