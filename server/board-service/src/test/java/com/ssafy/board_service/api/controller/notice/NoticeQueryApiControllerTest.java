@@ -70,4 +70,13 @@ class NoticeQueryApiControllerTest extends ControllerTestSupport {
             )
             .andExpect(status().isOk());
     }
+
+    @DisplayName("공지사항을 상세 조회한다.")
+    @Test
+    void searchNotice() throws Exception {
+        mockMvc.perform(
+                get("/board-service/notices/{noticeId}", 1)
+            )
+            .andExpect(status().isOk());
+    }
 }

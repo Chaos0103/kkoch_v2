@@ -5,13 +5,11 @@ import com.ssafy.board_service.api.PageResponse;
 import com.ssafy.board_service.api.controller.notice.param.NoticeSearchParam;
 import com.ssafy.board_service.api.service.notice.FixedNoticeResponse;
 import com.ssafy.board_service.api.service.notice.NoticeQueryService;
+import com.ssafy.board_service.domain.notice.repository.response.NoticeDetailResponse;
 import com.ssafy.board_service.domain.notice.repository.response.NoticeResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
@@ -42,5 +40,10 @@ public class NoticeQueryApiController {
         FixedNoticeResponse response = noticeQueryService.searchFixedNotices(currentDateTime);
 
         return ApiResponse.ok(response);
+    }
+
+    @GetMapping("/{noticeId}")
+    public ApiResponse<NoticeDetailResponse> searchNotice(@PathVariable int noticeId) {
+        return null;
     }
 }
