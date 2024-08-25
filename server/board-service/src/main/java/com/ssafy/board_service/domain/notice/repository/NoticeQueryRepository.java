@@ -83,7 +83,23 @@ public class NoticeQueryRepository {
     }
 
     public Optional<NoticeDetailResponse> findDetailById(int id) {
-        return Optional.empty();
+        NoticeDetailResponse content = queryFactory
+            .select(
+                Projections.fields(
+                    NoticeDetailResponse.class,
+                    notice.id,
+                    notice.noticeTitle.as("title"),
+                    notice.noticeContent.as("content"),
+                    notice.createdDateTime
+                )
+            )
+            .from(notice)
+            .where(
+                isNotDeleted(),
+                notice.id.eq(id)
+            )
+            .fetchFirst();
+        return Optional.ofNullable(content);
     }
 
     private BooleanExpression isNotDeleted() {
