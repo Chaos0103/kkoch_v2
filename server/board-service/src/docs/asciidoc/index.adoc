@@ -16,4 +16,5 @@ include::overview.adoc[]
 
 include::api/notice/create-notice.adoc[]
 include::api/notice/modify-notice.adoc[]
+include::api/notice/search-fixed-notices.adoc[]
 include::api/notice/search-not-fixed-notices.adoc[]

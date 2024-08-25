@@ -1,0 +1,11 @@
+[[search-fixed-notices]]
+=== 고정된 공지사항 목록 조회 API
+
+==== HTTP Request
+
+include::{snippets}/search-fixed-notices/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/search-fixed-notices/http-response.adoc[]
+include::{snippets}/search-fixed-notices/response-fields.adoc[]
