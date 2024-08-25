@@ -28,4 +28,8 @@ public class NoticeQueryService {
 
         return PageResponse.create(content, pageable, total);
     }
+
+    public FixedNoticeResponse searchFixedNotices(LocalDateTime currentDateTime) {
+        return null;
+    }
 }

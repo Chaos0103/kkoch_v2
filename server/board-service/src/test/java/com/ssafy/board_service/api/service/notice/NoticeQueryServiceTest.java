@@ -57,6 +57,31 @@ class NoticeQueryServiceTest extends IntegrationTestSupport {
             );
     }
 
+    @DisplayName("고정된 공지사항 목록을 조회한다.")
+    @Test
+    void searchFixedNotices() {
+        //given
+        LocalDateTime currentDateTime = LocalDateTime.of(2024, 8, 15, 7, 0, 0);
+
+        createNotice(false, "공지사항 제목", LocalDateTime.of(2024, 8, 15, 6, 59, 59));
+        Notice notice1 = createNotice(false, "공지사항 제목", LocalDateTime.of(2024, 8, 15, 7, 0, 0));
+        Notice notice2 = createNotice(false, "공지사항 제목", LocalDateTime.of(2024, 8, 15, 7, 0, 1));
+        createNotice(true, "공지사항 제목", LocalDateTime.of(2024, 8, 15, 8, 0, 0));
+
+        //when
+        FixedNoticeResponse response = noticeQueryService.searchFixedNotices(currentDateTime);
+
+        //then
+        assertThat(response).isNotNull()
+            .hasFieldOrPropertyWithValue("size", 2);
+        assertThat(response.getContent()).hasSize(2)
+            .extracting("id", "isFixed", "createdDateTime")
+            .containsExactly(
+                tuple(notice2.getId(), true, notice2.getCreatedDateTime()),
+                tuple(notice1.getId(), true, notice1.getCreatedDateTime())
+            );
+    }
+
     private Notice createNotice(boolean isDeleted, String noticeTitle, LocalDateTime toFixedDateTime) {
         Notice notice = Notice.builder()
             .isDeleted(isDeleted)
