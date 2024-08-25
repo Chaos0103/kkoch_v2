@@ -30,6 +30,8 @@ public class NoticeQueryService {
     }
 
     public FixedNoticeResponse searchFixedNotices(LocalDateTime currentDateTime) {
-        return null;
+        List<NoticeResponse> content = noticeQueryRepository.findFixedAll(currentDateTime);
+
+        return FixedNoticeResponse.of(content);
     }
 }
