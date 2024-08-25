@@ -1,0 +1,13 @@
+[[remove-notice]]
+=== 공지사항 삭제 API
+
+==== HTTP Request
+
+include::{snippets}/remove-notice/http-request.adoc[]
+include::{snippets}/remove-notice/request-headers.adoc[]
+include::{snippets}/remove-notice/path-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/remove-notice/http-response.adoc[]
+include::{snippets}/remove-notice/response-fields.adoc[]
