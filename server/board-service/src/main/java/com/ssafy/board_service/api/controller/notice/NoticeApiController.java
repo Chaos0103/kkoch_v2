@@ -42,6 +42,10 @@ public class NoticeApiController {
 
     @DeleteMapping("/{noticeId}")
     public ApiResponse<NoticeRemoveResponse> removeNotice(@PathVariable Integer noticeId) {
-        return null;
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        NoticeRemoveResponse response = noticeService.removeNotice(noticeId, currentDateTime);
+
+        return ApiResponse.ok(response);
     }
 }
