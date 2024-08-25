@@ -3,6 +3,7 @@ package com.ssafy.board_service.api.service.notice;
 import com.ssafy.board_service.api.PageResponse;
 import com.ssafy.board_service.common.util.PageUtils;
 import com.ssafy.board_service.domain.notice.repository.NoticeQueryRepository;
+import com.ssafy.board_service.domain.notice.repository.response.NoticeDetailResponse;
 import com.ssafy.board_service.domain.notice.repository.response.NoticeResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -33,5 +34,9 @@ public class NoticeQueryService {
         List<NoticeResponse> content = noticeQueryRepository.findFixedAll(currentDateTime);
 
         return FixedNoticeResponse.of(content);
+    }
+
+    public NoticeDetailResponse searchNotice(int noticeId) {
+        return null;
     }
 }

@@ -4,6 +4,7 @@ import com.ssafy.board_service.IntegrationTestSupport;
 import com.ssafy.board_service.api.PageResponse;
 import com.ssafy.board_service.domain.notice.Notice;
 import com.ssafy.board_service.domain.notice.repository.NoticeRepository;
+import com.ssafy.board_service.domain.notice.repository.response.NoticeDetailResponse;
 import com.ssafy.board_service.domain.notice.repository.response.NoticeResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -80,6 +81,23 @@ class NoticeQueryServiceTest extends IntegrationTestSupport {
                 tuple(notice2.getId(), true, notice2.getCreatedDateTime()),
                 tuple(notice1.getId(), true, notice1.getCreatedDateTime())
             );
+    }
+
+    @DisplayName("공지사항을 상세 조회한다.")
+    @Test
+    void searchNotice() {
+        //given
+        Notice notice = createNotice(false, "서비스 긴급 점검", LocalDateTime.of(2024, 8, 15, 7, 0, 0));
+
+        //when
+        NoticeDetailResponse response = noticeQueryService.searchNotice(notice.getId());
+
+        //then
+        assertThat(response).isNotNull()
+            .hasFieldOrPropertyWithValue("id", notice.getId())
+            .hasFieldOrPropertyWithValue("title", notice.getNoticeTitle())
+            .hasFieldOrPropertyWithValue("content", notice.getNoticeContent())
+            .hasFieldOrPropertyWithValue("createdDateTime", notice.getCreatedDateTime());
     }
 
     private Notice createNotice(boolean isDeleted, String noticeTitle, LocalDateTime toFixedDateTime) {
