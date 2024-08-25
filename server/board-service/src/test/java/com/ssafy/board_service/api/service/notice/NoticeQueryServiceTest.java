@@ -11,9 +11,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
+import static org.assertj.core.api.Assertions.*;
 
 class NoticeQueryServiceTest extends IntegrationTestSupport {
 
@@ -98,6 +98,15 @@ class NoticeQueryServiceTest extends IntegrationTestSupport {
             .hasFieldOrPropertyWithValue("title", notice.getNoticeTitle())
             .hasFieldOrPropertyWithValue("content", notice.getNoticeContent())
             .hasFieldOrPropertyWithValue("createdDateTime", notice.getCreatedDateTime());
+    }
+
+    @DisplayName("공지사항 상세 조회시 조회된 데이터가 없다면 예외가 발생한다.")
+    @Test
+    void searchNoticeWithoutData() {
+        //given //when //then
+        assertThatThrownBy(() -> noticeQueryService.searchNotice(1))
+            .isInstanceOf(NoSuchElementException.class)
+            .hasMessage("등록되지 않는 공지사항입니다.");
     }
 
     private Notice createNotice(boolean isDeleted, String noticeTitle, LocalDateTime toFixedDateTime) {

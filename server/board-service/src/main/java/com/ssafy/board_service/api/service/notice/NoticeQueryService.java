@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @Transactional(readOnly = true)
@@ -37,6 +38,7 @@ public class NoticeQueryService {
     }
 
     public NoticeDetailResponse searchNotice(int noticeId) {
-        return null;
+        return noticeQueryRepository.findDetailById(noticeId)
+            .orElseThrow(() -> new NoSuchElementException("등록되지 않는 공지사항입니다."));
     }
 }
