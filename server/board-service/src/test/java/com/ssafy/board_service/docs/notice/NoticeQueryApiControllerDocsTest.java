@@ -3,7 +3,7 @@ package com.ssafy.board_service.docs.notice;
 import com.ssafy.board_service.api.PageResponse;
 import com.ssafy.board_service.api.controller.notice.NoticeQueryApiController;
 import com.ssafy.board_service.api.controller.notice.param.NoticeSearchParam;
-import com.ssafy.board_service.api.service.notice.FixedNoticeResponse;
+import com.ssafy.board_service.api.service.notice.response.FixedNoticeResponse;
 import com.ssafy.board_service.api.service.notice.NoticeQueryService;
 import com.ssafy.board_service.docs.RestDocsSupport;
 import com.ssafy.board_service.domain.notice.repository.response.NoticeDetailResponse;

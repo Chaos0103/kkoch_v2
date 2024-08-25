@@ -1,4 +1,4 @@
-package com.ssafy.board_service.api.service.notice;
+package com.ssafy.board_service.api.service.notice.response;
 
 import com.ssafy.board_service.domain.notice.repository.response.NoticeResponse;
 import lombok.Builder;

@@ -2,6 +2,7 @@ package com.ssafy.board_service.api.service.notice;
 
 import com.ssafy.board_service.IntegrationTestSupport;
 import com.ssafy.board_service.api.PageResponse;
+import com.ssafy.board_service.api.service.notice.response.FixedNoticeResponse;
 import com.ssafy.board_service.domain.notice.Notice;
 import com.ssafy.board_service.domain.notice.repository.NoticeRepository;
 import com.ssafy.board_service.domain.notice.repository.response.NoticeDetailResponse;

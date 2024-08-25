@@ -8,6 +8,7 @@ import com.ssafy.board_service.api.service.notice.request.NoticeCreateServiceReq
 import com.ssafy.board_service.api.service.notice.request.NoticeModifyServiceRequest;
 import com.ssafy.board_service.api.service.notice.response.NoticeCreateResponse;
 import com.ssafy.board_service.api.service.notice.response.NoticeModifyResponse;
+import com.ssafy.board_service.api.service.notice.response.NoticeRemoveResponse;
 import com.ssafy.board_service.domain.notice.Notice;
 import com.ssafy.board_service.domain.notice.repository.NoticeRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -178,6 +179,39 @@ class NoticeServiceTest extends IntegrationTestSupport {
             .hasFieldOrPropertyWithValue("lastModifiedBy", 2L)
             .hasFieldOrPropertyWithValue("noticeTitle", "(수정)서비스 점검 안내")
             .hasFieldOrPropertyWithValue("noticeContent", "2024.08.15 02:00 ~ 07:00 서비스 점검 예정입니다.");
+    }
+
+    @DisplayName("공지사항 ID를 입력 받아 공지사항을 삭제한다.")
+    @Test
+    void removeNotice() {
+        //given
+        LocalDateTime currentDateTime = LocalDateTime.of(2024, 8, 15, 7, 0, 0);
+
+        Notice notice = createNotice(1L);
+
+        MemberIdResponse memberId = MemberIdResponse.builder()
+            .memberId(2L)
+            .build();
+        ApiResponse<MemberIdResponse> clientResponse = ApiResponse.ok(memberId);
+
+        given(memberServiceClient.searchMemberId())
+            .willReturn(clientResponse);
+
+        //when
+        NoticeRemoveResponse response = noticeService.removeNotice(notice.getId(), currentDateTime);
+
+        //then
+        assertThat(response).isNotNull()
+            .hasFieldOrPropertyWithValue("id", notice.getId())
+            .hasFieldOrPropertyWithValue("title", notice.getNoticeTitle())
+            .hasFieldOrPropertyWithValue("removedDateTime", currentDateTime);
+
+        Optional<Notice> findNotice = noticeRepository.findById(notice.getId());
+        assertThat(findNotice).isPresent()
+            .get()
+            .hasFieldOrPropertyWithValue("createdBy", 1L)
+            .hasFieldOrPropertyWithValue("lastModifiedBy", 2L)
+            .hasFieldOrPropertyWithValue("isDeleted", true);
     }
 
     private Notice createNotice(long memberId) {

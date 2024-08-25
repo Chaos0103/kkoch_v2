@@ -7,6 +7,7 @@ import com.ssafy.board_service.api.service.notice.request.NoticeCreateServiceReq
 import com.ssafy.board_service.api.service.notice.request.NoticeModifyServiceRequest;
 import com.ssafy.board_service.api.service.notice.response.NoticeCreateResponse;
 import com.ssafy.board_service.api.service.notice.response.NoticeModifyResponse;
+import com.ssafy.board_service.api.service.notice.response.NoticeRemoveResponse;
 import com.ssafy.board_service.domain.notice.Notice;
 import com.ssafy.board_service.domain.notice.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,10 @@ public class NoticeService {
         request.modifyEntity(notice, memberId, currentDateTime);
 
         return NoticeModifyResponse.of(notice, currentDateTime);
+    }
+
+    public NoticeRemoveResponse removeNotice(int noticeId, LocalDateTime currentDateTime) {
+        return null;
     }
 
     private Long findMemberId() {

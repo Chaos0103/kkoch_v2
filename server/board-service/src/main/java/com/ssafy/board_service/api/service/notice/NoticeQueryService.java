@@ -1,6 +1,7 @@
 package com.ssafy.board_service.api.service.notice;
 
 import com.ssafy.board_service.api.PageResponse;
+import com.ssafy.board_service.api.service.notice.response.FixedNoticeResponse;
 import com.ssafy.board_service.common.util.PageUtils;
 import com.ssafy.board_service.domain.notice.repository.NoticeQueryRepository;
 import com.ssafy.board_service.domain.notice.repository.response.NoticeDetailResponse;
