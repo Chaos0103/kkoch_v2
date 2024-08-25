@@ -6,6 +6,7 @@ import com.ssafy.board_service.api.controller.notice.param.NoticeSearchParam;
 import com.ssafy.board_service.api.service.notice.FixedNoticeResponse;
 import com.ssafy.board_service.api.service.notice.NoticeQueryService;
 import com.ssafy.board_service.docs.RestDocsSupport;
+import com.ssafy.board_service.domain.notice.repository.response.NoticeDetailResponse;
 import com.ssafy.board_service.domain.notice.repository.response.NoticeResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,8 +25,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -152,6 +152,51 @@ class NoticeQueryApiControllerDocsTest extends RestDocsSupport {
                         .description("공지사항 등록일시"),
                     fieldWithPath("data.size").type(JsonFieldType.NUMBER)
                         .description("조회된 데이터 갯수")
+                )
+            ));
+    }
+
+    @DisplayName("공지사항 상세 조회 API")
+    @Test
+    void searchNotice() throws Exception {
+        NoticeDetailResponse response = NoticeDetailResponse.builder()
+            .id(1)
+            .title("서버 긴급 점검 안내")
+            .content("<h1>서버 긴급 점검 안내</h1>")
+            .createdDateTime(LocalDateTime.of(2024, 8, 10, 10, 0, 0))
+            .build();
+
+        given(noticeQueryService.searchNotice(anyInt()))
+            .willReturn(response);
+
+        mockMvc.perform(
+                get("/board-service/notices/{noticeId}", 1)
+            )
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andDo(document("search-notice",
+                preprocessResponse(prettyPrint()),
+                pathParameters(
+                    parameterWithName("noticeId")
+                        .description("공지사항 ID")
+                ),
+                responseFields(
+                    fieldWithPath("code").type(JsonFieldType.NUMBER)
+                        .description("코드"),
+                    fieldWithPath("status").type(JsonFieldType.STRING)
+                        .description("상태"),
+                    fieldWithPath("message").type(JsonFieldType.STRING)
+                        .description("메시지"),
+                    fieldWithPath("data").type(JsonFieldType.OBJECT)
+                        .description("응답 데이터"),
+                    fieldWithPath("data.id").type(JsonFieldType.NUMBER)
+                        .description("공지사항 ID"),
+                    fieldWithPath("data.title").type(JsonFieldType.STRING)
+                        .description("공지사항 제목"),
+                    fieldWithPath("data.content").type(JsonFieldType.STRING)
+                        .description("공지사항 내용"),
+                    fieldWithPath("data.createdDateTime").type(JsonFieldType.ARRAY)
+                        .description("공지사항 등록일시")
                 )
             ));
     }
