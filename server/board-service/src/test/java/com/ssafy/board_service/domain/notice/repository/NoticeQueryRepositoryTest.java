@@ -2,6 +2,7 @@ package com.ssafy.board_service.domain.notice.repository;
 
 import com.ssafy.board_service.IntegrationTestSupport;
 import com.ssafy.board_service.domain.notice.Notice;
+import com.ssafy.board_service.domain.notice.repository.response.NoticeDetailResponse;
 import com.ssafy.board_service.domain.notice.repository.response.NoticeResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
@@ -150,6 +152,46 @@ class NoticeQueryRepositoryTest extends IntegrationTestSupport {
 
         //then
         assertThat(total).isEqualTo(5);
+    }
+
+    @DisplayName("공지사항 ID로 공지사항을 상세 조회한다.")
+    @Test
+    void findDetailById() {
+        //given
+        Notice notice = createNotice(false, "서비스 점검 안내", LocalDateTime.of(2024, 8, 15, 7, 0, 0));
+
+        //when
+        Optional<NoticeDetailResponse> findNotice = noticeQueryRepository.findDetailById(notice.getId());
+
+        //then
+        assertThat(findNotice).isPresent().get()
+            .hasFieldOrPropertyWithValue("id", notice.getId())
+            .hasFieldOrPropertyWithValue("title", notice.getNoticeTitle())
+            .hasFieldOrPropertyWithValue("content", notice.getNoticeContent())
+            .hasFieldOrPropertyWithValue("createdDateTime", notice.getCreatedDateTime());
+    }
+
+    @DisplayName("등록되지 않은 공지사항 ID로 공지사항 상세 조회시 빈 객체를 반환한다.")
+    @Test
+    void findDetailByIdWithoutNotice() {
+        //given //when
+        Optional<NoticeDetailResponse> findNotice = noticeQueryRepository.findDetailById(1);
+
+        //then
+        assertThat(findNotice).isEmpty();
+    }
+
+    @DisplayName("삭제된 공지사항 ID로 공지사항 상세 조회시 빈 객체를 반환한다.")
+    @Test
+    void findDetailByIdIsDeletedIsTrue() {
+        //given
+        Notice notice = createNotice(true, "서비스 점검 안내", LocalDateTime.of(2024, 8, 15, 7, 0, 0));
+
+        //when
+        Optional<NoticeDetailResponse> findNotice = noticeQueryRepository.findDetailById(notice.getId());
+
+        //then
+        assertThat(findNotice).isEmpty();
     }
 
     private Notice createNotice(boolean isDeleted, String noticeTitle, LocalDateTime toFixedDateTime) {

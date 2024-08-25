@@ -4,6 +4,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.board_service.domain.notice.repository.response.NoticeDetailResponse;
 import com.ssafy.board_service.domain.notice.repository.response.NoticeResponse;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static com.ssafy.board_service.domain.notice.QNotice.notice;
 import static org.springframework.util.StringUtils.hasText;
@@ -78,6 +80,10 @@ public class NoticeQueryRepository {
             )
             .fetch()
             .size();
+    }
+
+    public Optional<NoticeDetailResponse> findDetailById(int id) {
+        return Optional.empty();
     }
 
     private BooleanExpression isNotDeleted() {
