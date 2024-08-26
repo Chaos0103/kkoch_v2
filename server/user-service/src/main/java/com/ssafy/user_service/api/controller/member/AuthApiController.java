@@ -20,7 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 
-import static com.ssafy.user_service.api.controller.member.AuthNumberGenerator.generateAuthNumber;
+import static com.ssafy.user_service.api.controller.member.AuthNumberGenerator.generateEmailAuthNumber;
+import static com.ssafy.user_service.common.util.TimeUtils.getCurrentDateTime;
 
 @Slf4j
 @RestController
@@ -28,15 +29,13 @@ import static com.ssafy.user_service.api.controller.member.AuthNumberGenerator.g
 @RequestMapping("/auth")
 public class AuthApiController {
 
-    private static final int EMAIL_AUTH_NUMBER_SIZE = 6;
-
     private final AuthService authService;
 
     @PostMapping("/email")
     public ApiResponse<EmailAuthResponse> sendAuthNumber(@Valid @RequestBody SendAuthNumberRequest request) {
         LocalDateTime currentDateTime = getCurrentDateTime();
 
-        String authNumber = generateAuthNumber(EMAIL_AUTH_NUMBER_SIZE);
+        String authNumber = generateEmailAuthNumber();
 
         EmailAuthResponse response = authService.sendAuthNumberToEmail(request.getEmail(), authNumber, currentDateTime);
 
@@ -68,9 +67,5 @@ public class AuthApiController {
         BusinessNumberValidateResponse response = authService.validateBusinessNumber(request.getBusinessNumber(), currentDateTime);
 
         return ApiResponse.ok(response);
-    }
-
-    private static LocalDateTime getCurrentDateTime() {
-        return LocalDateTime.now();
     }
 }

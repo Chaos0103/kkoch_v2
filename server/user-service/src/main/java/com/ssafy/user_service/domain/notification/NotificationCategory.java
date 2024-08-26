@@ -2,6 +2,8 @@ package com.ssafy.user_service.domain.notification;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.Arrays;
+
 @RequiredArgsConstructor
 public enum NotificationCategory {
 
@@ -12,11 +14,9 @@ public enum NotificationCategory {
     private final String description;
 
     public static NotificationCategory of(String notificationCategory) {
-        for (NotificationCategory category : values()) {
-            if (category.name().equals(notificationCategory)) {
-                return category;
-            }
-        }
-        return null;
+        return Arrays.stream(values())
+            .filter(category -> category.name().equals(notificationCategory))
+            .findFirst()
+            .orElse(null);
     }
 }

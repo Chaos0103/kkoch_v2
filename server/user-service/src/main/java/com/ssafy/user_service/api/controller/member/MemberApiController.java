@@ -13,16 +13,15 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
-import static com.ssafy.user_service.api.controller.member.AuthNumberGenerator.generateAuthNumber;
+import static com.ssafy.user_service.api.controller.member.AuthNumberGenerator.generateBackAccountAuthNumber;
 import static com.ssafy.user_service.common.security.SecurityUtils.findMemberKeyByToken;
+import static com.ssafy.user_service.common.util.TimeUtils.getCurrentDateTime;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/members")
 public class MemberApiController {
-
-    private static final int BANK_ACCOUNT_AUTH_NUMBER_SIZE = 3;
 
     private final MemberService memberService;
     private final AuthService authService;
@@ -69,7 +68,7 @@ public class MemberApiController {
     public ApiResponse<BankAccountAuthResponse> sendOneCoinAuthNumber(@Valid @RequestBody BankAccountRequest request) {
         LocalDateTime currentDateTime = getCurrentDateTime();
 
-        String authNumber = generateAuthNumber(BANK_ACCOUNT_AUTH_NUMBER_SIZE);
+        String authNumber = generateBackAccountAuthNumber();
 
         BankAccountAuthResponse response = authService.sendAuthNumberToBankAccount(request.toServiceRequest(), authNumber, currentDateTime);
 
@@ -98,9 +97,5 @@ public class MemberApiController {
         MemberRemoveResponse response = memberService.removeMember(memberKey, request.getPassword(), currentDateTime);
 
         return ApiResponse.ok(response);
-    }
-
-    private static LocalDateTime getCurrentDateTime() {
-        return LocalDateTime.now();
     }
 }

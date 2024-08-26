@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 
+import static com.ssafy.user_service.common.util.TimeUtils.getCurrentDateTime;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -26,7 +28,7 @@ public class NotificationApiController {
 
     @PostMapping("/open")
     public ApiResponse<NotificationOpenResponse> openNotifications(@Valid @RequestBody NotificationOpenRequest request) {
-        LocalDateTime currentDateTime = LocalDateTime.now();
+        LocalDateTime currentDateTime = getCurrentDateTime();
 
         NotificationOpenResponse response = notificationService.openNotifications(request.getIds(), currentDateTime);
 
@@ -35,7 +37,7 @@ public class NotificationApiController {
 
     @PostMapping("/remove")
     public ApiResponse<NotificationRemoveResponse> removeNotifications(@Valid @RequestBody NotificationRemoveRequest request) {
-        LocalDateTime currentDateTime = LocalDateTime.now();
+        LocalDateTime currentDateTime = getCurrentDateTime();
 
         NotificationRemoveResponse response = notificationService.removeNotifications(request.getIds(), currentDateTime);
 

@@ -19,13 +19,11 @@ public class AuthNumberManager {
     private final RedisRepository<String, String> redisRepository;
 
     public LocalDateTime saveEmailAuthNumber(String email, String issuedAuthNumber, LocalDateTime currentDateTime) {
-        redisRepository.save(email, issuedAuthNumber, EMAIL_AUTH_NUMBER_TIMEOUT, MINUTES);
-        return currentDateTime.plusMinutes(EMAIL_AUTH_NUMBER_TIMEOUT);
+        return saveAuthNumber(email, issuedAuthNumber, currentDateTime, EMAIL_AUTH_NUMBER_TIMEOUT);
     }
 
-    public LocalDateTime saveBankAccountAuthNumber(String accountNumber, String issuedAuthNumber, LocalDateTime currentDateTime) {
-        redisRepository.save(accountNumber, issuedAuthNumber, BANK_ACCOUNT_AUTH_NUMBER_TIMEOUT, MINUTES);
-        return currentDateTime.plusMinutes(BANK_ACCOUNT_AUTH_NUMBER_TIMEOUT);
+    public LocalDateTime saveBankAccountAuthNumber(String accountNumber, String issuedAuthNumber, LocalDateTime current) {
+        return saveAuthNumber(accountNumber, issuedAuthNumber, current, BANK_ACCOUNT_AUTH_NUMBER_TIMEOUT);
     }
 
     public void checkAuthNumber(String key, String authNumber) {
@@ -40,6 +38,11 @@ public class AuthNumberManager {
         }
 
         redisRepository.remove(key);
+    }
+
+    private LocalDateTime saveAuthNumber(String key, String issuedAuthNumber, LocalDateTime current, int timeout) {
+        redisRepository.save(key, issuedAuthNumber, timeout, MINUTES);
+        return current.plusMinutes(timeout);
     }
 
     private IssuedAuthNumber findAuthNumberByKey(String key) {

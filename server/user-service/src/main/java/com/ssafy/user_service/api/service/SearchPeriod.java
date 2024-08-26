@@ -5,13 +5,11 @@ import lombok.Builder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
+
+import static com.ssafy.user_service.common.util.StringUtils.isBlank;
+import static com.ssafy.user_service.common.util.TimeUtils.*;
 
 public class SearchPeriod {
-
-    private static final String DATE_FORMAT = "yyyy-MM-dd";
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT);
 
     private final String from;
     private final String to;
@@ -33,7 +31,7 @@ public class SearchPeriod {
 
         LocalDate fromDate = parse(from);
 
-        return fromDate.atStartOfDay();
+        return atStartOfDay(fromDate);
     }
 
     public LocalDateTime getTo() {
@@ -43,24 +41,22 @@ public class SearchPeriod {
 
         LocalDate toDate = parse(to);
 
-        return toDate.atStartOfDay()
-            .plusDays(1)
-            .minusSeconds(1);
+        return atEndOfDay(toDate);
     }
 
     public boolean valid() {
         LocalDateTime fromDateTime = getFrom();
         LocalDateTime toDateTime = getTo();
 
-        if (fromDateTime == null && toDateTime == null) {
+        if (isNull(fromDateTime) && isNull(toDateTime)) {
             return true;
         }
 
-        if (fromDateTime == null) {
+        if (isNull(fromDateTime)) {
             throw new AppException("시작 일자를 입력해주세요.");
         }
 
-        if (toDateTime == null) {
+        if (isNull(toDateTime)) {
             throw new AppException("종료 일자를 입력해주세요.");
         }
 
@@ -68,17 +64,5 @@ public class SearchPeriod {
             throw new AppException("날짜를 올바르게 입력해주세요.");
         }
         return true;
-    }
-
-    private LocalDate parse(String date) {
-        try {
-            return LocalDate.parse(date, FORMATTER);
-        } catch (DateTimeParseException e) {
-            throw new AppException("날짜를 올바르게 입력해주세요.", e);
-        }
-    }
-
-    private boolean isBlank(String date) {
-        return StringValidate.of(date).isBlank();
     }
 }
