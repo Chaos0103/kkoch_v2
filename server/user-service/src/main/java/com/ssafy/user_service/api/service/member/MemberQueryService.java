@@ -24,6 +24,7 @@ public class MemberQueryService {
     }
 
     public MemberIdResponse searchMemberId(String memberKey) {
-        return null;
+        return memberQueryRepository.findMemberId(memberKey)
+            .orElseThrow(() -> new NoSuchElementException("등록되지 않은 회원입니다."));
     }
 }
