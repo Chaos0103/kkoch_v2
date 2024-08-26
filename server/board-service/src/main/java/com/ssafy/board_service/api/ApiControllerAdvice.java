@@ -35,16 +35,6 @@ public class ApiControllerAdvice {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(DateTimeParseException.class)
-    public ApiResponse<Object> dateTimeParseException(DateTimeParseException e) {
-        return ApiResponse.of(
-            HttpStatus.BAD_REQUEST,
-            e.getMessage(),
-            null
-        );
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(Exception.class)
     public ApiResponse<Object> exception(Exception e) {
         log.error(e.getMessage());

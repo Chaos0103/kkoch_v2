@@ -14,10 +14,10 @@ public abstract class PageUtils {
     public static final String PARAM_DEFAULT_PAGE_SIZE = "1";
 
     private static final int DEFAULT_PAGE_SIZE = 10;
-    private static final int DEFAULT_PAGE_NUMBER = 0;
+    private static final int DEFAULT_PAGE_NUMBER = 1;
 
     public static Pageable of(int pageNumber) {
-        return PageRequest.of(pageNumber, DEFAULT_PAGE_SIZE);
+        return PageRequest.of(pageNumber - 1, DEFAULT_PAGE_SIZE);
     }
 
     public static int parsePageNumber(String pageNumber) {
@@ -26,6 +26,6 @@ public abstract class PageUtils {
         }
 
         int intPageNumber = Integer.parseInt(pageNumber);
-        return Math.max(DEFAULT_PAGE_NUMBER, intPageNumber - 1);
+        return Math.max(DEFAULT_PAGE_NUMBER, intPageNumber);
     }
 }

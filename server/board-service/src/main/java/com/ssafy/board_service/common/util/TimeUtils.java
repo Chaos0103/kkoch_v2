@@ -1,9 +1,11 @@
 package com.ssafy.board_service.common.util;
 
+import com.ssafy.board_service.common.exception.AppException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 
 import static org.springframework.util.StringUtils.hasText;
 
@@ -35,6 +37,10 @@ public abstract class TimeUtils {
     }
 
     private static LocalDateTime parse(String s) {
-        return LocalDateTime.parse(s);
+        try {
+            return LocalDateTime.parse(s);
+        } catch (DateTimeParseException e) {
+            throw new AppException("일시를 올바르게 입력해주세요.", e);
+        }
     }
 }
