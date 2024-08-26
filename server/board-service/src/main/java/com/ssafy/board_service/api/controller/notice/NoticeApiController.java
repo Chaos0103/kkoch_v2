@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
+import static com.ssafy.board_service.common.util.TimeUtils.getCurrentDateTime;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/board-service/notices")
@@ -24,7 +26,7 @@ public class NoticeApiController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<NoticeCreateResponse> createNotice(@Valid @RequestBody NoticeCreateRequest request) {
-        LocalDateTime currentDateTime = LocalDateTime.now();
+        LocalDateTime currentDateTime = getCurrentDateTime();
 
         NoticeCreateResponse response = noticeService.createNotice(currentDateTime, request.toServiceRequest());
 
@@ -33,7 +35,7 @@ public class NoticeApiController {
 
     @PatchMapping("/{noticeId}")
     public ApiResponse<NoticeModifyResponse> modifyNotice(@PathVariable Integer noticeId, @Valid @RequestBody NoticeModifyRequest request) {
-        LocalDateTime currentDateTime = LocalDateTime.now();
+        LocalDateTime currentDateTime = getCurrentDateTime();
 
         NoticeModifyResponse response = noticeService.modifyNotice(noticeId, currentDateTime, request.toServiceRequest());
 
@@ -42,7 +44,7 @@ public class NoticeApiController {
 
     @DeleteMapping("/{noticeId}")
     public ApiResponse<NoticeRemoveResponse> removeNotice(@PathVariable Integer noticeId) {
-        LocalDateTime currentDateTime = LocalDateTime.now();
+        LocalDateTime currentDateTime = getCurrentDateTime();
 
         NoticeRemoveResponse response = noticeService.removeNotice(noticeId, currentDateTime);
 

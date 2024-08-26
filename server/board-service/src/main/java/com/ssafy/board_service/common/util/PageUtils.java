@@ -1,13 +1,15 @@
 package com.ssafy.board_service.common.util;
 
-import com.ssafy.board_service.api.service.StringValidate;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import static com.ssafy.board_service.common.util.StringUtils.isBlank;
+import static com.ssafy.board_service.common.util.StringUtils.isNotNumber;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class PageUtils {
+public abstract class PageUtils {
 
     public static final String PARAM_DEFAULT_PAGE_SIZE = "1";
 
@@ -19,8 +21,7 @@ public class PageUtils {
     }
 
     public static int parsePageNumber(String pageNumber) {
-        StringValidate strPageNumber = StringValidate.of(pageNumber);
-        if (strPageNumber.isBlank() || strPageNumber.isNotNumber()) {
+        if (isBlank(pageNumber) || isNotNumber(pageNumber)) {
             return DEFAULT_PAGE_NUMBER;
         }
 

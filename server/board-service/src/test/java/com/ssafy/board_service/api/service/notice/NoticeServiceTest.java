@@ -2,7 +2,7 @@ package com.ssafy.board_service.api.service.notice;
 
 import com.ssafy.board_service.IntegrationTestSupport;
 import com.ssafy.board_service.api.ApiResponse;
-import com.ssafy.board_service.api.client.MemberIdResponse;
+import com.ssafy.board_service.api.client.response.MemberIdResponse;
 import com.ssafy.board_service.api.client.MemberServiceClient;
 import com.ssafy.board_service.api.service.notice.request.NoticeCreateServiceRequest;
 import com.ssafy.board_service.api.service.notice.request.NoticeModifyServiceRequest;

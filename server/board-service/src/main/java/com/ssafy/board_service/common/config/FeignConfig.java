@@ -9,6 +9,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import static org.springframework.util.StringUtils.*;
+
 @Configuration
 public class FeignConfig {
 
@@ -23,7 +25,7 @@ public class FeignConfig {
 
             HttpServletRequest request = attributes.getRequest();
             String accessToken = request.getHeader(HttpHeaders.AUTHORIZATION);
-            if (accessToken == null) {
+            if (!hasText(accessToken)) {
                 throw new AppException();
             }
 

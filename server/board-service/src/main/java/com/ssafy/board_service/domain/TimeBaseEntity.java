@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class TimeBaseEntity {
+public abstract class TimeBaseEntity {
 
     @Column(nullable = false, columnDefinition = "boolean default false")
     private Boolean isDeleted;

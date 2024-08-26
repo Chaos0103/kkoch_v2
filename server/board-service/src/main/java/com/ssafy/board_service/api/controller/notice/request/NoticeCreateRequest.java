@@ -6,14 +6,17 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import static com.ssafy.board_service.api.controller.notice.message.NoticeBindingMessage.NOT_BLANK_CONTENT;
+import static com.ssafy.board_service.api.controller.notice.message.NoticeBindingMessage.NOT_BLANK_TITLE;
+
 @Getter
 @NoArgsConstructor
 public class NoticeCreateRequest {
 
-    @NotBlank(message = "공지사항 제목을 입력해주세요.")
+    @NotBlank(message = NOT_BLANK_TITLE)
     private String title;
 
-    @NotBlank(message = "공지사항 내용을 입력해주세요.")
+    @NotBlank(message = NOT_BLANK_CONTENT)
     private String content;
 
     private String toFixedDateTime;

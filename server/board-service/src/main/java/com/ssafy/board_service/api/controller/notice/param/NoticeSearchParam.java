@@ -13,6 +13,7 @@ import static com.ssafy.board_service.common.util.PageUtils.PARAM_DEFAULT_PAGE_S
 public class NoticeSearchParam {
 
     private String page = PARAM_DEFAULT_PAGE_SIZE;
+
     private String keyword;
 
     @Builder

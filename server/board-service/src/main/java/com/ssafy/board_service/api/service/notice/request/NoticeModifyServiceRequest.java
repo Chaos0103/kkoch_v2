@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 import static com.ssafy.board_service.api.service.notice.NoticeValidate.validateNoticeTitle;
 import static com.ssafy.board_service.api.service.notice.NoticeValidate.validateToFixedDateTime;
+import static com.ssafy.board_service.common.util.TimeUtils.parseToFixedDateTime;
 
 public class NoticeModifyServiceRequest {
 
@@ -26,19 +27,11 @@ public class NoticeModifyServiceRequest {
     }
 
     public void modifyEntity(Notice notice, Long modifiedBy, LocalDateTime currentDateTime) {
-        LocalDateTime to = getToFixedDateTime(currentDateTime);
+        LocalDateTime to = parseToFixedDateTime(toFixedDateTime, currentDateTime);
 
         validateNoticeTitle(title);
         validateToFixedDateTime(to, currentDateTime);
 
         notice.modify(modifiedBy, title, content, to);
-    }
-
-    private LocalDateTime getToFixedDateTime(LocalDateTime currentDateTime) {
-        if (toFixedDateTime == null) {
-            return currentDateTime;
-        }
-
-        return LocalDateTime.parse(toFixedDateTime);
     }
 }

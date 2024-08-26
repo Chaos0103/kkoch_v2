@@ -1,4 +1,4 @@
-package com.ssafy.board_service.api.client;
+package com.ssafy.board_service.api.client.response;
 
 import lombok.Builder;
 import lombok.Getter;
