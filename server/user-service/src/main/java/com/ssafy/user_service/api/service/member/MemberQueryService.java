@@ -1,6 +1,7 @@
 package com.ssafy.user_service.api.service.member;
 
 import com.ssafy.user_service.domain.member.repository.MemberQueryRepository;
+import com.ssafy.user_service.domain.member.repository.response.MemberIdResponse;
 import com.ssafy.user_service.domain.member.repository.response.MemberInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,5 +21,9 @@ public class MemberQueryService {
             .orElseThrow(() -> new NoSuchElementException("등록되지 않은 회원입니다."));
 
         return content.toMasking();
+    }
+
+    public MemberIdResponse searchMemberId(String memberKey) {
+        return null;
     }
 }

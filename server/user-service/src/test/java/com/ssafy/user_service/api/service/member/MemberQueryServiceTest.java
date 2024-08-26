@@ -3,6 +3,7 @@ package com.ssafy.user_service.api.service.member;
 import com.ssafy.user_service.IntegrationTestSupport;
 import com.ssafy.user_service.domain.member.*;
 import com.ssafy.user_service.domain.member.repository.MemberRepository;
+import com.ssafy.user_service.domain.member.repository.response.MemberIdResponse;
 import com.ssafy.user_service.domain.member.repository.response.MemberInfoResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,6 +34,20 @@ class MemberQueryServiceTest extends IntegrationTestSupport {
             .hasFieldOrPropertyWithValue("name", "김싸피")
             .hasFieldOrPropertyWithValue("tel", "010****1234")
             .hasFieldOrPropertyWithValue("businessNumber", "123*****45");
+    }
+
+    @DisplayName("회원 고유키를 입력 받아 회원 ID를 조회한다.")
+    @Test
+    void searchMemberId() {
+        //given
+        Member member = createMember();
+
+        //when
+        MemberIdResponse response = memberQueryService.searchMemberId(member.getMemberKey());
+
+        //then
+        assertThat(response).isNotNull()
+            .hasFieldOrPropertyWithValue("memberId", member.getId());
     }
 
     private Member createMember() {
