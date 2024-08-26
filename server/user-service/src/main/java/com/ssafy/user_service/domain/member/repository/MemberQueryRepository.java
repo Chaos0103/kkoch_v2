@@ -2,6 +2,7 @@ package com.ssafy.user_service.domain.member.repository;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.user_service.domain.member.repository.response.MemberIdResponse;
 import com.ssafy.user_service.domain.member.repository.response.MemberInfoResponse;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
@@ -37,5 +38,9 @@ public class MemberQueryRepository {
             )
             .fetchFirst();
         return Optional.ofNullable(content);
+    }
+
+    public Optional<MemberIdResponse> findMemberId(String memberKey) {
+        return Optional.empty();
     }
 }

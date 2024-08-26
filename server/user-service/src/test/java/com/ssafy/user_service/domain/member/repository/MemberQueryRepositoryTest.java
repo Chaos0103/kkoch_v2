@@ -2,6 +2,7 @@ package com.ssafy.user_service.domain.member.repository;
 
 import com.ssafy.user_service.IntegrationTestSupport;
 import com.ssafy.user_service.domain.member.*;
+import com.ssafy.user_service.domain.member.repository.response.MemberIdResponse;
 import com.ssafy.user_service.domain.member.repository.response.MemberInfoResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,6 +36,21 @@ class MemberQueryRepositoryTest extends IntegrationTestSupport {
             .hasFieldOrPropertyWithValue("name", "김싸피")
             .hasFieldOrPropertyWithValue("tel", "01012341234")
             .hasFieldOrPropertyWithValue("businessNumber", "1231212345");
+    }
+
+    @DisplayName("회원 고유키로 회원 ID를 조회한다.")
+    @Test
+    void findMemberId() {
+        //given
+        Member member = createMember();
+
+        //when
+        Optional<MemberIdResponse> content = memberQueryRepository.findMemberId(member.getMemberKey());
+
+        //then
+        assertThat(content).isPresent()
+            .get()
+            .hasFieldOrPropertyWithValue("memberId", member.getId());
     }
 
     private Member createMember() {
