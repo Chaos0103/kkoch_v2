@@ -1,5 +1,6 @@
 package com.ssafy.auction_service.api.service.variety.response;
 
+import com.ssafy.auction_service.domain.variety.Variety;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,5 +28,9 @@ public class VarietyCreateResponse {
 
     public static VarietyCreateResponse of(String code, String plantCategory, String itemName, String varietyName, LocalDateTime createdDateTime) {
         return new VarietyCreateResponse(code, plantCategory, itemName, varietyName, createdDateTime);
+    }
+
+    public static VarietyCreateResponse of(Variety variety) {
+        return of(variety.getCode(), variety.getPlantCategory().getDescription(), variety.getItemName(), variety.getVarietyName(), variety.getCreatedDateTime());
     }
 }

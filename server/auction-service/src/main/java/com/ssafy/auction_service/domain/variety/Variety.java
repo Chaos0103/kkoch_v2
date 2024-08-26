@@ -27,15 +27,19 @@ public class Variety extends BaseEntity {
     private String varietyName;
 
     @Builder
-    private Variety(boolean isDeleted, Long createdBy, Long lastModifiedBy, PlantCategory plantCategory, String code, String itemName, String varietyName) {
+    private Variety(boolean isDeleted, Long createdBy, Long lastModifiedBy, String code, PlantCategory plantCategory, String itemName, String varietyName) {
         super(isDeleted, createdBy, lastModifiedBy);
-        this.plantCategory = plantCategory;
         this.code = code;
+        this.plantCategory = plantCategory;
         this.itemName = itemName;
         this.varietyName = varietyName;
     }
 
-    public static Variety of(boolean isDeleted, Long createdBy, Long lastModifiedBy, PlantCategory plantCategory, String code, String itemName, String varietyName) {
-        return new Variety(isDeleted, createdBy, lastModifiedBy, plantCategory, code, itemName, varietyName);
+    public static Variety of(boolean isDeleted, Long createdBy, Long lastModifiedBy, String code, PlantCategory plantCategory, String itemName, String varietyName) {
+        return new Variety(isDeleted, createdBy, lastModifiedBy, code, plantCategory, itemName, varietyName);
+    }
+
+    public static Variety create(Long createdBy, String code, PlantCategory plantCategory, String itemName, String varietyName) {
+        return of(false, createdBy, createdBy, code, plantCategory, itemName, varietyName);
     }
 }
