@@ -41,6 +41,19 @@ public class MemberQueryRepository {
     }
 
     public Optional<MemberIdResponse> findMemberId(String memberKey) {
-        return Optional.empty();
+        MemberIdResponse content = queryFactory
+            .select(
+                Projections.fields(
+                    MemberIdResponse.class,
+                    member.id.as("memberId")
+                )
+            )
+            .from(member)
+            .where(
+                member.isDeleted.isFalse(),
+                member.specificInfo.memberKey.eq(memberKey)
+            )
+            .fetchFirst();
+        return Optional.ofNullable(content);
     }
 }
