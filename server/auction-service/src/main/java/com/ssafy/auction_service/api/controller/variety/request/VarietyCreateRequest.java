@@ -6,17 +6,19 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import static com.ssafy.auction_service.api.controller.variety.message.VarietyBindingMessage.*;
+
 @Getter
 @NoArgsConstructor
 public class VarietyCreateRequest {
 
-    @NotBlank(message = "화훼부류를 입력해주세요.")
+    @NotBlank(message = NOT_BLANK_PLANT_CATEGORY)
     private String category;
 
-    @NotBlank(message = "품목명을 입력해주세요.")
+    @NotBlank(message = NOT_BLANK_ITEM_NAME)
     private String itemName;
 
-    @NotBlank(message = "품종명을 입력해주세요.")
+    @NotBlank(message = NOT_BLANK_VARIETY_NAME)
     private String varietyName;
 
     @Builder
