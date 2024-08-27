@@ -1,0 +1,13 @@
+[[create-variety]]
+=== 품종 등록 API
+
+==== HTTP Request
+
+include::{snippets}/create-variety/http-request.adoc[]
+include::{snippets}/create-variety/request-headers.adoc[]
+include::{snippets}/create-variety/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/create-variety/http-response.adoc[]
+include::{snippets}/create-variety/response-fields.adoc[]
