@@ -5,6 +5,8 @@ import com.ssafy.auction_service.domain.variety.Variety;
 import lombok.Builder;
 import lombok.Getter;
 
+import static com.ssafy.auction_service.api.service.variety.VarietyUtils.*;
+
 @Getter
 public class VarietyCreateServiceRequest {
 
@@ -24,10 +26,17 @@ public class VarietyCreateServiceRequest {
     }
 
     public Variety toEntity(Long createdBy, String code) {
+        valid();
         return Variety.create(createdBy, code, PlantCategory.of(plantCategory), itemName, varietyName);
     }
 
     public PlantCategory getPlantCategory() {
         return PlantCategory.of(plantCategory);
+    }
+
+    private void valid() {
+        validatePlantCategory(plantCategory);
+        validateItemName(itemName);
+        validateVarietyName(varietyName);
     }
 }

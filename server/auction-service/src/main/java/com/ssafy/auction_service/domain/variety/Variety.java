@@ -42,4 +42,8 @@ public class Variety extends BaseEntity {
     public static Variety create(Long createdBy, String code, PlantCategory plantCategory, String itemName, String varietyName) {
         return of(false, createdBy, createdBy, code, plantCategory, itemName, varietyName);
     }
+
+    public String getPlantCategoryDescription() {
+        return plantCategory.getDescription();
+    }
 }

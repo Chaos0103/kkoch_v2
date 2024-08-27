@@ -31,6 +31,6 @@ public class VarietyCreateResponse {
     }
 
     public static VarietyCreateResponse of(Variety variety) {
-        return of(variety.getCode(), variety.getPlantCategory().getDescription(), variety.getItemName(), variety.getVarietyName(), variety.getCreatedDateTime());
+        return of(variety.getCode(), variety.getPlantCategoryDescription(), variety.getItemName(), variety.getVarietyName(), variety.getCreatedDateTime());
     }
 }

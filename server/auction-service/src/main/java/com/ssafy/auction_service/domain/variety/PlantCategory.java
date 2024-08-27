@@ -26,4 +26,13 @@ public enum PlantCategory {
             .findFirst()
             .orElse(null);
     }
+
+    public static boolean isSupported(String str) {
+        PlantCategory plantCategory = of(str);
+        return plantCategory != null;
+    }
+
+    public static boolean isNotSupported(String str) {
+        return !isSupported(str);
+    }
 }
