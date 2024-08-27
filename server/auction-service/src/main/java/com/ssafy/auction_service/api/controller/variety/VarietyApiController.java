@@ -19,6 +19,8 @@ public class VarietyApiController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<VarietyCreateResponse> createVariety(@Valid @RequestBody VarietyCreateRequest request) {
-        return null;
+        VarietyCreateResponse response = varietyService.createVariety(request.toServiceRequest());
+
+        return ApiResponse.created(response);
     }
 }
