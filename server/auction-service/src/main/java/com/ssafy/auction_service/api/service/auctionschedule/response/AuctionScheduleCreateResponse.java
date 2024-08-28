@@ -1,5 +1,6 @@
 package com.ssafy.auction_service.api.service.auctionschedule.response;
 
+import com.ssafy.auction_service.domain.auctionschedule.AuctionSchedule;
 import com.ssafy.auction_service.domain.auctionschedule.AuctionStatue;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,5 +25,9 @@ public class AuctionScheduleCreateResponse {
         this.auctionStartDateTime = auctionStartDateTime;
         this.auctionStatus = auctionStatus;
         this.createdDateTime = createdDateTime;
+    }
+
+    public static AuctionScheduleCreateResponse of(AuctionSchedule auctionSchedule) {
+        return new AuctionScheduleCreateResponse(auctionSchedule.getId(), auctionSchedule.getPlantCategoryDescription(), auctionSchedule.getKoreanJointMarket(), auctionSchedule.getAuctionStartDateTime(), auctionSchedule.getAuctionStatue(), auctionSchedule.getCreatedDateTime());
     }
 }

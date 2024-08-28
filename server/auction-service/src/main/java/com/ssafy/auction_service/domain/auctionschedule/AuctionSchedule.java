@@ -1,6 +1,7 @@
 package com.ssafy.auction_service.domain.auctionschedule;
 
 import com.ssafy.auction_service.domain.BaseEntity;
+import com.ssafy.auction_service.domain.variety.PlantCategory;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -39,5 +40,18 @@ public class AuctionSchedule extends BaseEntity {
 
     public static AuctionSchedule of(boolean isDeleted, Long createdBy, Long lastModifiedBy, AuctionInfo auctionInfo, LocalDateTime auctionStartDateTime, AuctionStatue auctionStatue) {
         return new AuctionSchedule(isDeleted, createdBy, lastModifiedBy, auctionInfo, auctionStartDateTime, auctionStatue);
+    }
+
+    public static AuctionSchedule create(Long createdBy, PlantCategory plantCategory, JointMarket jointMarket, String auctionDescription, LocalDateTime auctionStartDateTime) {
+        AuctionInfo auctionInfo = AuctionInfo.of(plantCategory, jointMarket, auctionDescription);
+        return of(false, createdBy, createdBy, auctionInfo, auctionStartDateTime, AuctionStatue.INIT);
+    }
+
+    public String getPlantCategoryDescription() {
+        return auctionInfo.getPlantCategory().getDescription();
+    }
+
+    public String getKoreanJointMarket() {
+        return auctionInfo.getJointMarket().getKorean();
     }
 }
