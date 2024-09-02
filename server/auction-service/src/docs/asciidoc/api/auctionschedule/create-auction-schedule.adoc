@@ -1,0 +1,13 @@
+[[create-auction-schedule]]
+=== 경매 일정 등록 API
+
+==== HTTP Request
+
+include::{snippets}/create-auction-schedule/http-request.adoc[]
+include::{snippets}/create-auction-schedule/request-headers.adoc[]
+include::{snippets}/create-auction-schedule/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/create-auction-schedule/http-response.adoc[]
+include::{snippets}/create-auction-schedule/response-fields.adoc[]
