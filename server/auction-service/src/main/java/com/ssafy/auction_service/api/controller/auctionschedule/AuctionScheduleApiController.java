@@ -9,6 +9,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+
+import static com.ssafy.auction_service.common.util.TimeUtils.getCurrentDateTime;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auction-service/auction-schedules")
@@ -19,6 +23,10 @@ public class AuctionScheduleApiController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<AuctionScheduleCreateResponse> createAuctionSchedule(@Valid @RequestBody AuctionScheduleCreateRequest request) {
-        return null;
+        LocalDateTime current = getCurrentDateTime();
+
+        AuctionScheduleCreateResponse response = auctionScheduleService.createAuctionSchedule(request.toServiceRequest(), current);
+
+        return ApiResponse.created(response);
     }
 }
