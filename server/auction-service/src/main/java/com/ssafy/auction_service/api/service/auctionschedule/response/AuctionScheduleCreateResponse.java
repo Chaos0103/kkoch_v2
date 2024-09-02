@@ -2,6 +2,7 @@ package com.ssafy.auction_service.api.service.auctionschedule.response;
 
 import com.ssafy.auction_service.domain.auctionschedule.AuctionSchedule;
 import com.ssafy.auction_service.domain.auctionschedule.AuctionStatue;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,6 +19,7 @@ public class AuctionScheduleCreateResponse {
     private AuctionStatue auctionStatus;
     private LocalDateTime createdDateTime;
 
+    @Builder
     private AuctionScheduleCreateResponse(int id, String plantCategory, String jointMarket, LocalDateTime auctionStartDateTime, AuctionStatue auctionStatus, LocalDateTime createdDateTime) {
         this.id = id;
         this.plantCategory = plantCategory;
