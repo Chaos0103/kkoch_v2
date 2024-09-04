@@ -2,6 +2,7 @@ package com.ssafy.auction_service.domain.auctionschedule;
 
 import com.ssafy.auction_service.domain.BaseEntity;
 import com.ssafy.auction_service.domain.variety.PlantCategory;
+import com.ssafy.auction_service.domain.variety.Variety;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -53,5 +54,21 @@ public class AuctionSchedule extends BaseEntity {
 
     public String getKoreanJointMarket() {
         return auctionInfo.getJointMarket().getKorean();
+    }
+
+    public boolean isInitStatus() {
+        return auctionStatue == AuctionStatue.INIT;
+    }
+
+    public boolean isNotInitStatus() {
+        return !isInitStatus();
+    }
+
+    public boolean isRegisteredVarietyBy(Variety variety) {
+        return variety.plantCategoryEquals(auctionInfo.getPlantCategory());
+    }
+
+    public boolean isNotRegisteredVarietyBy(Variety variety) {
+        return !isRegisteredVarietyBy(variety);
     }
 }

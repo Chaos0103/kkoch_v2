@@ -49,4 +49,8 @@ public class AuctionVariety extends BaseEntity {
     public static AuctionVariety of(boolean isDeleted, Long createdBy, Long lastModifiedBy, AuctionSchedule auctionSchedule, Variety variety, String listingNumber, AuctionPlant auctionPlant, Shipment shipment) {
         return new AuctionVariety(isDeleted, createdBy, lastModifiedBy, auctionSchedule, variety, listingNumber, auctionPlant, shipment);
     }
+
+    public static AuctionVariety create(Long createdBy, AuctionSchedule auctionSchedule, Variety variety, String listingNumber, AuctionPlant auctionPlant, Shipment shipment) {
+        return of(false, createdBy, createdBy, auctionSchedule, variety, listingNumber, auctionPlant, shipment);
+    }
 }

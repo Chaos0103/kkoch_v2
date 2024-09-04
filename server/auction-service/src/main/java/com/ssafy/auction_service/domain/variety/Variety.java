@@ -46,4 +46,8 @@ public class Variety extends BaseEntity {
     public String getPlantCategoryDescription() {
         return plantCategory.getDescription();
     }
+
+    public boolean plantCategoryEquals(PlantCategory plantCategory) {
+        return this.plantCategory == plantCategory;
+    }
 }

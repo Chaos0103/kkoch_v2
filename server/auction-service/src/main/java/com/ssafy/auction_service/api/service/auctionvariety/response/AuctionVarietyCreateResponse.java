@@ -1,5 +1,6 @@
 package com.ssafy.auction_service.api.service.auctionvariety.response;
 
+import com.ssafy.auction_service.domain.auctionvariety.AuctionVariety;
 import com.ssafy.auction_service.domain.auctionvariety.PlantGrade;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,5 +29,17 @@ public class AuctionVarietyCreateResponse {
         this.region = region;
         this.shipper = shipper;
         this.createdDateTime = createdDateTime;
+    }
+
+    public static AuctionVarietyCreateResponse of(AuctionVariety auctionVariety) {
+        return new AuctionVarietyCreateResponse(
+            auctionVariety.getId(),
+            auctionVariety.getAuctionPlant().getPlantGrade(),
+            auctionVariety.getAuctionPlant().getPlantCount(),
+            auctionVariety.getAuctionPlant().getAuctionStartPrice(),
+            auctionVariety.getShipment().getRegion(),
+            auctionVariety.getShipment().getShipper(),
+            auctionVariety.getCreatedDateTime()
+        );
     }
 }

@@ -34,4 +34,8 @@ public class AuctionPlant {
     public static AuctionPlant of(PlantGrade plantGrade, int plantCount, int auctionStartPrice) {
         return new AuctionPlant(plantGrade, plantCount, auctionStartPrice);
     }
+
+    public static AuctionPlant create(String plantGrade, int plantCount, int auctionStartPrice) {
+        return of(PlantGrade.valueOf(plantGrade), plantCount, auctionStartPrice);
+    }
 }
