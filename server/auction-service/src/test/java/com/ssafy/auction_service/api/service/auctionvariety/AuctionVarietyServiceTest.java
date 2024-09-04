@@ -126,6 +126,7 @@ class AuctionVarietyServiceTest extends IntegrationTestSupport {
 
         //then
         assertThat(response).isNotNull()
+            .hasFieldOrPropertyWithValue("listingNumber", "00001")
             .hasFieldOrPropertyWithValue("plantGrade", PlantGrade.SUPER)
             .hasFieldOrPropertyWithValue("plantCount", 10)
             .hasFieldOrPropertyWithValue("auctionStartPrice", 4500)

@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public class AuctionVarietyCreateResponse {
 
     private Long id;
+    private String listingNumber;
     private PlantGrade plantGrade;
     private int plantCount;
     private int auctionStartPrice;
@@ -21,8 +22,9 @@ public class AuctionVarietyCreateResponse {
     private LocalDateTime createdDateTime;
 
     @Builder
-    private AuctionVarietyCreateResponse(Long id, PlantGrade plantGrade, int plantCount, int auctionStartPrice, String region, String shipper, LocalDateTime createdDateTime) {
+    private AuctionVarietyCreateResponse(Long id, String listingNumber, PlantGrade plantGrade, int plantCount, int auctionStartPrice, String region, String shipper, LocalDateTime createdDateTime) {
         this.id = id;
+        this.listingNumber = listingNumber;
         this.plantGrade = plantGrade;
         this.plantCount = plantCount;
         this.auctionStartPrice = auctionStartPrice;
@@ -34,6 +36,7 @@ public class AuctionVarietyCreateResponse {
     public static AuctionVarietyCreateResponse of(AuctionVariety auctionVariety) {
         return new AuctionVarietyCreateResponse(
             auctionVariety.getId(),
+            auctionVariety.getListingNumber(),
             auctionVariety.getAuctionPlant().getPlantGrade(),
             auctionVariety.getAuctionPlant().getPlantCount(),
             auctionVariety.getAuctionPlant().getAuctionStartPrice(),

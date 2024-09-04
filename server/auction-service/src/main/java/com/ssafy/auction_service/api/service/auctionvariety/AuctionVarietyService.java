@@ -29,11 +29,9 @@ public class AuctionVarietyService {
     private final MemberServiceClient memberServiceClient;
 
     public AuctionVarietyCreateResponse createAuctionVariety(String varietyCode, int auctionScheduleId, AuctionVarietyCreateServiceRequest request) {
-        Variety variety = varietyRepository.findById(varietyCode)
-            .orElseThrow(() -> new NoSuchElementException("등록되지 않은 품종입니다."));
+        Variety variety = findVarietyByCode(varietyCode);
 
-        AuctionSchedule auctionSchedule = auctionScheduleRepository.findById(auctionScheduleId)
-            .orElseThrow(() -> new NoSuchElementException("등록되지 않은 경매 일정입니다."));
+        AuctionSchedule auctionSchedule = findAuctionScheduleById(auctionScheduleId);
 
         if (auctionSchedule.isNotInitStatus()) {
             throw new AppException("경매 품종을 등록할 수 없습니다.");
@@ -56,6 +54,17 @@ public class AuctionVarietyService {
     private String generateListingNumberBy(AuctionSchedule auctionSchedule) {
         int count = auctionVarietyRepository.countByAuctionSchedule(auctionSchedule);
         return String.format("%05d", count + 1);
+    }
+
+
+    private Variety findVarietyByCode(String varietyCode) {
+        return varietyRepository.findById(varietyCode)
+            .orElseThrow(() -> new NoSuchElementException("등록되지 않은 품종입니다."));
+    }
+
+    private AuctionSchedule findAuctionScheduleById(int auctionScheduleId) {
+        return auctionScheduleRepository.findById(auctionScheduleId)
+            .orElseThrow(() -> new NoSuchElementException("등록되지 않은 경매 일정입니다."));
     }
 
     private Long getMemberId() {
