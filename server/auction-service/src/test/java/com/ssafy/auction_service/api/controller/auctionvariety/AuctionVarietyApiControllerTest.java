@@ -3,6 +3,7 @@ package com.ssafy.auction_service.api.controller.auctionvariety;
 import com.ssafy.auction_service.ControllerTestSupport;
 import com.ssafy.auction_service.api.controller.auctionvariety.request.AuctionVarietyCreateRequest;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.http.MediaType;
@@ -13,11 +14,65 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class AuctionVarietyApiControllerTest extends ControllerTestSupport {
 
+    @DisplayName("경매 품종 등록시 품종 코드는 필수값이다.")
+    @NullAndEmptySource
+    @ParameterizedTest
+    void createAuctionVarietyWithoutVarietyCode(String varietyCode) throws Exception {
+        AuctionVarietyCreateRequest request = AuctionVarietyCreateRequest.builder()
+            .varietyCode(varietyCode)
+            .auctionScheduleId("1")
+            .plantGrade("SUPER")
+            .plantCount("10")
+            .auctionStartPrice("4500")
+            .region("광주")
+            .shipper("김출하")
+            .build();
+
+        mockMvc.perform(
+                post("/auction-service/auction-variety")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.code").value("400"))
+            .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
+            .andExpect(jsonPath("$.message").value("화훼등급을 입력해주세요."))
+            .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @DisplayName("경매 품종 등록시 경매 일정 ID는 필수값이다.")
+    @NullAndEmptySource
+    @ParameterizedTest
+    void createAuctionVarietyWithoutAuctionScheduleId(String auctionScheduleId) throws Exception {
+        AuctionVarietyCreateRequest request = AuctionVarietyCreateRequest.builder()
+            .varietyCode("10000001")
+            .auctionScheduleId(auctionScheduleId)
+            .plantGrade("SUPER")
+            .plantCount("10")
+            .auctionStartPrice("4500")
+            .region("광주")
+            .shipper("김출하")
+            .build();
+
+        mockMvc.perform(
+                post("/auction-service/auction-variety")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.code").value("400"))
+            .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
+            .andExpect(jsonPath("$.message").value("화훼등급을 입력해주세요."))
+            .andExpect(jsonPath("$.data").isEmpty());
+    }
+
     @DisplayName("경매 품종 등록시 화훼등급은 필수값이다.")
     @NullAndEmptySource
     @ParameterizedTest
     void createAuctionVarietyWithoutPlantGrade(String plantGrade) throws Exception {
         AuctionVarietyCreateRequest request = AuctionVarietyCreateRequest.builder()
+            .varietyCode("10000001")
+            .auctionScheduleId("1")
             .plantGrade(plantGrade)
             .plantCount("10")
             .auctionStartPrice("4500")
@@ -42,6 +97,8 @@ class AuctionVarietyApiControllerTest extends ControllerTestSupport {
     @ParameterizedTest
     void createAuctionVarietyWithoutPlantCount(String plantCount) throws Exception {
         AuctionVarietyCreateRequest request = AuctionVarietyCreateRequest.builder()
+            .varietyCode("10000001")
+            .auctionScheduleId("1")
             .plantGrade("SUPER")
             .plantCount(plantCount)
             .auctionStartPrice("4500")
@@ -66,6 +123,8 @@ class AuctionVarietyApiControllerTest extends ControllerTestSupport {
     @ParameterizedTest
     void createAuctionVarietyWithoutAuctionStartPrice(String auctionStartPrice) throws Exception {
         AuctionVarietyCreateRequest request = AuctionVarietyCreateRequest.builder()
+            .varietyCode("10000001")
+            .auctionScheduleId("1")
             .plantGrade("SUPER")
             .plantCount("10")
             .auctionStartPrice(auctionStartPrice)
@@ -90,6 +149,8 @@ class AuctionVarietyApiControllerTest extends ControllerTestSupport {
     @ParameterizedTest
     void createAuctionVarietyWithoutRegion(String region) throws Exception {
         AuctionVarietyCreateRequest request = AuctionVarietyCreateRequest.builder()
+            .varietyCode("10000001")
+            .auctionScheduleId("1")
             .plantGrade("SUPER")
             .plantCount("10")
             .auctionStartPrice("4500")
@@ -114,6 +175,8 @@ class AuctionVarietyApiControllerTest extends ControllerTestSupport {
     @ParameterizedTest
     void createAuctionVarietyWithoutShipper(String region) throws Exception {
         AuctionVarietyCreateRequest request = AuctionVarietyCreateRequest.builder()
+            .varietyCode("10000001")
+            .auctionScheduleId("1")
             .plantGrade("SUPER")
             .plantCount("10")
             .auctionStartPrice("4500")
@@ -134,10 +197,11 @@ class AuctionVarietyApiControllerTest extends ControllerTestSupport {
     }
 
     @DisplayName("경매 품종을 등록한다.")
-    @NullAndEmptySource
-    @ParameterizedTest
-    void createAuctionVariety(String region) throws Exception {
+    @Test
+    void createAuctionVariety() throws Exception {
         AuctionVarietyCreateRequest request = AuctionVarietyCreateRequest.builder()
+            .varietyCode("10000001")
+            .auctionScheduleId("1")
             .plantGrade("SUPER")
             .plantCount("10")
             .auctionStartPrice("4500")

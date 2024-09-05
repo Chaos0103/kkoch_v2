@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AuctionVarietyCreateRequest {
 
+    private String varietyCode;
+    private String auctionScheduleId;
     private String plantGrade;
     private String plantCount;
     private String auctionStartPrice;
@@ -15,7 +17,9 @@ public class AuctionVarietyCreateRequest {
     private String shipper;
 
     @Builder
-    private AuctionVarietyCreateRequest(String plantGrade, String plantCount, String auctionStartPrice, String region, String shipper) {
+    private AuctionVarietyCreateRequest(String varietyCode, String auctionScheduleId, String plantGrade, String plantCount, String auctionStartPrice, String region, String shipper) {
+        this.varietyCode = varietyCode;
+        this.auctionScheduleId = auctionScheduleId;
         this.plantGrade = plantGrade;
         this.plantCount = plantCount;
         this.auctionStartPrice = auctionStartPrice;
