@@ -14,6 +14,7 @@ import com.ssafy.auction_service.domain.auctionschedule.JointMarket;
 import com.ssafy.auction_service.domain.auctionschedule.repository.AuctionScheduleRepository;
 import com.ssafy.auction_service.domain.auctionvariety.AuctionVariety;
 import com.ssafy.auction_service.domain.auctionvariety.PlantGrade;
+import com.ssafy.auction_service.domain.auctionvariety.Price;
 import com.ssafy.auction_service.domain.auctionvariety.repository.AuctionVarietyRepository;
 import com.ssafy.auction_service.domain.variety.PlantCategory;
 import com.ssafy.auction_service.domain.variety.Variety;
@@ -58,9 +59,9 @@ class AuctionVarietyServiceTest extends IntegrationTestSupport {
         AuctionSchedule auctionSchedule = createAuctionSchedule(PlantCategory.CUT_FLOWERS, statue);
 
         AuctionVarietyCreateServiceRequest request = AuctionVarietyCreateServiceRequest.builder()
-            .plantGrade("SUPER")
+            .plantGrade(PlantGrade.SUPER)
             .plantCount(10)
-            .auctionStartPrice(4500)
+            .auctionStartPrice(Price.of(4500))
             .region("광주")
             .shipper("김출하")
             .build();
@@ -85,9 +86,9 @@ class AuctionVarietyServiceTest extends IntegrationTestSupport {
         AuctionSchedule auctionSchedule = createAuctionSchedule(PlantCategory.ORCHID, AuctionStatue.INIT);
 
         AuctionVarietyCreateServiceRequest request = AuctionVarietyCreateServiceRequest.builder()
-            .plantGrade("SUPER")
+            .plantGrade(PlantGrade.SUPER)
             .plantCount(10)
-            .auctionStartPrice(4500)
+            .auctionStartPrice(Price.of(4500))
             .region("광주")
             .shipper("김출하")
             .build();
@@ -112,9 +113,9 @@ class AuctionVarietyServiceTest extends IntegrationTestSupport {
         AuctionSchedule auctionSchedule = createAuctionSchedule(PlantCategory.CUT_FLOWERS, AuctionStatue.INIT);
 
         AuctionVarietyCreateServiceRequest request = AuctionVarietyCreateServiceRequest.builder()
-            .plantGrade("SUPER")
+            .plantGrade(PlantGrade.SUPER)
             .plantCount(10)
-            .auctionStartPrice(4500)
+            .auctionStartPrice(Price.of(4500))
             .region("광주")
             .shipper("김출하")
             .build();

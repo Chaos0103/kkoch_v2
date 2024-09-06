@@ -39,7 +39,7 @@ public class AuctionVarietyCreateResponse {
             auctionVariety.getListingNumber(),
             auctionVariety.getAuctionPlant().getPlantGrade(),
             auctionVariety.getAuctionPlant().getPlantCount(),
-            auctionVariety.getAuctionPlant().getAuctionStartPrice(),
+            auctionVariety.getAuctionPlant().getAuctionStartPrice().getValue(),
             auctionVariety.getShipment().getRegion(),
             auctionVariety.getShipment().getShipper(),
             auctionVariety.getCreatedDateTime()

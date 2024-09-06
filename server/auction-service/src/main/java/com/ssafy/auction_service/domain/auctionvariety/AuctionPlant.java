@@ -22,20 +22,16 @@ public class AuctionPlant {
     private final int plantCount;
 
     @Column(nullable = false)
-    private final int auctionStartPrice;
+    private final Price auctionStartPrice;
 
     @Builder
-    private AuctionPlant(PlantGrade plantGrade, int plantCount, int auctionStartPrice) {
+    private AuctionPlant(PlantGrade plantGrade, int plantCount, Price auctionStartPrice) {
         this.plantGrade = plantGrade;
         this.plantCount = plantCount;
         this.auctionStartPrice = auctionStartPrice;
     }
 
-    public static AuctionPlant of(PlantGrade plantGrade, int plantCount, int auctionStartPrice) {
+    public static AuctionPlant of(PlantGrade plantGrade, int plantCount, Price auctionStartPrice) {
         return new AuctionPlant(plantGrade, plantCount, auctionStartPrice);
-    }
-
-    public static AuctionPlant create(String plantGrade, int plantCount, int auctionStartPrice) {
-        return of(PlantGrade.valueOf(plantGrade), plantCount, auctionStartPrice);
     }
 }

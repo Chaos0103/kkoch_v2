@@ -1,22 +1,22 @@
 package com.ssafy.auction_service.api.service.auctionvariety.request;
 
 import com.ssafy.auction_service.domain.auctionschedule.AuctionSchedule;
-import com.ssafy.auction_service.domain.auctionvariety.AuctionPlant;
-import com.ssafy.auction_service.domain.auctionvariety.AuctionVariety;
-import com.ssafy.auction_service.domain.auctionvariety.Shipment;
+import com.ssafy.auction_service.domain.auctionvariety.*;
 import com.ssafy.auction_service.domain.variety.Variety;
 import lombok.Builder;
 
+import static com.ssafy.auction_service.api.service.auctionvariety.AuctionVarietyUtils.*;
+
 public class AuctionVarietyCreateServiceRequest {
 
-    private final String plantGrade;
+    private final PlantGrade plantGrade;
     private final int plantCount;
-    private final int auctionStartPrice;
+    private final Price auctionStartPrice;
     private final String region;
     private final String shipper;
 
     @Builder
-    private AuctionVarietyCreateServiceRequest(String plantGrade, int plantCount, int auctionStartPrice, String region, String shipper) {
+    private AuctionVarietyCreateServiceRequest(PlantGrade plantGrade, int plantCount, Price auctionStartPrice, String region, String shipper) {
         this.plantGrade = plantGrade;
         this.plantCount = plantCount;
         this.auctionStartPrice = auctionStartPrice;
@@ -25,11 +25,13 @@ public class AuctionVarietyCreateServiceRequest {
     }
 
     public static AuctionVarietyCreateServiceRequest of(String plantGrade, int plantCount, int auctionStartPrice, String region, String shipper) {
-        return new AuctionVarietyCreateServiceRequest(plantGrade, plantCount, auctionStartPrice, region, shipper);
+        validateRegion(region);
+        validateShipper(shipper);
+        return new AuctionVarietyCreateServiceRequest(parsePlantGrade(plantGrade), plantCount, Price.of(auctionStartPrice), region, shipper);
     }
 
     public AuctionVariety toEntity(Long memberId, AuctionSchedule auctionSchedule, Variety variety, String listingNumber) {
-        AuctionPlant auctionPlant = AuctionPlant.create(plantGrade, plantCount, auctionStartPrice);
+        AuctionPlant auctionPlant = AuctionPlant.of(plantGrade, plantCount, auctionStartPrice);
         Shipment shipment = Shipment.of(region, shipper);
         return AuctionVariety.create(memberId, auctionSchedule, variety, listingNumber, auctionPlant, shipment);
     }
