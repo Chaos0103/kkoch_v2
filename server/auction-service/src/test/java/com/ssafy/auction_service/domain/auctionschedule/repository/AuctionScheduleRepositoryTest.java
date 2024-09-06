@@ -24,10 +24,10 @@ class AuctionScheduleRepositoryTest extends IntegrationTestSupport {
     @Test
     void findIdByAuction() {
         //given
-        createAuctionSchedule();
+        AuctionSchedule auctionSchedule = createAuctionSchedule();
 
         //when
-        Optional<Integer> auctionScheduleId = auctionScheduleRepository.findIdByAuction(PlantCategory.CUT_FLOWERS, JointMarket.YANGJAE, LocalDateTime.of(2024, 7, 12, 5, 0));
+        Optional<Integer> auctionScheduleId = auctionScheduleRepository.findIdByAuction(auctionSchedule.getAuctionInfo());
 
         //then
         assertThat(auctionScheduleId).isPresent();
@@ -39,8 +39,8 @@ class AuctionScheduleRepositoryTest extends IntegrationTestSupport {
             .createdBy(1L)
             .lastModifiedBy(1L)
             .auctionInfo(createAuctionInfo())
-            .auctionStartDateTime(LocalDateTime.of(2024, 7, 12, 5, 0))
             .auctionStatus(AuctionStatus.INIT)
+            .auctionDescription("auctionDescription")
             .build();
         return auctionScheduleRepository.save(auctionSchedule);
     }
@@ -49,7 +49,7 @@ class AuctionScheduleRepositoryTest extends IntegrationTestSupport {
         return AuctionInfo.builder()
             .plantCategory(PlantCategory.CUT_FLOWERS)
             .jointMarket(JointMarket.YANGJAE)
-            .auctionDescription("auctionDescription")
+            .auctionStartDateTime(LocalDateTime.of(2024, 7, 12, 5, 0))
             .build();
     }
 }

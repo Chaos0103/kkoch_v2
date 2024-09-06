@@ -24,28 +24,29 @@ public class AuctionSchedule extends BaseEntity {
     @Embedded
     private AuctionInfo auctionInfo;
 
-    @Column(nullable = false)
-    private LocalDateTime auctionStartDateTime;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 10)
     private AuctionStatus auctionStatus;
 
+    @Lob
+    @Column(columnDefinition = "text")
+    private String auctionDescription;
+
     @Builder
-    private AuctionSchedule(boolean isDeleted, Long createdBy, Long lastModifiedBy, AuctionInfo auctionInfo, LocalDateTime auctionStartDateTime, AuctionStatus auctionStatus) {
+    private AuctionSchedule(boolean isDeleted, Long createdBy, Long lastModifiedBy, AuctionInfo auctionInfo, AuctionStatus auctionStatus, String auctionDescription) {
         super(isDeleted, createdBy, lastModifiedBy);
         this.auctionInfo = auctionInfo;
-        this.auctionStartDateTime = auctionStartDateTime;
         this.auctionStatus = auctionStatus;
+        this.auctionDescription = auctionDescription;
     }
 
-    public static AuctionSchedule of(boolean isDeleted, Long createdBy, Long lastModifiedBy, AuctionInfo auctionInfo, LocalDateTime auctionStartDateTime, AuctionStatus auctionStatus) {
-        return new AuctionSchedule(isDeleted, createdBy, lastModifiedBy, auctionInfo, auctionStartDateTime, auctionStatus);
+    public static AuctionSchedule of(boolean isDeleted, Long createdBy, Long lastModifiedBy, AuctionInfo auctionInfo, AuctionStatus auctionStatus, String auctionDescription) {
+        return new AuctionSchedule(isDeleted, createdBy, lastModifiedBy, auctionInfo, auctionStatus, auctionDescription);
     }
 
-    public static AuctionSchedule create(Long createdBy, PlantCategory plantCategory, JointMarket jointMarket, String auctionDescription, LocalDateTime auctionStartDateTime) {
-        AuctionInfo auctionInfo = AuctionInfo.of(plantCategory, jointMarket, auctionDescription);
-        return of(false, createdBy, createdBy, auctionInfo, auctionStartDateTime, AuctionStatus.INIT);
+    public static AuctionSchedule create(Long createdBy, PlantCategory plantCategory, JointMarket jointMarket, LocalDateTime auctionStartDateTime, String auctionDescription) {
+        AuctionInfo auctionInfo = AuctionInfo.of(plantCategory, jointMarket, auctionStartDateTime);
+        return of(false, createdBy, createdBy, auctionInfo, AuctionStatus.INIT, auctionDescription);
     }
 
     public void ready(Long memberId) {

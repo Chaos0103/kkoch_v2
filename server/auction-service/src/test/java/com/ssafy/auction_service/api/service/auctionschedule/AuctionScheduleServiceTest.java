@@ -53,10 +53,10 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
         createAuctionSchedule(AuctionStatus.INIT);
 
         AuctionScheduleCreateServiceRequest request = AuctionScheduleCreateServiceRequest.builder()
-            .plantCategory("CUT_FLOWERS")
-            .jointMarket("YANGJAE")
+            .plantCategory(PlantCategory.CUT_FLOWERS)
+            .jointMarket(JointMarket.YANGJAE)
             .auctionDescription("경매 예정입니다.")
-            .auctionStartDateTime("2024-08-12T05:00")
+            .auctionStartDateTime(LocalDateTime.of(2024, 8, 12, 5, 0))
             .build();
 
         //when
@@ -76,10 +76,10 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
         LocalDateTime current = LocalDateTime.of(2024, 8, 2, 0, 0, 0);
 
         AuctionScheduleCreateServiceRequest request = AuctionScheduleCreateServiceRequest.builder()
-            .plantCategory("CUT_FLOWERS")
-            .jointMarket("YANGJAE")
+            .plantCategory(PlantCategory.CUT_FLOWERS)
+            .jointMarket(JointMarket.YANGJAE)
             .auctionDescription("경매 예정입니다.")
-            .auctionStartDateTime("2024-08-12T05:00")
+            .auctionStartDateTime(LocalDateTime.of(2024, 8, 12, 5, 0))
             .build();
 
         //when
@@ -282,8 +282,8 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
             .createdBy(1L)
             .lastModifiedBy(1L)
             .auctionInfo(createAuctionInfo())
-            .auctionStartDateTime(LocalDateTime.of(2024, 8, 12, 5, 0))
             .auctionStatus(auctionStatus)
+            .auctionDescription("auction description")
             .build();
         return auctionScheduleRepository.save(auctionSchedule);
     }
@@ -292,7 +292,7 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
         return AuctionInfo.builder()
             .plantCategory(PlantCategory.CUT_FLOWERS)
             .jointMarket(JointMarket.YANGJAE)
-            .auctionDescription("auction description")
+            .auctionStartDateTime(LocalDateTime.of(2024, 8, 12, 5, 0))
             .build();
     }
 

@@ -26,7 +26,7 @@ public class AuctionScheduleService {
     private final MemberServiceClient memberServiceClient;
 
     public AuctionScheduleCreateResponse createAuctionSchedule(AuctionScheduleCreateServiceRequest request, LocalDateTime current) {
-        Optional<Integer> auctionScheduleId = auctionScheduleRepository.findIdByAuction(request.getPlantCategory(), request.getJointMarket(), request.getAuctionStartDateTime());
+        Optional<Integer> auctionScheduleId = auctionScheduleRepository.findIdByAuction(request.getAuctionInfo());
         if (auctionScheduleId.isPresent()) {
             throw new AppException("이미 등록된 경매 일정이 있습니다.");
         }

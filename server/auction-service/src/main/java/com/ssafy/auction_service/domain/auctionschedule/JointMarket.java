@@ -1,8 +1,7 @@
 package com.ssafy.auction_service.domain.auctionschedule;
 
+import com.ssafy.auction_service.common.exception.NotSupportedException;
 import lombok.Getter;
-
-import java.util.Arrays;
 
 @Getter
 public enum JointMarket {
@@ -16,10 +15,11 @@ public enum JointMarket {
     }
 
     public static JointMarket of(String str) {
-        return Arrays.stream(values())
-            .filter(s -> s.name().equals(str))
-            .findFirst()
-            .orElse(null);
+        try {
+            return JointMarket.valueOf(str);
+        } catch (IllegalArgumentException e) {
+            throw new NotSupportedException("지원하지 않는 공판장입니다.", e);
+        }
     }
 
     public static boolean isSupported(String str) {

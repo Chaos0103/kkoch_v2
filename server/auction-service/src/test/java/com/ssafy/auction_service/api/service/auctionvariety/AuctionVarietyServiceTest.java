@@ -164,10 +164,10 @@ class AuctionVarietyServiceTest extends IntegrationTestSupport {
             .auctionInfo(AuctionInfo.builder()
                 .plantCategory(plantCategory)
                 .jointMarket(JointMarket.YANGJAE)
-                .auctionDescription("경매 설명")
+                .auctionStartDateTime(LocalDateTime.of(2024, 7, 12, 5, 0))
                 .build())
-            .auctionStartDateTime(LocalDateTime.of(2024, 7, 12, 5, 0))
             .auctionStatus(auctionStatus)
+            .auctionDescription("경매 설명")
             .build();
         return auctionScheduleRepository.save(auctionSchedule);
     }
