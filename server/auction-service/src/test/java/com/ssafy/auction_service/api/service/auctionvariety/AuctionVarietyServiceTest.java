@@ -9,7 +9,7 @@ import com.ssafy.auction_service.api.service.auctionvariety.response.AuctionVari
 import com.ssafy.auction_service.common.exception.AppException;
 import com.ssafy.auction_service.domain.auctionschedule.AuctionInfo;
 import com.ssafy.auction_service.domain.auctionschedule.AuctionSchedule;
-import com.ssafy.auction_service.domain.auctionschedule.AuctionStatue;
+import com.ssafy.auction_service.domain.auctionschedule.AuctionStatus;
 import com.ssafy.auction_service.domain.auctionschedule.JointMarket;
 import com.ssafy.auction_service.domain.auctionschedule.repository.AuctionScheduleRepository;
 import com.ssafy.auction_service.domain.auctionvariety.AuctionVariety;
@@ -53,7 +53,7 @@ class AuctionVarietyServiceTest extends IntegrationTestSupport {
     @DisplayName("경매 품종 등록시 경매 상태가 INIT 상태일 때 경매 품종을 등록할 수 있다.")
     @CsvSource({"READY", "PROGRESS", "COMPLETE"})
     @ParameterizedTest
-    void createAuctionVarietyAuctionStateNotInit(AuctionStatue statue) {
+    void createAuctionVarietyAuctionStateNotInit(AuctionStatus statue) {
         //given
         Variety variety = createVariety();
         AuctionSchedule auctionSchedule = createAuctionSchedule(PlantCategory.CUT_FLOWERS, statue);
@@ -83,7 +83,7 @@ class AuctionVarietyServiceTest extends IntegrationTestSupport {
     void createAuctionVarietyNotEqualsPlantCategory() {
         //given
         Variety variety = createVariety();
-        AuctionSchedule auctionSchedule = createAuctionSchedule(PlantCategory.ORCHID, AuctionStatue.INIT);
+        AuctionSchedule auctionSchedule = createAuctionSchedule(PlantCategory.ORCHID, AuctionStatus.INIT);
 
         AuctionVarietyCreateServiceRequest request = AuctionVarietyCreateServiceRequest.builder()
             .plantGrade(PlantGrade.SUPER)
@@ -110,7 +110,7 @@ class AuctionVarietyServiceTest extends IntegrationTestSupport {
     void createAuctionVariety() {
         //given
         Variety variety = createVariety();
-        AuctionSchedule auctionSchedule = createAuctionSchedule(PlantCategory.CUT_FLOWERS, AuctionStatue.INIT);
+        AuctionSchedule auctionSchedule = createAuctionSchedule(PlantCategory.CUT_FLOWERS, AuctionStatus.INIT);
 
         AuctionVarietyCreateServiceRequest request = AuctionVarietyCreateServiceRequest.builder()
             .plantGrade(PlantGrade.SUPER)
@@ -151,7 +151,7 @@ class AuctionVarietyServiceTest extends IntegrationTestSupport {
         return varietyRepository.save(variety);
     }
 
-    private AuctionSchedule createAuctionSchedule(PlantCategory plantCategory, AuctionStatue auctionStatue) {
+    private AuctionSchedule createAuctionSchedule(PlantCategory plantCategory, AuctionStatus auctionStatus) {
         AuctionSchedule auctionSchedule = AuctionSchedule.builder()
             .isDeleted(false)
             .createdBy(1L)
@@ -162,7 +162,7 @@ class AuctionVarietyServiceTest extends IntegrationTestSupport {
                 .auctionDescription("경매 설명")
                 .build())
             .auctionStartDateTime(LocalDateTime.of(2024, 7, 12, 5, 0))
-            .auctionStatue(auctionStatue)
+            .auctionStatus(auctionStatus)
             .build();
         return auctionScheduleRepository.save(auctionSchedule);
     }

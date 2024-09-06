@@ -5,6 +5,7 @@ import com.ssafy.auction_service.api.client.MemberServiceClient;
 import com.ssafy.auction_service.api.client.response.MemberIdResponse;
 import com.ssafy.auction_service.api.service.auctionschedule.request.AuctionScheduleCreateServiceRequest;
 import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionScheduleCreateResponse;
+import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionStatusModifyResponse;
 import com.ssafy.auction_service.common.exception.AppException;
 import com.ssafy.auction_service.domain.auctionschedule.AuctionSchedule;
 import com.ssafy.auction_service.domain.auctionschedule.repository.AuctionScheduleRepository;
@@ -35,6 +36,18 @@ public class AuctionScheduleService {
         AuctionSchedule savedAuctionSchedule = auctionScheduleRepository.save(auctionSchedule);
 
         return AuctionScheduleCreateResponse.of(savedAuctionSchedule);
+    }
+
+    public AuctionStatusModifyResponse modifyAuctionStatusToReady(int auctionScheduleId, LocalDateTime current) {
+        return null;
+    }
+
+    public AuctionStatusModifyResponse modifyAuctionStatusToProgress(int auctionScheduleId, LocalDateTime current) {
+        return null;
+    }
+
+    public AuctionStatusModifyResponse modifyAuctionStatusToComplete(int auctionScheduleId, LocalDateTime current) {
+        return null;
     }
 
     private Long getMemberId() {

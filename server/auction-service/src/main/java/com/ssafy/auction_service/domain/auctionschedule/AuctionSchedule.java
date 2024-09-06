@@ -29,23 +29,23 @@ public class AuctionSchedule extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 10)
-    private AuctionStatue auctionStatue;
+    private AuctionStatus auctionStatus;
 
     @Builder
-    private AuctionSchedule(boolean isDeleted, Long createdBy, Long lastModifiedBy, AuctionInfo auctionInfo, LocalDateTime auctionStartDateTime, AuctionStatue auctionStatue) {
+    private AuctionSchedule(boolean isDeleted, Long createdBy, Long lastModifiedBy, AuctionInfo auctionInfo, LocalDateTime auctionStartDateTime, AuctionStatus auctionStatus) {
         super(isDeleted, createdBy, lastModifiedBy);
         this.auctionInfo = auctionInfo;
         this.auctionStartDateTime = auctionStartDateTime;
-        this.auctionStatue = auctionStatue;
+        this.auctionStatus = auctionStatus;
     }
 
-    public static AuctionSchedule of(boolean isDeleted, Long createdBy, Long lastModifiedBy, AuctionInfo auctionInfo, LocalDateTime auctionStartDateTime, AuctionStatue auctionStatue) {
-        return new AuctionSchedule(isDeleted, createdBy, lastModifiedBy, auctionInfo, auctionStartDateTime, auctionStatue);
+    public static AuctionSchedule of(boolean isDeleted, Long createdBy, Long lastModifiedBy, AuctionInfo auctionInfo, LocalDateTime auctionStartDateTime, AuctionStatus auctionStatus) {
+        return new AuctionSchedule(isDeleted, createdBy, lastModifiedBy, auctionInfo, auctionStartDateTime, auctionStatus);
     }
 
     public static AuctionSchedule create(Long createdBy, PlantCategory plantCategory, JointMarket jointMarket, String auctionDescription, LocalDateTime auctionStartDateTime) {
         AuctionInfo auctionInfo = AuctionInfo.of(plantCategory, jointMarket, auctionDescription);
-        return of(false, createdBy, createdBy, auctionInfo, auctionStartDateTime, AuctionStatue.INIT);
+        return of(false, createdBy, createdBy, auctionInfo, auctionStartDateTime, AuctionStatus.INIT);
     }
 
     public String getPlantCategoryDescription() {
@@ -57,7 +57,7 @@ public class AuctionSchedule extends BaseEntity {
     }
 
     public boolean isInitStatus() {
-        return auctionStatue == AuctionStatue.INIT;
+        return auctionStatus == AuctionStatus.INIT;
     }
 
     public boolean isNotInitStatus() {

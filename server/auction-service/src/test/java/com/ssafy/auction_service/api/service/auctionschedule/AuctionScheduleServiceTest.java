@@ -6,10 +6,11 @@ import com.ssafy.auction_service.api.client.MemberServiceClient;
 import com.ssafy.auction_service.api.client.response.MemberIdResponse;
 import com.ssafy.auction_service.api.service.auctionschedule.request.AuctionScheduleCreateServiceRequest;
 import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionScheduleCreateResponse;
+import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionStatusModifyResponse;
 import com.ssafy.auction_service.common.exception.AppException;
 import com.ssafy.auction_service.domain.auctionschedule.AuctionInfo;
 import com.ssafy.auction_service.domain.auctionschedule.AuctionSchedule;
-import com.ssafy.auction_service.domain.auctionschedule.AuctionStatue;
+import com.ssafy.auction_service.domain.auctionschedule.AuctionStatus;
 import com.ssafy.auction_service.domain.auctionschedule.JointMarket;
 import com.ssafy.auction_service.domain.auctionschedule.repository.AuctionScheduleRepository;
 import com.ssafy.auction_service.domain.variety.PlantCategory;
@@ -20,6 +21,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -42,7 +44,7 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
         //given
         LocalDateTime current = LocalDateTime.of(2024, 8, 2, 0, 0, 0);
 
-        createAuctionSchedule(AuctionStatue.INIT);
+        createAuctionSchedule(AuctionStatus.INIT);
 
         AuctionScheduleCreateServiceRequest request = AuctionScheduleCreateServiceRequest.builder()
             .plantCategory("CUT_FLOWERS")
@@ -86,20 +88,200 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
             .hasFieldOrPropertyWithValue("plantCategory", "절화")
             .hasFieldOrPropertyWithValue("jointMarket", "양재")
             .hasFieldOrPropertyWithValue("auctionStartDateTime", LocalDateTime.of(2024, 8, 12, 5, 0))
-            .hasFieldOrPropertyWithValue("auctionStatus", AuctionStatue.INIT);
+            .hasFieldOrPropertyWithValue("auctionStatus", AuctionStatus.INIT);
 
         List<AuctionSchedule> auctionSchedules = auctionScheduleRepository.findAll();
         assertThat(auctionSchedules).hasSize(1);
     }
 
-    private AuctionSchedule createAuctionSchedule(AuctionStatue auctionStatue) {
+    @DisplayName("경매 상태를 READY로 변경시 경매 상태가 PROGRESS 라면 예외가 발생한다.")
+    @Test
+    void progressStatusToReady() {
+        //given
+        LocalDateTime current = LocalDateTime.of(2024, 8, 6, 7, 0);
+        AuctionSchedule auctionSchedule = createAuctionSchedule(AuctionStatus.PROGRESS);
+
+        //when
+        assertThatThrownBy(() -> auctionScheduleService.modifyAuctionStatusToReady(auctionSchedule.getId(), current))
+            .isInstanceOf(AppException.class)
+            .hasMessage("진행중인 경매입니다.");
+
+        //then
+        Optional<AuctionSchedule> findAuctionSchedule = auctionScheduleRepository.findById(auctionSchedule.getId());
+        assertThat(findAuctionSchedule).isPresent()
+            .get()
+            .hasFieldOrPropertyWithValue("auctionStatus", AuctionStatus.PROGRESS);
+    }
+
+    @DisplayName("경매 상태를 READY로 변경시 경매 상태가 COMPLETE 라면 예외가 발생한다.")
+    @Test
+    void completeStatusToReady() {
+        //given
+        LocalDateTime current = LocalDateTime.of(2024, 8, 6, 7, 0);
+        AuctionSchedule auctionSchedule = createAuctionSchedule(AuctionStatus.COMPLETE);
+
+        //when
+        assertThatThrownBy(() -> auctionScheduleService.modifyAuctionStatusToReady(auctionSchedule.getId(), current))
+            .isInstanceOf(AppException.class)
+            .hasMessage("완료된 경매입니다.");
+
+        //then
+        Optional<AuctionSchedule> findAuctionSchedule = auctionScheduleRepository.findById(auctionSchedule.getId());
+        assertThat(findAuctionSchedule).isPresent()
+            .get()
+            .hasFieldOrPropertyWithValue("auctionStatus", AuctionStatus.COMPLETE);
+    }
+
+    @DisplayName("경매 일정 상태를 READY로 변경한다.")
+    @Test
+    void modifyAuctionStatusToReady() {
+        //given
+        LocalDateTime current = LocalDateTime.of(2024, 8, 6, 7, 0);
+        AuctionSchedule auctionSchedule = createAuctionSchedule(AuctionStatus.INIT);
+
+        //when
+        AuctionStatusModifyResponse response = auctionScheduleService.modifyAuctionStatusToReady(auctionSchedule.getId(), current);
+
+        //then
+        assertThat(response).isNotNull()
+            .hasFieldOrPropertyWithValue("id", auctionSchedule.getId())
+            .hasFieldOrPropertyWithValue("auctionStatus", AuctionStatus.READY)
+            .hasFieldOrPropertyWithValue("modifyDateTime", current);
+
+        Optional<AuctionSchedule> findAuctionSchedule = auctionScheduleRepository.findById(auctionSchedule.getId());
+        assertThat(findAuctionSchedule).isPresent()
+            .get()
+            .hasFieldOrPropertyWithValue("auctionStatus", AuctionStatus.READY);
+    }
+
+    @DisplayName("경매 상태를 PROGRESS로 변경시 경매 상태가 INIT 라면 예외가 발생한다.")
+    @Test
+    void initStatusToProgress() {
+        //given
+        LocalDateTime current = LocalDateTime.of(2024, 8, 6, 7, 0);
+        AuctionSchedule auctionSchedule = createAuctionSchedule(AuctionStatus.INIT);
+
+        //when
+        assertThatThrownBy(() -> auctionScheduleService.modifyAuctionStatusToProgress(auctionSchedule.getId(), current))
+            .isInstanceOf(AppException.class)
+            .hasMessage("준비된 경매가 아닙니다.");
+
+        //then
+        Optional<AuctionSchedule> findAuctionSchedule = auctionScheduleRepository.findById(auctionSchedule.getId());
+        assertThat(findAuctionSchedule).isPresent()
+            .get()
+            .hasFieldOrPropertyWithValue("auctionStatus", AuctionStatus.INIT);
+    }
+
+    @DisplayName("경매 상태를 PROGRESS로 변경시 경매 상태가 COMPLETE 라면 예외가 발생한다.")
+    @Test
+    void completeStatusToProgress() {
+        //given
+        LocalDateTime current = LocalDateTime.of(2024, 8, 6, 7, 0);
+        AuctionSchedule auctionSchedule = createAuctionSchedule(AuctionStatus.COMPLETE);
+
+        //when
+        assertThatThrownBy(() -> auctionScheduleService.modifyAuctionStatusToProgress(auctionSchedule.getId(), current))
+            .isInstanceOf(AppException.class)
+            .hasMessage("완료된 경매입니다.");
+
+        //then
+        Optional<AuctionSchedule> findAuctionSchedule = auctionScheduleRepository.findById(auctionSchedule.getId());
+        assertThat(findAuctionSchedule).isPresent()
+            .get()
+            .hasFieldOrPropertyWithValue("auctionStatus", AuctionStatus.COMPLETE);
+    }
+
+    @DisplayName("경매 일정 상태를 PROGRESS로 변경한다.")
+    @Test
+    void modifyAuctionStatusToProgress() {
+        //given
+        LocalDateTime current = LocalDateTime.of(2024, 8, 6, 7, 0);
+        AuctionSchedule auctionSchedule = createAuctionSchedule(AuctionStatus.READY);
+
+        //when
+        AuctionStatusModifyResponse response = auctionScheduleService.modifyAuctionStatusToProgress(auctionSchedule.getId(), current);
+
+        //then
+        assertThat(response).isNotNull()
+            .hasFieldOrPropertyWithValue("id", auctionSchedule.getId())
+            .hasFieldOrPropertyWithValue("auctionStatus", AuctionStatus.PROGRESS)
+            .hasFieldOrPropertyWithValue("modifyDateTime", current);
+
+        Optional<AuctionSchedule> findAuctionSchedule = auctionScheduleRepository.findById(auctionSchedule.getId());
+        assertThat(findAuctionSchedule).isPresent()
+            .get()
+            .hasFieldOrPropertyWithValue("auctionStatus", AuctionStatus.PROGRESS);
+    }
+
+    @DisplayName("경매 상태를 COMPLETE로 변경시 경매 상태가 INIT 라면 예외가 발생한다.")
+    @Test
+    void initStatusToComplete() {
+        //given
+        LocalDateTime current = LocalDateTime.of(2024, 8, 6, 7, 0);
+        AuctionSchedule auctionSchedule = createAuctionSchedule(AuctionStatus.INIT);
+
+        //when
+        assertThatThrownBy(() -> auctionScheduleService.modifyAuctionStatusToComplete(auctionSchedule.getId(), current))
+            .isInstanceOf(AppException.class)
+            .hasMessage("진행중인 경매가 아닙니다.");
+
+        //then
+        Optional<AuctionSchedule> findAuctionSchedule = auctionScheduleRepository.findById(auctionSchedule.getId());
+        assertThat(findAuctionSchedule).isPresent()
+            .get()
+            .hasFieldOrPropertyWithValue("auctionStatus", AuctionStatus.INIT);
+    }
+
+    @DisplayName("경매 상태를 PROGRESS로 변경시 경매 상태가 COMPLETE 라면 예외가 발생한다.")
+    @Test
+    void readyStatusToComplete() {
+        //given
+        LocalDateTime current = LocalDateTime.of(2024, 8, 6, 7, 0);
+        AuctionSchedule auctionSchedule = createAuctionSchedule(AuctionStatus.READY);
+
+        //when
+        assertThatThrownBy(() -> auctionScheduleService.modifyAuctionStatusToComplete(auctionSchedule.getId(), current))
+            .isInstanceOf(AppException.class)
+            .hasMessage("진행중인 경매가 아닙니다.");
+
+        //then
+        Optional<AuctionSchedule> findAuctionSchedule = auctionScheduleRepository.findById(auctionSchedule.getId());
+        assertThat(findAuctionSchedule).isPresent()
+            .get()
+            .hasFieldOrPropertyWithValue("auctionStatus", AuctionStatus.READY);
+    }
+
+    @DisplayName("경매 일정 상태를 COMPLETE로 변경한다.")
+    @Test
+    void modifyAuctionStatusToComplete() {
+        //given
+        LocalDateTime current = LocalDateTime.of(2024, 8, 6, 7, 0);
+        AuctionSchedule auctionSchedule = createAuctionSchedule(AuctionStatus.PROGRESS);
+
+        //when
+        AuctionStatusModifyResponse response = auctionScheduleService.modifyAuctionStatusToComplete(auctionSchedule.getId(), current);
+
+        //then
+        assertThat(response).isNotNull()
+            .hasFieldOrPropertyWithValue("id", auctionSchedule.getId())
+            .hasFieldOrPropertyWithValue("auctionStatus", AuctionStatus.COMPLETE)
+            .hasFieldOrPropertyWithValue("modifyDateTime", current);
+
+        Optional<AuctionSchedule> findAuctionSchedule = auctionScheduleRepository.findById(auctionSchedule.getId());
+        assertThat(findAuctionSchedule).isPresent()
+            .get()
+            .hasFieldOrPropertyWithValue("auctionStatus", AuctionStatus.COMPLETE);
+    }
+
+    private AuctionSchedule createAuctionSchedule(AuctionStatus auctionStatus) {
         AuctionSchedule auctionSchedule = AuctionSchedule.builder()
             .isDeleted(false)
             .createdBy(1L)
             .lastModifiedBy(1L)
             .auctionInfo(createAuctionInfo())
             .auctionStartDateTime(LocalDateTime.of(2024, 8, 12, 5, 0))
-            .auctionStatue(auctionStatue)
+            .auctionStatus(auctionStatus)
             .build();
         return auctionScheduleRepository.save(auctionSchedule);
     }

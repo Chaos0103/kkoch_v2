@@ -1,6 +1,6 @@
 package com.ssafy.auction_service.domain.auctionschedule;
 
-public enum AuctionStatue {
+public enum AuctionStatus {
 
     INIT("생성"),
     READY("준비"),
@@ -9,7 +9,7 @@ public enum AuctionStatue {
 
     private final String description;
 
-    AuctionStatue(String description) {
+    AuctionStatus(String description) {
         this.description = description;
     }
 }

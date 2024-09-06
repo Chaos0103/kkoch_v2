@@ -1,7 +1,7 @@
 package com.ssafy.auction_service.api.service.auctionschedule.response;
 
 import com.ssafy.auction_service.domain.auctionschedule.AuctionSchedule;
-import com.ssafy.auction_service.domain.auctionschedule.AuctionStatue;
+import com.ssafy.auction_service.domain.auctionschedule.AuctionStatus;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,11 +16,11 @@ public class AuctionScheduleCreateResponse {
     private String plantCategory;
     private String jointMarket;
     private LocalDateTime auctionStartDateTime;
-    private AuctionStatue auctionStatus;
+    private AuctionStatus auctionStatus;
     private LocalDateTime createdDateTime;
 
     @Builder
-    private AuctionScheduleCreateResponse(int id, String plantCategory, String jointMarket, LocalDateTime auctionStartDateTime, AuctionStatue auctionStatus, LocalDateTime createdDateTime) {
+    private AuctionScheduleCreateResponse(int id, String plantCategory, String jointMarket, LocalDateTime auctionStartDateTime, AuctionStatus auctionStatus, LocalDateTime createdDateTime) {
         this.id = id;
         this.plantCategory = plantCategory;
         this.jointMarket = jointMarket;
@@ -30,6 +30,6 @@ public class AuctionScheduleCreateResponse {
     }
 
     public static AuctionScheduleCreateResponse of(AuctionSchedule auctionSchedule) {
-        return new AuctionScheduleCreateResponse(auctionSchedule.getId(), auctionSchedule.getPlantCategoryDescription(), auctionSchedule.getKoreanJointMarket(), auctionSchedule.getAuctionStartDateTime(), auctionSchedule.getAuctionStatue(), auctionSchedule.getCreatedDateTime());
+        return new AuctionScheduleCreateResponse(auctionSchedule.getId(), auctionSchedule.getPlantCategoryDescription(), auctionSchedule.getKoreanJointMarket(), auctionSchedule.getAuctionStartDateTime(), auctionSchedule.getAuctionStatus(), auctionSchedule.getCreatedDateTime());
     }
 }

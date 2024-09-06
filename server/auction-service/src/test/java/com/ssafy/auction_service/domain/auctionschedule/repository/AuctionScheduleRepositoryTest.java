@@ -3,7 +3,7 @@ package com.ssafy.auction_service.domain.auctionschedule.repository;
 import com.ssafy.auction_service.IntegrationTestSupport;
 import com.ssafy.auction_service.domain.auctionschedule.AuctionInfo;
 import com.ssafy.auction_service.domain.auctionschedule.AuctionSchedule;
-import com.ssafy.auction_service.domain.auctionschedule.AuctionStatue;
+import com.ssafy.auction_service.domain.auctionschedule.AuctionStatus;
 import com.ssafy.auction_service.domain.auctionschedule.JointMarket;
 import com.ssafy.auction_service.domain.variety.PlantCategory;
 import org.junit.jupiter.api.DisplayName;
@@ -40,7 +40,7 @@ class AuctionScheduleRepositoryTest extends IntegrationTestSupport {
             .lastModifiedBy(1L)
             .auctionInfo(createAuctionInfo())
             .auctionStartDateTime(LocalDateTime.of(2024, 7, 12, 5, 0))
-            .auctionStatue(AuctionStatue.INIT)
+            .auctionStatus(AuctionStatus.INIT)
             .build();
         return auctionScheduleRepository.save(auctionSchedule);
     }

@@ -5,7 +5,7 @@ import com.ssafy.auction_service.api.controller.auctionschedule.request.AuctionS
 import com.ssafy.auction_service.api.service.auctionschedule.AuctionScheduleService;
 import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionScheduleCreateResponse;
 import com.ssafy.auction_service.docs.RestDocsSupport;
-import com.ssafy.auction_service.domain.auctionschedule.AuctionStatue;
+import com.ssafy.auction_service.domain.auctionschedule.AuctionStatus;
 import com.ssafy.auction_service.domain.auctionschedule.JointMarket;
 import com.ssafy.auction_service.domain.variety.PlantCategory;
 import org.junit.jupiter.api.DisplayName;
@@ -52,7 +52,7 @@ class AuctionScheduleApiControllerDocsTest extends RestDocsSupport {
             .plantCategory(PlantCategory.CUT_FLOWERS.getDescription())
             .jointMarket(JointMarket.YANGJAE.getKorean())
             .auctionStartDateTime(LocalDateTime.of(2024, 7, 15, 5, 0))
-            .auctionStatus(AuctionStatue.INIT)
+            .auctionStatus(AuctionStatus.INIT)
             .createdDateTime(LocalDateTime.now())
             .build();
 
