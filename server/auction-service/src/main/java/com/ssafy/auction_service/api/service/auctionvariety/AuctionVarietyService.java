@@ -33,7 +33,7 @@ public class AuctionVarietyService {
 
         AuctionSchedule auctionSchedule = findAuctionScheduleById(auctionScheduleId);
 
-        if (auctionSchedule.isNotInitStatus()) {
+        if (auctionSchedule.isNotInit()) {
             throw new AppException("경매 품종을 등록할 수 없습니다.");
         }
 

@@ -64,7 +64,7 @@ public class AuctionSchedule extends BaseEntity {
         return auctionStatus == AuctionStatus.INIT;
     }
 
-    public boolean isNotInitStatus() {
+    public boolean isNotInit() {
         return !isInit();
     }
 
