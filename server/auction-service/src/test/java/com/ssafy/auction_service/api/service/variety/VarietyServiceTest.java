@@ -93,7 +93,7 @@ class VarietyServiceTest extends IntegrationTestSupport {
         //given
         LocalDateTime current = LocalDateTime.of(2024, 9, 6, 7, 0);
         Variety variety = createVariety("10000001", "하트앤소울");
-        createVariety("10000001", "심화");
+        createVariety("10000002", "심화");
 
         //when
         assertThatThrownBy(() -> varietyService.modifyVariety(variety.getCode(), "심화", current))

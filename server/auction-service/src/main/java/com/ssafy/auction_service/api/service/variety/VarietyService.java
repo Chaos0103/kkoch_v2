@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -41,7 +42,22 @@ public class VarietyService {
     }
 
     public VarietyModifyResponse modifyVariety(String varietyCode, String varietyName, LocalDateTime current) {
-        return null;
+        Variety variety = findVarietyByCode(varietyCode);
+
+        Optional<String> code = varietyRepository.findCodeByVariety(variety.getPlantCategory(), variety.getItemName(), varietyName);
+        if (code.isPresent()) {
+            throw new AppException("이미 등록된 품종입니다.");
+        }
+
+        Long memberId = getMemberId();
+        variety.modifyVarietyName(memberId, varietyName);
+
+        return VarietyModifyResponse.of(variety, current);
+    }
+
+    private Variety findVarietyByCode(String code) {
+        return varietyRepository.findById(code)
+            .orElseThrow(() -> new NoSuchElementException("등록되지 않은 품종입니다."));
     }
 
     private Long getMemberId() {

@@ -43,6 +43,11 @@ public class Variety extends BaseEntity {
         return of(false, createdBy, createdBy, code, plantCategory, itemName, varietyName);
     }
 
+    public void modifyVarietyName(Long memberId, String varietyName) {
+        updateModifiedBy(memberId);
+        this.varietyName = varietyName;
+    }
+
     public String getPlantCategoryDescription() {
         return plantCategory.getDescription();
     }

@@ -1,5 +1,6 @@
 package com.ssafy.auction_service.api.service.variety.response;
 
+import com.ssafy.auction_service.domain.variety.Variety;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,5 +24,9 @@ public class VarietyModifyResponse {
         this.itemName = itemName;
         this.varietyName = varietyName;
         this.modifiedDateTime = modifiedDateTime;
+    }
+
+    public static VarietyModifyResponse of(Variety variety, LocalDateTime current) {
+        return new VarietyModifyResponse(variety.getCode(), variety.getPlantCategoryDescription(), variety.getItemName(), variety.getVarietyName(), current);
     }
 }
