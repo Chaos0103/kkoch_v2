@@ -4,6 +4,7 @@ import com.ssafy.auction_service.api.ApiResponse;
 import com.ssafy.auction_service.api.controller.auctionschedule.request.AuctionScheduleCreateRequest;
 import com.ssafy.auction_service.api.service.auctionschedule.AuctionScheduleService;
 import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionScheduleCreateResponse;
+import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionStatusModifyResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,5 +29,20 @@ public class AuctionScheduleApiController {
         AuctionScheduleCreateResponse response = auctionScheduleService.createAuctionSchedule(request.toServiceRequest(), current);
 
         return ApiResponse.created(response);
+    }
+
+    @PostMapping("/{auctionScheduleId}/ready")
+    public ApiResponse<AuctionStatusModifyResponse> modifyAuctionStatusToReady(@PathVariable Integer auctionScheduleId) {
+        return null;
+    }
+
+    @PostMapping("/{auctionScheduleId}/progress")
+    public ApiResponse<AuctionStatusModifyResponse> modifyAuctionStatusToProgress(@PathVariable Integer auctionScheduleId) {
+        return null;
+    }
+
+    @PostMapping("/{auctionScheduleId}/complete")
+    public ApiResponse<AuctionStatusModifyResponse> modifyAuctionStatusToComplete(@PathVariable Integer auctionScheduleId) {
+        return null;
     }
 }

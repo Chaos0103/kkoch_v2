@@ -119,4 +119,34 @@ class AuctionScheduleApiControllerTest extends ControllerTestSupport {
             )
             .andExpect(status().isCreated());
     }
+
+    @DisplayName("경매 일정 상태를 READY로 수정한다.")
+    @Test
+    void modifyAuctionStatusToReady() throws Exception {
+        mockMvc.perform(
+                post("/auction-service/auction-schedules/{auctionScheduleId}/ready", 1)
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().isOk());
+    }
+
+    @DisplayName("경매 일정 상태를 PROGRESS로 수정한다.")
+    @Test
+    void modifyAuctionStatusToProgress() throws Exception {
+        mockMvc.perform(
+                post("/auction-service/auction-schedules/{auctionScheduleId}/progress", 1)
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().isOk());
+    }
+
+    @DisplayName("경매 일정 상태를 COMPLETE로 수정한다.")
+    @Test
+    void modifyAuctionStatusToComplete() throws Exception {
+        mockMvc.perform(
+                post("/auction-service/auction-schedules/{auctionScheduleId}/complete", 1)
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().isOk());
+    }
 }
