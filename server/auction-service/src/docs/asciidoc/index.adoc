@@ -1,7 +1,7 @@
 ifndef::snippets[]
 :snippets: ../../build/generated-snippets
 endif::[]
-= 꽃향기(Variety-Service) REST API 문서
+= 꽃향기(Auction-Service) REST API 문서
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs
@@ -20,4 +20,9 @@ include::api/variety/create-variety.adoc[]
 == 경매 일정 API
 
 include::api/auctionschedule/create-auction-schedule.adoc[]
+
+[[Auction-Variety-API]]
+== 경매 품종 API
+
+include::api/auctionvariety/create-auction-variety.adoc[]
 

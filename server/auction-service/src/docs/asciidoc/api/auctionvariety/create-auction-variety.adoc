@@ -1,0 +1,13 @@
+[[create-auction-variety]]
+=== 경매 품종 등록 API
+
+==== HTTP Request
+
+include::{snippets}/create-auction-variety/http-request.adoc[]
+include::{snippets}/create-auction-variety/request-headers.adoc[]
+include::{snippets}/create-auction-variety/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/create-auction-variety/http-response.adoc[]
+include::{snippets}/create-auction-variety/response-fields.adoc[]
