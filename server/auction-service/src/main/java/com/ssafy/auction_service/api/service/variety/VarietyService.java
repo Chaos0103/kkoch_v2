@@ -5,6 +5,7 @@ import com.ssafy.auction_service.api.client.MemberServiceClient;
 import com.ssafy.auction_service.api.client.response.MemberIdResponse;
 import com.ssafy.auction_service.api.service.variety.request.VarietyCreateServiceRequest;
 import com.ssafy.auction_service.api.service.variety.response.VarietyCreateResponse;
+import com.ssafy.auction_service.api.service.variety.response.VarietyModifyResponse;
 import com.ssafy.auction_service.common.exception.AppException;
 import com.ssafy.auction_service.domain.variety.PlantCategory;
 import com.ssafy.auction_service.domain.variety.Variety;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -36,6 +38,10 @@ public class VarietyService {
         Variety savedVariety = varietyRepository.save(variety);
 
         return VarietyCreateResponse.of(savedVariety);
+    }
+
+    public VarietyModifyResponse modifyVariety(String varietyCode, String varietyName, LocalDateTime current) {
+        return null;
     }
 
     private Long getMemberId() {
