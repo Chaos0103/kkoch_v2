@@ -4,6 +4,7 @@ import com.ssafy.auction_service.api.controller.auctionschedule.AuctionScheduleA
 import com.ssafy.auction_service.api.controller.auctionschedule.request.AuctionScheduleCreateRequest;
 import com.ssafy.auction_service.api.service.auctionschedule.AuctionScheduleService;
 import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionScheduleCreateResponse;
+import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionStatusModifyResponse;
 import com.ssafy.auction_service.docs.RestDocsSupport;
 import com.ssafy.auction_service.domain.auctionschedule.AuctionStatus;
 import com.ssafy.auction_service.domain.auctionschedule.JointMarket;
@@ -17,14 +18,17 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import java.time.LocalDateTime;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -39,7 +43,7 @@ class AuctionScheduleApiControllerDocsTest extends RestDocsSupport {
 
     @DisplayName("경매 일정 등록 API")
     @Test
-    void createVariety() throws Exception {
+    void createAuctionSchedule() throws Exception {
         AuctionScheduleCreateRequest request = AuctionScheduleCreateRequest.builder()
             .plantCategory("CUT_FLOWERS")
             .jointMarket("YANGJAE")
@@ -106,6 +110,150 @@ class AuctionScheduleApiControllerDocsTest extends RestDocsSupport {
                         .description("경매 상태"),
                     fieldWithPath("data.createdDateTime").type(JsonFieldType.ARRAY)
                         .description("경매 일정 등록일시")
+                )
+            ));
+    }
+
+    @DisplayName("경매 준비 API")
+    @Test
+    void modifyAuctionStatusToReady() throws Exception {
+        AuctionStatusModifyResponse response = AuctionStatusModifyResponse.builder()
+            .id(1)
+            .auctionStatus(AuctionStatus.READY)
+            .modifiedDateTime(LocalDateTime.now())
+            .build();
+
+        given(auctionScheduleService.modifyAuctionStatusToReady(anyInt(), any()))
+            .willReturn(response);
+
+        mockMvc.perform(
+                post("/auction-service/auction-schedules/{auctionScheduleId}/ready", 1)
+                    .header(HttpHeaders.AUTHORIZATION, "issued.access.token")
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andDo(document("modify-auction-status-to-ready",
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName(HttpHeaders.AUTHORIZATION)
+                        .description("회원 토큰")
+                ),
+                pathParameters(
+                    parameterWithName("auctionScheduleId")
+                        .description("경매 일정 ID")
+                ),
+                responseFields(
+                    fieldWithPath("code").type(JsonFieldType.NUMBER)
+                        .description("코드"),
+                    fieldWithPath("status").type(JsonFieldType.STRING)
+                        .description("상태"),
+                    fieldWithPath("message").type(JsonFieldType.STRING)
+                        .description("메시지"),
+                    fieldWithPath("data").type(JsonFieldType.OBJECT)
+                        .description("응답 데이터"),
+                    fieldWithPath("data.id").type(JsonFieldType.NUMBER)
+                        .description("경매 일정 ID"),
+                    fieldWithPath("data.auctionStatus").type(JsonFieldType.STRING)
+                        .description("경매 상태"),
+                    fieldWithPath("data.modifiedDateTime").type(JsonFieldType.ARRAY)
+                        .description("경매 상태 수정일시")
+                )
+            ));
+    }
+
+    @DisplayName("경매 진행 API")
+    @Test
+    void modifyAuctionStatusToProgress() throws Exception {
+        AuctionStatusModifyResponse response = AuctionStatusModifyResponse.builder()
+            .id(1)
+            .auctionStatus(AuctionStatus.PROGRESS)
+            .modifiedDateTime(LocalDateTime.now())
+            .build();
+
+        given(auctionScheduleService.modifyAuctionStatusToProgress(anyInt(), any()))
+            .willReturn(response);
+
+        mockMvc.perform(
+                post("/auction-service/auction-schedules/{auctionScheduleId}/progress", 1)
+                    .header(HttpHeaders.AUTHORIZATION, "issued.access.token")
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andDo(document("modify-auction-status-to-progress",
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName(HttpHeaders.AUTHORIZATION)
+                        .description("회원 토큰")
+                ),
+                pathParameters(
+                    parameterWithName("auctionScheduleId")
+                        .description("경매 일정 ID")
+                ),
+                responseFields(
+                    fieldWithPath("code").type(JsonFieldType.NUMBER)
+                        .description("코드"),
+                    fieldWithPath("status").type(JsonFieldType.STRING)
+                        .description("상태"),
+                    fieldWithPath("message").type(JsonFieldType.STRING)
+                        .description("메시지"),
+                    fieldWithPath("data").type(JsonFieldType.OBJECT)
+                        .description("응답 데이터"),
+                    fieldWithPath("data.id").type(JsonFieldType.NUMBER)
+                        .description("경매 일정 ID"),
+                    fieldWithPath("data.auctionStatus").type(JsonFieldType.STRING)
+                        .description("경매 상태"),
+                    fieldWithPath("data.modifiedDateTime").type(JsonFieldType.ARRAY)
+                        .description("경매 상태 수정일시")
+                )
+            ));
+    }
+
+    @DisplayName("경매 완료 API")
+    @Test
+    void modifyAuctionStatusToComplete() throws Exception {
+        AuctionStatusModifyResponse response = AuctionStatusModifyResponse.builder()
+            .id(1)
+            .auctionStatus(AuctionStatus.COMPLETE)
+            .modifiedDateTime(LocalDateTime.now())
+            .build();
+
+        given(auctionScheduleService.modifyAuctionStatusToComplete(anyInt(), any()))
+            .willReturn(response);
+
+        mockMvc.perform(
+                post("/auction-service/auction-schedules/{auctionScheduleId}/complete", 1)
+                    .header(HttpHeaders.AUTHORIZATION, "issued.access.token")
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andDo(document("modify-auction-status-to-complete",
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName(HttpHeaders.AUTHORIZATION)
+                        .description("회원 토큰")
+                ),
+                pathParameters(
+                    parameterWithName("auctionScheduleId")
+                        .description("경매 일정 ID")
+                ),
+                responseFields(
+                    fieldWithPath("code").type(JsonFieldType.NUMBER)
+                        .description("코드"),
+                    fieldWithPath("status").type(JsonFieldType.STRING)
+                        .description("상태"),
+                    fieldWithPath("message").type(JsonFieldType.STRING)
+                        .description("메시지"),
+                    fieldWithPath("data").type(JsonFieldType.OBJECT)
+                        .description("응답 데이터"),
+                    fieldWithPath("data.id").type(JsonFieldType.NUMBER)
+                        .description("경매 일정 ID"),
+                    fieldWithPath("data.auctionStatus").type(JsonFieldType.STRING)
+                        .description("경매 상태"),
+                    fieldWithPath("data.modifiedDateTime").type(JsonFieldType.ARRAY)
+                        .description("경매 상태 수정일시")
                 )
             ));
     }
