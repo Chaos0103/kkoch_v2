@@ -1,8 +1,7 @@
 package com.ssafy.auction_service.domain.variety;
 
+import com.ssafy.auction_service.common.exception.NotSupportedException;
 import lombok.Getter;
-
-import java.util.Arrays;
 
 @Getter
 public enum PlantCategory {
@@ -21,10 +20,11 @@ public enum PlantCategory {
     }
 
     public static PlantCategory of(String str) {
-        return Arrays.stream(values())
-            .filter(s -> s.name().equals(str))
-            .findFirst()
-            .orElse(null);
+        try {
+            return PlantCategory.valueOf(str);
+        } catch (IllegalArgumentException e) {
+            throw new NotSupportedException("지원하지 않는 화훼부류입니다.", e);
+        }
     }
 
     public static boolean isSupported(String str) {
@@ -34,5 +34,9 @@ public enum PlantCategory {
 
     public static boolean isNotSupported(String str) {
         return !isSupported(str);
+    }
+
+    public String getNextCode(int count) {
+        return String.format("%s%04d", prefix, count + 1);
     }
 }

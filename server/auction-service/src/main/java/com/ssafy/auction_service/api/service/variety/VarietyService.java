@@ -7,7 +7,6 @@ import com.ssafy.auction_service.api.service.variety.request.VarietyCreateServic
 import com.ssafy.auction_service.api.service.variety.response.VarietyCreateResponse;
 import com.ssafy.auction_service.api.service.variety.response.VarietyModifyResponse;
 import com.ssafy.auction_service.common.exception.AppException;
-import com.ssafy.auction_service.domain.variety.PlantCategory;
 import com.ssafy.auction_service.domain.variety.Variety;
 import com.ssafy.auction_service.domain.variety.repository.VarietyRepository;
 import lombok.RequiredArgsConstructor;
@@ -34,8 +33,9 @@ public class VarietyService {
 
         Long memberId = getMemberId();
 
-        String nextCode = generateNextCode(request.getPlantCategory());
-        Variety variety = request.toEntity(memberId, nextCode);
+        int count = varietyRepository.countByInfoPlantCategory(request.getPlantCategory());
+
+        Variety variety = request.toEntity(memberId, count);
         Variety savedVariety = varietyRepository.save(variety);
 
         return VarietyCreateResponse.of(savedVariety);
@@ -63,10 +63,5 @@ public class VarietyService {
     private Long getMemberId() {
         ApiResponse<MemberIdResponse> response = memberServiceClient.searchMemberId();
         return response.getData().getMemberId();
-    }
-
-    private String generateNextCode(PlantCategory plantCategory) {
-        int count = varietyRepository.countByInfoPlantCategory(plantCategory);
-        return String.format("%s%04d", plantCategory.getPrefix(), count + 1);
     }
 }

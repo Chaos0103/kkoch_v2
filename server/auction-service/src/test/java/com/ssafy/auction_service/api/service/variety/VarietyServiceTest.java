@@ -49,7 +49,7 @@ class VarietyServiceTest extends IntegrationTestSupport {
         createVariety("10000001", "하트앤소울");
 
         VarietyCreateServiceRequest request = VarietyCreateServiceRequest.builder()
-            .plantCategory("CUT_FLOWERS")
+            .plantCategory(PlantCategory.CUT_FLOWERS)
             .itemName("장미")
             .varietyName("하트앤소울")
             .build();
@@ -69,7 +69,7 @@ class VarietyServiceTest extends IntegrationTestSupport {
     void createVariety() {
         //given
         VarietyCreateServiceRequest request = VarietyCreateServiceRequest.builder()
-            .plantCategory("CUT_FLOWERS")
+            .plantCategory(PlantCategory.CUT_FLOWERS)
             .itemName("장미")
             .varietyName("하트앤소울")
             .build();
