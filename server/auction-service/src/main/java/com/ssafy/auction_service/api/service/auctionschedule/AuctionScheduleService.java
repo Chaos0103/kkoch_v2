@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -39,15 +40,62 @@ public class AuctionScheduleService {
     }
 
     public AuctionStatusModifyResponse modifyAuctionStatusToReady(int auctionScheduleId, LocalDateTime current) {
-        return null;
+        AuctionSchedule auctionSchedule = findAuctionScheduleById(auctionScheduleId);
+
+        if (auctionSchedule.isProgress()) {
+            throw new AppException("진행중인 경매입니다.");
+        }
+
+        if (auctionSchedule.isComplete()) {
+            throw new AppException("완료된 경매입니다.");
+        }
+
+        Long memberId = getMemberId();
+
+        auctionSchedule.ready(memberId);
+
+        return AuctionStatusModifyResponse.of(auctionSchedule, current);
     }
 
     public AuctionStatusModifyResponse modifyAuctionStatusToProgress(int auctionScheduleId, LocalDateTime current) {
-        return null;
+        AuctionSchedule auctionSchedule = findAuctionScheduleById(auctionScheduleId);
+
+        if (auctionSchedule.isInit()) {
+            throw new AppException("준비된 경매가 아닙니다.");
+        }
+
+        if (auctionSchedule.isComplete()) {
+            throw new AppException("완료된 경매입니다.");
+        }
+
+        Long memberId = getMemberId();
+
+        auctionSchedule.progress(memberId);
+
+        return AuctionStatusModifyResponse.of(auctionSchedule, current);
     }
 
     public AuctionStatusModifyResponse modifyAuctionStatusToComplete(int auctionScheduleId, LocalDateTime current) {
-        return null;
+        AuctionSchedule auctionSchedule = findAuctionScheduleById(auctionScheduleId);
+
+        if (auctionSchedule.isInit()) {
+            throw new AppException("진행중인 경매가 아닙니다.");
+        }
+
+        if (auctionSchedule.isReady()) {
+            throw new AppException("진행중인 경매가 아닙니다.");
+        }
+
+        Long memberId = getMemberId();
+
+        auctionSchedule.complete(memberId);
+
+        return AuctionStatusModifyResponse.of(auctionSchedule, current);
+    }
+
+    private AuctionSchedule findAuctionScheduleById(int auctionScheduleId) {
+        return auctionScheduleRepository.findById(auctionScheduleId)
+            .orElseThrow(() -> new NoSuchElementException("등록되지 않은 경매 일정입니다."));
     }
 
     private Long getMemberId() {

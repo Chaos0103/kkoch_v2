@@ -1,5 +1,6 @@
 package com.ssafy.auction_service.api.service.auctionschedule.response;
 
+import com.ssafy.auction_service.domain.auctionschedule.AuctionSchedule;
 import com.ssafy.auction_service.domain.auctionschedule.AuctionStatus;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,5 +21,9 @@ public class AuctionStatusModifyResponse {
         this.id = id;
         this.auctionStatus = auctionStatus;
         this.modifiedDateTime = modifiedDateTime;
+    }
+
+    public static AuctionStatusModifyResponse of(AuctionSchedule auctionSchedule, LocalDateTime current) {
+        return new AuctionStatusModifyResponse(auctionSchedule.getId(), auctionSchedule.getAuctionStatus(), current);
     }
 }

@@ -48,20 +48,36 @@ public class AuctionSchedule extends BaseEntity {
         return of(false, createdBy, createdBy, auctionInfo, auctionStartDateTime, AuctionStatus.INIT);
     }
 
-    public String getPlantCategoryDescription() {
-        return auctionInfo.getPlantCategory().getDescription();
+    public void ready(Long memberId) {
+        modifyAuctionStatus(memberId, AuctionStatus.READY);
     }
 
-    public String getKoreanJointMarket() {
-        return auctionInfo.getJointMarket().getKorean();
+    public void progress(Long memberId) {
+        modifyAuctionStatus(memberId, AuctionStatus.PROGRESS);
     }
 
-    public boolean isInitStatus() {
+    public void complete(Long memberId) {
+        modifyAuctionStatus(memberId, AuctionStatus.COMPLETE);
+    }
+
+    public boolean isInit() {
         return auctionStatus == AuctionStatus.INIT;
     }
 
     public boolean isNotInitStatus() {
-        return !isInitStatus();
+        return !isInit();
+    }
+
+    public boolean isReady() {
+        return auctionStatus == AuctionStatus.READY;
+    }
+
+    public boolean isProgress() {
+        return auctionStatus == AuctionStatus.PROGRESS;
+    }
+
+    public boolean isComplete() {
+        return auctionStatus == AuctionStatus.COMPLETE;
     }
 
     public boolean isRegisteredVarietyBy(Variety variety) {
@@ -70,5 +86,18 @@ public class AuctionSchedule extends BaseEntity {
 
     public boolean isNotRegisteredVarietyBy(Variety variety) {
         return !isRegisteredVarietyBy(variety);
+    }
+
+    public String getPlantCategoryDescription() {
+        return auctionInfo.getPlantCategory().getDescription();
+    }
+
+    public String getKoreanJointMarket() {
+        return auctionInfo.getJointMarket().getKorean();
+    }
+
+    private void modifyAuctionStatus(Long memberId, AuctionStatus auctionStatus) {
+        updateModifiedBy(memberId);
+        this.auctionStatus = auctionStatus;
     }
 }

@@ -14,6 +14,7 @@ import com.ssafy.auction_service.domain.auctionschedule.AuctionStatus;
 import com.ssafy.auction_service.domain.auctionschedule.JointMarket;
 import com.ssafy.auction_service.domain.auctionschedule.repository.AuctionScheduleRepository;
 import com.ssafy.auction_service.domain.variety.PlantCategory;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,11 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
     @MockBean
     private MemberServiceClient memberServiceClient;
 
+    @BeforeEach
+    void setUp() {
+        mockingMemberId();
+    }
+
     @DisplayName("같은 경매 일정이 존재하면 예외가 발생한다.")
     @Test
     void duplicatedAuctionSchedule() {
@@ -52,8 +58,6 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
             .auctionDescription("경매 예정입니다.")
             .auctionStartDateTime("2024-08-12T05:00")
             .build();
-
-        mockingMemberId();
 
         //when
         assertThatThrownBy(() -> auctionScheduleService.createAuctionSchedule(request, current))
@@ -77,8 +81,6 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
             .auctionDescription("경매 예정입니다.")
             .auctionStartDateTime("2024-08-12T05:00")
             .build();
-
-        mockingMemberId();
 
         //when
         AuctionScheduleCreateResponse response = auctionScheduleService.createAuctionSchedule(request, current);
@@ -146,7 +148,7 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
         assertThat(response).isNotNull()
             .hasFieldOrPropertyWithValue("id", auctionSchedule.getId())
             .hasFieldOrPropertyWithValue("auctionStatus", AuctionStatus.READY)
-            .hasFieldOrPropertyWithValue("modifyDateTime", current);
+            .hasFieldOrPropertyWithValue("modifiedDateTime", current);
 
         Optional<AuctionSchedule> findAuctionSchedule = auctionScheduleRepository.findById(auctionSchedule.getId());
         assertThat(findAuctionSchedule).isPresent()
@@ -206,7 +208,7 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
         assertThat(response).isNotNull()
             .hasFieldOrPropertyWithValue("id", auctionSchedule.getId())
             .hasFieldOrPropertyWithValue("auctionStatus", AuctionStatus.PROGRESS)
-            .hasFieldOrPropertyWithValue("modifyDateTime", current);
+            .hasFieldOrPropertyWithValue("modifiedDateTime", current);
 
         Optional<AuctionSchedule> findAuctionSchedule = auctionScheduleRepository.findById(auctionSchedule.getId());
         assertThat(findAuctionSchedule).isPresent()
@@ -266,7 +268,7 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
         assertThat(response).isNotNull()
             .hasFieldOrPropertyWithValue("id", auctionSchedule.getId())
             .hasFieldOrPropertyWithValue("auctionStatus", AuctionStatus.COMPLETE)
-            .hasFieldOrPropertyWithValue("modifyDateTime", current);
+            .hasFieldOrPropertyWithValue("modifiedDateTime", current);
 
         Optional<AuctionSchedule> findAuctionSchedule = auctionScheduleRepository.findById(auctionSchedule.getId());
         assertThat(findAuctionSchedule).isPresent()
