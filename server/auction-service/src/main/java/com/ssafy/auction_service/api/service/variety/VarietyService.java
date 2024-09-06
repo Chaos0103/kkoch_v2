@@ -27,7 +27,7 @@ public class VarietyService {
     private final MemberServiceClient memberServiceClient;
 
     public VarietyCreateResponse createVariety(VarietyCreateServiceRequest request) {
-        Optional<String> varietyCode = varietyRepository.findCodeByVariety(request.getPlantCategory(), request.getItemName(), request.getVarietyName());
+        Optional<String> varietyCode = varietyRepository.findCodeByVariety(request.getVarietyInfo());
         if (varietyCode.isPresent()) {
             throw new AppException("이미 등록된 품종입니다.");
         }
@@ -44,7 +44,7 @@ public class VarietyService {
     public VarietyModifyResponse modifyVariety(String varietyCode, String varietyName, LocalDateTime current) {
         Variety variety = findVarietyByCode(varietyCode);
 
-        Optional<String> code = varietyRepository.findCodeByVariety(variety.getPlantCategory(), variety.getItemName(), varietyName);
+        Optional<String> code = varietyRepository.findCodeByVariety(variety.getModifiedInfo(varietyName));
         if (code.isPresent()) {
             throw new AppException("이미 등록된 품종입니다.");
         }
@@ -66,7 +66,7 @@ public class VarietyService {
     }
 
     private String generateNextCode(PlantCategory plantCategory) {
-        int count = varietyRepository.countByPlantCategory(plantCategory);
+        int count = varietyRepository.countByInfoPlantCategory(plantCategory);
         return String.format("%s%04d", plantCategory.getPrefix(), count + 1);
     }
 }

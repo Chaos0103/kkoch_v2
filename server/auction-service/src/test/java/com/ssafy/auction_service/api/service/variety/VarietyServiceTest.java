@@ -10,6 +10,7 @@ import com.ssafy.auction_service.api.service.variety.response.VarietyModifyRespo
 import com.ssafy.auction_service.common.exception.AppException;
 import com.ssafy.auction_service.domain.variety.PlantCategory;
 import com.ssafy.auction_service.domain.variety.Variety;
+import com.ssafy.auction_service.domain.variety.VarietyInfo;
 import com.ssafy.auction_service.domain.variety.repository.VarietyRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -137,9 +138,13 @@ class VarietyServiceTest extends IntegrationTestSupport {
             .createdBy(1L)
             .lastModifiedBy(1L)
             .code(code)
-            .plantCategory(PlantCategory.CUT_FLOWERS)
-            .itemName("장미")
-            .varietyName(varietyName)
+            .info(
+                VarietyInfo.builder()
+                    .plantCategory(PlantCategory.CUT_FLOWERS)
+                    .itemName("장미")
+                    .varietyName(varietyName)
+                    .build()
+            )
             .build();
         return varietyRepository.save(variety);
     }

@@ -27,6 +27,6 @@ public class VarietyModifyResponse {
     }
 
     public static VarietyModifyResponse of(Variety variety, LocalDateTime current) {
-        return new VarietyModifyResponse(variety.getCode(), variety.getPlantCategoryDescription(), variety.getItemName(), variety.getVarietyName(), current);
+        return new VarietyModifyResponse(variety.getCode(), variety.getKoreanPlantCategory(), variety.getItemName(), variety.getVarietyName(), current);
     }
 }

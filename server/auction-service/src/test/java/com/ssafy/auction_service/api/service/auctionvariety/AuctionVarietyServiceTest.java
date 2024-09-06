@@ -18,6 +18,7 @@ import com.ssafy.auction_service.domain.auctionvariety.Price;
 import com.ssafy.auction_service.domain.auctionvariety.repository.AuctionVarietyRepository;
 import com.ssafy.auction_service.domain.variety.PlantCategory;
 import com.ssafy.auction_service.domain.variety.Variety;
+import com.ssafy.auction_service.domain.variety.VarietyInfo;
 import com.ssafy.auction_service.domain.variety.repository.VarietyRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -144,9 +145,13 @@ class AuctionVarietyServiceTest extends IntegrationTestSupport {
             .createdBy(1L)
             .lastModifiedBy(1L)
             .code("10000001")
-            .plantCategory(PlantCategory.CUT_FLOWERS)
-            .itemName("장미")
-            .varietyName("하트앤소울")
+            .info(
+                VarietyInfo.builder()
+                    .plantCategory(PlantCategory.CUT_FLOWERS)
+                    .itemName("장미")
+                    .varietyName("하트앤소울")
+                    .build()
+            )
             .build();
         return varietyRepository.save(variety);
     }

@@ -3,6 +3,7 @@ package com.ssafy.auction_service.domain.variety.repository;
 import com.ssafy.auction_service.IntegrationTestSupport;
 import com.ssafy.auction_service.domain.variety.PlantCategory;
 import com.ssafy.auction_service.domain.variety.Variety;
+import com.ssafy.auction_service.domain.variety.VarietyInfo;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,10 @@ class VarietyRepositoryTest extends IntegrationTestSupport {
     @Test
     void findCodeByVariety() {
         //given
-        createVariety();
+        Variety variety = createVariety();
 
         //when
-        Optional<String> varietyCode = varietyRepository.findCodeByVariety(PlantCategory.CUT_FLOWERS, "장미", "하트앤소울");
+        Optional<String> varietyCode = varietyRepository.findCodeByVariety(variety.getInfo());
 
         //then
         assertThat(varietyCode).isPresent();
@@ -36,7 +37,7 @@ class VarietyRepositoryTest extends IntegrationTestSupport {
         createVariety();
 
         //when
-        int count = varietyRepository.countByPlantCategory(PlantCategory.CUT_FLOWERS);
+        int count = varietyRepository.countByInfoPlantCategory(PlantCategory.CUT_FLOWERS);
 
         //then
         assertThat(count).isOne();
@@ -48,9 +49,13 @@ class VarietyRepositoryTest extends IntegrationTestSupport {
             .createdBy(1L)
             .lastModifiedBy(1L)
             .code("10000001")
-            .plantCategory(PlantCategory.CUT_FLOWERS)
-            .itemName("장미")
-            .varietyName("하트앤소울")
+            .info(
+                VarietyInfo.builder()
+                    .plantCategory(PlantCategory.CUT_FLOWERS)
+                    .itemName("장미")
+                    .varietyName("하트앤소울")
+                    .build()
+            )
             .build();
         return varietyRepository.save(variety);
     }
