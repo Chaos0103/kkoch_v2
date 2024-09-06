@@ -29,7 +29,7 @@ class AuctionVarietyApiControllerTest extends ControllerTestSupport {
             .build();
 
         mockMvc.perform(
-                post("/auction-service/auction-variety")
+                post("/auction-service/auction-varieties")
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -54,7 +54,7 @@ class AuctionVarietyApiControllerTest extends ControllerTestSupport {
             .build();
 
         mockMvc.perform(
-                post("/auction-service/auction-variety")
+                post("/auction-service/auction-varieties")
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -80,7 +80,7 @@ class AuctionVarietyApiControllerTest extends ControllerTestSupport {
             .build();
 
         mockMvc.perform(
-                post("/auction-service/auction-variety")
+                post("/auction-service/auction-varieties")
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -105,7 +105,7 @@ class AuctionVarietyApiControllerTest extends ControllerTestSupport {
             .build();
 
         mockMvc.perform(
-                post("/auction-service/auction-variety")
+                post("/auction-service/auction-varieties")
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -130,7 +130,7 @@ class AuctionVarietyApiControllerTest extends ControllerTestSupport {
             .build();
 
         mockMvc.perform(
-                post("/auction-service/auction-variety")
+                post("/auction-service/auction-varieties")
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -156,7 +156,7 @@ class AuctionVarietyApiControllerTest extends ControllerTestSupport {
             .build();
 
         mockMvc.perform(
-                post("/auction-service/auction-variety")
+                post("/auction-service/auction-varieties")
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -182,7 +182,7 @@ class AuctionVarietyApiControllerTest extends ControllerTestSupport {
             .build();
 
         mockMvc.perform(
-                post("/auction-service/auction-variety")
+                post("/auction-service/auction-varieties")
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -207,7 +207,7 @@ class AuctionVarietyApiControllerTest extends ControllerTestSupport {
             .build();
 
         mockMvc.perform(
-                post("/auction-service/auction-variety")
+                post("/auction-service/auction-varieties")
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
             )
