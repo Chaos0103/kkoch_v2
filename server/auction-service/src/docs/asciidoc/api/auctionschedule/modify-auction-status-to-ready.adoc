@@ -1,0 +1,13 @@
+[[modify-auction-status-to-ready]]
+=== 경매 준비 API
+
+==== HTTP Request
+
+include::{snippets}/modify-auction-status-to-ready/http-request.adoc[]
+include::{snippets}/modify-auction-status-to-ready/request-headers.adoc[]
+include::{snippets}/modify-auction-status-to-ready/path-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/modify-auction-status-to-ready/http-response.adoc[]
+include::{snippets}/modify-auction-status-to-ready/response-fields.adoc[]

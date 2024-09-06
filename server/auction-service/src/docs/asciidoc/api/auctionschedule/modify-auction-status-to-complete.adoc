@@ -1,0 +1,13 @@
+[[modify-auction-status-to-complete]]
+=== 경매 완료 API
+
+==== HTTP Request
+
+include::{snippets}/modify-auction-status-to-complete/http-request.adoc[]
+include::{snippets}/modify-auction-status-to-complete/request-headers.adoc[]
+include::{snippets}/modify-auction-status-to-complete/path-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/modify-auction-status-to-complete/http-response.adoc[]
+include::{snippets}/modify-auction-status-to-complete/response-fields.adoc[]

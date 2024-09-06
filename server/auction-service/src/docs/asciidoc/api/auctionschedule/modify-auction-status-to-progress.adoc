@@ -1,0 +1,13 @@
+[[modify-auction-status-to-progress]]
+=== 경매 진행 API
+
+==== HTTP Request
+
+include::{snippets}/modify-auction-status-to-progress/http-request.adoc[]
+include::{snippets}/modify-auction-status-to-progress/request-headers.adoc[]
+include::{snippets}/modify-auction-status-to-progress/path-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/modify-auction-status-to-progress/http-response.adoc[]
+include::{snippets}/modify-auction-status-to-progress/response-fields.adoc[]
