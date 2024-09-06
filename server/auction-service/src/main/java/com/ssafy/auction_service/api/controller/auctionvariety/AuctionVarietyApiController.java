@@ -19,6 +19,8 @@ public class AuctionVarietyApiController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<AuctionVarietyCreateResponse> createAuctionVariety(@Valid @RequestBody AuctionVarietyCreateRequest request) {
-        return null;
+        AuctionVarietyCreateResponse response = auctionVarietyService.createAuctionVariety(request.getVarietyCode(), request.getAuctionScheduleId(), request.toServiceRequest());
+
+        return ApiResponse.created(response);
     }
 }
