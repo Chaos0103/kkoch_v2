@@ -33,16 +33,28 @@ public class AuctionScheduleApiController {
 
     @PostMapping("/{auctionScheduleId}/ready")
     public ApiResponse<AuctionStatusModifyResponse> modifyAuctionStatusToReady(@PathVariable Integer auctionScheduleId) {
-        return null;
+        LocalDateTime current = getCurrentDateTime();
+
+        AuctionStatusModifyResponse response = auctionScheduleService.modifyAuctionStatusToReady(auctionScheduleId, current);
+
+        return ApiResponse.ok(response);
     }
 
     @PostMapping("/{auctionScheduleId}/progress")
     public ApiResponse<AuctionStatusModifyResponse> modifyAuctionStatusToProgress(@PathVariable Integer auctionScheduleId) {
-        return null;
+        LocalDateTime current = getCurrentDateTime();
+
+        AuctionStatusModifyResponse response = auctionScheduleService.modifyAuctionStatusToProgress(auctionScheduleId, current);
+
+        return ApiResponse.ok(response);
     }
 
     @PostMapping("/{auctionScheduleId}/complete")
     public ApiResponse<AuctionStatusModifyResponse> modifyAuctionStatusToComplete(@PathVariable Integer auctionScheduleId) {
-        return null;
+        LocalDateTime current = getCurrentDateTime();
+
+        AuctionStatusModifyResponse response = auctionScheduleService.modifyAuctionStatusToComplete(auctionScheduleId, current);
+
+        return ApiResponse.ok(response);
     }
 }
