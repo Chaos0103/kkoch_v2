@@ -75,6 +75,10 @@ public class AuctionScheduleApiController {
 
     @DeleteMapping("/{auctionScheduleId}")
     public ApiResponse<AuctionScheduleRemoveResponse> removeAuctionSchedule(@PathVariable Integer auctionScheduleId) {
-        return null;
+        LocalDateTime current = getCurrentDateTime();
+
+        AuctionScheduleRemoveResponse response = auctionScheduleService.removeAuctionSchedule(auctionScheduleId, current);
+
+        return ApiResponse.ok(response);
     }
 }
