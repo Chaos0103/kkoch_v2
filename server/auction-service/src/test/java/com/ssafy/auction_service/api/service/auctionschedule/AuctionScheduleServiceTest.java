@@ -5,7 +5,9 @@ import com.ssafy.auction_service.api.ApiResponse;
 import com.ssafy.auction_service.api.client.MemberServiceClient;
 import com.ssafy.auction_service.api.client.response.MemberIdResponse;
 import com.ssafy.auction_service.api.service.auctionschedule.request.AuctionScheduleCreateServiceRequest;
+import com.ssafy.auction_service.api.service.auctionschedule.request.AuctionScheduleModifyServiceRequest;
 import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionScheduleCreateResponse;
+import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionScheduleModifyResponse;
 import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionStatusModifyResponse;
 import com.ssafy.auction_service.common.exception.AppException;
 import com.ssafy.auction_service.domain.auctionschedule.AuctionInfo;
@@ -17,6 +19,8 @@ import com.ssafy.auction_service.domain.variety.PlantCategory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
@@ -50,7 +54,7 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
         //given
         LocalDateTime current = LocalDateTime.of(2024, 8, 2, 0, 0, 0);
 
-        createAuctionSchedule(AuctionStatus.INIT);
+        createAuctionSchedule(AuctionStatus.INIT, LocalDateTime.of(2024, 8, 12, 5, 0));
 
         AuctionScheduleCreateServiceRequest request = AuctionScheduleCreateServiceRequest.builder()
             .plantCategory(PlantCategory.CUT_FLOWERS)
@@ -96,12 +100,96 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
         assertThat(auctionSchedules).hasSize(1);
     }
 
+    @DisplayName("경매 일정 수정시 같은 경매 일정이 존재하면 예외가 발생한다.")
+    @Test
+    void duplicatedAuctionSchedule2() {
+        //given
+        LocalDateTime current = LocalDateTime.of(2024, 8, 15, 10, 0);
+        createAuctionSchedule(AuctionStatus.INIT, LocalDateTime.of(2024, 8, 12, 5, 0));
+
+        AuctionSchedule auctionSchedule = createAuctionSchedule(AuctionStatus.INIT, LocalDateTime.of(2024, 8, 11, 5, 0));
+
+        AuctionScheduleModifyServiceRequest request = AuctionScheduleModifyServiceRequest.builder()
+            .auctionStartDateTime(LocalDateTime.of(2024, 8, 12, 5, 0))
+            .auctionDescription("수정된 설명입니다.")
+            .build();
+
+        //when
+        assertThatThrownBy(() -> auctionScheduleService.modifyAuctionSchedule(auctionSchedule.getId(), request, current))
+            .isInstanceOf(AppException.class)
+            .hasMessage("이미 등록된 경매 일정이 있습니다.");
+
+        //then
+        Optional<AuctionSchedule> findAuctionSchedule = auctionScheduleRepository.findById(auctionSchedule.getId());
+        assertThat(findAuctionSchedule).isPresent()
+            .get()
+            .hasFieldOrPropertyWithValue("auctionInfo.auctionStartDateTime", LocalDateTime.of(2024, 8, 11, 5, 0))
+            .hasFieldOrPropertyWithValue("auctionDescription", "auction description");
+    }
+
+    @DisplayName("경매 일정 수정시 상태가 INIT이 아니라면 예외가 발생한다.")
+    @ValueSource(strings = {"READY", "PROGRESS", "COMPLETE"})
+    @ParameterizedTest
+    void impossibleModifyStatus(AuctionStatus auctionStatus) {
+        //given
+        LocalDateTime current = LocalDateTime.of(2024, 8, 15, 10, 0);
+        AuctionSchedule auctionSchedule = createAuctionSchedule(auctionStatus, LocalDateTime.of(2024, 8, 12, 5, 0));
+
+        AuctionScheduleModifyServiceRequest request = AuctionScheduleModifyServiceRequest.builder()
+            .auctionStartDateTime(LocalDateTime.of(2024, 9, 6, 10, 0))
+            .auctionDescription("수정된 설명입니다.")
+            .build();
+
+        //when
+        assertThatThrownBy(() -> auctionScheduleService.modifyAuctionSchedule(auctionSchedule.getId(), request, current))
+            .isInstanceOf(AppException.class)
+            .hasMessage("더이상 경매 일정을 수정할 수 없습니다.");
+
+        //then
+        Optional<AuctionSchedule> findAuctionSchedule = auctionScheduleRepository.findById(auctionSchedule.getId());
+        assertThat(findAuctionSchedule).isPresent()
+            .get()
+            .hasFieldOrPropertyWithValue("auctionInfo.auctionStartDateTime", LocalDateTime.of(2024, 8, 12, 5, 0))
+            .hasFieldOrPropertyWithValue("auctionDescription", "auction description");
+    }
+
+    @DisplayName("경매 시간과 경매 설명을 입력 받아 경매 일정을 수정한다.")
+    @Test
+    void modifyAuctionSchedule() {
+        //given
+        LocalDateTime current = LocalDateTime.of(2024, 8, 15, 10, 0);
+        AuctionSchedule auctionSchedule = createAuctionSchedule(AuctionStatus.INIT, LocalDateTime.of(2024, 8, 12, 5, 0));
+
+        AuctionScheduleModifyServiceRequest request = AuctionScheduleModifyServiceRequest.builder()
+            .auctionStartDateTime(LocalDateTime.of(2024, 9, 6, 10, 0))
+            .auctionDescription("수정된 설명입니다.")
+            .build();
+
+        //when
+        AuctionScheduleModifyResponse response = auctionScheduleService.modifyAuctionSchedule(auctionSchedule.getId(), request, current);
+
+        //then
+        assertThat(response).isNotNull()
+            .hasFieldOrPropertyWithValue("id", auctionSchedule.getId())
+            .hasFieldOrPropertyWithValue("plantCategory", "절화")
+            .hasFieldOrPropertyWithValue("jointMarket", "양재")
+            .hasFieldOrPropertyWithValue("auctionStartDateTime", LocalDateTime.of(2024, 9, 6, 10, 0))
+            .hasFieldOrPropertyWithValue("auctionStatus", AuctionStatus.INIT)
+            .hasFieldOrPropertyWithValue("modifiedDateTime", current);
+
+        Optional<AuctionSchedule> findAuctionSchedule = auctionScheduleRepository.findById(auctionSchedule.getId());
+        assertThat(findAuctionSchedule).isPresent()
+            .get()
+            .hasFieldOrPropertyWithValue("auctionInfo.auctionStartDateTime", LocalDateTime.of(2024, 9, 6, 10, 0))
+            .hasFieldOrPropertyWithValue("auctionDescription", "수정된 설명입니다.");
+    }
+
     @DisplayName("경매 상태를 READY로 변경시 경매 상태가 PROGRESS 라면 예외가 발생한다.")
     @Test
     void progressStatusToReady() {
         //given
         LocalDateTime current = LocalDateTime.of(2024, 8, 6, 7, 0);
-        AuctionSchedule auctionSchedule = createAuctionSchedule(AuctionStatus.PROGRESS);
+        AuctionSchedule auctionSchedule = createAuctionSchedule(AuctionStatus.PROGRESS, LocalDateTime.of(2024, 8, 12, 5, 0));
 
         //when
         assertThatThrownBy(() -> auctionScheduleService.modifyAuctionStatusToReady(auctionSchedule.getId(), current))
@@ -120,7 +208,7 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
     void completeStatusToReady() {
         //given
         LocalDateTime current = LocalDateTime.of(2024, 8, 6, 7, 0);
-        AuctionSchedule auctionSchedule = createAuctionSchedule(AuctionStatus.COMPLETE);
+        AuctionSchedule auctionSchedule = createAuctionSchedule(AuctionStatus.COMPLETE, LocalDateTime.of(2024, 8, 12, 5, 0));
 
         //when
         assertThatThrownBy(() -> auctionScheduleService.modifyAuctionStatusToReady(auctionSchedule.getId(), current))
@@ -139,7 +227,7 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
     void modifyAuctionStatusToReady() {
         //given
         LocalDateTime current = LocalDateTime.of(2024, 8, 6, 7, 0);
-        AuctionSchedule auctionSchedule = createAuctionSchedule(AuctionStatus.INIT);
+        AuctionSchedule auctionSchedule = createAuctionSchedule(AuctionStatus.INIT, LocalDateTime.of(2024, 8, 12, 5, 0));
 
         //when
         AuctionStatusModifyResponse response = auctionScheduleService.modifyAuctionStatusToReady(auctionSchedule.getId(), current);
@@ -161,7 +249,7 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
     void initStatusToProgress() {
         //given
         LocalDateTime current = LocalDateTime.of(2024, 8, 6, 7, 0);
-        AuctionSchedule auctionSchedule = createAuctionSchedule(AuctionStatus.INIT);
+        AuctionSchedule auctionSchedule = createAuctionSchedule(AuctionStatus.INIT, LocalDateTime.of(2024, 8, 12, 5, 0));
 
         //when
         assertThatThrownBy(() -> auctionScheduleService.modifyAuctionStatusToProgress(auctionSchedule.getId(), current))
@@ -180,7 +268,7 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
     void completeStatusToProgress() {
         //given
         LocalDateTime current = LocalDateTime.of(2024, 8, 6, 7, 0);
-        AuctionSchedule auctionSchedule = createAuctionSchedule(AuctionStatus.COMPLETE);
+        AuctionSchedule auctionSchedule = createAuctionSchedule(AuctionStatus.COMPLETE, LocalDateTime.of(2024, 8, 12, 5, 0));
 
         //when
         assertThatThrownBy(() -> auctionScheduleService.modifyAuctionStatusToProgress(auctionSchedule.getId(), current))
@@ -199,7 +287,7 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
     void modifyAuctionStatusToProgress() {
         //given
         LocalDateTime current = LocalDateTime.of(2024, 8, 6, 7, 0);
-        AuctionSchedule auctionSchedule = createAuctionSchedule(AuctionStatus.READY);
+        AuctionSchedule auctionSchedule = createAuctionSchedule(AuctionStatus.READY, LocalDateTime.of(2024, 8, 12, 5, 0));
 
         //when
         AuctionStatusModifyResponse response = auctionScheduleService.modifyAuctionStatusToProgress(auctionSchedule.getId(), current);
@@ -221,7 +309,7 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
     void initStatusToComplete() {
         //given
         LocalDateTime current = LocalDateTime.of(2024, 8, 6, 7, 0);
-        AuctionSchedule auctionSchedule = createAuctionSchedule(AuctionStatus.INIT);
+        AuctionSchedule auctionSchedule = createAuctionSchedule(AuctionStatus.INIT, LocalDateTime.of(2024, 8, 12, 5, 0));
 
         //when
         assertThatThrownBy(() -> auctionScheduleService.modifyAuctionStatusToComplete(auctionSchedule.getId(), current))
@@ -240,7 +328,7 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
     void readyStatusToComplete() {
         //given
         LocalDateTime current = LocalDateTime.of(2024, 8, 6, 7, 0);
-        AuctionSchedule auctionSchedule = createAuctionSchedule(AuctionStatus.READY);
+        AuctionSchedule auctionSchedule = createAuctionSchedule(AuctionStatus.READY, LocalDateTime.of(2024, 8, 12, 5, 0));
 
         //when
         assertThatThrownBy(() -> auctionScheduleService.modifyAuctionStatusToComplete(auctionSchedule.getId(), current))
@@ -259,7 +347,7 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
     void modifyAuctionStatusToComplete() {
         //given
         LocalDateTime current = LocalDateTime.of(2024, 8, 6, 7, 0);
-        AuctionSchedule auctionSchedule = createAuctionSchedule(AuctionStatus.PROGRESS);
+        AuctionSchedule auctionSchedule = createAuctionSchedule(AuctionStatus.PROGRESS, LocalDateTime.of(2024, 8, 12, 5, 0));
 
         //when
         AuctionStatusModifyResponse response = auctionScheduleService.modifyAuctionStatusToComplete(auctionSchedule.getId(), current);
@@ -276,23 +364,23 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
             .hasFieldOrPropertyWithValue("auctionStatus", AuctionStatus.COMPLETE);
     }
 
-    private AuctionSchedule createAuctionSchedule(AuctionStatus auctionStatus) {
+    private AuctionSchedule createAuctionSchedule(AuctionStatus auctionStatus, LocalDateTime auctionStartDateTime) {
         AuctionSchedule auctionSchedule = AuctionSchedule.builder()
             .isDeleted(false)
             .createdBy(1L)
             .lastModifiedBy(1L)
-            .auctionInfo(createAuctionInfo())
+            .auctionInfo(createAuctionInfo(auctionStartDateTime))
             .auctionStatus(auctionStatus)
             .auctionDescription("auction description")
             .build();
         return auctionScheduleRepository.save(auctionSchedule);
     }
 
-    private AuctionInfo createAuctionInfo() {
+    private AuctionInfo createAuctionInfo(LocalDateTime auctionStartDateTime) {
         return AuctionInfo.builder()
             .plantCategory(PlantCategory.CUT_FLOWERS)
             .jointMarket(JointMarket.YANGJAE)
-            .auctionStartDateTime(LocalDateTime.of(2024, 8, 12, 5, 0))
+            .auctionStartDateTime(auctionStartDateTime)
             .build();
     }
 
