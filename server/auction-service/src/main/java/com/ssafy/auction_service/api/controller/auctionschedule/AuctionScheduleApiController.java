@@ -6,6 +6,7 @@ import com.ssafy.auction_service.api.controller.auctionschedule.request.AuctionS
 import com.ssafy.auction_service.api.service.auctionschedule.AuctionScheduleService;
 import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionScheduleCreateResponse;
 import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionScheduleModifyResponse;
+import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionScheduleRemoveResponse;
 import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionStatusModifyResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -70,5 +71,10 @@ public class AuctionScheduleApiController {
         AuctionStatusModifyResponse response = auctionScheduleService.modifyAuctionStatusToComplete(auctionScheduleId, current);
 
         return ApiResponse.ok(response);
+    }
+
+    @DeleteMapping("/{auctionScheduleId}")
+    public ApiResponse<AuctionScheduleRemoveResponse> removeAuctionSchedule(@PathVariable Integer auctionScheduleId) {
+        return null;
     }
 }

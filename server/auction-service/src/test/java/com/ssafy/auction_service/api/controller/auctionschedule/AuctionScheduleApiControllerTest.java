@@ -9,8 +9,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.http.MediaType;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -199,6 +198,16 @@ class AuctionScheduleApiControllerTest extends ControllerTestSupport {
     void modifyAuctionStatusToComplete() throws Exception {
         mockMvc.perform(
                 post("/auction-service/auction-schedules/{auctionScheduleId}/complete", 1)
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().isOk());
+    }
+
+    @DisplayName("경매 일정을 삭제한다.")
+    @Test
+    void removeAuctionSchedule() throws Exception {
+        mockMvc.perform(
+                delete("/auction-service/auction-schedules/{auctionScheduleId}", 1)
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk());
