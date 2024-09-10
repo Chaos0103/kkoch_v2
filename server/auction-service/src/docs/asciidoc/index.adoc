@@ -20,6 +20,7 @@ include::api/variety/create-variety.adoc[]
 == 경매 일정 API
 
 include::api/auctionschedule/create-auction-schedule.adoc[]
+include::api/auctionschedule/modify-auction-schedule.adoc[]
 include::api/auctionschedule/modify-auction-status-to-ready.adoc[]
 include::api/auctionschedule/modify-auction-status-to-progress.adoc[]
 include::api/auctionschedule/modify-auction-status-to-complete.adoc[]

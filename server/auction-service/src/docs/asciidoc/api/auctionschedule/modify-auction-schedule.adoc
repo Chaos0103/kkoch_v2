@@ -1,0 +1,14 @@
+[[modify-auction-schedule]]
+=== 경매 일정 수정 API
+
+==== HTTP Request
+
+include::{snippets}/modify-auction-schedule/http-request.adoc[]
+include::{snippets}/modify-auction-schedule/request-headers.adoc[]
+include::{snippets}/modify-auction-schedule/path-parameters.adoc[]
+include::{snippets}/modify-auction-schedule/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/modify-auction-schedule/http-response.adoc[]
+include::{snippets}/modify-auction-schedule/response-fields.adoc[]
