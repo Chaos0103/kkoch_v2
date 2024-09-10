@@ -54,7 +54,9 @@ public class AuctionScheduleService {
             throw new AppException("더이상 경매 일정을 수정할 수 없습니다.");
         }
 
-        request.modify(auctionSchedule);
+        Long memberId = getMemberId();
+
+        request.modify(auctionSchedule, memberId);
 
         return AuctionScheduleModifyResponse.of(auctionSchedule, current);
     }
@@ -114,7 +116,17 @@ public class AuctionScheduleService {
     }
 
     public AuctionScheduleRemoveResponse removeAuctionSchedule(int auctionScheduleId, LocalDateTime current) {
-        return null;
+        AuctionSchedule auctionSchedule = findAuctionScheduleById(auctionScheduleId);
+
+        if (auctionSchedule.isNotRemovable()) {
+            throw new AppException("경매 일정을 삭제할 수 없습니다.");
+        }
+
+        Long memberId = getMemberId();
+
+        auctionSchedule.remove(memberId);
+
+        return AuctionScheduleRemoveResponse.of(auctionSchedule, current);
     }
 
     private AuctionSchedule findAuctionScheduleById(int auctionScheduleId) {

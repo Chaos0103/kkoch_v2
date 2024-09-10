@@ -49,7 +49,8 @@ public class AuctionSchedule extends BaseEntity {
         return of(false, createdBy, createdBy, auctionInfo, AuctionStatus.INIT, auctionDescription);
     }
 
-    public void modify(LocalDateTime auctionStartDateTime, String auctionDescription) {
+    public void modify(Long memberId, LocalDateTime auctionStartDateTime, String auctionDescription) {
+        super.updateModifiedBy(memberId);
         auctionInfo = getModifiedAuctionInfo(auctionStartDateTime);
         this.auctionDescription = auctionDescription;
     }
@@ -64,6 +65,11 @@ public class AuctionSchedule extends BaseEntity {
 
     public void complete(Long memberId) {
         modifyAuctionStatus(memberId, AuctionStatus.COMPLETE);
+    }
+
+    @Override
+    public void remove(Long memberId) {
+        super.remove(memberId);
     }
 
     public boolean isInit() {
@@ -100,6 +106,14 @@ public class AuctionSchedule extends BaseEntity {
 
     public boolean isNotModifiable() {
         return !isModifiable();
+    }
+
+    public boolean isRemovable() {
+        return isInit();
+    }
+
+    public boolean isNotRemovable() {
+        return !isRemovable();
     }
 
     public String getPlantCategoryDescription() {

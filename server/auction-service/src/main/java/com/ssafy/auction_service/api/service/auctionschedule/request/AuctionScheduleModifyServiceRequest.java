@@ -22,8 +22,8 @@ public class AuctionScheduleModifyServiceRequest {
         return new AuctionScheduleModifyServiceRequest(TimeUtils.parse(auctionStartDateTime), auctionDescription);
     }
 
-    public void modify(AuctionSchedule auctionSchedule) {
-        auctionSchedule.modify(auctionStartDateTime, auctionDescription);
+    public void modify(AuctionSchedule auctionSchedule, Long memberId) {
+        auctionSchedule.modify(memberId, auctionStartDateTime, auctionDescription);
     }
 
     public AuctionInfo getAuctionInfo(AuctionSchedule auctionSchedule) {

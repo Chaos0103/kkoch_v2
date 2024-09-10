@@ -26,4 +26,9 @@ public abstract class BaseEntity extends TimeBaseEntity {
     protected void updateModifiedBy(Long modifiedBy) {
         this.lastModifiedBy = modifiedBy;
     }
+
+    protected void remove(Long modifiedBy) {
+        super.remove();
+        lastModifiedBy = modifiedBy;
+    }
 }

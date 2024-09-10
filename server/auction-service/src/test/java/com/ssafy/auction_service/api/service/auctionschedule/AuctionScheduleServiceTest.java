@@ -400,7 +400,7 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
             .hasFieldOrPropertyWithValue("id", auctionSchedule.getId())
             .hasFieldOrPropertyWithValue("plantCategory", "절화")
             .hasFieldOrPropertyWithValue("jointMarket", "양재")
-            .hasFieldOrPropertyWithValue("auctionStartDateTime", LocalDateTime.of(2024, 9, 6, 10, 0))
+            .hasFieldOrPropertyWithValue("auctionStartDateTime", LocalDateTime.of(2024, 8, 12, 5, 0))
             .hasFieldOrPropertyWithValue("auctionStatus", AuctionStatus.INIT)
             .hasFieldOrPropertyWithValue("removedDateTime", current);
 
