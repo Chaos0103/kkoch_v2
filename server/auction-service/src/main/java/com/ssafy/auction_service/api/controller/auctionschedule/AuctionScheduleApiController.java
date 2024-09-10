@@ -38,7 +38,11 @@ public class AuctionScheduleApiController {
         @PathVariable Integer auctionScheduleId,
         @Valid @RequestBody AuctionScheduleModifyRequest request
     ) {
-        return null;
+        LocalDateTime current = getCurrentDateTime();
+
+        AuctionScheduleModifyResponse response = auctionScheduleService.modifyAuctionSchedule(auctionScheduleId, request.toServiceRequest(), current);
+
+        return ApiResponse.ok(response);
     }
 
     @PostMapping("/{auctionScheduleId}/ready")
