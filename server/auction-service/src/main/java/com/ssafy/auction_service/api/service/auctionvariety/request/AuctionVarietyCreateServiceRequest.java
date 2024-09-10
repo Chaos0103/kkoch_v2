@@ -30,9 +30,9 @@ public class AuctionVarietyCreateServiceRequest {
         return new AuctionVarietyCreateServiceRequest(parsePlantGrade(plantGrade), plantCount, Price.of(auctionStartPrice), region, shipper);
     }
 
-    public AuctionVariety toEntity(Long memberId, AuctionSchedule auctionSchedule, Variety variety, String listingNumber) {
+    public AuctionVariety toEntity(AuctionSchedule auctionSchedule, Variety variety, String listingNumber) {
         AuctionPlant auctionPlant = AuctionPlant.of(plantGrade, plantCount, auctionStartPrice);
         Shipment shipment = Shipment.of(region, shipper);
-        return AuctionVariety.create(memberId, auctionSchedule, variety, listingNumber, auctionPlant, shipment);
+        return AuctionVariety.create(auctionSchedule, variety, listingNumber, auctionPlant, shipment);
     }
 }

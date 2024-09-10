@@ -29,8 +29,8 @@ public class VarietyCreateServiceRequest {
         return new VarietyCreateServiceRequest(PlantCategory.of(plantCategory), itemName, varietyName);
     }
 
-    public Variety toEntity(Long memberId, int equalPlantCategoryCount) {
-        return Variety.create(memberId, equalPlantCategoryCount, plantCategory, itemName, varietyName);
+    public Variety toEntity(int equalPlantCategoryCount) {
+        return Variety.create(equalPlantCategoryCount, plantCategory, itemName, varietyName);
     }
 
     public VarietyInfo getVarietyInfo() {

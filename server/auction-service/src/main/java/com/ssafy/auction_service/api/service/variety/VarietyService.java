@@ -1,8 +1,5 @@
 package com.ssafy.auction_service.api.service.variety;
 
-import com.ssafy.auction_service.api.ApiResponse;
-import com.ssafy.auction_service.api.client.MemberServiceClient;
-import com.ssafy.auction_service.api.client.response.MemberIdResponse;
 import com.ssafy.auction_service.api.service.variety.request.VarietyCreateServiceRequest;
 import com.ssafy.auction_service.api.service.variety.response.VarietyCreateResponse;
 import com.ssafy.auction_service.api.service.variety.response.VarietyModifyResponse;
@@ -23,7 +20,6 @@ import java.util.Optional;
 public class VarietyService {
 
     private final VarietyRepository varietyRepository;
-    private final MemberServiceClient memberServiceClient;
 
     public VarietyCreateResponse createVariety(VarietyCreateServiceRequest request) {
         Optional<String> varietyCode = varietyRepository.findCodeByVariety(request.getVarietyInfo());
@@ -31,11 +27,9 @@ public class VarietyService {
             throw new AppException("이미 등록된 품종입니다.");
         }
 
-        Long memberId = getMemberId();
-
         int count = varietyRepository.countByInfoPlantCategory(request.getPlantCategory());
 
-        Variety variety = request.toEntity(memberId, count);
+        Variety variety = request.toEntity(count);
         Variety savedVariety = varietyRepository.save(variety);
 
         return VarietyCreateResponse.of(savedVariety);
@@ -49,8 +43,7 @@ public class VarietyService {
             throw new AppException("이미 등록된 품종입니다.");
         }
 
-        Long memberId = getMemberId();
-        variety.modifyVarietyName(memberId, varietyName);
+        variety.modifyVarietyName(varietyName);
 
         return VarietyModifyResponse.of(variety, current);
     }
@@ -58,10 +51,5 @@ public class VarietyService {
     private Variety findVarietyByCode(String code) {
         return varietyRepository.findById(code)
             .orElseThrow(() -> new NoSuchElementException("등록되지 않은 품종입니다."));
-    }
-
-    private Long getMemberId() {
-        ApiResponse<MemberIdResponse> response = memberServiceClient.searchMemberId();
-        return response.getData().getMemberId();
     }
 }

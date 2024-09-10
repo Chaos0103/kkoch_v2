@@ -30,10 +30,10 @@ public class AuctionScheduleCreateServiceRequest {
         return new AuctionScheduleCreateServiceRequest(PlantCategory.of(plantCategory), JointMarket.of(jointMarket), auctionDescription, TimeUtils.parse(auctionStartDateTime));
     }
 
-    public AuctionSchedule toEntity(Long createdBy, LocalDateTime current) {
+    public AuctionSchedule toEntity(LocalDateTime current) {
         validateAuctionStartDateTime(auctionStartDateTime, current);
 
-        return AuctionSchedule.create(createdBy, plantCategory, jointMarket, auctionStartDateTime, auctionDescription);
+        return AuctionSchedule.create(plantCategory, jointMarket, auctionStartDateTime, auctionDescription);
     }
 
     public AuctionInfo getAuctionInfo() {

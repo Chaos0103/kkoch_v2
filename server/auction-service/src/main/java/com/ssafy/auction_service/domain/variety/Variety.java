@@ -33,15 +33,14 @@ public class Variety extends BaseEntity {
         return new Variety(isDeleted, createdBy, lastModifiedBy, code, info);
     }
 
-    public static Variety create(Long createdBy, int equalPlantCategoryCount, PlantCategory plantCategory, String itemName, String varietyName) {
+    public static Variety create(int equalPlantCategoryCount, PlantCategory plantCategory, String itemName, String varietyName) {
         String code = plantCategory.getNextCode(equalPlantCategoryCount);
 
         VarietyInfo info = VarietyInfo.of(plantCategory, itemName, varietyName);
-        return of(false, createdBy, createdBy, code, info);
+        return of(false, null, null, code, info);
     }
 
-    public void modifyVarietyName(Long memberId, String varietyName) {
-        updateModifiedBy(memberId);
+    public void modifyVarietyName(String varietyName) {
         info = info.withVarietyName(varietyName);
     }
 

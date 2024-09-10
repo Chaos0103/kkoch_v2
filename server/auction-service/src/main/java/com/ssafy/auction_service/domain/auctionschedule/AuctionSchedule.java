@@ -44,32 +44,31 @@ public class AuctionSchedule extends BaseEntity {
         return new AuctionSchedule(isDeleted, createdBy, lastModifiedBy, auctionInfo, auctionStatus, auctionDescription);
     }
 
-    public static AuctionSchedule create(Long createdBy, PlantCategory plantCategory, JointMarket jointMarket, LocalDateTime auctionStartDateTime, String auctionDescription) {
+    public static AuctionSchedule create(PlantCategory plantCategory, JointMarket jointMarket, LocalDateTime auctionStartDateTime, String auctionDescription) {
         AuctionInfo auctionInfo = AuctionInfo.of(plantCategory, jointMarket, auctionStartDateTime);
-        return of(false, createdBy, createdBy, auctionInfo, AuctionStatus.INIT, auctionDescription);
+        return of(false, null, null, auctionInfo, AuctionStatus.INIT, auctionDescription);
     }
 
-    public void modify(Long memberId, LocalDateTime auctionStartDateTime, String auctionDescription) {
-        super.updateModifiedBy(memberId);
+    public void modify(LocalDateTime auctionStartDateTime, String auctionDescription) {
         auctionInfo = getModifiedAuctionInfo(auctionStartDateTime);
         this.auctionDescription = auctionDescription;
     }
 
-    public void ready(Long memberId) {
-        modifyAuctionStatus(memberId, AuctionStatus.READY);
+    public void ready() {
+        modifyAuctionStatus(AuctionStatus.READY);
     }
 
-    public void progress(Long memberId) {
-        modifyAuctionStatus(memberId, AuctionStatus.PROGRESS);
+    public void progress() {
+        modifyAuctionStatus(AuctionStatus.PROGRESS);
     }
 
-    public void complete(Long memberId) {
-        modifyAuctionStatus(memberId, AuctionStatus.COMPLETE);
+    public void complete() {
+        modifyAuctionStatus(AuctionStatus.COMPLETE);
     }
 
     @Override
-    public void remove(Long memberId) {
-        super.remove(memberId);
+    public void remove() {
+        super.remove();
     }
 
     public boolean isInit() {
@@ -128,8 +127,7 @@ public class AuctionSchedule extends BaseEntity {
         return auctionInfo.withAuctionStartDateTime(auctionStartDateTime);
     }
 
-    private void modifyAuctionStatus(Long memberId, AuctionStatus auctionStatus) {
-        updateModifiedBy(memberId);
+    private void modifyAuctionStatus(AuctionStatus auctionStatus) {
         this.auctionStatus = auctionStatus;
     }
 }

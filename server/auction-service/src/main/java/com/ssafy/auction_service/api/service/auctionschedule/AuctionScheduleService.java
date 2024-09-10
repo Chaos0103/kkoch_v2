@@ -1,8 +1,5 @@
 package com.ssafy.auction_service.api.service.auctionschedule;
 
-import com.ssafy.auction_service.api.ApiResponse;
-import com.ssafy.auction_service.api.client.MemberServiceClient;
-import com.ssafy.auction_service.api.client.response.MemberIdResponse;
 import com.ssafy.auction_service.api.service.auctionschedule.request.AuctionScheduleCreateServiceRequest;
 import com.ssafy.auction_service.api.service.auctionschedule.request.AuctionScheduleModifyServiceRequest;
 import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionScheduleCreateResponse;
@@ -37,14 +34,11 @@ public class AuctionScheduleService {
     private static final String DUPLICATE_AUCTION_SCHEDULE = "이미 등록된 경매 일정이 있습니다.";
 
     private final AuctionScheduleRepository auctionScheduleRepository;
-    private final MemberServiceClient memberServiceClient;
 
     public AuctionScheduleCreateResponse createAuctionSchedule(AuctionScheduleCreateServiceRequest request, LocalDateTime current) {
         checkDuplicateAuctionSchedule(request.getAuctionInfo());
 
-        Long memberId = getMemberId();
-
-        AuctionSchedule auctionSchedule = request.toEntity(memberId, current);
+        AuctionSchedule auctionSchedule = request.toEntity(current);
         AuctionSchedule savedAuctionSchedule = auctionScheduleRepository.save(auctionSchedule);
 
         return AuctionScheduleCreateResponse.of(savedAuctionSchedule);
@@ -59,9 +53,7 @@ public class AuctionScheduleService {
             throw new AppException(NOT_MODIFIABLE_AUCTION_SCHEDULE);
         }
 
-        Long memberId = getMemberId();
-
-        request.modify(auctionSchedule, memberId);
+        request.modify(auctionSchedule);
 
         return AuctionScheduleModifyResponse.of(auctionSchedule, current);
     }
@@ -77,9 +69,7 @@ public class AuctionScheduleService {
             throw new AppException(IS_COMPLETE_AUCTION_SCHEDULE);
         }
 
-        Long memberId = getMemberId();
-
-        auctionSchedule.ready(memberId);
+        auctionSchedule.ready();
 
         return AuctionStatusModifyResponse.of(auctionSchedule, current);
     }
@@ -95,9 +85,7 @@ public class AuctionScheduleService {
             throw new AppException(IS_COMPLETE_AUCTION_SCHEDULE);
         }
 
-        Long memberId = getMemberId();
-
-        auctionSchedule.progress(memberId);
+        auctionSchedule.progress();
 
         return AuctionStatusModifyResponse.of(auctionSchedule, current);
     }
@@ -113,9 +101,7 @@ public class AuctionScheduleService {
             throw new AppException(IS_NOT_PROGRESS_AUCTION_SCHEDULE);
         }
 
-        Long memberId = getMemberId();
-
-        auctionSchedule.complete(memberId);
+        auctionSchedule.complete();
 
         return AuctionStatusModifyResponse.of(auctionSchedule, current);
     }
@@ -127,9 +113,7 @@ public class AuctionScheduleService {
             throw new AppException(NOT_REMOVABLE_AUCTION_SCHEDULE);
         }
 
-        Long memberId = getMemberId();
-
-        auctionSchedule.remove(memberId);
+        auctionSchedule.remove();
 
         return AuctionScheduleRemoveResponse.of(auctionSchedule, current);
     }
@@ -144,10 +128,5 @@ public class AuctionScheduleService {
         if (auctionScheduleId.isPresent()) {
             throw new AppException(DUPLICATE_AUCTION_SCHEDULE);
         }
-    }
-
-    private Long getMemberId() {
-        ApiResponse<MemberIdResponse> response = memberServiceClient.searchMemberId();
-        return response.getData().getMemberId();
     }
 }
