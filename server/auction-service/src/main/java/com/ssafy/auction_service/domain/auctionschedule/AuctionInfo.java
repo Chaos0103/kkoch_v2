@@ -38,4 +38,8 @@ public class AuctionInfo {
     public static AuctionInfo of(PlantCategory plantCategory, JointMarket jointMarket, LocalDateTime auctionStartDateTime) {
         return new AuctionInfo(plantCategory, jointMarket, auctionStartDateTime);
     }
+
+    public AuctionInfo withAuctionStartDateTime(LocalDateTime auctionStartDateTime) {
+        return of(plantCategory, jointMarket, auctionStartDateTime);
+    }
 }

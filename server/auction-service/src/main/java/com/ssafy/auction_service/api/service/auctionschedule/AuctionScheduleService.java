@@ -42,7 +42,20 @@ public class AuctionScheduleService {
     }
 
     public AuctionScheduleModifyResponse modifyAuctionSchedule(int auctionScheduleId, AuctionScheduleModifyServiceRequest request, LocalDateTime current) {
-        return null;
+        AuctionSchedule auctionSchedule = findAuctionScheduleById(auctionScheduleId);
+
+        Optional<Integer> findAuctionScheduleId = auctionScheduleRepository.findIdByAuction(request.getAuctionInfo(auctionSchedule));
+        if (findAuctionScheduleId.isPresent()) {
+            throw new AppException("이미 등록된 경매 일정이 있습니다.");
+        }
+
+        if (auctionSchedule.isNotModifiable()) {
+            throw new AppException("더이상 경매 일정을 수정할 수 없습니다.");
+        }
+
+        request.modify(auctionSchedule);
+
+        return AuctionScheduleModifyResponse.of(auctionSchedule, current);
     }
 
     public AuctionStatusModifyResponse modifyAuctionStatusToReady(int auctionScheduleId, LocalDateTime current) {

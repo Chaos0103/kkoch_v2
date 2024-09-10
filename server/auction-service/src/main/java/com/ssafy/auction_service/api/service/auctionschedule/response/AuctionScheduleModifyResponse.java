@@ -1,5 +1,6 @@
 package com.ssafy.auction_service.api.service.auctionschedule.response;
 
+import com.ssafy.auction_service.domain.auctionschedule.AuctionSchedule;
 import com.ssafy.auction_service.domain.auctionschedule.AuctionStatus;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,5 +27,16 @@ public class AuctionScheduleModifyResponse {
         this.auctionStartDateTime = auctionStartDateTime;
         this.auctionStatus = auctionStatus;
         this.modifiedDateTime = modifiedDateTime;
+    }
+
+    public static AuctionScheduleModifyResponse of(AuctionSchedule auctionSchedule, LocalDateTime current) {
+        return new AuctionScheduleModifyResponse(
+            auctionSchedule.getId(),
+            auctionSchedule.getPlantCategoryDescription(),
+            auctionSchedule.getKoreanJointMarket(),
+            auctionSchedule.getAuctionInfo().getAuctionStartDateTime(),
+            auctionSchedule.getAuctionStatus(),
+            current
+        );
     }
 }

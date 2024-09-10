@@ -49,6 +49,11 @@ public class AuctionSchedule extends BaseEntity {
         return of(false, createdBy, createdBy, auctionInfo, AuctionStatus.INIT, auctionDescription);
     }
 
+    public void modify(LocalDateTime auctionStartDateTime, String auctionDescription) {
+        auctionInfo = getModifiedAuctionInfo(auctionStartDateTime);
+        this.auctionDescription = auctionDescription;
+    }
+
     public void ready(Long memberId) {
         modifyAuctionStatus(memberId, AuctionStatus.READY);
     }
@@ -89,12 +94,24 @@ public class AuctionSchedule extends BaseEntity {
         return !isRegisteredVarietyBy(variety);
     }
 
+    public boolean isModifiable() {
+        return isInit();
+    }
+
+    public boolean isNotModifiable() {
+        return !isModifiable();
+    }
+
     public String getPlantCategoryDescription() {
         return auctionInfo.getPlantCategory().getDescription();
     }
 
     public String getKoreanJointMarket() {
         return auctionInfo.getJointMarket().getKorean();
+    }
+
+    public AuctionInfo getModifiedAuctionInfo(LocalDateTime auctionStartDateTime) {
+        return auctionInfo.withAuctionStartDateTime(auctionStartDateTime);
     }
 
     private void modifyAuctionStatus(Long memberId, AuctionStatus auctionStatus) {
