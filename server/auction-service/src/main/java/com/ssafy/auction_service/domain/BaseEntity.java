@@ -5,15 +5,19 @@ import jakarta.persistence.MappedSuperclass;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
 
 @MappedSuperclass
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class BaseEntity extends TimeBaseEntity {
 
+    @CreatedBy
     @Column(nullable = false, updatable = false)
     private Long createdBy;
 
+    @LastModifiedBy
     @Column(nullable = false)
     private Long lastModifiedBy;
 

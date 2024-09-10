@@ -59,5 +59,4 @@ class VarietyRepositoryTest extends IntegrationTestSupport {
             .build();
         return varietyRepository.save(variety);
     }
-
 }

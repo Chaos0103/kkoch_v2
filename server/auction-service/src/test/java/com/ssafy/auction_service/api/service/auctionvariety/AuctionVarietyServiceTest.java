@@ -1,9 +1,6 @@
 package com.ssafy.auction_service.api.service.auctionvariety;
 
 import com.ssafy.auction_service.IntegrationTestSupport;
-import com.ssafy.auction_service.api.ApiResponse;
-import com.ssafy.auction_service.api.client.MemberServiceClient;
-import com.ssafy.auction_service.api.client.response.MemberIdResponse;
 import com.ssafy.auction_service.api.service.auctionvariety.request.AuctionVarietyCreateServiceRequest;
 import com.ssafy.auction_service.api.service.auctionvariety.response.AuctionVarietyCreateResponse;
 import com.ssafy.auction_service.common.exception.AppException;
@@ -25,14 +22,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.BDDMockito.given;
 
 class AuctionVarietyServiceTest extends IntegrationTestSupport {
 
@@ -47,9 +42,6 @@ class AuctionVarietyServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private AuctionScheduleRepository auctionScheduleRepository;
-
-    @MockBean
-    private MemberServiceClient memberServiceClient;
 
     @DisplayName("경매 품종 등록시 경매 상태가 INIT 상태일 때 경매 품종을 등록할 수 있다.")
     @CsvSource({"READY", "PROGRESS", "COMPLETE"})
@@ -66,8 +58,6 @@ class AuctionVarietyServiceTest extends IntegrationTestSupport {
             .region("광주")
             .shipper("김출하")
             .build();
-
-        mockingMemberId();
 
         //when
         assertThatThrownBy(() -> auctionVarietyService.createAuctionVariety(variety.getCode(), auctionSchedule.getId(), request))
@@ -94,8 +84,6 @@ class AuctionVarietyServiceTest extends IntegrationTestSupport {
             .shipper("김출하")
             .build();
 
-        mockingMemberId();
-
         //when
         assertThatThrownBy(() -> auctionVarietyService.createAuctionVariety(variety.getCode(), auctionSchedule.getId(), request))
             .isInstanceOf(AppException.class)
@@ -120,8 +108,6 @@ class AuctionVarietyServiceTest extends IntegrationTestSupport {
             .region("광주")
             .shipper("김출하")
             .build();
-
-        mockingMemberId();
 
         //when
         AuctionVarietyCreateResponse response = auctionVarietyService.createAuctionVariety(variety.getCode(), auctionSchedule.getId(), request);
@@ -170,15 +156,5 @@ class AuctionVarietyServiceTest extends IntegrationTestSupport {
             .auctionDescription("경매 설명")
             .build();
         return auctionScheduleRepository.save(auctionSchedule);
-    }
-
-    private void mockingMemberId() {
-        MemberIdResponse memberId = MemberIdResponse.builder()
-            .memberId(1L)
-            .build();
-        ApiResponse<MemberIdResponse> apiResponse = ApiResponse.ok(memberId);
-
-        given(memberServiceClient.searchMemberId())
-            .willReturn(apiResponse);
     }
 }

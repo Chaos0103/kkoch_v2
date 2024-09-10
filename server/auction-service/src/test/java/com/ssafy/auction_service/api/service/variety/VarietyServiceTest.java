@@ -1,9 +1,6 @@
 package com.ssafy.auction_service.api.service.variety;
 
 import com.ssafy.auction_service.IntegrationTestSupport;
-import com.ssafy.auction_service.api.ApiResponse;
-import com.ssafy.auction_service.api.client.MemberServiceClient;
-import com.ssafy.auction_service.api.client.response.MemberIdResponse;
 import com.ssafy.auction_service.api.service.variety.request.VarietyCreateServiceRequest;
 import com.ssafy.auction_service.api.service.variety.response.VarietyCreateResponse;
 import com.ssafy.auction_service.api.service.variety.response.VarietyModifyResponse;
@@ -12,11 +9,9 @@ import com.ssafy.auction_service.domain.variety.PlantCategory;
 import com.ssafy.auction_service.domain.variety.Variety;
 import com.ssafy.auction_service.domain.variety.VarietyInfo;
 import com.ssafy.auction_service.domain.variety.repository.VarietyRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,7 +19,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.BDDMockito.given;
 
 class VarietyServiceTest extends IntegrationTestSupport {
 
@@ -33,14 +27,6 @@ class VarietyServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private VarietyRepository varietyRepository;
-
-    @MockBean
-    private MemberServiceClient memberServiceClient;
-
-    @BeforeEach
-    void setUp() {
-        mockingMemberId();
-    }
 
     @DisplayName("이미 등록된 품종이라면 예외가 발생한다.")
     @Test
@@ -147,15 +133,5 @@ class VarietyServiceTest extends IntegrationTestSupport {
             )
             .build();
         return varietyRepository.save(variety);
-    }
-
-    private void mockingMemberId() {
-        MemberIdResponse memberId = MemberIdResponse.builder()
-            .memberId(1L)
-            .build();
-        ApiResponse<MemberIdResponse> apiResponse = ApiResponse.ok(memberId);
-
-        given(memberServiceClient.searchMemberId())
-            .willReturn(apiResponse);
     }
 }

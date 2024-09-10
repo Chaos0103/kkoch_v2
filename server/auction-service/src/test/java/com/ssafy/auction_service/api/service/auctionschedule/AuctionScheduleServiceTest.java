@@ -1,9 +1,6 @@
 package com.ssafy.auction_service.api.service.auctionschedule;
 
 import com.ssafy.auction_service.IntegrationTestSupport;
-import com.ssafy.auction_service.api.ApiResponse;
-import com.ssafy.auction_service.api.client.MemberServiceClient;
-import com.ssafy.auction_service.api.client.response.MemberIdResponse;
 import com.ssafy.auction_service.api.service.auctionschedule.request.AuctionScheduleCreateServiceRequest;
 import com.ssafy.auction_service.api.service.auctionschedule.request.AuctionScheduleModifyServiceRequest;
 import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionScheduleCreateResponse;
@@ -17,13 +14,11 @@ import com.ssafy.auction_service.domain.auctionschedule.AuctionStatus;
 import com.ssafy.auction_service.domain.auctionschedule.JointMarket;
 import com.ssafy.auction_service.domain.auctionschedule.repository.AuctionScheduleRepository;
 import com.ssafy.auction_service.domain.variety.PlantCategory;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,7 +26,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.BDDMockito.given;
 
 class AuctionScheduleServiceTest extends IntegrationTestSupport {
 
@@ -40,14 +34,6 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private AuctionScheduleRepository auctionScheduleRepository;
-
-    @MockBean
-    private MemberServiceClient memberServiceClient;
-
-    @BeforeEach
-    void setUp() {
-        mockingMemberId();
-    }
 
     @DisplayName("같은 경매 일정이 존재하면 예외가 발생한다.")
     @Test
@@ -428,15 +414,5 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
             .jointMarket(JointMarket.YANGJAE)
             .auctionStartDateTime(auctionStartDateTime)
             .build();
-    }
-
-    private void mockingMemberId() {
-        MemberIdResponse memberId = MemberIdResponse.builder()
-            .memberId(1L)
-            .build();
-        ApiResponse<MemberIdResponse> apiResponse = ApiResponse.ok(memberId);
-
-        given(memberServiceClient.searchMemberId())
-            .willReturn(apiResponse);
     }
 }

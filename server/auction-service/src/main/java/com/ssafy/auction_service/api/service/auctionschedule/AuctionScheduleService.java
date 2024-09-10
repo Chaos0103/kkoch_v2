@@ -10,6 +10,7 @@ import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionSch
 import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionScheduleRemoveResponse;
 import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionStatusModifyResponse;
 import com.ssafy.auction_service.common.exception.AppException;
+import com.ssafy.auction_service.domain.auctionschedule.AuctionInfo;
 import com.ssafy.auction_service.domain.auctionschedule.AuctionSchedule;
 import com.ssafy.auction_service.domain.auctionschedule.repository.AuctionScheduleRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,19 +21,26 @@ import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import static com.ssafy.auction_service.domain.auctionschedule.repository.AuctionScheduleRepository.NO_SUCH_AUCTION_SCHEDULE;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class AuctionScheduleService {
 
+    private static final String NOT_MODIFIABLE_AUCTION_SCHEDULE = "더이상 경매 일정을 수정할 수 없습니다.";
+    private static final String NOT_REMOVABLE_AUCTION_SCHEDULE = "경매 일정을 삭제할 수 없습니다.";
+    private static final String IS_NOT_READY_AUCTION_SCHEDULE = "준비된 경매가 아닙니다.";
+    private static final String IS_PROGRESS_AUCTION_SCHEDULE = "진행중인 경매입니다.";
+    private static final String IS_NOT_PROGRESS_AUCTION_SCHEDULE = "진행중인 경매가 아닙니다.";
+    private static final String IS_COMPLETE_AUCTION_SCHEDULE = "완료된 경매입니다.";
+    private static final String DUPLICATE_AUCTION_SCHEDULE = "이미 등록된 경매 일정이 있습니다.";
+
     private final AuctionScheduleRepository auctionScheduleRepository;
     private final MemberServiceClient memberServiceClient;
 
     public AuctionScheduleCreateResponse createAuctionSchedule(AuctionScheduleCreateServiceRequest request, LocalDateTime current) {
-        Optional<Integer> auctionScheduleId = auctionScheduleRepository.findIdByAuction(request.getAuctionInfo());
-        if (auctionScheduleId.isPresent()) {
-            throw new AppException("이미 등록된 경매 일정이 있습니다.");
-        }
+        checkDuplicateAuctionSchedule(request.getAuctionInfo());
 
         Long memberId = getMemberId();
 
@@ -45,13 +53,10 @@ public class AuctionScheduleService {
     public AuctionScheduleModifyResponse modifyAuctionSchedule(int auctionScheduleId, AuctionScheduleModifyServiceRequest request, LocalDateTime current) {
         AuctionSchedule auctionSchedule = findAuctionScheduleById(auctionScheduleId);
 
-        Optional<Integer> findAuctionScheduleId = auctionScheduleRepository.findIdByAuction(request.getAuctionInfo(auctionSchedule));
-        if (findAuctionScheduleId.isPresent()) {
-            throw new AppException("이미 등록된 경매 일정이 있습니다.");
-        }
+        checkDuplicateAuctionSchedule(request.getAuctionInfo(auctionSchedule));
 
         if (auctionSchedule.isNotModifiable()) {
-            throw new AppException("더이상 경매 일정을 수정할 수 없습니다.");
+            throw new AppException(NOT_MODIFIABLE_AUCTION_SCHEDULE);
         }
 
         Long memberId = getMemberId();
@@ -65,11 +70,11 @@ public class AuctionScheduleService {
         AuctionSchedule auctionSchedule = findAuctionScheduleById(auctionScheduleId);
 
         if (auctionSchedule.isProgress()) {
-            throw new AppException("진행중인 경매입니다.");
+            throw new AppException(IS_PROGRESS_AUCTION_SCHEDULE);
         }
 
         if (auctionSchedule.isComplete()) {
-            throw new AppException("완료된 경매입니다.");
+            throw new AppException(IS_COMPLETE_AUCTION_SCHEDULE);
         }
 
         Long memberId = getMemberId();
@@ -83,11 +88,11 @@ public class AuctionScheduleService {
         AuctionSchedule auctionSchedule = findAuctionScheduleById(auctionScheduleId);
 
         if (auctionSchedule.isInit()) {
-            throw new AppException("준비된 경매가 아닙니다.");
+            throw new AppException(IS_NOT_READY_AUCTION_SCHEDULE);
         }
 
         if (auctionSchedule.isComplete()) {
-            throw new AppException("완료된 경매입니다.");
+            throw new AppException(IS_COMPLETE_AUCTION_SCHEDULE);
         }
 
         Long memberId = getMemberId();
@@ -101,11 +106,11 @@ public class AuctionScheduleService {
         AuctionSchedule auctionSchedule = findAuctionScheduleById(auctionScheduleId);
 
         if (auctionSchedule.isInit()) {
-            throw new AppException("진행중인 경매가 아닙니다.");
+            throw new AppException(IS_NOT_PROGRESS_AUCTION_SCHEDULE);
         }
 
         if (auctionSchedule.isReady()) {
-            throw new AppException("진행중인 경매가 아닙니다.");
+            throw new AppException(IS_NOT_PROGRESS_AUCTION_SCHEDULE);
         }
 
         Long memberId = getMemberId();
@@ -119,7 +124,7 @@ public class AuctionScheduleService {
         AuctionSchedule auctionSchedule = findAuctionScheduleById(auctionScheduleId);
 
         if (auctionSchedule.isNotRemovable()) {
-            throw new AppException("경매 일정을 삭제할 수 없습니다.");
+            throw new AppException(NOT_REMOVABLE_AUCTION_SCHEDULE);
         }
 
         Long memberId = getMemberId();
@@ -131,7 +136,14 @@ public class AuctionScheduleService {
 
     private AuctionSchedule findAuctionScheduleById(int auctionScheduleId) {
         return auctionScheduleRepository.findById(auctionScheduleId)
-            .orElseThrow(() -> new NoSuchElementException("등록되지 않은 경매 일정입니다."));
+            .orElseThrow(() -> new NoSuchElementException(NO_SUCH_AUCTION_SCHEDULE));
+    }
+
+    private void checkDuplicateAuctionSchedule(AuctionInfo request) {
+        Optional<Integer> auctionScheduleId = auctionScheduleRepository.findIdByAuction(request);
+        if (auctionScheduleId.isPresent()) {
+            throw new AppException(DUPLICATE_AUCTION_SCHEDULE);
+        }
     }
 
     private Long getMemberId() {
