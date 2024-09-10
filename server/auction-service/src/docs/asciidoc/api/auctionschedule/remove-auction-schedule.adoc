@@ -1,0 +1,13 @@
+[[remove-auction-schedule]]
+=== 경매 일정 삭제 API
+
+==== HTTP Request
+
+include::{snippets}/remove-auction-schedule/http-request.adoc[]
+include::{snippets}/remove-auction-schedule/request-headers.adoc[]
+include::{snippets}/remove-auction-schedule/path-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/remove-auction-schedule/http-response.adoc[]
+include::{snippets}/remove-auction-schedule/response-fields.adoc[]
