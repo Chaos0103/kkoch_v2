@@ -8,6 +8,7 @@ import com.ssafy.auction_service.api.service.auctionschedule.request.AuctionSche
 import com.ssafy.auction_service.api.service.auctionschedule.request.AuctionScheduleModifyServiceRequest;
 import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionScheduleCreateResponse;
 import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionScheduleModifyResponse;
+import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionScheduleRemoveResponse;
 import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionStatusModifyResponse;
 import com.ssafy.auction_service.common.exception.AppException;
 import com.ssafy.auction_service.domain.auctionschedule.AuctionInfo;
@@ -362,6 +363,51 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
         assertThat(findAuctionSchedule).isPresent()
             .get()
             .hasFieldOrPropertyWithValue("auctionStatus", AuctionStatus.COMPLETE);
+    }
+
+    @DisplayName("경매 일정 삭제시 상태가 INIT이 아니라면 예외가 발생한다.")
+    @ValueSource(strings = {"READY", "PROGRESS", "COMPLETE"})
+    @ParameterizedTest
+    void impossibleRemoveStatus(AuctionStatus status) {
+        //given
+        LocalDateTime current = LocalDateTime.of(2024, 8, 6, 7, 0);
+        AuctionSchedule auctionSchedule = createAuctionSchedule(status, LocalDateTime.of(2024, 8, 12, 5, 0));
+
+        //when
+        assertThatThrownBy(() -> auctionScheduleService.removeAuctionSchedule(auctionSchedule.getId(), current))
+            .isInstanceOf(AppException.class)
+            .hasMessage("경매 일정을 삭제할 수 없습니다.");
+
+        //then
+        Optional<AuctionSchedule> findAuctionSchedule = auctionScheduleRepository.findById(auctionSchedule.getId());
+        assertThat(findAuctionSchedule).isPresent()
+            .get()
+            .hasFieldOrPropertyWithValue("isDeleted", false);
+    }
+
+    @DisplayName("경매 일정을 삭제한다.")
+    @Test
+    void removeAuctionSchedule() {
+        //given
+        LocalDateTime current = LocalDateTime.of(2024, 8, 6, 7, 0);
+        AuctionSchedule auctionSchedule = createAuctionSchedule(AuctionStatus.INIT, LocalDateTime.of(2024, 8, 12, 5, 0));
+
+        //when
+        AuctionScheduleRemoveResponse response = auctionScheduleService.removeAuctionSchedule(auctionSchedule.getId(), current);
+
+        //then
+        assertThat(response).isNotNull()
+            .hasFieldOrPropertyWithValue("id", auctionSchedule.getId())
+            .hasFieldOrPropertyWithValue("plantCategory", "절화")
+            .hasFieldOrPropertyWithValue("jointMarket", "양재")
+            .hasFieldOrPropertyWithValue("auctionStartDateTime", LocalDateTime.of(2024, 9, 6, 10, 0))
+            .hasFieldOrPropertyWithValue("auctionStatus", AuctionStatus.INIT)
+            .hasFieldOrPropertyWithValue("removedDateTime", current);
+
+        Optional<AuctionSchedule> findAuctionSchedule = auctionScheduleRepository.findById(auctionSchedule.getId());
+        assertThat(findAuctionSchedule).isPresent()
+            .get()
+            .hasFieldOrPropertyWithValue("isDeleted", true);
     }
 
     private AuctionSchedule createAuctionSchedule(AuctionStatus auctionStatus, LocalDateTime auctionStartDateTime) {

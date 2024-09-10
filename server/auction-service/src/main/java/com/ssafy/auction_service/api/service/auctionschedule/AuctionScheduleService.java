@@ -7,6 +7,7 @@ import com.ssafy.auction_service.api.service.auctionschedule.request.AuctionSche
 import com.ssafy.auction_service.api.service.auctionschedule.request.AuctionScheduleModifyServiceRequest;
 import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionScheduleCreateResponse;
 import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionScheduleModifyResponse;
+import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionScheduleRemoveResponse;
 import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionStatusModifyResponse;
 import com.ssafy.auction_service.common.exception.AppException;
 import com.ssafy.auction_service.domain.auctionschedule.AuctionSchedule;
@@ -110,6 +111,10 @@ public class AuctionScheduleService {
         auctionSchedule.complete(memberId);
 
         return AuctionStatusModifyResponse.of(auctionSchedule, current);
+    }
+
+    public AuctionScheduleRemoveResponse removeAuctionSchedule(int auctionScheduleId, LocalDateTime current) {
+        return null;
     }
 
     private AuctionSchedule findAuctionScheduleById(int auctionScheduleId) {
