@@ -6,6 +6,7 @@ import com.ssafy.auction_service.api.controller.auctionschedule.request.AuctionS
 import com.ssafy.auction_service.api.service.auctionschedule.AuctionScheduleService;
 import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionScheduleCreateResponse;
 import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionScheduleModifyResponse;
+import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionScheduleRemoveResponse;
 import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionStatusModifyResponse;
 import com.ssafy.auction_service.docs.RestDocsSupport;
 import com.ssafy.auction_service.domain.auctionschedule.AuctionStatus;
@@ -26,8 +27,7 @@ import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -328,6 +328,63 @@ class AuctionScheduleApiControllerDocsTest extends RestDocsSupport {
                         .description("경매 상태"),
                     fieldWithPath("data.modifiedDateTime").type(JsonFieldType.ARRAY)
                         .description("경매 상태 수정일시")
+                )
+            ));
+    }
+
+    @DisplayName("경매 일정 삭제 API")
+    @Test
+    void removeAuctionSchedule() throws Exception {
+        AuctionScheduleRemoveResponse response = AuctionScheduleRemoveResponse.builder()
+            .id(1)
+            .plantCategory(PlantCategory.CUT_FLOWERS.getDescription())
+            .jointMarket(JointMarket.YANGJAE.getKorean())
+            .auctionStartDateTime(LocalDateTime.of(2024, 7, 15, 5, 0))
+            .auctionStatus(AuctionStatus.INIT)
+            .removedDateTime(LocalDateTime.now())
+            .build();
+
+        given(auctionScheduleService.removeAuctionSchedule(anyInt(), any()))
+            .willReturn(response);
+
+        mockMvc.perform(
+                delete("/auction-service/auction-schedules/{auctionScheduleId}", 1)
+                    .header(HttpHeaders.AUTHORIZATION, "issued.access.token")
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andDo(document("remove-auction-schedule",
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName(HttpHeaders.AUTHORIZATION)
+                        .description("회원 토큰")
+                ),
+                pathParameters(
+                    parameterWithName("auctionScheduleId")
+                        .description("경매 일정 ID")
+                ),
+                responseFields(
+                    fieldWithPath("code").type(JsonFieldType.NUMBER)
+                        .description("코드"),
+                    fieldWithPath("status").type(JsonFieldType.STRING)
+                        .description("상태"),
+                    fieldWithPath("message").type(JsonFieldType.STRING)
+                        .description("메시지"),
+                    fieldWithPath("data").type(JsonFieldType.OBJECT)
+                        .description("응답 데이터"),
+                    fieldWithPath("data.id").type(JsonFieldType.NUMBER)
+                        .description("경매 일정 ID"),
+                    fieldWithPath("data.plantCategory").type(JsonFieldType.STRING)
+                        .description("화훼부류"),
+                    fieldWithPath("data.jointMarket").type(JsonFieldType.STRING)
+                        .description("공판장"),
+                    fieldWithPath("data.auctionStartDateTime").type(JsonFieldType.ARRAY)
+                        .description("경매 시작일시"),
+                    fieldWithPath("data.auctionStatus").type(JsonFieldType.STRING)
+                        .description("경매 상태"),
+                    fieldWithPath("data.removedDateTime").type(JsonFieldType.ARRAY)
+                        .description("경매 일정 삭제일시")
                 )
             ));
     }
