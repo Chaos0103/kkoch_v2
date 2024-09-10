@@ -2,8 +2,10 @@ package com.ssafy.auction_service.api.controller.auctionschedule;
 
 import com.ssafy.auction_service.api.ApiResponse;
 import com.ssafy.auction_service.api.controller.auctionschedule.request.AuctionScheduleCreateRequest;
+import com.ssafy.auction_service.api.controller.auctionschedule.request.AuctionScheduleModifyRequest;
 import com.ssafy.auction_service.api.service.auctionschedule.AuctionScheduleService;
 import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionScheduleCreateResponse;
+import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionScheduleModifyResponse;
 import com.ssafy.auction_service.api.service.auctionschedule.response.AuctionStatusModifyResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,14 @@ public class AuctionScheduleApiController {
         AuctionScheduleCreateResponse response = auctionScheduleService.createAuctionSchedule(request.toServiceRequest(), current);
 
         return ApiResponse.created(response);
+    }
+
+    @PatchMapping("/{auctionScheduleId}")
+    public ApiResponse<AuctionScheduleModifyResponse> modifyAuctionSchedule(
+        @PathVariable Integer auctionScheduleId,
+        @Valid @RequestBody AuctionScheduleModifyRequest request
+    ) {
+        return null;
     }
 
     @PostMapping("/{auctionScheduleId}/ready")

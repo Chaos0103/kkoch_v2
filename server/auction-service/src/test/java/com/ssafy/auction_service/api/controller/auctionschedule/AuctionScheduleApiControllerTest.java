@@ -2,12 +2,14 @@ package com.ssafy.auction_service.api.controller.auctionschedule;
 
 import com.ssafy.auction_service.ControllerTestSupport;
 import com.ssafy.auction_service.api.controller.auctionschedule.request.AuctionScheduleCreateRequest;
+import com.ssafy.auction_service.api.controller.auctionschedule.request.AuctionScheduleModifyRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.http.MediaType;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -118,6 +120,58 @@ class AuctionScheduleApiControllerTest extends ControllerTestSupport {
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isCreated());
+    }
+
+    @DisplayName("경매 일정 수정시 경매 시작일시는 필수값이다.")
+    @Test
+    void modifyAuctionScheduleWithoutAuctionStartDateTime() throws Exception {
+        AuctionScheduleModifyRequest request = AuctionScheduleModifyRequest.builder()
+            .auctionStartDateTime(null)
+            .auctionDescription("경매를 진행할 예정입니다.")
+            .build();
+
+        mockMvc.perform(
+                patch("/auction-service/auction-schedules/{auctionScheduleId}", 1)
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.code").value("400"))
+            .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
+            .andExpect(jsonPath("$.message").value("경매 시작일시를 입력해주세요."))
+            .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @DisplayName("경매 일정 수정시 경매 설명은 필수값이 아니다.")
+    @Test
+    void modifyAuctionScheduleWithoutAuctionDescription() throws Exception {
+        AuctionScheduleModifyRequest request = AuctionScheduleModifyRequest.builder()
+            .auctionStartDateTime("2024-07-15T05:00")
+            .auctionDescription("경매를 진행할 예정입니다.")
+            .build();
+
+        mockMvc.perform(
+                patch("/auction-service/auction-schedules/{auctionScheduleId}", 1)
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().isOk());
+    }
+
+    @DisplayName("경매 일정을 수정한다.")
+    @Test
+    void modifyAuctionSchedule() throws Exception {
+        AuctionScheduleModifyRequest request = AuctionScheduleModifyRequest.builder()
+            .auctionStartDateTime("2024-07-15T05:00")
+            .auctionDescription("경매를 진행할 예정입니다.")
+            .build();
+
+        mockMvc.perform(
+                patch("/auction-service/auction-schedules/{auctionScheduleId}", 1)
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().isOk());
     }
 
     @DisplayName("경매 일정 상태를 READY로 수정한다.")
