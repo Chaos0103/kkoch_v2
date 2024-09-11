@@ -3,10 +3,12 @@ package com.ssafy.auction_service.api.controller.auctionschedule;
 import com.ssafy.auction_service.ControllerTestSupport;
 import com.ssafy.auction_service.api.controller.auctionschedule.request.AuctionScheduleCreateRequest;
 import com.ssafy.auction_service.api.controller.auctionschedule.request.AuctionScheduleModifyRequest;
+import com.ssafy.auction_service.common.util.TimeUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -14,6 +16,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class AuctionScheduleApiControllerTest extends ControllerTestSupport {
+
+    @MockBean
+    TimeUtils timeUtils;
 
     @DisplayName("경매 일정 등록시 화훼부류는 필수값이다.")
     @NullAndEmptySource

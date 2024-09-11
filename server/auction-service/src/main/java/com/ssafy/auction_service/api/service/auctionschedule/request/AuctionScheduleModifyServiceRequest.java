@@ -7,6 +7,8 @@ import lombok.Builder;
 
 import java.time.LocalDateTime;
 
+import static com.ssafy.auction_service.api.service.auctionschedule.AuctionScheduleUtils.validateAuctionStartDateTime;
+
 public class AuctionScheduleModifyServiceRequest {
 
     private final LocalDateTime auctionStartDateTime;
@@ -24,6 +26,10 @@ public class AuctionScheduleModifyServiceRequest {
 
     public void modify(AuctionSchedule auctionSchedule) {
         auctionSchedule.modify(auctionStartDateTime, auctionDescription);
+    }
+
+    public void checkAuctionStartDateTime(LocalDateTime current) {
+        validateAuctionStartDateTime(auctionStartDateTime, current);
     }
 
     public AuctionInfo getAuctionInfo(AuctionSchedule auctionSchedule) {

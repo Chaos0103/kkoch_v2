@@ -36,9 +36,10 @@ public class AuctionScheduleService {
     private final AuctionScheduleRepository auctionScheduleRepository;
 
     public AuctionScheduleCreateResponse createAuctionSchedule(AuctionScheduleCreateServiceRequest request, LocalDateTime current) {
+        request.checkAuctionStartDateTime(current);
         checkDuplicateAuctionSchedule(request.getAuctionInfo());
 
-        AuctionSchedule auctionSchedule = request.toEntity(current);
+        AuctionSchedule auctionSchedule = request.toEntity();
         AuctionSchedule savedAuctionSchedule = auctionScheduleRepository.save(auctionSchedule);
 
         return AuctionScheduleCreateResponse.of(savedAuctionSchedule);
@@ -47,6 +48,7 @@ public class AuctionScheduleService {
     public AuctionScheduleModifyResponse modifyAuctionSchedule(int auctionScheduleId, AuctionScheduleModifyServiceRequest request, LocalDateTime current) {
         AuctionSchedule auctionSchedule = findAuctionScheduleById(auctionScheduleId);
 
+        request.checkAuctionStartDateTime(current);
         checkDuplicateAuctionSchedule(request.getAuctionInfo(auctionSchedule));
 
         if (auctionSchedule.isNotModifiable()) {
