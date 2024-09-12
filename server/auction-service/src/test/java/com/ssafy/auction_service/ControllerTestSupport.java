@@ -2,8 +2,10 @@ package com.ssafy.auction_service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.auction_service.api.controller.auctionschedule.AuctionScheduleApiController;
+import com.ssafy.auction_service.api.controller.auctionschedule.AuctionScheduleApiQueryController;
 import com.ssafy.auction_service.api.controller.auctionvariety.AuctionVarietyApiController;
 import com.ssafy.auction_service.api.controller.variety.VarietyApiController;
+import com.ssafy.auction_service.api.service.auctionschedule.AuctionScheduleQueryService;
 import com.ssafy.auction_service.api.service.auctionschedule.AuctionScheduleService;
 import com.ssafy.auction_service.api.service.auctionvariety.AuctionVarietyService;
 import com.ssafy.auction_service.api.service.variety.VarietyService;
@@ -14,7 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = {
     VarietyApiController.class,
-    AuctionScheduleApiController.class,
+    AuctionScheduleApiController.class, AuctionScheduleApiQueryController.class,
     AuctionVarietyApiController.class
 })
 public abstract class ControllerTestSupport {
@@ -30,6 +32,9 @@ public abstract class ControllerTestSupport {
 
     @MockBean
     protected AuctionScheduleService auctionScheduleService;
+
+    @MockBean
+    protected AuctionScheduleQueryService auctionScheduleQueryService;
 
     @MockBean
     protected AuctionVarietyService auctionVarietyService;
