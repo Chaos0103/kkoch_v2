@@ -186,6 +186,7 @@ class AuctionScheduleQueryRepositoryTest extends IntegrationTestSupport {
             .isDeleted(false)
             .createdBy(1L)
             .lastModifiedBy(1L)
+            .code("10000001")
             .info(VarietyInfo.builder()
                 .plantCategory(PlantCategory.CUT_FLOWERS)
                 .itemName("장미")

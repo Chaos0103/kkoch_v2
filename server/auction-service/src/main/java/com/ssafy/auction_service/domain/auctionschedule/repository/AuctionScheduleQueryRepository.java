@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.ssafy.auction_service.domain.auctionschedule.QAuctionSchedule.auctionSchedule;
+import static com.ssafy.auction_service.domain.auctionvariety.QAuctionVariety.auctionVariety;
 
 @Repository
 public class AuctionScheduleQueryRepository {
@@ -50,7 +51,28 @@ public class AuctionScheduleQueryRepository {
     }
 
     public Optional<AuctionScheduleDetailResponse> findById(int id) {
-        return Optional.empty();
+        AuctionScheduleDetailResponse content = queryFactory
+            .select(
+                Projections.fields(
+                    AuctionScheduleDetailResponse.class,
+                    auctionSchedule.id,
+                    auctionSchedule.auctionInfo.plantCategory,
+                    auctionSchedule.auctionInfo.jointMarket,
+                    auctionSchedule.auctionInfo.auctionStartDateTime,
+                    auctionSchedule.auctionStatus,
+                    auctionSchedule.auctionDescription,
+                    auctionVariety.id.count().intValue().as("auctionVarietyCount")
+                )
+            )
+            .from(auctionVariety)
+            .join(auctionVariety.auctionSchedule, auctionSchedule)
+            .where(
+                auctionVariety.isDeleted.isFalse(),
+                auctionVariety.auctionSchedule.id.eq(id)
+            )
+            .groupBy(auctionVariety.auctionSchedule.id)
+            .fetchFirst();
+        return Optional.ofNullable(content);
     }
 
     private BooleanExpression eqPlantCategory(PlantCategory plantCategory) {
