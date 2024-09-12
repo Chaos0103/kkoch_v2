@@ -6,12 +6,14 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.auction_service.domain.auctionschedule.AuctionStatus;
 import com.ssafy.auction_service.domain.auctionschedule.JointMarket;
 import com.ssafy.auction_service.domain.auctionschedule.repository.dto.AuctionScheduleSearchCond;
+import com.ssafy.auction_service.domain.auctionschedule.repository.response.AuctionScheduleDetailResponse;
 import com.ssafy.auction_service.domain.auctionschedule.repository.response.AuctionScheduleResponse;
 import com.ssafy.auction_service.domain.variety.PlantCategory;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.ssafy.auction_service.domain.auctionschedule.QAuctionSchedule.auctionSchedule;
 
@@ -45,6 +47,10 @@ public class AuctionScheduleQueryRepository {
             )
             .orderBy(auctionSchedule.auctionInfo.auctionStartDateTime.desc())
             .fetch();
+    }
+
+    public Optional<AuctionScheduleDetailResponse> findById(int id) {
+        return Optional.empty();
     }
 
     private BooleanExpression eqPlantCategory(PlantCategory plantCategory) {
