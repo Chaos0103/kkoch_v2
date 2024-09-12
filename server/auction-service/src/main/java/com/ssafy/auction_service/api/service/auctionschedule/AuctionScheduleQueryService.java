@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+
+import static com.ssafy.auction_service.domain.auctionschedule.repository.AuctionScheduleRepository.NO_SUCH_AUCTION_SCHEDULE;
 
 @Service
 @Transactional(readOnly = true)
@@ -25,6 +28,7 @@ public class AuctionScheduleQueryService {
     }
 
     public AuctionScheduleDetailResponse searchAuctionSchedule(int auctionScheduleId) {
-        return null;
+        return auctionScheduleQueryRepository.findById(auctionScheduleId)
+            .orElseThrow(() -> new NoSuchElementException(NO_SUCH_AUCTION_SCHEDULE));
     }
 }
