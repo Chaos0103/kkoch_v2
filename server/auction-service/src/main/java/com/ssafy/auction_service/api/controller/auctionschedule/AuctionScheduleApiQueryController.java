@@ -4,12 +4,10 @@ import com.ssafy.auction_service.api.ApiResponse;
 import com.ssafy.auction_service.api.ListResponse;
 import com.ssafy.auction_service.api.controller.auctionschedule.param.AuctionScheduleSearchParam;
 import com.ssafy.auction_service.api.service.auctionschedule.AuctionScheduleQueryService;
+import com.ssafy.auction_service.domain.auctionschedule.repository.response.AuctionScheduleDetailResponse;
 import com.ssafy.auction_service.domain.auctionschedule.repository.response.AuctionScheduleResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,5 +21,10 @@ public class AuctionScheduleApiQueryController {
         ListResponse<AuctionScheduleResponse> response = auctionScheduleQueryService.searchAuctionSchedulesByCond(param.toCond());
 
         return ApiResponse.ok(response);
+    }
+
+    @GetMapping("/{auctionScheduleId}")
+    public ApiResponse<AuctionScheduleDetailResponse> searchAuctionSchedule(@PathVariable Integer auctionScheduleId) {
+        return null;
     }
 }

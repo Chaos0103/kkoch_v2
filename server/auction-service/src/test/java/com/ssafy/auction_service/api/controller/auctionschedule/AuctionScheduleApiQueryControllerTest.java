@@ -45,4 +45,13 @@ class AuctionScheduleApiQueryControllerTest extends ControllerTestSupport {
             )
             .andExpect(status().isOk());
     }
+
+    @DisplayName("경매 일정 상세 내용을 조회한다.")
+    @Test
+    void searchAuctionSchedule() throws Exception {
+        mockMvc.perform(
+                get("/auction-service/auction-schedules/{auctionScheduleId}", 1)
+            )
+            .andExpect(status().isOk());
+    }
 }
