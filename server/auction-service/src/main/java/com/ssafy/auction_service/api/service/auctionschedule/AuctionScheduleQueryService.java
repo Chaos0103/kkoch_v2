@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -16,6 +18,8 @@ public class AuctionScheduleQueryService {
     private final AuctionScheduleQueryRepository auctionScheduleQueryRepository;
 
     public ListResponse<AuctionScheduleResponse> searchAuctionSchedulesByCond(AuctionScheduleSearchCond cond) {
-        return null;
+        List<AuctionScheduleResponse> content = auctionScheduleQueryRepository.findByCond(cond);
+
+        return ListResponse.of(content);
     }
 }
