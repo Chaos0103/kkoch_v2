@@ -25,6 +25,8 @@ public class AuctionScheduleApiQueryController {
 
     @GetMapping("/{auctionScheduleId}")
     public ApiResponse<AuctionScheduleDetailResponse> searchAuctionSchedule(@PathVariable Integer auctionScheduleId) {
-        return null;
+        AuctionScheduleDetailResponse response = auctionScheduleQueryService.searchAuctionSchedule(auctionScheduleId);
+
+        return ApiResponse.ok(response);
     }
 }
