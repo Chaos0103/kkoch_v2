@@ -1,0 +1,13 @@
+[[search-auction-schedule]]
+=== 경매 일정 상세 조회 API
+
+==== HTTP Request
+
+include::{snippets}/search-auction-schedule/http-request.adoc[]
+include::{snippets}/search-auction-schedule/request-headers.adoc[]
+include::{snippets}/search-auction-schedule/path-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/search-auction-schedule/http-response.adoc[]
+include::{snippets}/search-auction-schedule/response-fields.adoc[]

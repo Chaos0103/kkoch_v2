@@ -1,5 +1,5 @@
 [[search-auction-schedules]]
-=== 경매 일정 목록 조 API
+=== 경매 일정 목록 조회 API
 
 ==== HTTP Request
 
