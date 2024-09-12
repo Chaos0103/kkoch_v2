@@ -5,6 +5,8 @@ import com.ssafy.auction_service.domain.variety.PlantCategory;
 import lombok.Builder;
 import lombok.Getter;
 
+import static org.springframework.util.StringUtils.hasText;
+
 @Getter
 public class AuctionScheduleSearchCond {
 
@@ -19,5 +21,17 @@ public class AuctionScheduleSearchCond {
 
     public static AuctionScheduleSearchCond of(PlantCategory plantCategory, JointMarket jointMarket) {
         return new AuctionScheduleSearchCond(plantCategory, jointMarket);
+    }
+
+    public static AuctionScheduleSearchCond of(String plantCategory, String jointMarket) {
+        return new AuctionScheduleSearchCond(parsePlantCategory(plantCategory), parseJointMarket(jointMarket));
+    }
+
+    private static PlantCategory parsePlantCategory(String plantCategory) {
+        return hasText(plantCategory) ? PlantCategory.of(plantCategory) : null;
+    }
+
+    private static JointMarket parseJointMarket(String jointMarket) {
+        return hasText(jointMarket) ? JointMarket.of(jointMarket) : null;
     }
 }

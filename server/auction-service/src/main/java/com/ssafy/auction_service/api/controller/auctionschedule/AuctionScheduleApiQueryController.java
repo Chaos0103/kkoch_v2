@@ -20,6 +20,8 @@ public class AuctionScheduleApiQueryController {
 
     @GetMapping
     public ApiResponse<ListResponse<AuctionScheduleResponse>> searchAuctionSchedules(@ModelAttribute AuctionScheduleSearchParam param) {
-        return null;
+        ListResponse<AuctionScheduleResponse> response = auctionScheduleQueryService.searchAuctionSchedulesByCond(param.toCond());
+
+        return ApiResponse.ok(response);
     }
 }
