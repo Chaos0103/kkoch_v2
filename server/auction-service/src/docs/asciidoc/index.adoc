@@ -25,6 +25,7 @@ include::api/auctionschedule/modify-auction-status-to-ready.adoc[]
 include::api/auctionschedule/modify-auction-status-to-progress.adoc[]
 include::api/auctionschedule/modify-auction-status-to-complete.adoc[]
 include::api/auctionschedule/remove-auction-schedule.adoc[]
+include::api/auctionschedule/search-auction-schedules.adoc[]
 
 [[Auction-Variety-API]]
 == 경매 품종 API
