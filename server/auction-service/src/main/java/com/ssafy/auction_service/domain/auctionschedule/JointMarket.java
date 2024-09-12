@@ -6,7 +6,8 @@ import lombok.Getter;
 @Getter
 public enum JointMarket {
 
-    YANGJAE("양재");
+    YANGJAE("양재"),
+    GWANGJU("광주");
 
     private final String korean;
 
