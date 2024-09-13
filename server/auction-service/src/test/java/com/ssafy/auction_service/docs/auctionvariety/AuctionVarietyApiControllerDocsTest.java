@@ -6,6 +6,7 @@ import com.ssafy.auction_service.api.controller.auctionvariety.request.AuctionVa
 import com.ssafy.auction_service.api.service.auctionvariety.AuctionVarietyService;
 import com.ssafy.auction_service.api.service.auctionvariety.response.AuctionVarietyCreateResponse;
 import com.ssafy.auction_service.api.service.auctionvariety.response.AuctionVarietyModifyResponse;
+import com.ssafy.auction_service.api.service.auctionvariety.response.AuctionVarietyRemoveResponse;
 import com.ssafy.auction_service.docs.RestDocsSupport;
 import com.ssafy.auction_service.domain.auctionvariety.PlantGrade;
 import org.junit.jupiter.api.DisplayName;
@@ -22,6 +23,7 @@ import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -193,6 +195,50 @@ class AuctionVarietyApiControllerDocsTest extends RestDocsSupport {
                         .description("화훼단수"),
                     fieldWithPath("data.auctionStartPrice").type(JsonFieldType.NUMBER)
                         .description("경매 시작가")
+                )
+            ));
+    }
+
+    @DisplayName("경매 품종 삭제 API")
+    @Test
+    void removeAuctionSchedule() throws Exception {
+        AuctionVarietyRemoveResponse response = AuctionVarietyRemoveResponse.builder()
+            .id(1L)
+            .listingNumber("00001")
+            .build();
+
+        given(auctionVarietyService.removeAuctionVariety(anyLong()))
+            .willReturn(response);
+
+        mockMvc.perform(
+                delete("/auction-service/auction-varieties/{auctionVarietyId}", 1)
+                    .header(HttpHeaders.AUTHORIZATION, "issued.access.token")
+            )
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andDo(document("remove-auction-variety",
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName(HttpHeaders.AUTHORIZATION)
+                        .description("회원 토큰")
+                ),
+                pathParameters(
+                    parameterWithName("auctionVarietyId")
+                        .description("경매 품종 ID")
+                ),
+                responseFields(
+                    fieldWithPath("code").type(JsonFieldType.NUMBER)
+                        .description("코드"),
+                    fieldWithPath("status").type(JsonFieldType.STRING)
+                        .description("상태"),
+                    fieldWithPath("message").type(JsonFieldType.STRING)
+                        .description("메시지"),
+                    fieldWithPath("data").type(JsonFieldType.OBJECT)
+                        .description("응답 데이터"),
+                    fieldWithPath("data.id").type(JsonFieldType.NUMBER)
+                        .description("경매 품종 ID"),
+                    fieldWithPath("data.listingNumber").type(JsonFieldType.STRING)
+                        .description("경매번호")
                 )
             ));
     }
