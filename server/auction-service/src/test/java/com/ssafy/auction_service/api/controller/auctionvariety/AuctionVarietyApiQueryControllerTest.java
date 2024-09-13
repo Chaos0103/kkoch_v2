@@ -13,7 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class AuctionVarietyApiQueryControllerTest extends ControllerTestSupport {
 
-    @DisplayName("공지사항 목록 조회시 페이지 번호가 양수가 아니라면 기본값으로 조회한다.")
+    @DisplayName("경매 품종 목록 조회시 페이지 번호가 양수가 아니라면 기본값으로 조회한다.")
     @ValueSource(strings = {"0", "-1", "a"})
     @NullAndEmptySource
     @ParameterizedTest
