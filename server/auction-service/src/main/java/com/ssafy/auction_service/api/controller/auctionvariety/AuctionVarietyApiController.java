@@ -28,6 +28,8 @@ public class AuctionVarietyApiController {
 
     @PatchMapping("/{auctionVarietyId}")
     public ApiResponse<AuctionVarietyModifyResponse> modifyAuctionVariety(@PathVariable Integer auctionVarietyId, @Valid @RequestBody AuctionVarietyModifyRequest request) {
-        return null;
+        AuctionVarietyModifyResponse response = auctionVarietyService.modifyAuctionVariety(auctionVarietyId, request.toServiceRequest());
+
+        return ApiResponse.ok(response);
     }
 }
