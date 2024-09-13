@@ -8,5 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AuctionVarietyRepository extends JpaRepository<AuctionVariety, Long> {
 
+    String NO_SUCH_AUCTION_VARIETY = "등록되지 않은 경매 품종입니다.";
+
     int countByAuctionSchedule(AuctionSchedule auctionSchedule);
 }

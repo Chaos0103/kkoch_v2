@@ -17,10 +17,19 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
 
+import static com.ssafy.auction_service.domain.auctionschedule.repository.AuctionScheduleRepository.NO_SUCH_AUCTION_SCHEDULE;
+import static com.ssafy.auction_service.domain.auctionvariety.repository.AuctionVarietyRepository.NO_SUCH_AUCTION_VARIETY;
+import static com.ssafy.auction_service.domain.variety.repository.VarietyRepository.NO_SUCH_VARIETY;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class AuctionVarietyService {
+
+    private static final String LISTING_NUMBER_FORMAT = "%05d";
+    private static final String UNABLE_TO_REGISTER_AUCTION_VARIETY = "경매 품종을 등록할 수 없습니다.";
+    private static final String UNABLE_TO_MODIFY_AUCTION_VARIETY = "경매 품종을 수정할 수 없습니다.";
+    private static final String UNABLE_TO_REGISTER_VARIETY_FOR_AUCTION_SCHEDULE = "해당 경매에 등록할 수 없는 품종입니다.";
 
     private final AuctionVarietyRepository auctionVarietyRepository;
     private final VarietyRepository varietyRepository;
@@ -32,11 +41,11 @@ public class AuctionVarietyService {
         AuctionSchedule auctionSchedule = findAuctionScheduleById(auctionScheduleId);
 
         if (auctionSchedule.isNotInit()) {
-            throw new AppException("경매 품종을 등록할 수 없습니다.");
+            throw new AppException(UNABLE_TO_REGISTER_AUCTION_VARIETY);
         }
 
         if (auctionSchedule.isNotRegisteredVarietyBy(variety)) {
-            throw new AppException("해당 경매에 등록할 수 없는 품종입니다.");
+            throw new AppException(UNABLE_TO_REGISTER_VARIETY_FOR_AUCTION_SCHEDULE);
         }
 
         String listingNumber = generateListingNumberBy(auctionSchedule);
@@ -48,11 +57,10 @@ public class AuctionVarietyService {
     }
 
     public AuctionVarietyModifyResponse modifyAuctionVariety(long auctionVarietyId, AuctionVarietyModifyServiceRequest request) {
-        AuctionVariety auctionVariety = auctionVarietyRepository.findById(auctionVarietyId)
-            .orElseThrow(() -> new NoSuchElementException("등록되지 않은 경매 품종입니다."));
+        AuctionVariety auctionVariety = findAuctionVarietyById(auctionVarietyId);
 
-        if (auctionVariety.getAuctionSchedule().isNotInit()) {
-            throw new AppException("경매 품종을 수정할 수 없습니다.");
+        if (auctionVariety.isNotModifiable()) {
+            throw new AppException(UNABLE_TO_MODIFY_AUCTION_VARIETY);
         }
 
         request.modify(auctionVariety);
@@ -62,17 +70,21 @@ public class AuctionVarietyService {
 
     private String generateListingNumberBy(AuctionSchedule auctionSchedule) {
         int count = auctionVarietyRepository.countByAuctionSchedule(auctionSchedule);
-        return String.format("%05d", count + 1);
+        return String.format(LISTING_NUMBER_FORMAT, count + 1);
     }
-
 
     private Variety findVarietyByCode(String varietyCode) {
         return varietyRepository.findById(varietyCode)
-            .orElseThrow(() -> new NoSuchElementException("등록되지 않은 품종입니다."));
+            .orElseThrow(() -> new NoSuchElementException(NO_SUCH_VARIETY));
     }
 
     private AuctionSchedule findAuctionScheduleById(int auctionScheduleId) {
         return auctionScheduleRepository.findById(auctionScheduleId)
-            .orElseThrow(() -> new NoSuchElementException("등록되지 않은 경매 일정입니다."));
+            .orElseThrow(() -> new NoSuchElementException(NO_SUCH_AUCTION_SCHEDULE));
+    }
+
+    private AuctionVariety findAuctionVarietyById(long auctionVarietyId) {
+        return auctionVarietyRepository.findById(auctionVarietyId)
+            .orElseThrow(() -> new NoSuchElementException(NO_SUCH_AUCTION_VARIETY));
     }
 }

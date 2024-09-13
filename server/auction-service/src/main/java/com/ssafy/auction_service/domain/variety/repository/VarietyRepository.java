@@ -12,6 +12,8 @@ import java.util.Optional;
 @Repository
 public interface VarietyRepository extends JpaRepository<Variety, String> {
 
+    String NO_SUCH_VARIETY = "등록되지 않은 품종입니다.";
+
     @Query("select v.code from Variety v where v.info=:info")
     Optional<String> findCodeByVariety(VarietyInfo info);
 
