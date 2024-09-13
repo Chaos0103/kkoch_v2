@@ -36,6 +36,8 @@ public class AuctionVarietyApiController {
 
     @DeleteMapping("/{auctionVarietyId}")
     public ApiResponse<AuctionVarietyRemoveResponse> removeAuctionVariety(@PathVariable Integer auctionVarietyId) {
-        return null;
+        AuctionVarietyRemoveResponse response = auctionVarietyService.removeAuctionVariety(auctionVarietyId);
+
+        return ApiResponse.ok(response);
     }
 }
