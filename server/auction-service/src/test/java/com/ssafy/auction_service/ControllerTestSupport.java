@@ -4,9 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.auction_service.api.controller.auctionschedule.AuctionScheduleApiController;
 import com.ssafy.auction_service.api.controller.auctionschedule.AuctionScheduleApiQueryController;
 import com.ssafy.auction_service.api.controller.auctionvariety.AuctionVarietyApiController;
+import com.ssafy.auction_service.api.controller.auctionvariety.AuctionVarietyApiQueryController;
 import com.ssafy.auction_service.api.controller.variety.VarietyApiController;
 import com.ssafy.auction_service.api.service.auctionschedule.AuctionScheduleQueryService;
 import com.ssafy.auction_service.api.service.auctionschedule.AuctionScheduleService;
+import com.ssafy.auction_service.api.service.auctionvariety.AuctionVarietyQueryService;
 import com.ssafy.auction_service.api.service.auctionvariety.AuctionVarietyService;
 import com.ssafy.auction_service.api.service.variety.VarietyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest(controllers = {
     VarietyApiController.class,
     AuctionScheduleApiController.class, AuctionScheduleApiQueryController.class,
-    AuctionVarietyApiController.class
+    AuctionVarietyApiController.class, AuctionVarietyApiQueryController.class
 })
 public abstract class ControllerTestSupport {
 
@@ -38,4 +40,7 @@ public abstract class ControllerTestSupport {
 
     @MockBean
     protected AuctionVarietyService auctionVarietyService;
+
+    @MockBean
+    protected AuctionVarietyQueryService auctionVarietyQueryService;
 }
