@@ -32,4 +32,4 @@ include::api/auctionschedule/search-auction-schedule.adoc[]
 == 경매 품종 API
 
 include::api/auctionvariety/create-auction-variety.adoc[]
-
+include::api/auctionvariety/modify-auction-variety.adoc[]
