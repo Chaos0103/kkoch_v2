@@ -52,6 +52,14 @@ public class AuctionVarietyQueryRepository {
     }
 
     public int countByAuctionScheduleId(int auctionScheduleId) {
-        return 0;
+        return queryFactory
+            .select(auctionVariety.id)
+            .from(auctionVariety)
+            .where(
+                auctionVariety.isDeleted.isFalse(),
+                auctionVariety.auctionSchedule.id.eq(auctionScheduleId)
+            )
+            .fetch()
+            .size();
     }
 }
