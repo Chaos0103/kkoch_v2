@@ -51,7 +51,16 @@ public class VarietyQueryRepository {
     }
 
     public int countByCond(VarietySearchCond cond) {
-        return 0;
+        return queryFactory
+            .select(variety.code)
+            .from(variety)
+            .where(
+                variety.isDeleted.isFalse(),
+                variety.info.plantCategory.eq(cond.getPlantCategory()),
+                eqItemName(cond.getItemName())
+            )
+            .fetch()
+            .size();
     }
 
     private BooleanExpression eqItemName(String itemName) {
