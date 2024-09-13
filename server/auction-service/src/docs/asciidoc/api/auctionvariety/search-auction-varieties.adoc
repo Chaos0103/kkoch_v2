@@ -1,0 +1,14 @@
+[[search-auction-varieties]]
+=== 경매 품종 목록 조회 API
+
+==== HTTP Request
+
+include::{snippets}/search-auction-varieties/http-request.adoc[]
+include::{snippets}/search-auction-varieties/path-parameters.adoc[]
+include::{snippets}/search-auction-varieties/request-headers.adoc[]
+include::{snippets}/search-auction-varieties/query-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/search-auction-varieties/http-response.adoc[]
+include::{snippets}/search-auction-varieties/response-fields.adoc[]

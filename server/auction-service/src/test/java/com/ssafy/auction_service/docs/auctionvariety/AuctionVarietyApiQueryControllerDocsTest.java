@@ -28,8 +28,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -85,6 +84,11 @@ class AuctionVarietyApiQueryControllerDocsTest extends RestDocsSupport {
                 pathParameters(
                     parameterWithName("auctionScheduleId")
                         .description("경매 일정 ID")
+                ),
+                queryParameters(
+                    parameterWithName("page")
+                        .optional()
+                        .description("페이지 번호(default: 1)")
                 ),
                 responseFields(
                     fieldWithPath("code").type(JsonFieldType.NUMBER)
