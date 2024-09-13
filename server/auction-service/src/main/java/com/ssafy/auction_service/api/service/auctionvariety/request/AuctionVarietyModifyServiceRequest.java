@@ -1,5 +1,6 @@
 package com.ssafy.auction_service.api.service.auctionvariety.request;
 
+import com.ssafy.auction_service.domain.auctionvariety.AuctionVariety;
 import com.ssafy.auction_service.domain.auctionvariety.PlantGrade;
 import com.ssafy.auction_service.domain.auctionvariety.Price;
 import lombok.Builder;
@@ -19,5 +20,9 @@ public class AuctionVarietyModifyServiceRequest {
 
     public static AuctionVarietyModifyServiceRequest of(String plantGrade, int plantCount, int auctionStartPrice) {
         return new AuctionVarietyModifyServiceRequest(PlantGrade.of(plantGrade), plantCount, Price.of(auctionStartPrice));
+    }
+
+    public void modify(AuctionVariety auctionVariety) {
+        auctionVariety.modifyAuctionPlant(plantGrade, plantCount, auctionStartPrice);
     }
 }

@@ -53,4 +53,12 @@ public class AuctionVariety extends BaseEntity {
     public static AuctionVariety create(AuctionSchedule auctionSchedule, Variety variety, String listingNumber, AuctionPlant auctionPlant, Shipment shipment) {
         return of(false, null, null, auctionSchedule, variety, listingNumber, auctionPlant, shipment);
     }
+
+    public void modifyAuctionPlant(PlantGrade plantGrade, int plantCount, Price auctionStartPrice) {
+        auctionPlant = AuctionPlant.of(plantGrade, plantCount, auctionStartPrice);
+    }
+
+    public int getAuctionStartPrice() {
+        return auctionPlant.getAuctionStartPrice().getValue();
+    }
 }

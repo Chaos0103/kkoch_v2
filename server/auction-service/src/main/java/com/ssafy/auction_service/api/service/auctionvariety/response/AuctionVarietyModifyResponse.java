@@ -1,5 +1,6 @@
 package com.ssafy.auction_service.api.service.auctionvariety.response;
 
+import com.ssafy.auction_service.domain.auctionvariety.AuctionVariety;
 import com.ssafy.auction_service.domain.auctionvariety.PlantGrade;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,5 +23,15 @@ public class AuctionVarietyModifyResponse {
         this.plantGrade = plantGrade;
         this.plantCount = plantCount;
         this.auctionStartPrice = auctionStartPrice;
+    }
+
+    public static AuctionVarietyModifyResponse of(AuctionVariety auctionVariety) {
+        return AuctionVarietyModifyResponse.builder()
+            .id(auctionVariety.getId())
+            .listingNumber(auctionVariety.getListingNumber())
+            .plantGrade(auctionVariety.getAuctionPlant().getPlantGrade())
+            .plantCount(auctionVariety.getAuctionPlant().getPlantCount())
+            .auctionStartPrice(auctionVariety.getAuctionStartPrice())
+            .build();
     }
 }

@@ -48,7 +48,16 @@ public class AuctionVarietyService {
     }
 
     public AuctionVarietyModifyResponse modifyAuctionVariety(long auctionVarietyId, AuctionVarietyModifyServiceRequest request) {
-        return null;
+        AuctionVariety auctionVariety = auctionVarietyRepository.findById(auctionVarietyId)
+            .orElseThrow(() -> new NoSuchElementException("등록되지 않은 경매 품종입니다."));
+
+        if (auctionVariety.getAuctionSchedule().isNotInit()) {
+            throw new AppException("경매 품종을 수정할 수 없습니다.");
+        }
+
+        request.modify(auctionVariety);
+
+        return AuctionVarietyModifyResponse.of(auctionVariety);
     }
 
     private String generateListingNumberBy(AuctionSchedule auctionSchedule) {
