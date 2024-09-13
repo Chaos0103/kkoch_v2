@@ -64,6 +64,26 @@ class AuctionVarietyQueryRepositoryTest extends IntegrationTestSupport {
             );
     }
 
+    @DisplayName("경매 일정 ID로 경매 품종 총 갯수를 조회한다.")
+    @Test
+    void countByAuctionScheduleId() {
+        //given
+        Variety variety = createVariety();
+        AuctionSchedule otherAuctionSchedule = createAuctionSchedule(LocalDateTime.of(2024, 7, 15, 5, 0));
+        createAuctionVariety(false, otherAuctionSchedule, variety, "00001");
+
+        AuctionSchedule targetAuctionSchedule = createAuctionSchedule(LocalDateTime.of(2024, 7, 12, 5, 0));
+        createAuctionVariety(false, targetAuctionSchedule, variety, "00001");
+        createAuctionVariety(true, targetAuctionSchedule, variety, "00002");
+        createAuctionVariety(false, targetAuctionSchedule, variety, "00003");
+
+        //when
+        int total = auctionVarietyQueryRepository.countByAuctionScheduleId(targetAuctionSchedule.getId());
+
+        //then
+        assertThat(total).isEqualTo(2);
+    }
+
     private Variety createVariety() {
         Variety variety = Variety.builder()
             .isDeleted(false)

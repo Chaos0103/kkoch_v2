@@ -50,4 +50,8 @@ public class AuctionVarietyQueryRepository {
             .offset(pageable.getOffset())
             .fetch();
     }
+
+    public int countByAuctionScheduleId(int auctionScheduleId) {
+        return 0;
+    }
 }
