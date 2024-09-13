@@ -9,8 +9,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.http.MediaType;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -295,6 +294,14 @@ class AuctionVarietyApiControllerTest extends ControllerTestSupport {
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk());
+    }
 
+    @DisplayName("경매 품종을 삭제한다.")
+    @Test
+    void removeAuctionVariety() throws Exception {
+        mockMvc.perform(
+                delete("/auction-service/auction-varieties/{auctionVarietyId}", 1)
+            )
+            .andExpect(status().isOk());
     }
 }
