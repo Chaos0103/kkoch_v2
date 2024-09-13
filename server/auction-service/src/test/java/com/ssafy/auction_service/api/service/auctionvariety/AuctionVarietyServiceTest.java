@@ -2,16 +2,16 @@ package com.ssafy.auction_service.api.service.auctionvariety;
 
 import com.ssafy.auction_service.IntegrationTestSupport;
 import com.ssafy.auction_service.api.service.auctionvariety.request.AuctionVarietyCreateServiceRequest;
+import com.ssafy.auction_service.api.service.auctionvariety.request.AuctionVarietyModifyServiceRequest;
 import com.ssafy.auction_service.api.service.auctionvariety.response.AuctionVarietyCreateResponse;
+import com.ssafy.auction_service.api.service.auctionvariety.response.AuctionVarietyModifyResponse;
 import com.ssafy.auction_service.common.exception.AppException;
 import com.ssafy.auction_service.domain.auctionschedule.AuctionInfo;
 import com.ssafy.auction_service.domain.auctionschedule.AuctionSchedule;
 import com.ssafy.auction_service.domain.auctionschedule.AuctionStatus;
 import com.ssafy.auction_service.domain.auctionschedule.JointMarket;
 import com.ssafy.auction_service.domain.auctionschedule.repository.AuctionScheduleRepository;
-import com.ssafy.auction_service.domain.auctionvariety.AuctionVariety;
-import com.ssafy.auction_service.domain.auctionvariety.PlantGrade;
-import com.ssafy.auction_service.domain.auctionvariety.Price;
+import com.ssafy.auction_service.domain.auctionvariety.*;
 import com.ssafy.auction_service.domain.auctionvariety.repository.AuctionVarietyRepository;
 import com.ssafy.auction_service.domain.variety.PlantCategory;
 import com.ssafy.auction_service.domain.variety.Variety;
@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -46,10 +47,10 @@ class AuctionVarietyServiceTest extends IntegrationTestSupport {
     @DisplayName("경매 품종 등록시 경매 상태가 INIT 상태일 때 경매 품종을 등록할 수 있다.")
     @CsvSource({"READY", "PROGRESS", "COMPLETE"})
     @ParameterizedTest
-    void createAuctionVarietyAuctionStateNotInit(AuctionStatus statue) {
+    void createAuctionVarietyAuctionStateNotInit(AuctionStatus status) {
         //given
         Variety variety = createVariety();
-        AuctionSchedule auctionSchedule = createAuctionSchedule(PlantCategory.CUT_FLOWERS, statue);
+        AuctionSchedule auctionSchedule = createAuctionSchedule(PlantCategory.CUT_FLOWERS, status);
 
         AuctionVarietyCreateServiceRequest request = AuctionVarietyCreateServiceRequest.builder()
             .plantGrade(PlantGrade.SUPER)
@@ -125,6 +126,67 @@ class AuctionVarietyServiceTest extends IntegrationTestSupport {
         assertThat(auctionVarieties).hasSize(1);
     }
 
+    @DisplayName("경매 품종 수정시 경매 상태가 INIT 상태일 때 경매 품종을 수정할 수 있다.")
+    @CsvSource({"READY", "PROGRESS", "COMPLETE"})
+    @ParameterizedTest
+    void modifyAuctionVarietyAuctionStateNotInit(AuctionStatus status) {
+        //given
+        Variety variety = createVariety();
+        AuctionSchedule auctionSchedule = createAuctionSchedule(PlantCategory.CUT_FLOWERS, status);
+        AuctionVariety auctionVariety = createAuctionVariety(auctionSchedule, variety);
+
+        AuctionVarietyModifyServiceRequest request = AuctionVarietyModifyServiceRequest.builder()
+            .plantGrade(PlantGrade.ADVANCED)
+            .plantCount(15)
+            .auctionStartPrice(Price.of(4000))
+            .build();
+        //when
+        assertThatThrownBy(() -> auctionVarietyService.modifyAuctionVariety(auctionVariety.getId(), request))
+            .isInstanceOf(AppException.class)
+            .hasMessage("경매 품종을 수정할 수 없습니다.");
+
+        //then
+        Optional<AuctionVariety> findAuctionVariety = auctionVarietyRepository.findById(auctionVariety.getId());
+        assertThat(findAuctionVariety).isPresent()
+            .get()
+            .hasFieldOrPropertyWithValue("auctionPlant.plantGrade", PlantGrade.SUPER)
+            .hasFieldOrPropertyWithValue("auctionPlant.plantCount", 10)
+            .hasFieldOrPropertyWithValue("auctionPlant.auctionStartPrice.value", 4500);
+    }
+
+    @DisplayName("화훼등급, 화훼단수, 경매시작가를 입력 받아 경매 품종 정보를 수정한다.")
+    @Test
+    void modifyAuctionVariety() {
+        //given
+        Variety variety = createVariety();
+        AuctionSchedule auctionSchedule = createAuctionSchedule(PlantCategory.CUT_FLOWERS, AuctionStatus.INIT);
+        AuctionVariety auctionVariety = createAuctionVariety(auctionSchedule, variety);
+
+        AuctionVarietyModifyServiceRequest request = AuctionVarietyModifyServiceRequest.builder()
+            .plantGrade(PlantGrade.ADVANCED)
+            .plantCount(15)
+            .auctionStartPrice(Price.of(4000))
+            .build();
+
+        //when
+        AuctionVarietyModifyResponse response = auctionVarietyService.modifyAuctionVariety(auctionVariety.getId(), request);
+
+        //then
+        assertThat(response).isNotNull()
+            .hasFieldOrPropertyWithValue("id", auctionVariety.getId())
+            .hasFieldOrPropertyWithValue("listingNumber", auctionVariety.getListingNumber())
+            .hasFieldOrPropertyWithValue("plantGrade", PlantGrade.ADVANCED)
+            .hasFieldOrPropertyWithValue("plantCount", 15)
+            .hasFieldOrPropertyWithValue("auctionStartPrice", 4000);
+
+        Optional<AuctionVariety> findAuctionVariety = auctionVarietyRepository.findById(auctionVariety.getId());
+        assertThat(findAuctionVariety).isPresent()
+            .get()
+            .hasFieldOrPropertyWithValue("auctionPlant.plantGrade", PlantGrade.ADVANCED)
+            .hasFieldOrPropertyWithValue("auctionPlant.plantCount", 15)
+            .hasFieldOrPropertyWithValue("auctionPlant.auctionStartPrice.value", 4000);
+    }
+
     private Variety createVariety() {
         Variety variety = Variety.builder()
             .isDeleted(false)
@@ -156,5 +218,26 @@ class AuctionVarietyServiceTest extends IntegrationTestSupport {
             .auctionDescription("경매 설명")
             .build();
         return auctionScheduleRepository.save(auctionSchedule);
+    }
+
+    private AuctionVariety createAuctionVariety(AuctionSchedule auctionSchedule, Variety variety) {
+        AuctionVariety auctionVariety = AuctionVariety.builder()
+            .isDeleted(false)
+            .createdBy(1L)
+            .lastModifiedBy(1L)
+            .auctionSchedule(auctionSchedule)
+            .variety(variety)
+            .listingNumber("00001")
+            .auctionPlant(AuctionPlant.builder()
+                .plantGrade(PlantGrade.SUPER)
+                .plantCount(10)
+                .auctionStartPrice(Price.of(4500))
+                .build())
+            .shipment(Shipment.builder()
+                .region("광주")
+                .shipper("김출하")
+                .build())
+            .build();
+        return auctionVarietyRepository.save(auctionVariety);
     }
 }

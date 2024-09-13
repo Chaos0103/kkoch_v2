@@ -1,7 +1,9 @@
 package com.ssafy.auction_service.api.service.auctionvariety;
 
 import com.ssafy.auction_service.api.service.auctionvariety.request.AuctionVarietyCreateServiceRequest;
+import com.ssafy.auction_service.api.service.auctionvariety.request.AuctionVarietyModifyServiceRequest;
 import com.ssafy.auction_service.api.service.auctionvariety.response.AuctionVarietyCreateResponse;
+import com.ssafy.auction_service.api.service.auctionvariety.response.AuctionVarietyModifyResponse;
 import com.ssafy.auction_service.common.exception.AppException;
 import com.ssafy.auction_service.domain.auctionschedule.AuctionSchedule;
 import com.ssafy.auction_service.domain.auctionschedule.repository.AuctionScheduleRepository;
@@ -43,6 +45,10 @@ public class AuctionVarietyService {
         AuctionVariety savedAuctionVariety = auctionVarietyRepository.save(auctionVariety);
 
         return AuctionVarietyCreateResponse.of(savedAuctionVariety);
+    }
+
+    public AuctionVarietyModifyResponse modifyAuctionVariety(long auctionVarietyId, AuctionVarietyModifyServiceRequest request) {
+        return null;
     }
 
     private String generateListingNumberBy(AuctionSchedule auctionSchedule) {
