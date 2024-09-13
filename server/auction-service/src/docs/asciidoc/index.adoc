@@ -33,3 +33,4 @@ include::api/auctionschedule/search-auction-schedule.adoc[]
 
 include::api/auctionvariety/create-auction-variety.adoc[]
 include::api/auctionvariety/modify-auction-variety.adoc[]
+include::api/auctionvariety/remove-auction-variety.adoc[]

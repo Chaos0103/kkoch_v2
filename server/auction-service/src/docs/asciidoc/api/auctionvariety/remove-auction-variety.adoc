@@ -1,0 +1,13 @@
+[[remove-auction-variety]]
+=== 경매 품종 삭제 API
+
+==== HTTP Request
+
+include::{snippets}/remove-auction-variety/http-request.adoc[]
+include::{snippets}/remove-auction-variety/request-headers.adoc[]
+include::{snippets}/remove-auction-variety/path-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/remove-auction-variety/http-response.adoc[]
+include::{snippets}/remove-auction-variety/response-fields.adoc[]
