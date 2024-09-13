@@ -4,6 +4,7 @@ import com.ssafy.auction_service.api.ApiResponse;
 import com.ssafy.auction_service.api.PageResponse;
 import com.ssafy.auction_service.api.controller.variety.param.VarietySearchParam;
 import com.ssafy.auction_service.api.service.variety.VarietyQueryService;
+import com.ssafy.auction_service.common.util.PageUtils;
 import com.ssafy.auction_service.domain.variety.repository.response.VarietyResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,10 @@ public class VarietyApiQueryController {
 
     @GetMapping
     public ApiResponse<PageResponse<VarietyResponse>> searchVarieties(@Valid @ModelAttribute VarietySearchParam param) {
-        return null;
+        int pageNumber = PageUtils.parsePageNumber(param.getPage());
+
+        PageResponse<VarietyResponse> response = varietyQueryService.searchVarieties(param.toCond(), pageNumber);
+
+        return ApiResponse.ok(response);
     }
 }
