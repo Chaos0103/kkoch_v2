@@ -87,6 +87,54 @@ class VarietyQueryRepositoryTest extends IntegrationTestSupport {
             );
     }
 
+    @DisplayName("품종 목록 갯수 조회시 품목명이 없으면 전체를 조회한다.")
+    @Test
+    void countByCondWithoutItemName() {
+        //given
+        createVariety(false, "10031285", PlantCategory.CUT_FLOWERS, "장미", "하젤");
+        createVariety(false, "10031204", PlantCategory.CUT_FLOWERS, "장미", "하트앤소울");
+        createVariety(true, "10030934", PlantCategory.CUT_FLOWERS, "장미", "햇살(sp)");
+        createVariety(false, "10011740", PlantCategory.CUT_FLOWERS, "국화", "개구리");
+        createVariety(false, "10030547", PlantCategory.CUT_FLOWERS, "장미", "헤라");
+        createVariety(false, "60031066", PlantCategory.ORCHID, "덴파레", "레드");
+        createVariety(false, "85390027", PlantCategory.FOLIAGE, "장미", "미니장미 3.5\"");
+
+        VarietySearchCond cond = VarietySearchCond.builder()
+            .plantCategory(PlantCategory.CUT_FLOWERS)
+            .itemName(null)
+            .build();
+
+        //when
+        int total = varietyQueryRepository.countByCond(cond);
+
+        //then
+        assertThat(total).isEqualTo(4);
+    }
+
+    @DisplayName("검색 조건으로 품종 목록 갯수를 조회한다.")
+    @Test
+    void countByCond() {
+        //given
+        createVariety(false, "10031285", PlantCategory.CUT_FLOWERS, "장미", "하젤");
+        createVariety(false, "10031204", PlantCategory.CUT_FLOWERS, "장미", "하트앤소울");
+        createVariety(true, "10030934", PlantCategory.CUT_FLOWERS, "장미", "햇살(sp)");
+        createVariety(false, "10011740", PlantCategory.CUT_FLOWERS, "국화", "개구리");
+        createVariety(false, "10030547", PlantCategory.CUT_FLOWERS, "장미", "헤라");
+        createVariety(false, "60031066", PlantCategory.ORCHID, "덴파레", "레드");
+        createVariety(false, "85390027", PlantCategory.FOLIAGE, "장미", "미니장미 3.5\"");
+
+        VarietySearchCond cond = VarietySearchCond.builder()
+            .plantCategory(PlantCategory.CUT_FLOWERS)
+            .itemName("장미")
+            .build();
+
+        //when
+        int total = varietyQueryRepository.countByCond(cond);
+
+        //then
+        assertThat(total).isEqualTo(3);
+    }
+
     private Variety createVariety(boolean isDeleted, String code, PlantCategory plantCategory, String itemName, String varietyName) {
         Variety variety = Variety.builder()
             .isDeleted(isDeleted)
