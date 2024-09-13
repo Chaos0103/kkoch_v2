@@ -5,6 +5,7 @@ import com.ssafy.auction_service.api.service.auctionvariety.request.AuctionVarie
 import com.ssafy.auction_service.api.service.auctionvariety.request.AuctionVarietyModifyServiceRequest;
 import com.ssafy.auction_service.api.service.auctionvariety.response.AuctionVarietyCreateResponse;
 import com.ssafy.auction_service.api.service.auctionvariety.response.AuctionVarietyModifyResponse;
+import com.ssafy.auction_service.api.service.auctionvariety.response.AuctionVarietyRemoveResponse;
 import com.ssafy.auction_service.common.exception.AppException;
 import com.ssafy.auction_service.domain.auctionschedule.AuctionInfo;
 import com.ssafy.auction_service.domain.auctionschedule.AuctionSchedule;
@@ -185,6 +186,49 @@ class AuctionVarietyServiceTest extends IntegrationTestSupport {
             .hasFieldOrPropertyWithValue("auctionPlant.plantGrade", PlantGrade.ADVANCED)
             .hasFieldOrPropertyWithValue("auctionPlant.plantCount", 15)
             .hasFieldOrPropertyWithValue("auctionPlant.auctionStartPrice.value", 4000);
+    }
+
+    @DisplayName("경매 품종 삭제시 경매 상태가 INIT 상태일 때 경매 품종을 삭제할 수 있다.")
+    @CsvSource({"READY", "PROGRESS", "COMPLETE"})
+    @ParameterizedTest
+    void removeAuctionVarietyAuctionStateNotInit(AuctionStatus status) {
+        //given
+        Variety variety = createVariety();
+        AuctionSchedule auctionSchedule = createAuctionSchedule(PlantCategory.CUT_FLOWERS, status);
+        AuctionVariety auctionVariety = createAuctionVariety(auctionSchedule, variety);
+
+        //when
+        assertThatThrownBy(() -> auctionVarietyService.removeAuctionVariety(auctionVariety.getId()))
+            .isInstanceOf(AppException.class)
+            .hasMessage("경매 품종을 삭제할 수 없습니다.");
+
+        //then
+        Optional<AuctionVariety> findAuctionVariety = auctionVarietyRepository.findById(auctionVariety.getId());
+        assertThat(findAuctionVariety).isPresent()
+            .get()
+            .hasFieldOrPropertyWithValue("isDeleted", false);
+    }
+
+    @DisplayName("경매 품종을 삭제한다.")
+    @Test
+    void removeAuctionVariety() {
+        //given
+        Variety variety = createVariety();
+        AuctionSchedule auctionSchedule = createAuctionSchedule(PlantCategory.CUT_FLOWERS, AuctionStatus.INIT);
+        AuctionVariety auctionVariety = createAuctionVariety(auctionSchedule, variety);
+
+        //when
+        AuctionVarietyRemoveResponse response = auctionVarietyService.removeAuctionVariety(auctionVariety.getId());
+
+        //then
+        assertThat(response).isNotNull()
+            .hasFieldOrPropertyWithValue("id", auctionVariety.getId())
+            .hasFieldOrPropertyWithValue("listingNumber", auctionVariety.getListingNumber());
+
+        Optional<AuctionVariety> findAuctionVariety = auctionVarietyRepository.findById(auctionVariety.getId());
+        assertThat(findAuctionVariety).isPresent()
+            .get()
+            .hasFieldOrPropertyWithValue("isDeleted", true);
     }
 
     private Variety createVariety() {
