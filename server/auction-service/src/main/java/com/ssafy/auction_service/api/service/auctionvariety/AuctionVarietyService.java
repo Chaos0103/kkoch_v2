@@ -30,6 +30,7 @@ public class AuctionVarietyService {
     private static final String LISTING_NUMBER_FORMAT = "%05d";
     private static final String UNABLE_TO_REGISTER_AUCTION_VARIETY = "경매 품종을 등록할 수 없습니다.";
     private static final String UNABLE_TO_MODIFY_AUCTION_VARIETY = "경매 품종을 수정할 수 없습니다.";
+    private static final String UNABLE_TO_REMOVE_AUCTION_VARIETY = "경매 품종을 삭제할 수 없습니다.";
     private static final String UNABLE_TO_REGISTER_VARIETY_FOR_AUCTION_SCHEDULE = "해당 경매에 등록할 수 없는 품종입니다.";
 
     private final AuctionVarietyRepository auctionVarietyRepository;
@@ -70,7 +71,15 @@ public class AuctionVarietyService {
     }
 
     public AuctionVarietyRemoveResponse removeAuctionVariety(long auctionVarietyId) {
-        return null;
+        AuctionVariety auctionVariety = findAuctionVarietyById(auctionVarietyId);
+
+        if (auctionVariety.isNotRemovable()) {
+            throw new AppException(UNABLE_TO_REMOVE_AUCTION_VARIETY);
+        }
+
+        auctionVariety.remove();
+
+        return AuctionVarietyRemoveResponse.of(auctionVariety);
     }
 
     private String generateListingNumberBy(AuctionSchedule auctionSchedule) {

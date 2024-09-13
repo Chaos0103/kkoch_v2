@@ -58,8 +58,17 @@ public class AuctionVariety extends BaseEntity {
         auctionPlant = AuctionPlant.of(plantGrade, plantCount, auctionStartPrice);
     }
 
+    @Override
+    public void remove() {
+        super.remove();
+    }
+
     public boolean isNotModifiable() {
         return auctionSchedule.isNotModifiable();
+    }
+
+    public boolean isNotRemovable() {
+        return auctionSchedule.isNotRemovable();
     }
 
     public int getAuctionStartPrice() {
