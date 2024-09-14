@@ -27,15 +27,6 @@ public enum PlantCategory {
         }
     }
 
-    public static boolean isSupported(String str) {
-        PlantCategory plantCategory = of(str);
-        return plantCategory != null;
-    }
-
-    public static boolean isNotSupported(String str) {
-        return !isSupported(str);
-    }
-
     public String getNextCode(int count) {
         return String.format("%s%04d", prefix, count + 1);
     }

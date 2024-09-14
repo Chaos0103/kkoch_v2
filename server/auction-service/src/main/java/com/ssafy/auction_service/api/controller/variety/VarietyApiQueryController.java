@@ -6,6 +6,7 @@ import com.ssafy.auction_service.api.PageResponse;
 import com.ssafy.auction_service.api.controller.variety.param.VarietySearchParam;
 import com.ssafy.auction_service.api.service.variety.VarietyQueryService;
 import com.ssafy.auction_service.common.util.PageUtils;
+import com.ssafy.auction_service.domain.variety.PlantCategory;
 import com.ssafy.auction_service.domain.variety.repository.response.ItemNameResponse;
 import com.ssafy.auction_service.domain.variety.repository.response.VarietyResponse;
 import jakarta.validation.Valid;
@@ -30,6 +31,8 @@ public class VarietyApiQueryController {
 
     @GetMapping("/{plantCategory}")
     public ApiResponse<ListResponse<ItemNameResponse>> searchItemNames(@PathVariable String plantCategory) {
-        return null;
+        ListResponse<ItemNameResponse> response = varietyQueryService.searchItemNames(PlantCategory.of(plantCategory));
+
+        return ApiResponse.ok(response);
     }
 }
