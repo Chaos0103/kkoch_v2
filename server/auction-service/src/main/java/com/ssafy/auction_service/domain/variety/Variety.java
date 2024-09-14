@@ -44,6 +44,11 @@ public class Variety extends BaseEntity {
         info = info.withVarietyName(varietyName);
     }
 
+    @Override
+    public void remove() {
+        super.remove();
+    }
+
     public boolean plantCategoryEquals(PlantCategory plantCategory) {
         return info.plantCategoryEquals(plantCategory);
     }

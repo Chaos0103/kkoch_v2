@@ -50,7 +50,11 @@ public class VarietyService {
     }
 
     public VarietyRemoveResponse removeVariety(String varietyCode) {
-        return null;
+        Variety variety = findVarietyByCode(varietyCode);
+
+        variety.remove();
+
+        return VarietyRemoveResponse.of(variety);
     }
 
     private Variety findVarietyByCode(String code) {
