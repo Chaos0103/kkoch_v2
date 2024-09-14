@@ -33,6 +33,8 @@ public class VarietyQueryService {
     }
 
     public ListResponse<ItemNameResponse> searchItemNames(PlantCategory plantCategory) {
-        return null;
+        List<ItemNameResponse> content = varietyQueryRepository.findItemNameByPlantCategory(plantCategory);
+
+        return ListResponse.of(content);
     }
 }
