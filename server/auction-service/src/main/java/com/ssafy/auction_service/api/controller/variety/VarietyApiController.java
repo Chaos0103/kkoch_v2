@@ -45,6 +45,8 @@ public class VarietyApiController {
 
     @DeleteMapping("/{varietyCode}")
     public ApiResponse<VarietyRemoveResponse> removeVariety(@PathVariable String varietyCode) {
-        return null;
+        VarietyRemoveResponse response = varietyService.removeVariety(varietyCode);
+
+        return ApiResponse.ok(response);
     }
 }
