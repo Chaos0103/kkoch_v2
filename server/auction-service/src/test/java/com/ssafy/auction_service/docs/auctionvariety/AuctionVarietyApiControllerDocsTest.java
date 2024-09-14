@@ -23,13 +23,11 @@ import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -47,7 +45,6 @@ class AuctionVarietyApiControllerDocsTest extends RestDocsSupport {
     void createAuctionSchedule() throws Exception {
         AuctionVarietyCreateRequest request = AuctionVarietyCreateRequest.builder()
             .varietyCode("10000001")
-            .auctionScheduleId(1)
             .plantGrade("SUPER")
             .plantCount(10)
             .auctionStartPrice(4500)
@@ -70,7 +67,7 @@ class AuctionVarietyApiControllerDocsTest extends RestDocsSupport {
             .willReturn(response);
 
         mockMvc.perform(
-                post("/auction-service/auction-varieties")
+                post("/auction-service/auction-schedules/{auctionScheduleId}/auction-varieties", 1)
                     .header(HttpHeaders.AUTHORIZATION, "issued.access.token")
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
@@ -84,11 +81,13 @@ class AuctionVarietyApiControllerDocsTest extends RestDocsSupport {
                     headerWithName(HttpHeaders.AUTHORIZATION)
                         .description("회원 토큰")
                 ),
+                pathParameters(
+                    parameterWithName("auctionScheduleId")
+                        .description("경매 일정 ID")
+                ),
                 requestFields(
                     fieldWithPath("varietyCode").type(JsonFieldType.STRING)
                         .description("품종코드"),
-                    fieldWithPath("auctionScheduleId").type(JsonFieldType.NUMBER)
-                        .description("경매 일정 ID"),
                     fieldWithPath("plantGrade").type(JsonFieldType.STRING)
                         .description("화훼등급"),
                     fieldWithPath("plantCount").type(JsonFieldType.NUMBER)
@@ -150,7 +149,7 @@ class AuctionVarietyApiControllerDocsTest extends RestDocsSupport {
             .willReturn(response);
 
         mockMvc.perform(
-                patch("/auction-service/auction-varieties/{auctionVarietyId}", 1)
+                patch("/auction-service/auction-schedules/{auctionScheduleId}/auction-varieties/{auctionVarietyId}", 1, 1)
                     .header(HttpHeaders.AUTHORIZATION, "issued.access.token")
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
@@ -165,6 +164,8 @@ class AuctionVarietyApiControllerDocsTest extends RestDocsSupport {
                         .description("회원 토큰")
                 ),
                 pathParameters(
+                    parameterWithName("auctionScheduleId")
+                        .description("경매 일정 ID"),
                     parameterWithName("auctionVarietyId")
                         .description("경매 품종 ID")
                 ),
@@ -211,7 +212,7 @@ class AuctionVarietyApiControllerDocsTest extends RestDocsSupport {
             .willReturn(response);
 
         mockMvc.perform(
-                delete("/auction-service/auction-varieties/{auctionVarietyId}", 1)
+                delete("/auction-service/auction-schedules/{auctionScheduleId}/auction-varieties/{auctionVarietyId}", 1, 1)
                     .header(HttpHeaders.AUTHORIZATION, "issued.access.token")
             )
             .andDo(print())
@@ -223,6 +224,8 @@ class AuctionVarietyApiControllerDocsTest extends RestDocsSupport {
                         .description("회원 토큰")
                 ),
                 pathParameters(
+                    parameterWithName("auctionScheduleId")
+                        .description("경매 일정 ID"),
                     parameterWithName("auctionVarietyId")
                         .description("경매 품종 ID")
                 ),

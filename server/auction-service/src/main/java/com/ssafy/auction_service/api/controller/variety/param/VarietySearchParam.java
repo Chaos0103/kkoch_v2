@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import static com.ssafy.auction_service.api.controller.variety.message.VarietyBindingMessage.NOT_BLANK_PLANT_CATEGORY;
 import static com.ssafy.auction_service.common.util.PageUtils.PARAM_DEFAULT_PAGE_SIZE;
 
 @Getter
@@ -16,7 +17,7 @@ public class VarietySearchParam {
 
     private String page = PARAM_DEFAULT_PAGE_SIZE;
 
-    @NotBlank(message = "화훼부류를 입력해주세요.")
+    @NotBlank(message = NOT_BLANK_PLANT_CATEGORY)
     private String plantCategory;
 
     private String itemName;

@@ -7,17 +7,19 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import static com.ssafy.auction_service.api.controller.auctionvariety.message.AuctionVarietyBindingMessage.*;
+
 @Getter
 @NoArgsConstructor
 public class AuctionVarietyModifyRequest {
 
-    @NotBlank(message = "화훼등급을 입력해주세요.")
+    @NotBlank(message = NOT_BLANK_PLANT_GRADE)
     private String plantGrade;
 
-    @Positive(message = "화훼단수를 올바르게 입력해주세요.")
+    @Positive(message = NOT_BLANK_PLANT_COUNT)
     private Integer plantCount;
 
-    @Positive(message = "경매 시작가를 올바르게 입력해주세요.")
+    @Positive(message = NOT_BLANK_AUCTION_START_PRICE)
     private Integer auctionStartPrice;
 
     @Builder

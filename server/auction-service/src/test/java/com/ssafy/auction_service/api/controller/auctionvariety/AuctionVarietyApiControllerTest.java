@@ -21,7 +21,6 @@ class AuctionVarietyApiControllerTest extends ControllerTestSupport {
     void createAuctionVarietyWithoutVarietyCode(String varietyCode) throws Exception {
         AuctionVarietyCreateRequest request = AuctionVarietyCreateRequest.builder()
             .varietyCode(varietyCode)
-            .auctionScheduleId(1)
             .plantGrade("SUPER")
             .plantCount(10)
             .auctionStartPrice(4500)
@@ -30,7 +29,7 @@ class AuctionVarietyApiControllerTest extends ControllerTestSupport {
             .build();
 
         mockMvc.perform(
-                post("/auction-service/auction-varieties")
+                post("/auction-service/auction-schedules/{auctionScheduleId}/auction-varieties", 1)
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -41,38 +40,12 @@ class AuctionVarietyApiControllerTest extends ControllerTestSupport {
             .andExpect(jsonPath("$.data").isEmpty());
     }
 
-    @DisplayName("경매 품종 등록시 경매 일정 ID는 필수값이다.")
-    @Test
-    void createAuctionVarietyWithoutAuctionScheduleId() throws Exception {
-        AuctionVarietyCreateRequest request = AuctionVarietyCreateRequest.builder()
-            .varietyCode("10000001")
-            .auctionScheduleId(null)
-            .plantGrade("SUPER")
-            .plantCount(10)
-            .auctionStartPrice(4500)
-            .region("광주")
-            .shipper("김출하")
-            .build();
-
-        mockMvc.perform(
-                post("/auction-service/auction-varieties")
-                    .content(objectMapper.writeValueAsString(request))
-                    .contentType(MediaType.APPLICATION_JSON)
-            )
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.code").value("400"))
-            .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
-            .andExpect(jsonPath("$.message").value("경매 일정 ID를 입력해주세요."))
-            .andExpect(jsonPath("$.data").isEmpty());
-    }
-
     @DisplayName("경매 품종 등록시 화훼등급은 필수값이다.")
     @NullAndEmptySource
     @ParameterizedTest
     void createAuctionVarietyWithoutPlantGrade(String plantGrade) throws Exception {
         AuctionVarietyCreateRequest request = AuctionVarietyCreateRequest.builder()
             .varietyCode("10000001")
-            .auctionScheduleId(1)
             .plantGrade(plantGrade)
             .plantCount(10)
             .auctionStartPrice(4500)
@@ -81,7 +54,7 @@ class AuctionVarietyApiControllerTest extends ControllerTestSupport {
             .build();
 
         mockMvc.perform(
-                post("/auction-service/auction-varieties")
+                post("/auction-service/auction-schedules/{auctionScheduleId}/auction-varieties", 1)
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -97,7 +70,6 @@ class AuctionVarietyApiControllerTest extends ControllerTestSupport {
     void createAuctionVarietyWithoutPlantCount() throws Exception {
         AuctionVarietyCreateRequest request = AuctionVarietyCreateRequest.builder()
             .varietyCode("10000001")
-            .auctionScheduleId(1)
             .plantGrade("SUPER")
             .plantCount(0)
             .auctionStartPrice(4500)
@@ -106,7 +78,7 @@ class AuctionVarietyApiControllerTest extends ControllerTestSupport {
             .build();
 
         mockMvc.perform(
-                post("/auction-service/auction-varieties")
+                post("/auction-service/auction-schedules/{auctionScheduleId}/auction-varieties", 1)
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -122,7 +94,6 @@ class AuctionVarietyApiControllerTest extends ControllerTestSupport {
     void createAuctionVarietyWithoutAuctionStartPrice() throws Exception {
         AuctionVarietyCreateRequest request = AuctionVarietyCreateRequest.builder()
             .varietyCode("10000001")
-            .auctionScheduleId(1)
             .plantGrade("SUPER")
             .plantCount(10)
             .auctionStartPrice(0)
@@ -131,7 +102,7 @@ class AuctionVarietyApiControllerTest extends ControllerTestSupport {
             .build();
 
         mockMvc.perform(
-                post("/auction-service/auction-varieties")
+                post("/auction-service/auction-schedules/{auctionScheduleId}/auction-varieties", 1)
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -148,7 +119,6 @@ class AuctionVarietyApiControllerTest extends ControllerTestSupport {
     void createAuctionVarietyWithoutRegion(String region) throws Exception {
         AuctionVarietyCreateRequest request = AuctionVarietyCreateRequest.builder()
             .varietyCode("10000001")
-            .auctionScheduleId(1)
             .plantGrade("SUPER")
             .plantCount(10)
             .auctionStartPrice(4500)
@@ -157,7 +127,7 @@ class AuctionVarietyApiControllerTest extends ControllerTestSupport {
             .build();
 
         mockMvc.perform(
-                post("/auction-service/auction-varieties")
+                post("/auction-service/auction-schedules/{auctionScheduleId}/auction-varieties", 1)
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -174,7 +144,6 @@ class AuctionVarietyApiControllerTest extends ControllerTestSupport {
     void createAuctionVarietyWithoutShipper(String region) throws Exception {
         AuctionVarietyCreateRequest request = AuctionVarietyCreateRequest.builder()
             .varietyCode("10000001")
-            .auctionScheduleId(1)
             .plantGrade("SUPER")
             .plantCount(10)
             .auctionStartPrice(4500)
@@ -183,14 +152,14 @@ class AuctionVarietyApiControllerTest extends ControllerTestSupport {
             .build();
 
         mockMvc.perform(
-                post("/auction-service/auction-varieties")
+                post("/auction-service/auction-schedules/{auctionScheduleId}/auction-varieties", 1)
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.code").value("400"))
             .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
-            .andExpect(jsonPath("$.message").value("출하자을 입력해주세요."))
+            .andExpect(jsonPath("$.message").value("출하자를 입력해주세요."))
             .andExpect(jsonPath("$.data").isEmpty());
     }
 
@@ -199,7 +168,6 @@ class AuctionVarietyApiControllerTest extends ControllerTestSupport {
     void createAuctionVariety() throws Exception {
         AuctionVarietyCreateRequest request = AuctionVarietyCreateRequest.builder()
             .varietyCode("10000001")
-            .auctionScheduleId(1)
             .plantGrade("SUPER")
             .plantCount(10)
             .auctionStartPrice(4500)
@@ -208,7 +176,7 @@ class AuctionVarietyApiControllerTest extends ControllerTestSupport {
             .build();
 
         mockMvc.perform(
-                post("/auction-service/auction-varieties")
+                post("/auction-service/auction-schedules/{auctionScheduleId}/auction-varieties", 1)
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -226,7 +194,7 @@ class AuctionVarietyApiControllerTest extends ControllerTestSupport {
             .build();
 
         mockMvc.perform(
-                patch("/auction-service/auction-varieties/{auctionVarietyId}", 1)
+                patch("/auction-service/auction-schedules/{auctionScheduleId}/auction-varieties/{auctionVarietyId}", 1, 1)
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -247,7 +215,7 @@ class AuctionVarietyApiControllerTest extends ControllerTestSupport {
             .build();
 
         mockMvc.perform(
-                patch("/auction-service/auction-varieties/{auctionVarietyId}", 1)
+                patch("/auction-service/auction-schedules/{auctionScheduleId}/auction-varieties/{auctionVarietyId}", 1, 1)
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -268,7 +236,7 @@ class AuctionVarietyApiControllerTest extends ControllerTestSupport {
             .build();
 
         mockMvc.perform(
-                patch("/auction-service/auction-varieties/{auctionVarietyId}", 1)
+                patch("/auction-service/auction-schedules/{auctionScheduleId}/auction-varieties/{auctionVarietyId}", 1, 1)
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -289,7 +257,7 @@ class AuctionVarietyApiControllerTest extends ControllerTestSupport {
             .build();
 
         mockMvc.perform(
-                patch("/auction-service/auction-varieties/{auctionVarietyId}", 1)
+                patch("/auction-service/auction-schedules/{auctionScheduleId}/auction-varieties/{auctionVarietyId}", 1, 1)
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -300,7 +268,7 @@ class AuctionVarietyApiControllerTest extends ControllerTestSupport {
     @Test
     void removeAuctionVariety() throws Exception {
         mockMvc.perform(
-                delete("/auction-service/auction-varieties/{auctionVarietyId}", 1)
+                delete("/auction-service/auction-schedules/{auctionScheduleId}/auction-varieties/{auctionVarietyId}", 1, 1)
             )
             .andExpect(status().isOk());
     }

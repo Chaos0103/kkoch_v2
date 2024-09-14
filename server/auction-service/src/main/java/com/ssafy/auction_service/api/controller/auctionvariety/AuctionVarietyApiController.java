@@ -14,28 +14,38 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auction-service/auction-varieties")
+@RequestMapping("/auction-service/auction-schedules/{auctionScheduleId}/auction-varieties")
 public class AuctionVarietyApiController {
 
     private final AuctionVarietyService auctionVarietyService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<AuctionVarietyCreateResponse> createAuctionVariety(@Valid @RequestBody AuctionVarietyCreateRequest request) {
-        AuctionVarietyCreateResponse response = auctionVarietyService.createAuctionVariety(request.getVarietyCode(), request.getAuctionScheduleId(), request.toServiceRequest());
+    public ApiResponse<AuctionVarietyCreateResponse> createAuctionVariety(
+        @PathVariable Integer auctionScheduleId,
+        @Valid @RequestBody AuctionVarietyCreateRequest request
+    ) {
+        AuctionVarietyCreateResponse response = auctionVarietyService.createAuctionVariety(request.getVarietyCode(), auctionScheduleId, request.toServiceRequest());
 
         return ApiResponse.created(response);
     }
 
     @PatchMapping("/{auctionVarietyId}")
-    public ApiResponse<AuctionVarietyModifyResponse> modifyAuctionVariety(@PathVariable Integer auctionVarietyId, @Valid @RequestBody AuctionVarietyModifyRequest request) {
+    public ApiResponse<AuctionVarietyModifyResponse> modifyAuctionVariety(
+        @PathVariable Integer auctionScheduleId,
+        @PathVariable Integer auctionVarietyId,
+        @Valid @RequestBody AuctionVarietyModifyRequest request
+    ) {
         AuctionVarietyModifyResponse response = auctionVarietyService.modifyAuctionVariety(auctionVarietyId, request.toServiceRequest());
 
         return ApiResponse.ok(response);
     }
 
     @DeleteMapping("/{auctionVarietyId}")
-    public ApiResponse<AuctionVarietyRemoveResponse> removeAuctionVariety(@PathVariable Integer auctionVarietyId) {
+    public ApiResponse<AuctionVarietyRemoveResponse> removeAuctionVariety(
+        @PathVariable Integer auctionScheduleId,
+        @PathVariable Integer auctionVarietyId
+    ) {
         AuctionVarietyRemoveResponse response = auctionVarietyService.removeAuctionVariety(auctionVarietyId);
 
         return ApiResponse.ok(response);
