@@ -6,6 +6,7 @@ import com.ssafy.auction_service.api.controller.variety.request.VarietyModifyReq
 import com.ssafy.auction_service.api.service.variety.VarietyService;
 import com.ssafy.auction_service.api.service.variety.response.VarietyCreateResponse;
 import com.ssafy.auction_service.api.service.variety.response.VarietyModifyResponse;
+import com.ssafy.auction_service.api.service.variety.response.VarietyRemoveResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -40,5 +41,10 @@ public class VarietyApiController {
         VarietyModifyResponse response = varietyService.modifyVariety(varietyCode, request.getVarietyName(), current);
 
         return ApiResponse.ok(response);
+    }
+
+    @DeleteMapping("/{varietyCode}")
+    public ApiResponse<VarietyRemoveResponse> removeVariety(@PathVariable String varietyCode) {
+        return null;
     }
 }
