@@ -4,7 +4,9 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPQLQueryFactory;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.auction_service.domain.variety.PlantCategory;
 import com.ssafy.auction_service.domain.variety.repository.cond.VarietySearchCond;
+import com.ssafy.auction_service.domain.variety.repository.response.ItemNameResponse;
 import com.ssafy.auction_service.domain.variety.repository.response.VarietyResponse;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Pageable;
@@ -61,6 +63,10 @@ public class VarietyQueryRepository {
             )
             .fetch()
             .size();
+    }
+
+    public List<ItemNameResponse> findItemNameByPlantCategory(PlantCategory plantCategory) {
+        return null;
     }
 
     private BooleanExpression eqItemName(String itemName) {

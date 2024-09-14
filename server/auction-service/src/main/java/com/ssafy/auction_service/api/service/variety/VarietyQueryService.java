@@ -1,7 +1,9 @@
 package com.ssafy.auction_service.api.service.variety;
 
+import com.ssafy.auction_service.api.ListResponse;
 import com.ssafy.auction_service.api.PageResponse;
 import com.ssafy.auction_service.common.util.PageUtils;
+import com.ssafy.auction_service.domain.variety.PlantCategory;
 import com.ssafy.auction_service.domain.variety.repository.VarietyQueryRepository;
 import com.ssafy.auction_service.domain.variety.repository.cond.VarietySearchCond;
 import com.ssafy.auction_service.domain.variety.repository.response.VarietyResponse;
