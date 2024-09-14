@@ -66,7 +66,20 @@ public class VarietyQueryRepository {
     }
 
     public List<ItemNameResponse> findItemNameByPlantCategory(PlantCategory plantCategory) {
-        return null;
+        return queryFactory
+            .select(
+                Projections.fields(
+                    ItemNameResponse.class,
+                    variety.info.itemName
+                )
+            ).distinct()
+            .from(variety)
+            .where(
+                variety.isDeleted.isFalse(),
+                variety.info.plantCategory.eq(plantCategory)
+            )
+            .orderBy(variety.info.itemName.asc())
+            .fetch();
     }
 
     private BooleanExpression eqItemName(String itemName) {
