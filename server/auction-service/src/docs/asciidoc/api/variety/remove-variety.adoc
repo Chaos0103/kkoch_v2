@@ -1,0 +1,13 @@
+[[remove-variety]]
+=== 품종 삭제 API
+
+==== HTTP Request
+
+include::{snippets}/remove-variety/http-request.adoc[]
+include::{snippets}/remove-variety/path-parameters.adoc[]
+include::{snippets}/remove-variety/request-headers.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/remove-variety/http-response.adoc[]
+include::{snippets}/remove-variety/response-fields.adoc[]
