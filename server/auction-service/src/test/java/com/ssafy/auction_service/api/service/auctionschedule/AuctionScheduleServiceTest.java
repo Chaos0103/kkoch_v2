@@ -399,8 +399,6 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
     private AuctionSchedule createAuctionSchedule(AuctionStatus auctionStatus, LocalDateTime auctionStartDateTime) {
         AuctionSchedule auctionSchedule = AuctionSchedule.builder()
             .isDeleted(false)
-            .createdBy(1L)
-            .lastModifiedBy(1L)
             .auctionInfo(createAuctionInfo(auctionStartDateTime))
             .auctionStatus(auctionStatus)
             .auctionDescription("auction description")

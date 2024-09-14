@@ -33,20 +33,20 @@ public class AuctionSchedule extends BaseEntity {
     private String auctionDescription;
 
     @Builder
-    private AuctionSchedule(boolean isDeleted, Long createdBy, Long lastModifiedBy, AuctionInfo auctionInfo, AuctionStatus auctionStatus, String auctionDescription) {
-        super(isDeleted, createdBy, lastModifiedBy);
+    private AuctionSchedule(boolean isDeleted, AuctionInfo auctionInfo, AuctionStatus auctionStatus, String auctionDescription) {
+        super(isDeleted);
         this.auctionInfo = auctionInfo;
         this.auctionStatus = auctionStatus;
         this.auctionDescription = auctionDescription;
     }
 
-    public static AuctionSchedule of(boolean isDeleted, Long createdBy, Long lastModifiedBy, AuctionInfo auctionInfo, AuctionStatus auctionStatus, String auctionDescription) {
-        return new AuctionSchedule(isDeleted, createdBy, lastModifiedBy, auctionInfo, auctionStatus, auctionDescription);
+    public static AuctionSchedule of(boolean isDeleted, AuctionInfo auctionInfo, AuctionStatus auctionStatus, String auctionDescription) {
+        return new AuctionSchedule(isDeleted, auctionInfo, auctionStatus, auctionDescription);
     }
 
     public static AuctionSchedule create(PlantCategory plantCategory, JointMarket jointMarket, LocalDateTime auctionStartDateTime, String auctionDescription) {
         AuctionInfo auctionInfo = AuctionInfo.of(plantCategory, jointMarket, auctionStartDateTime);
-        return of(false, null, null, auctionInfo, AuctionStatus.INIT, auctionDescription);
+        return of(false, auctionInfo, AuctionStatus.INIT, auctionDescription);
     }
 
     public void modify(LocalDateTime auctionStartDateTime, String auctionDescription) {

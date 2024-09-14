@@ -234,8 +234,6 @@ class AuctionVarietyServiceTest extends IntegrationTestSupport {
     private Variety createVariety() {
         Variety variety = Variety.builder()
             .isDeleted(false)
-            .createdBy(1L)
-            .lastModifiedBy(1L)
             .code("10000001")
             .info(
                 VarietyInfo.builder()
@@ -251,8 +249,6 @@ class AuctionVarietyServiceTest extends IntegrationTestSupport {
     private AuctionSchedule createAuctionSchedule(PlantCategory plantCategory, AuctionStatus auctionStatus) {
         AuctionSchedule auctionSchedule = AuctionSchedule.builder()
             .isDeleted(false)
-            .createdBy(1L)
-            .lastModifiedBy(1L)
             .auctionInfo(AuctionInfo.builder()
                 .plantCategory(plantCategory)
                 .jointMarket(JointMarket.YANGJAE)
@@ -267,8 +263,6 @@ class AuctionVarietyServiceTest extends IntegrationTestSupport {
     private AuctionVariety createAuctionVariety(AuctionSchedule auctionSchedule, Variety variety) {
         AuctionVariety auctionVariety = AuctionVariety.builder()
             .isDeleted(false)
-            .createdBy(1L)
-            .lastModifiedBy(1L)
             .auctionSchedule(auctionSchedule)
             .variety(variety)
             .listingNumber("00001")

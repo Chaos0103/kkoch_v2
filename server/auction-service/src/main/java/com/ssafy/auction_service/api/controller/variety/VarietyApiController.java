@@ -12,10 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-
-import static com.ssafy.auction_service.common.util.TimeUtils.getCurrentDateTime;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auction-service/varieties")
@@ -36,9 +32,7 @@ public class VarietyApiController {
         @PathVariable String varietyCode,
         @Valid @RequestBody VarietyModifyRequest request
     ) {
-        LocalDateTime current = getCurrentDateTime();
-
-        VarietyModifyResponse response = varietyService.modifyVariety(varietyCode, request.getVarietyName(), current);
+        VarietyModifyResponse response = varietyService.modifyVariety(varietyCode, request.getVarietyName());
 
         return ApiResponse.ok(response);
     }

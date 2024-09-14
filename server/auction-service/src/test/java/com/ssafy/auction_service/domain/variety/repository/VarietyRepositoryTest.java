@@ -46,8 +46,6 @@ class VarietyRepositoryTest extends IntegrationTestSupport {
     private Variety createVariety() {
         Variety variety = Variety.builder()
             .isDeleted(false)
-            .createdBy(1L)
-            .lastModifiedBy(1L)
             .code("10000001")
             .info(
                 VarietyInfo.builder()

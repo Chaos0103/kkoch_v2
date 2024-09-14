@@ -14,7 +14,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,12 +78,11 @@ class VarietyServiceTest extends IntegrationTestSupport {
     @Test
     void existVariety2() {
         //given
-        LocalDateTime current = LocalDateTime.of(2024, 9, 6, 7, 0);
         Variety variety = createVariety("10000001", "하트앤소울");
         createVariety("10000002", "심화");
 
         //when
-        assertThatThrownBy(() -> varietyService.modifyVariety(variety.getCode(), "심화", current))
+        assertThatThrownBy(() -> varietyService.modifyVariety(variety.getCode(), "심화"))
             .isInstanceOf(AppException.class)
             .hasMessage("이미 등록된 품종입니다.");
 
@@ -99,19 +97,17 @@ class VarietyServiceTest extends IntegrationTestSupport {
     @Test
     void modifyVariety() {
         //given
-        LocalDateTime current = LocalDateTime.of(2024, 9, 6, 7, 0);
         Variety variety = createVariety("10000001", "하트앤소울");
 
         //when
-        VarietyModifyResponse response = varietyService.modifyVariety(variety.getCode(), "심화", current);
+        VarietyModifyResponse response = varietyService.modifyVariety(variety.getCode(), "심화");
 
         //then
         assertThat(response).isNotNull()
             .hasFieldOrPropertyWithValue("code", "10000001")
             .hasFieldOrPropertyWithValue("plantCategory", "절화")
             .hasFieldOrPropertyWithValue("itemName", "장미")
-            .hasFieldOrPropertyWithValue("varietyName", "심화")
-            .hasFieldOrPropertyWithValue("modifiedDateTime", current);
+            .hasFieldOrPropertyWithValue("varietyName", "심화");
 
         Optional<Variety> findVariety = varietyRepository.findById("10000001");
         assertThat(findVariety).isPresent()
@@ -144,8 +140,6 @@ class VarietyServiceTest extends IntegrationTestSupport {
     private Variety createVariety(String code, String varietyName) {
         Variety variety = Variety.builder()
             .isDeleted(false)
-            .createdBy(1L)
-            .lastModifiedBy(1L)
             .code(code)
             .info(
                 VarietyInfo.builder()

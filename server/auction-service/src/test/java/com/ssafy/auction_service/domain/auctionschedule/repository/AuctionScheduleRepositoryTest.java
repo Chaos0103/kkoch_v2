@@ -36,8 +36,6 @@ class AuctionScheduleRepositoryTest extends IntegrationTestSupport {
     private AuctionSchedule createAuctionSchedule() {
         AuctionSchedule auctionSchedule = AuctionSchedule.builder()
             .isDeleted(false)
-            .createdBy(1L)
-            .lastModifiedBy(1L)
             .auctionInfo(createAuctionInfo())
             .auctionStatus(AuctionStatus.INIT)
             .auctionDescription("auctionDescription")

@@ -168,8 +168,6 @@ class AuctionScheduleQueryRepositoryTest extends IntegrationTestSupport {
     private AuctionSchedule createAuctionSchedule(boolean isDeleted, PlantCategory plantCategory, JointMarket jointMarket, AuctionStatus auctionStatus, LocalDateTime auctionStartDateTime) {
         AuctionSchedule auctionSchedule = AuctionSchedule.builder()
             .isDeleted(isDeleted)
-            .createdBy(1L)
-            .lastModifiedBy(1L)
             .auctionInfo(AuctionInfo.builder()
                 .plantCategory(plantCategory)
                 .jointMarket(jointMarket)
@@ -184,8 +182,6 @@ class AuctionScheduleQueryRepositoryTest extends IntegrationTestSupport {
     private Variety createVariety() {
         Variety variety = Variety.builder()
             .isDeleted(false)
-            .createdBy(1L)
-            .lastModifiedBy(1L)
             .code("10000001")
             .info(VarietyInfo.builder()
                 .plantCategory(PlantCategory.CUT_FLOWERS)
@@ -199,8 +195,6 @@ class AuctionScheduleQueryRepositoryTest extends IntegrationTestSupport {
     private AuctionVariety createAuctionVariety(boolean isDeleted, AuctionSchedule auctionSchedule, Variety variety, String listingNumber) {
         AuctionVariety auctionVariety = AuctionVariety.builder()
             .isDeleted(isDeleted)
-            .createdBy(1L)
-            .lastModifiedBy(1L)
             .auctionSchedule(auctionSchedule)
             .variety(variety)
             .listingNumber(listingNumber)

@@ -2,7 +2,6 @@ package com.ssafy.auction_service.api.service.variety.request;
 
 import com.ssafy.auction_service.domain.variety.PlantCategory;
 import com.ssafy.auction_service.domain.variety.Variety;
-import com.ssafy.auction_service.domain.variety.VarietyInfo;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -31,9 +30,5 @@ public class VarietyCreateServiceRequest {
 
     public Variety toEntity(int equalPlantCategoryCount) {
         return Variety.create(equalPlantCategoryCount, plantCategory, itemName, varietyName);
-    }
-
-    public VarietyInfo getVarietyInfo() {
-        return VarietyInfo.of(plantCategory, itemName, varietyName);
     }
 }

@@ -37,8 +37,8 @@ public class AuctionVariety extends BaseEntity {
     private Shipment shipment;
 
     @Builder
-    private AuctionVariety(boolean isDeleted, Long createdBy, Long lastModifiedBy, AuctionSchedule auctionSchedule, Variety variety, String listingNumber, AuctionPlant auctionPlant, Shipment shipment) {
-        super(isDeleted, createdBy, lastModifiedBy);
+    private AuctionVariety(boolean isDeleted, AuctionSchedule auctionSchedule, Variety variety, String listingNumber, AuctionPlant auctionPlant, Shipment shipment) {
+        super(isDeleted);
         this.auctionSchedule = auctionSchedule;
         this.variety = variety;
         this.listingNumber = listingNumber;
@@ -46,12 +46,12 @@ public class AuctionVariety extends BaseEntity {
         this.shipment = shipment;
     }
 
-    public static AuctionVariety of(boolean isDeleted, Long createdBy, Long lastModifiedBy, AuctionSchedule auctionSchedule, Variety variety, String listingNumber, AuctionPlant auctionPlant, Shipment shipment) {
-        return new AuctionVariety(isDeleted, createdBy, lastModifiedBy, auctionSchedule, variety, listingNumber, auctionPlant, shipment);
+    public static AuctionVariety of(boolean isDeleted, AuctionSchedule auctionSchedule, Variety variety, String listingNumber, AuctionPlant auctionPlant, Shipment shipment) {
+        return new AuctionVariety(isDeleted, auctionSchedule, variety, listingNumber, auctionPlant, shipment);
     }
 
     public static AuctionVariety create(AuctionSchedule auctionSchedule, Variety variety, String listingNumber, AuctionPlant auctionPlant, Shipment shipment) {
-        return of(false, null, null, auctionSchedule, variety, listingNumber, auctionPlant, shipment);
+        return of(false, auctionSchedule, variety, listingNumber, auctionPlant, shipment);
     }
 
     public void modifyAuctionPlant(PlantGrade plantGrade, int plantCount, Price auctionStartPrice) {

@@ -21,9 +21,7 @@ public abstract class BaseEntity extends TimeBaseEntity {
     @Column(nullable = false)
     private Long lastModifiedBy;
 
-    protected BaseEntity(boolean isDeleted, Long createdBy, Long lastModifiedBy) {
+    protected BaseEntity(boolean isDeleted) {
         super(isDeleted);
-        this.createdBy = createdBy;
-        this.lastModifiedBy = lastModifiedBy;
     }
 }

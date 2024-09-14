@@ -85,8 +85,6 @@ class VarietyQueryServiceTest extends IntegrationTestSupport {
     private Variety createVariety(boolean isDeleted, String code, PlantCategory plantCategory, String itemName, String varietyName) {
         Variety variety = Variety.builder()
             .isDeleted(isDeleted)
-            .createdBy(1L)
-            .lastModifiedBy(1L)
             .code(code)
             .info(VarietyInfo.builder()
                 .plantCategory(plantCategory)

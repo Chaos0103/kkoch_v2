@@ -120,10 +120,9 @@ class VarietyApiControllerDocsTest extends RestDocsSupport {
             .plantCategory("절화")
             .itemName("장미")
             .varietyName("하젤")
-            .modifiedDateTime(LocalDateTime.now())
             .build();
 
-        given(varietyService.modifyVariety(anyString(), anyString(), any()))
+        given(varietyService.modifyVariety(anyString(), anyString()))
             .willReturn(response);
 
         mockMvc.perform(
@@ -165,9 +164,7 @@ class VarietyApiControllerDocsTest extends RestDocsSupport {
                     fieldWithPath("data.itemName").type(JsonFieldType.STRING)
                         .description("품목명"),
                     fieldWithPath("data.varietyName").type(JsonFieldType.STRING)
-                        .description("품종명"),
-                    fieldWithPath("data.modifiedDateTime").type(JsonFieldType.ARRAY)
-                        .description("품종 수정일시")
+                        .description("품종명")
                 )
             ));
     }

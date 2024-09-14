@@ -23,21 +23,21 @@ public class Variety extends BaseEntity {
     private VarietyInfo info;
 
     @Builder
-    private Variety(boolean isDeleted, Long createdBy, Long lastModifiedBy, String code, VarietyInfo info) {
-        super(isDeleted, createdBy, lastModifiedBy);
+    private Variety(boolean isDeleted, String code, VarietyInfo info) {
+        super(isDeleted);
         this.code = code;
         this.info = info;
     }
 
-    public static Variety of(boolean isDeleted, Long createdBy, Long lastModifiedBy, String code, VarietyInfo info) {
-        return new Variety(isDeleted, createdBy, lastModifiedBy, code, info);
+    public static Variety of(boolean isDeleted, String code, VarietyInfo info) {
+        return new Variety(isDeleted, code, info);
     }
 
     public static Variety create(int equalPlantCategoryCount, PlantCategory plantCategory, String itemName, String varietyName) {
-        String code = plantCategory.getNextCode(equalPlantCategoryCount);
+        String generatedCode = plantCategory.getNextCode(equalPlantCategoryCount);
 
         VarietyInfo info = VarietyInfo.of(plantCategory, itemName, varietyName);
-        return of(false, null, null, code, info);
+        return of(false, generatedCode, info);
     }
 
     public void modifyVarietyName(String varietyName) {
@@ -65,7 +65,7 @@ public class Variety extends BaseEntity {
         return info.getVarietyName();
     }
 
-    public VarietyInfo getModifiedInfo(String varietyName) {
-        return VarietyInfo.of(info.getPlantCategory(), info.getItemName(), varietyName);
+    public VarietyInfo getInfoWithVarietyName(String varietyName) {
+        return info.withVarietyName(varietyName);
     }
 }
