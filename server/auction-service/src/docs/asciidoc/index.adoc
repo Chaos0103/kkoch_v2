@@ -15,6 +15,7 @@ include::overview.adoc[]
 == 품종 API
 
 include::api/variety/create-variety.adoc[]
+include::api/variety/modify-variety.adoc[]
 include::api/variety/search-varieties.adoc[]
 include::api/variety/search-item-names.adoc[]
 

@@ -1,0 +1,14 @@
+[[modify-variety]]
+=== 품종 수정 API
+
+==== HTTP Request
+
+include::{snippets}/modify-variety/http-request.adoc[]
+include::{snippets}/modify-variety/path-parameters.adoc[]
+include::{snippets}/modify-variety/request-headers.adoc[]
+include::{snippets}/modify-variety/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/modify-variety/http-response.adoc[]
+include::{snippets}/modify-variety/response-fields.adoc[]
