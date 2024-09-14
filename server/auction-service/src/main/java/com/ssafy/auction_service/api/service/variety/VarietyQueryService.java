@@ -6,6 +6,7 @@ import com.ssafy.auction_service.common.util.PageUtils;
 import com.ssafy.auction_service.domain.variety.PlantCategory;
 import com.ssafy.auction_service.domain.variety.repository.VarietyQueryRepository;
 import com.ssafy.auction_service.domain.variety.repository.cond.VarietySearchCond;
+import com.ssafy.auction_service.domain.variety.repository.response.ItemNameResponse;
 import com.ssafy.auction_service.domain.variety.repository.response.VarietyResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -29,5 +30,9 @@ public class VarietyQueryService {
         int total = varietyQueryRepository.countByCond(cond);
 
         return PageResponse.create(content, pageable, total);
+    }
+
+    public ListResponse<ItemNameResponse> searchItemNames(PlantCategory plantCategory) {
+        return null;
     }
 }
