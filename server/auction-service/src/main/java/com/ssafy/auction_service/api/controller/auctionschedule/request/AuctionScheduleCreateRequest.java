@@ -6,27 +6,29 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import static com.ssafy.auction_service.api.controller.auctionschedule.message.AuctionScheduleBindingMessage.*;
+
 @Getter
 @NoArgsConstructor
 public class AuctionScheduleCreateRequest {
 
-    @NotBlank(message = "화훼부류를 입력해주세요.")
+    @NotBlank(message = NOT_BLANK_PLANT_CATEGORY)
     private String plantCategory;
 
-    @NotBlank(message = "공판장을 입력해주세요.")
+    @NotBlank(message = NOT_BLANK_JOINT_MARKET)
     private String jointMarket;
+
+    @NotBlank(message = NOT_BLANK_AUCTION_START_DATE_TIME)
+    private String auctionStartDateTime;
 
     private String auctionDescription;
 
-    @NotBlank(message = "경매 시작일시를 입력해주세요.")
-    private String auctionStartDateTime;
-
     @Builder
-    private AuctionScheduleCreateRequest(String plantCategory, String jointMarket, String auctionDescription, String auctionStartDateTime) {
+    private AuctionScheduleCreateRequest(String plantCategory, String jointMarket, String auctionStartDateTime, String auctionDescription) {
         this.plantCategory = plantCategory;
         this.jointMarket = jointMarket;
-        this.auctionDescription = auctionDescription;
         this.auctionStartDateTime = auctionStartDateTime;
+        this.auctionDescription = auctionDescription;
     }
 
     public AuctionScheduleCreateServiceRequest toServiceRequest() {

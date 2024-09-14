@@ -91,7 +91,7 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
     @Test
     void duplicatedAuctionSchedule2() {
         //given
-        LocalDateTime current = LocalDateTime.of(2024, 8, 15, 10, 0);
+        LocalDateTime current = LocalDateTime.of(2024, 8, 11, 10, 0);
         createAuctionSchedule(AuctionStatus.INIT, LocalDateTime.of(2024, 8, 12, 5, 0));
 
         AuctionSchedule auctionSchedule = createAuctionSchedule(AuctionStatus.INIT, LocalDateTime.of(2024, 8, 11, 5, 0));

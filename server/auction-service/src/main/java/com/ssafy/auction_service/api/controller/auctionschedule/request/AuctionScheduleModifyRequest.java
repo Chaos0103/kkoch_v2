@@ -6,11 +6,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import static com.ssafy.auction_service.api.controller.auctionschedule.message.AuctionScheduleBindingMessage.NOT_BLANK_AUCTION_START_DATE_TIME;
+
 @Getter
 @NoArgsConstructor
 public class AuctionScheduleModifyRequest {
 
-    @NotBlank(message = "경매 시작일시를 입력해주세요.")
+    @NotBlank(message = NOT_BLANK_AUCTION_START_DATE_TIME)
     private String auctionStartDateTime;
 
     private String auctionDescription;
