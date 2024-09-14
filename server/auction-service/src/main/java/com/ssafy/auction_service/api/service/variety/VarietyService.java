@@ -3,6 +3,7 @@ package com.ssafy.auction_service.api.service.variety;
 import com.ssafy.auction_service.api.service.variety.request.VarietyCreateServiceRequest;
 import com.ssafy.auction_service.api.service.variety.response.VarietyCreateResponse;
 import com.ssafy.auction_service.api.service.variety.response.VarietyModifyResponse;
+import com.ssafy.auction_service.api.service.variety.response.VarietyRemoveResponse;
 import com.ssafy.auction_service.common.exception.AppException;
 import com.ssafy.auction_service.domain.variety.Variety;
 import com.ssafy.auction_service.domain.variety.repository.VarietyRepository;
@@ -46,6 +47,10 @@ public class VarietyService {
         variety.modifyVarietyName(varietyName);
 
         return VarietyModifyResponse.of(variety, current);
+    }
+
+    public VarietyRemoveResponse removeVariety(String varietyCode) {
+        return null;
     }
 
     private Variety findVarietyByCode(String code) {

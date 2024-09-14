@@ -4,6 +4,7 @@ import com.ssafy.auction_service.IntegrationTestSupport;
 import com.ssafy.auction_service.api.service.variety.request.VarietyCreateServiceRequest;
 import com.ssafy.auction_service.api.service.variety.response.VarietyCreateResponse;
 import com.ssafy.auction_service.api.service.variety.response.VarietyModifyResponse;
+import com.ssafy.auction_service.api.service.variety.response.VarietyRemoveResponse;
 import com.ssafy.auction_service.common.exception.AppException;
 import com.ssafy.auction_service.domain.variety.PlantCategory;
 import com.ssafy.auction_service.domain.variety.Variety;
@@ -116,6 +117,28 @@ class VarietyServiceTest extends IntegrationTestSupport {
         assertThat(findVariety).isPresent()
             .get()
             .hasFieldOrPropertyWithValue("varietyName", "심화");
+    }
+
+    @DisplayName("품종을 삭제한다.")
+    @Test
+    void removeVariety() {
+        //given
+        Variety variety = createVariety("10000001", "하트앤소울");
+
+        //when
+        VarietyRemoveResponse response = varietyService.removeVariety(variety.getCode());
+
+        //then
+        assertThat(response).isNotNull()
+            .hasFieldOrPropertyWithValue("code", "10000001")
+            .hasFieldOrPropertyWithValue("plantCategory", "절화")
+            .hasFieldOrPropertyWithValue("itemName", "장미")
+            .hasFieldOrPropertyWithValue("varietyName", "하트앤소울");
+
+        Optional<Variety> findVariety = varietyRepository.findById("10000001");
+        assertThat(findVariety).isPresent()
+            .get()
+            .hasFieldOrPropertyWithValue("isDeleted", true);
     }
 
     private Variety createVariety(String code, String varietyName) {
