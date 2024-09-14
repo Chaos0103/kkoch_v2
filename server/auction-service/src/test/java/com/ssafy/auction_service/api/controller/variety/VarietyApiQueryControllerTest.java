@@ -93,4 +93,13 @@ class VarietyApiQueryControllerTest extends ControllerTestSupport {
             )
             .andExpect(status().isOk());
     }
+
+    @DisplayName("품목명 목록을 조회한다.")
+    @Test
+    void searchItemNames() throws Exception {
+        mockMvc.perform(
+                get("/auction-service/varieties/{plantCategory}", "CUT_FLOWERS")
+            )
+            .andExpect(status().isOk());
+    }
 }
