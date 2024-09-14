@@ -16,6 +16,7 @@ include::overview.adoc[]
 
 include::api/variety/create-variety.adoc[]
 include::api/variety/search-varieties.adoc[]
+include::api/variety/search-item-names.adoc[]
 
 [[Auction-Schedule-API]]
 == 경매 일정 API
