@@ -1,11 +1,13 @@
 package com.ssafy.auction_service.docs.variety;
 
+import com.ssafy.auction_service.api.ListResponse;
 import com.ssafy.auction_service.api.PageResponse;
 import com.ssafy.auction_service.api.controller.variety.VarietyApiQueryController;
 import com.ssafy.auction_service.api.controller.variety.param.VarietySearchParam;
 import com.ssafy.auction_service.api.service.variety.VarietyQueryService;
 import com.ssafy.auction_service.docs.RestDocsSupport;
 import com.ssafy.auction_service.domain.variety.PlantCategory;
+import com.ssafy.auction_service.domain.variety.repository.response.ItemNameResponse;
 import com.ssafy.auction_service.domain.variety.repository.response.VarietyResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,8 +30,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -116,6 +117,51 @@ class VarietyApiQueryControllerDocsTest extends RestDocsSupport {
                         .description("첫 페이지 여부"),
                     fieldWithPath("data.isLast").type(JsonFieldType.BOOLEAN)
                         .description("마지막 페이지 여부")
+                )
+            ));
+    }
+
+    @DisplayName("품목명 목록 조회 API")
+    @Test
+    void searchItemNames() throws Exception {
+        ItemNameResponse itemName1 = ItemNameResponse.builder()
+            .itemName("국화")
+            .build();
+        ItemNameResponse itemName2 = ItemNameResponse.builder()
+            .itemName("장미")
+            .build();
+
+        ListResponse<ItemNameResponse> response = ListResponse.of(List.of(itemName1, itemName2));
+
+        given(varietyQueryService.searchItemNames(any()))
+            .willReturn(response);
+
+        mockMvc.perform(
+                get("/auction-service/varieties/{plantCategory}", "CUT_FLOWERS")
+            )
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andDo(document("search-item-names",
+                preprocessResponse(prettyPrint()),
+                pathParameters(
+                    parameterWithName("plantCategory")
+                        .description("화훼부류")
+                ),
+                responseFields(
+                    fieldWithPath("code").type(JsonFieldType.NUMBER)
+                        .description("코드"),
+                    fieldWithPath("status").type(JsonFieldType.STRING)
+                        .description("상태"),
+                    fieldWithPath("message").type(JsonFieldType.STRING)
+                        .description("메시지"),
+                    fieldWithPath("data").type(JsonFieldType.OBJECT)
+                        .description("응답 데이터"),
+                    fieldWithPath("data.content").type(JsonFieldType.ARRAY)
+                        .description("조회된 품목명 목록"),
+                    fieldWithPath("data.content[].itemName").type(JsonFieldType.STRING)
+                        .description("품목명"),
+                    fieldWithPath("data.size").type(JsonFieldType.NUMBER)
+                        .description("조회된 품목명 갯수")
                 )
             ));
     }
