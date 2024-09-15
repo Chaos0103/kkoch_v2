@@ -14,11 +14,11 @@ public enum PlantCategory {
     private static final String NOT_SUPPORTED_VALUE = "지원하지 않는 화훼부류입니다.";
     private static final String CODE_FORMAT = "%s%04d";
 
-    private final String description;
+    private final String text;
     private final String prefix;
 
-    PlantCategory(String description, String prefix) {
-        this.description = description;
+    PlantCategory(String text, String prefix) {
+        this.text = text;
         this.prefix = prefix;
     }
 

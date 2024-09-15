@@ -46,7 +46,7 @@ public class AuctionVarietyService {
             throw new AppException(UNABLE_TO_REGISTER_AUCTION_VARIETY);
         }
 
-        if (auctionSchedule.isNotRegisteredVarietyBy(variety)) {
+        if (auctionSchedule.cannotRegister(variety)) {
             throw new AppException(UNABLE_TO_REGISTER_VARIETY_FOR_AUCTION_SCHEDULE);
         }
 

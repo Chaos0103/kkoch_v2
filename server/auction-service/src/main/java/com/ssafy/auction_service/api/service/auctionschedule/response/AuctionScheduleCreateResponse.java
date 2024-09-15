@@ -30,6 +30,6 @@ public class AuctionScheduleCreateResponse {
     }
 
     public static AuctionScheduleCreateResponse of(AuctionSchedule auctionSchedule) {
-        return new AuctionScheduleCreateResponse(auctionSchedule.getId(), auctionSchedule.getPlantCategoryDescription(), auctionSchedule.getKoreanJointMarket(), auctionSchedule.getAuctionInfo().getAuctionStartDateTime(), auctionSchedule.getAuctionStatus(), auctionSchedule.getCreatedDateTime());
+        return new AuctionScheduleCreateResponse(auctionSchedule.getId(), auctionSchedule.getPlantCategoryDescription(), auctionSchedule.getJointMarketFullName(), auctionSchedule.getAuctionInfo().getAuctionStartDateTime(), auctionSchedule.getAuctionStatus(), auctionSchedule.getCreatedDateTime());
     }
 }

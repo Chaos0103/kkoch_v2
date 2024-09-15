@@ -33,7 +33,7 @@ public class AuctionScheduleModifyResponse {
         return new AuctionScheduleModifyResponse(
             auctionSchedule.getId(),
             auctionSchedule.getPlantCategoryDescription(),
-            auctionSchedule.getKoreanJointMarket(),
+            auctionSchedule.getJointMarketFullName(),
             auctionSchedule.getAuctionInfo().getAuctionStartDateTime(),
             auctionSchedule.getAuctionStatus(),
             current

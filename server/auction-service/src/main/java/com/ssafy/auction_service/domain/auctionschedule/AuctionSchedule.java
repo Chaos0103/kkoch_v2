@@ -75,10 +75,6 @@ public class AuctionSchedule extends BaseEntity {
         return auctionStatus == AuctionStatus.INIT;
     }
 
-    public boolean isNotInit() {
-        return !isInit();
-    }
-
     public boolean isReady() {
         return auctionStatus == AuctionStatus.READY;
     }
@@ -91,36 +87,40 @@ public class AuctionSchedule extends BaseEntity {
         return auctionStatus == AuctionStatus.COMPLETE;
     }
 
-    public boolean isRegisteredVarietyBy(Variety variety) {
+    public boolean isNotInit() {
+        return !isInit();
+    }
+
+    public boolean canRegister(Variety variety) {
         return variety.plantCategoryEquals(auctionInfo.getPlantCategory());
     }
 
-    public boolean isNotRegisteredVarietyBy(Variety variety) {
-        return !isRegisteredVarietyBy(variety);
+    public boolean cannotRegister(Variety variety) {
+        return !canRegister(variety);
     }
 
-    public boolean isModifiable() {
+    public boolean canModify() {
         return isInit();
     }
 
-    public boolean isNotModifiable() {
-        return !isModifiable();
+    public boolean cannotModify() {
+        return !canModify();
     }
 
-    public boolean isRemovable() {
+    public boolean canRemove() {
         return isInit();
     }
 
-    public boolean isNotRemovable() {
-        return !isRemovable();
+    public boolean cannotRemove() {
+        return !canRemove();
     }
 
     public String getPlantCategoryDescription() {
-        return auctionInfo.getPlantCategory().getDescription();
+        return auctionInfo.getPlantCategory().getText();
     }
 
-    public String getKoreanJointMarket() {
-        return auctionInfo.getJointMarket().getKorean();
+    public String getJointMarketFullName() {
+        return auctionInfo.getJointMarket().getFullName();
     }
 
     public AuctionInfo getModifiedAuctionInfo(LocalDateTime auctionStartDateTime) {

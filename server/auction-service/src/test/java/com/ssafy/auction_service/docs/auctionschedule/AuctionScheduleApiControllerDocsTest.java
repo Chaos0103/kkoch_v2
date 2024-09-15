@@ -56,8 +56,8 @@ class AuctionScheduleApiControllerDocsTest extends RestDocsSupport {
 
         AuctionScheduleCreateResponse response = AuctionScheduleCreateResponse.builder()
             .id(1)
-            .plantCategory(PlantCategory.CUT_FLOWERS.getDescription())
-            .jointMarket(JointMarket.YANGJAE.getKorean())
+            .plantCategory(PlantCategory.CUT_FLOWERS.getText())
+            .jointMarket(JointMarket.YANGJAE.getCity())
             .auctionStartDateTime(LocalDateTime.of(2024, 7, 15, 5, 0))
             .auctionStatus(AuctionStatus.INIT)
             .createdDateTime(LocalDateTime.now())
@@ -127,8 +127,8 @@ class AuctionScheduleApiControllerDocsTest extends RestDocsSupport {
 
         AuctionScheduleModifyResponse response = AuctionScheduleModifyResponse.builder()
             .id(1)
-            .plantCategory(PlantCategory.CUT_FLOWERS.getDescription())
-            .jointMarket(JointMarket.YANGJAE.getKorean())
+            .plantCategory(PlantCategory.CUT_FLOWERS.getText())
+            .jointMarket(JointMarket.YANGJAE.getCity())
             .auctionStartDateTime(LocalDateTime.of(2024, 7, 15, 5, 0))
             .auctionStatus(AuctionStatus.INIT)
             .modifiedDateTime(LocalDateTime.now())
@@ -337,8 +337,8 @@ class AuctionScheduleApiControllerDocsTest extends RestDocsSupport {
     void removeAuctionSchedule() throws Exception {
         AuctionScheduleRemoveResponse response = AuctionScheduleRemoveResponse.builder()
             .id(1)
-            .plantCategory(PlantCategory.CUT_FLOWERS.getDescription())
-            .jointMarket(JointMarket.YANGJAE.getKorean())
+            .plantCategory(PlantCategory.CUT_FLOWERS.getText())
+            .jointMarket(JointMarket.YANGJAE.getCity())
             .auctionStartDateTime(LocalDateTime.of(2024, 7, 15, 5, 0))
             .auctionStatus(AuctionStatus.INIT)
             .removedDateTime(LocalDateTime.now())

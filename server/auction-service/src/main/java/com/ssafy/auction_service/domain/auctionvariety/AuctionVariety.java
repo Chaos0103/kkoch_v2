@@ -64,11 +64,11 @@ public class AuctionVariety extends BaseEntity {
     }
 
     public boolean isNotModifiable() {
-        return auctionSchedule.isNotModifiable();
+        return auctionSchedule.cannotModify();
     }
 
     public boolean isNotRemovable() {
-        return auctionSchedule.isNotRemovable();
+        return auctionSchedule.cannotRemove();
     }
 
     public int getAuctionStartPrice() {

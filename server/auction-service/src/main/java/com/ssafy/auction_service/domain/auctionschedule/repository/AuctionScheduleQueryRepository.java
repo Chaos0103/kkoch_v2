@@ -42,7 +42,7 @@ public class AuctionScheduleQueryRepository {
             .from(auctionSchedule)
             .where(
                 auctionSchedule.isDeleted.isFalse(),
-                auctionSchedule.auctionStatus.in(AuctionStatus.getSearchableStatus()),
+                auctionSchedule.auctionStatus.in(AuctionStatus.forDisplay()),
                 eqPlantCategory(cond.getPlantCategory()),
                 eqJointMarker(cond.getJointMarket())
             )

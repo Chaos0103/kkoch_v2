@@ -14,8 +14,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.ssafy.auction_service.common.util.StringUtils.isBlank;
 import static com.ssafy.auction_service.domain.variety.QVariety.variety;
+import static org.springframework.util.StringUtils.hasText;
 
 @Repository
 public class VarietyQueryRepository {
@@ -39,8 +39,8 @@ public class VarietyQueryRepository {
             )
             .from(variety)
             .where(
-                variety.isDeleted.isFalse(),
-                variety.info.plantCategory.eq(cond.getPlantCategory()),
+                isNotDeleted(),
+                eqPlantCategory(cond.getPlantCategory()),
                 eqItemName(cond.getItemName())
             )
             .orderBy(
@@ -57,8 +57,8 @@ public class VarietyQueryRepository {
             .select(variety.code)
             .from(variety)
             .where(
-                variety.isDeleted.isFalse(),
-                variety.info.plantCategory.eq(cond.getPlantCategory()),
+                isNotDeleted(),
+                eqPlantCategory(cond.getPlantCategory()),
                 eqItemName(cond.getItemName())
             )
             .fetch()
@@ -75,14 +75,22 @@ public class VarietyQueryRepository {
             ).distinct()
             .from(variety)
             .where(
-                variety.isDeleted.isFalse(),
-                variety.info.plantCategory.eq(plantCategory)
+                isNotDeleted(),
+                eqPlantCategory(plantCategory)
             )
             .orderBy(variety.info.itemName.asc())
             .fetch();
     }
 
     private BooleanExpression eqItemName(String itemName) {
-        return isBlank(itemName) ? null : variety.info.itemName.eq(itemName);
+        return hasText(itemName) ? variety.info.itemName.eq(itemName) : null;
+    }
+
+    private BooleanExpression isNotDeleted() {
+        return variety.isDeleted.isFalse();
+    }
+
+    private BooleanExpression eqPlantCategory(PlantCategory plantCategory) {
+        return variety.info.plantCategory.eq(plantCategory);
     }
 }

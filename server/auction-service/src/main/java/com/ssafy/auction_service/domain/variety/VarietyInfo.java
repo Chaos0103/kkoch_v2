@@ -46,7 +46,7 @@ public class VarietyInfo {
     }
 
     public String getKoreanPlantCategory() {
-        return plantCategory.getDescription();
+        return plantCategory.getText();
     }
 
     @Override
