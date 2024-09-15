@@ -79,7 +79,7 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
         //then
         assertThat(response).isNotNull()
             .hasFieldOrPropertyWithValue("plantCategory", "절화")
-            .hasFieldOrPropertyWithValue("jointMarket", "양재")
+            .hasFieldOrPropertyWithValue("jointMarket", "aT화훼공판장(양재동)")
             .hasFieldOrPropertyWithValue("auctionStartDateTime", LocalDateTime.of(2024, 8, 12, 5, 0))
             .hasFieldOrPropertyWithValue("auctionStatus", AuctionStatus.INIT);
 
@@ -130,7 +130,7 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
         //when
         assertThatThrownBy(() -> auctionScheduleService.modifyAuctionSchedule(auctionSchedule.getId(), request, current))
             .isInstanceOf(AppException.class)
-            .hasMessage("더이상 경매 일정을 수정할 수 없습니다.");
+            .hasMessage("경매 일정을 수정할 수 없습니다.");
 
         //then
         Optional<AuctionSchedule> findAuctionSchedule = auctionScheduleRepository.findById(auctionSchedule.getId());
@@ -159,7 +159,7 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
         assertThat(response).isNotNull()
             .hasFieldOrPropertyWithValue("id", auctionSchedule.getId())
             .hasFieldOrPropertyWithValue("plantCategory", "절화")
-            .hasFieldOrPropertyWithValue("jointMarket", "양재")
+            .hasFieldOrPropertyWithValue("jointMarket", "aT화훼공판장(양재동)")
             .hasFieldOrPropertyWithValue("auctionStartDateTime", LocalDateTime.of(2024, 9, 6, 10, 0))
             .hasFieldOrPropertyWithValue("auctionStatus", AuctionStatus.INIT)
             .hasFieldOrPropertyWithValue("modifiedDateTime", current);
@@ -385,7 +385,7 @@ class AuctionScheduleServiceTest extends IntegrationTestSupport {
         assertThat(response).isNotNull()
             .hasFieldOrPropertyWithValue("id", auctionSchedule.getId())
             .hasFieldOrPropertyWithValue("plantCategory", "절화")
-            .hasFieldOrPropertyWithValue("jointMarket", "양재")
+            .hasFieldOrPropertyWithValue("jointMarket", "aT화훼공판장(양재동)")
             .hasFieldOrPropertyWithValue("auctionStartDateTime", LocalDateTime.of(2024, 8, 12, 5, 0))
             .hasFieldOrPropertyWithValue("auctionStatus", AuctionStatus.INIT)
             .hasFieldOrPropertyWithValue("removedDateTime", current);

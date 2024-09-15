@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import static com.ssafy.auction_service.domain.auctionschedule.repository.AuctionScheduleRepository.NO_SUCH_AUCTION_SCHEDULE;
 
@@ -25,13 +24,13 @@ import static com.ssafy.auction_service.domain.auctionschedule.repository.Auctio
 @RequiredArgsConstructor
 public class AuctionScheduleService {
 
-    private static final String NOT_MODIFIABLE_AUCTION_SCHEDULE = "더이상 경매 일정을 수정할 수 없습니다.";
-    private static final String NOT_REMOVABLE_AUCTION_SCHEDULE = "경매 일정을 삭제할 수 없습니다.";
+    private static final String CAN_NOT_MODIFY_AUCTION_SCHEDULE = "경매 일정을 수정할 수 없습니다.";
+    private static final String CAN_NOT_REMOVE_AUCTION_SCHEDULE = "경매 일정을 삭제할 수 없습니다.";
     private static final String IS_NOT_READY_AUCTION_SCHEDULE = "준비된 경매가 아닙니다.";
     private static final String IS_PROGRESS_AUCTION_SCHEDULE = "진행중인 경매입니다.";
     private static final String IS_NOT_PROGRESS_AUCTION_SCHEDULE = "진행중인 경매가 아닙니다.";
     private static final String IS_COMPLETE_AUCTION_SCHEDULE = "완료된 경매입니다.";
-    private static final String DUPLICATE_AUCTION_SCHEDULE = "이미 등록된 경매 일정이 있습니다.";
+    private static final String EXIST_DUPLICATED_AUCTION_SCHEDULE = "이미 등록된 경매 일정이 있습니다.";
 
     private final AuctionScheduleRepository auctionScheduleRepository;
 
@@ -51,8 +50,8 @@ public class AuctionScheduleService {
         request.checkAuctionStartDateTime(current);
         checkDuplicateAuctionSchedule(request.getAuctionInfo(auctionSchedule));
 
-        if (auctionSchedule.isNotModifiable()) {
-            throw new AppException(NOT_MODIFIABLE_AUCTION_SCHEDULE);
+        if (auctionSchedule.cannotModify()) {
+            throw new AppException(CAN_NOT_MODIFY_AUCTION_SCHEDULE);
         }
 
         request.modify(auctionSchedule);
@@ -111,8 +110,8 @@ public class AuctionScheduleService {
     public AuctionScheduleRemoveResponse removeAuctionSchedule(int auctionScheduleId, LocalDateTime current) {
         AuctionSchedule auctionSchedule = findAuctionScheduleById(auctionScheduleId);
 
-        if (auctionSchedule.isNotRemovable()) {
-            throw new AppException(NOT_REMOVABLE_AUCTION_SCHEDULE);
+        if (auctionSchedule.cannotRemove()) {
+            throw new AppException(CAN_NOT_REMOVE_AUCTION_SCHEDULE);
         }
 
         auctionSchedule.remove();
@@ -125,10 +124,10 @@ public class AuctionScheduleService {
             .orElseThrow(() -> new NoSuchElementException(NO_SUCH_AUCTION_SCHEDULE));
     }
 
-    private void checkDuplicateAuctionSchedule(AuctionInfo request) {
-        Optional<Integer> auctionScheduleId = auctionScheduleRepository.findIdByAuction(request);
-        if (auctionScheduleId.isPresent()) {
-            throw new AppException(DUPLICATE_AUCTION_SCHEDULE);
-        }
+    private void checkDuplicateAuctionSchedule(AuctionInfo auctionInfo) {
+        auctionScheduleRepository.findIdByAuction(auctionInfo)
+            .ifPresent(id -> {
+                throw new AppException(EXIST_DUPLICATED_AUCTION_SCHEDULE);
+            });
     }
 }
