@@ -10,10 +10,10 @@ public enum PlantGrade {
     ADVANCED("상급"),
     NORMAL("보통");
 
-    private final String description;
+    private final String text;
 
-    PlantGrade(String description) {
-        this.description = description;
+    PlantGrade(String text) {
+        this.text = text;
     }
 
     public static PlantGrade of(String str) {
