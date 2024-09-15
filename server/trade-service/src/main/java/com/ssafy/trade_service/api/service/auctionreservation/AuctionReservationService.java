@@ -19,22 +19,26 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AuctionReservationService {
 
+    private static final int MAXIMUM_NUMBER_OF_RESERVATIONS_PER_AUCTION = 10;
+    private static final int MAXIMUM_NUMBER_OF_PLANT_COUNT_PER_AUCTION = 100;
+    private static final String MAXIMUM_RESERVATION_EXCEEDED = "경매에 등록할 수 있는 최대 예약수를 초과했습니다.";
+    private static final String MAXIMUM_PLANT_COUNT_EXCEEDED = "경매에 등록할 수 있는 최대 화훼단수를 초과했습니다.";
+
     private final AuctionReservationRepository auctionReservationRepository;
     private final MemberServiceClient memberServiceClient;
 
     public AuctionReservationResponse createAuctionReservation(int auctionScheduleId, AuctionReservationServiceRequest request) {
         Long memberId = getMemberId();
 
-        List<Integer> plantCounts = auctionReservationRepository.findAllPlantCountByAuctionScheduleId(auctionScheduleId, memberId);
-        if (plantCounts.size() >= 10) {
-            throw new AppException("경매에 등록할 수 있는 최대 예약수를 초과했습니다.");
+        List<Integer> content = auctionReservationRepository.findAllPlantCountByAuctionScheduleId(auctionScheduleId, memberId);
+        PlantCounts plantCounts = request.getPlantCounts(content);
+
+        if (plantCounts.isSizeMoreThan(MAXIMUM_NUMBER_OF_RESERVATIONS_PER_AUCTION)) {
+            throw new AppException(MAXIMUM_RESERVATION_EXCEEDED);
         }
 
-        int sum = plantCounts.stream()
-            .mapToInt(m -> m)
-            .sum();
-        if (sum >= 100) {
-            throw new AppException("경매에 등록할 수 있는 최대 화훼단수를 초과했습니다.");
+        if (plantCounts.isSumMoreThan(MAXIMUM_NUMBER_OF_PLANT_COUNT_PER_AUCTION)) {
+            throw new AppException(MAXIMUM_PLANT_COUNT_EXCEEDED);
         }
 
         AuctionReservation auctionReservation = request.toEntity(memberId, auctionScheduleId);
