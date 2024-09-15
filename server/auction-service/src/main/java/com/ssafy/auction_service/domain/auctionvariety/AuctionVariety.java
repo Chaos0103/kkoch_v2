@@ -63,11 +63,11 @@ public class AuctionVariety extends BaseEntity {
         super.remove();
     }
 
-    public boolean isNotModifiable() {
+    public boolean cannotModify() {
         return auctionSchedule.cannotModify();
     }
 
-    public boolean isNotRemovable() {
+    public boolean cannotRemove() {
         return auctionSchedule.cannotRemove();
     }
 

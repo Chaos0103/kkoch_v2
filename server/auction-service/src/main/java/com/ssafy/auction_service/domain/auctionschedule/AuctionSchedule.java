@@ -87,16 +87,20 @@ public class AuctionSchedule extends BaseEntity {
         return auctionStatus == AuctionStatus.COMPLETE;
     }
 
-    public boolean isNotInit() {
-        return !isInit();
+    public boolean canRegister() {
+        return isInit();
     }
 
-    public boolean canRegister(Variety variety) {
+    public boolean cannotRegister() {
+        return !canRegister();
+    }
+
+    public boolean canRegisterVariety(Variety variety) {
         return variety.plantCategoryEquals(auctionInfo.getPlantCategory());
     }
 
-    public boolean cannotRegister(Variety variety) {
-        return !canRegister(variety);
+    public boolean cannotRegisterVariety(Variety variety) {
+        return !canRegisterVariety(variety);
     }
 
     public boolean canModify() {

@@ -42,11 +42,11 @@ public class AuctionVarietyService {
 
         AuctionSchedule auctionSchedule = findAuctionScheduleById(auctionScheduleId);
 
-        if (auctionSchedule.isNotInit()) {
+        if (auctionSchedule.cannotRegister()) {
             throw new AppException(UNABLE_TO_REGISTER_AUCTION_VARIETY);
         }
 
-        if (auctionSchedule.cannotRegister(variety)) {
+        if (auctionSchedule.cannotRegisterVariety(variety)) {
             throw new AppException(UNABLE_TO_REGISTER_VARIETY_FOR_AUCTION_SCHEDULE);
         }
 
@@ -61,7 +61,7 @@ public class AuctionVarietyService {
     public AuctionVarietyModifyResponse modifyAuctionVariety(long auctionVarietyId, AuctionVarietyModifyServiceRequest request) {
         AuctionVariety auctionVariety = findAuctionVarietyById(auctionVarietyId);
 
-        if (auctionVariety.isNotModifiable()) {
+        if (auctionVariety.cannotModify()) {
             throw new AppException(UNABLE_TO_MODIFY_AUCTION_VARIETY);
         }
 
@@ -73,7 +73,7 @@ public class AuctionVarietyService {
     public AuctionVarietyRemoveResponse removeAuctionVariety(long auctionVarietyId) {
         AuctionVariety auctionVariety = findAuctionVarietyById(auctionVarietyId);
 
-        if (auctionVariety.isNotRemovable()) {
+        if (auctionVariety.cannotRemove()) {
             throw new AppException(UNABLE_TO_REMOVE_AUCTION_VARIETY);
         }
 
