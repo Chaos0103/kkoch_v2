@@ -37,4 +37,8 @@ public class AuctionReservation extends TimeBaseEntity {
     public static AuctionReservation of(boolean isDeleted, Long memberId, Integer auctionScheduleId, ReservationInfo reservationInfo) {
         return new AuctionReservation(isDeleted, memberId, auctionScheduleId, reservationInfo);
     }
+
+    public static AuctionReservation create(Long memberId, Integer auctionScheduleId, ReservationInfo reservationInfo) {
+        return of(false, memberId, auctionScheduleId, reservationInfo);
+    }
 }

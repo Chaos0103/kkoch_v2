@@ -1,7 +1,9 @@
 package com.ssafy.trade_service.api.service.auctionreservation.request;
 
+import com.ssafy.trade_service.domain.auctionreservation.AuctionReservation;
 import com.ssafy.trade_service.domain.auctionreservation.PlantGrade;
 import com.ssafy.trade_service.domain.auctionreservation.Price;
+import com.ssafy.trade_service.domain.auctionreservation.ReservationInfo;
 import lombok.Builder;
 
 public class AuctionReservationServiceRequest {
@@ -17,5 +19,10 @@ public class AuctionReservationServiceRequest {
         this.plantGrade = plantGrade;
         this.plantCount = plantCount;
         this.desiredPrice = desiredPrice;
+    }
+
+    public AuctionReservation toEntity(Long memberId, Integer auctionScheduleId) {
+        ReservationInfo reservationInfo = ReservationInfo.of(varietyCode, plantGrade, plantCount, desiredPrice);
+        return AuctionReservation.create(memberId, auctionScheduleId, reservationInfo);
     }
 }

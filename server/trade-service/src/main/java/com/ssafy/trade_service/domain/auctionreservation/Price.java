@@ -1,6 +1,7 @@
 package com.ssafy.trade_service.domain.auctionreservation;
 
 import com.ssafy.trade_service.common.exception.AppException;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 public class Price {
 
+    @Column(name = "desired_price")
     private final int value;
 
     @Builder
