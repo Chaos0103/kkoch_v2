@@ -50,7 +50,7 @@ public class AuctionSchedule extends BaseEntity {
     }
 
     public void modify(LocalDateTime auctionStartDateTime, String auctionDescription) {
-        auctionInfo = getModifiedAuctionInfo(auctionStartDateTime);
+        auctionInfo = getInfoWithAuctionStartDateTime(auctionStartDateTime);
         this.auctionDescription = auctionDescription;
     }
 
@@ -123,7 +123,7 @@ public class AuctionSchedule extends BaseEntity {
         return auctionInfo.getJointMarket().getFullName();
     }
 
-    public AuctionInfo getModifiedAuctionInfo(LocalDateTime auctionStartDateTime) {
+    public AuctionInfo getInfoWithAuctionStartDateTime(LocalDateTime auctionStartDateTime) {
         return auctionInfo.withAuctionStartDateTime(auctionStartDateTime);
     }
 

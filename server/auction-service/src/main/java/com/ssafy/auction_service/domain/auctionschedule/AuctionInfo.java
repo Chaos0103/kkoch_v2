@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+import static com.ssafy.auction_service.common.util.TimeUtils.comparePastOrPresent;
+
 @Getter
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
@@ -41,5 +43,9 @@ public class AuctionInfo {
 
     public AuctionInfo withAuctionStartDateTime(LocalDateTime auctionStartDateTime) {
         return of(plantCategory, jointMarket, auctionStartDateTime);
+    }
+
+    public boolean isAuctionStartDateTimePastOrPresent(LocalDateTime current) {
+        return comparePastOrPresent(auctionStartDateTime, current);
     }
 }

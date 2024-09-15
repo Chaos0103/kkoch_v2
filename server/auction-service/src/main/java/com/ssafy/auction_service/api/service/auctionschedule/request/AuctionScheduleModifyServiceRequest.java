@@ -1,14 +1,13 @@
 package com.ssafy.auction_service.api.service.auctionschedule.request;
 
 import com.ssafy.auction_service.common.util.TimeUtils;
-import com.ssafy.auction_service.domain.auctionschedule.AuctionInfo;
 import com.ssafy.auction_service.domain.auctionschedule.AuctionSchedule;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-import static com.ssafy.auction_service.api.service.auctionschedule.AuctionScheduleUtils.validateAuctionStartDateTime;
-
+@Getter
 public class AuctionScheduleModifyServiceRequest {
 
     private final LocalDateTime auctionStartDateTime;
@@ -26,13 +25,5 @@ public class AuctionScheduleModifyServiceRequest {
 
     public void modify(AuctionSchedule auctionSchedule) {
         auctionSchedule.modify(auctionStartDateTime, auctionDescription);
-    }
-
-    public void checkAuctionStartDateTime(LocalDateTime current) {
-        validateAuctionStartDateTime(auctionStartDateTime, current);
-    }
-
-    public AuctionInfo getAuctionInfo(AuctionSchedule auctionSchedule) {
-        return auctionSchedule.getModifiedAuctionInfo(auctionStartDateTime);
     }
 }

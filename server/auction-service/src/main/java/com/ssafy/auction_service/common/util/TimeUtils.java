@@ -24,7 +24,7 @@ public abstract class TimeUtils {
         }
     }
 
-    public static boolean isEqualsOrPast(LocalDateTime target, LocalDateTime current) {
+    public static boolean comparePastOrPresent(LocalDateTime target, LocalDateTime current) {
         return current.isEqual(target) || current.isAfter(target);
     }
 }

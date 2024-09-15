@@ -32,6 +32,6 @@ public class AuctionScheduleCreateRequest {
     }
 
     public AuctionScheduleCreateServiceRequest toServiceRequest() {
-        return AuctionScheduleCreateServiceRequest.of(plantCategory, jointMarket, auctionDescription, auctionStartDateTime);
+        return AuctionScheduleCreateServiceRequest.of(plantCategory, jointMarket, auctionStartDateTime, auctionDescription);
     }
 }

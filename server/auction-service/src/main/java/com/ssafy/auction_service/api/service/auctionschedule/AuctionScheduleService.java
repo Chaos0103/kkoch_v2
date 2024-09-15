@@ -31,14 +31,17 @@ public class AuctionScheduleService {
     private static final String IS_NOT_PROGRESS_AUCTION_SCHEDULE = "진행중인 경매가 아닙니다.";
     private static final String IS_COMPLETE_AUCTION_SCHEDULE = "완료된 경매입니다.";
     private static final String EXIST_DUPLICATED_AUCTION_SCHEDULE = "이미 등록된 경매 일정이 있습니다.";
+    private static final String IS_AUCTION_START_DATE_TIME_PAST_OR_PRESENT = "경매 시작 일시를 올바르게 입력해주세요.";
 
     private final AuctionScheduleRepository auctionScheduleRepository;
 
     public AuctionScheduleCreateResponse createAuctionSchedule(AuctionScheduleCreateServiceRequest request, LocalDateTime current) {
-        request.checkAuctionStartDateTime(current);
-        checkDuplicateAuctionSchedule(request.getAuctionInfo());
-
         AuctionSchedule auctionSchedule = request.toEntity();
+        AuctionInfo auctionInfo = auctionSchedule.getAuctionInfo();
+
+        checkAuctionStartDateTime(auctionInfo, current);
+        checkDuplicateAuctionSchedule(auctionInfo);
+
         AuctionSchedule savedAuctionSchedule = auctionScheduleRepository.save(auctionSchedule);
 
         return AuctionScheduleCreateResponse.of(savedAuctionSchedule);
@@ -46,9 +49,10 @@ public class AuctionScheduleService {
 
     public AuctionScheduleModifyResponse modifyAuctionSchedule(int auctionScheduleId, AuctionScheduleModifyServiceRequest request, LocalDateTime current) {
         AuctionSchedule auctionSchedule = findAuctionScheduleById(auctionScheduleId);
+        AuctionInfo auctionInfo = auctionSchedule.getInfoWithAuctionStartDateTime(request.getAuctionStartDateTime());
 
-        request.checkAuctionStartDateTime(current);
-        checkDuplicateAuctionSchedule(request.getAuctionInfo(auctionSchedule));
+        checkAuctionStartDateTime(auctionInfo, current);
+        checkDuplicateAuctionSchedule(auctionInfo);
 
         if (auctionSchedule.cannotModify()) {
             throw new AppException(CAN_NOT_MODIFY_AUCTION_SCHEDULE);
@@ -129,5 +133,11 @@ public class AuctionScheduleService {
             .ifPresent(id -> {
                 throw new AppException(EXIST_DUPLICATED_AUCTION_SCHEDULE);
             });
+    }
+
+    private void checkAuctionStartDateTime(AuctionInfo auctionInfo, LocalDateTime current) {
+        if (auctionInfo.isAuctionStartDateTimePastOrPresent(current)) {
+            throw new AppException(IS_AUCTION_START_DATE_TIME_PAST_OR_PRESENT);
+        }
     }
 }
