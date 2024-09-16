@@ -1,8 +1,10 @@
 package com.ssafy.trade_service.api.service.auctionreservation;
 
 import com.ssafy.trade_service.IntegrationTestSupport;
-import com.ssafy.trade_service.api.service.auctionreservation.request.AuctionReservationServiceRequest;
+import com.ssafy.trade_service.api.service.auctionreservation.request.AuctionReservationCreateServiceRequest;
+import com.ssafy.trade_service.api.service.auctionreservation.request.AuctionReservationModifyServiceRequest;
 import com.ssafy.trade_service.api.service.auctionreservation.response.AuctionReservationCreateResponse;
+import com.ssafy.trade_service.api.service.auctionreservation.response.AuctionReservationModifyResponse;
 import com.ssafy.trade_service.common.exception.AppException;
 import com.ssafy.trade_service.domain.auctionreservation.AuctionReservation;
 import com.ssafy.trade_service.domain.auctionreservation.PlantGrade;
@@ -14,9 +16,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
 class AuctionReservationServiceTest extends IntegrationTestSupport {
 
@@ -41,7 +43,7 @@ class AuctionReservationServiceTest extends IntegrationTestSupport {
         createAuctionReservation(5);
         createAuctionReservation(5);
 
-        AuctionReservationServiceRequest request = AuctionReservationServiceRequest.builder()
+        AuctionReservationCreateServiceRequest request = AuctionReservationCreateServiceRequest.builder()
             .varietyCode("10031204")
             .plantGrade(PlantGrade.SUPER)
             .plantCount(10)
@@ -68,7 +70,7 @@ class AuctionReservationServiceTest extends IntegrationTestSupport {
         createAuctionReservation(20);
         createAuctionReservation(20);
 
-        AuctionReservationServiceRequest request = AuctionReservationServiceRequest.builder()
+        AuctionReservationCreateServiceRequest request = AuctionReservationCreateServiceRequest.builder()
             .varietyCode("10031204")
             .plantGrade(PlantGrade.SUPER)
             .plantCount(1)
@@ -89,7 +91,7 @@ class AuctionReservationServiceTest extends IntegrationTestSupport {
     @Test
     void createAuctionReservation() {
         //given
-        AuctionReservationServiceRequest request = AuctionReservationServiceRequest.builder()
+        AuctionReservationCreateServiceRequest request = AuctionReservationCreateServiceRequest.builder()
             .varietyCode("10031204")
             .plantGrade(PlantGrade.SUPER)
             .plantCount(10)
@@ -107,6 +109,63 @@ class AuctionReservationServiceTest extends IntegrationTestSupport {
 
         List<AuctionReservation> auctionReservations = auctionReservationRepository.findAll();
         assertThat(auctionReservations).hasSize(1);
+    }
+
+    @DisplayName("경매 예약 수정시 같은 경매에 최대 100단의 예약을 등록할 수 있다.")
+    @Test
+    void modifyMaximumPlantCount() {
+        //given
+        AuctionReservation auctionReservation = createAuctionReservation(20);
+        createAuctionReservation(20);
+        createAuctionReservation(20);
+        createAuctionReservation(20);
+        createAuctionReservation(20);
+
+        AuctionReservationModifyServiceRequest request = AuctionReservationModifyServiceRequest.builder()
+            .plantGrade(PlantGrade.SUPER)
+            .plantCount(21)
+            .desiredPrice(Price.of(3000))
+            .build();
+
+        //when
+        assertThatThrownBy(() -> auctionReservationService.modifyAuctionReservation(auctionReservation.getId(), request))
+            .isInstanceOf(AppException.class)
+            .hasMessage("경매에 등록할 수 있는 최대 화훼단수를 초과했습니다.");
+
+        //then
+        Optional<AuctionReservation> findAuctionReservation = auctionReservationRepository.findById(auctionReservation.getId());
+        assertThat(findAuctionReservation).isPresent()
+            .get()
+            .hasFieldOrPropertyWithValue("plantCount", 20);
+    }
+
+    @DisplayName("수정할 경매 예약 정보를 입력 받아 경매 예약을 수정한다.")
+    @Test
+    void modifyAuctionReservation() {
+        //given
+        AuctionReservation auctionReservation = createAuctionReservation(10);
+
+        AuctionReservationModifyServiceRequest request = AuctionReservationModifyServiceRequest.builder()
+            .plantGrade(PlantGrade.ADVANCED)
+            .plantCount(15)
+            .desiredPrice(Price.of(2500))
+            .build();
+
+        //when
+        AuctionReservationModifyResponse response = auctionReservationService.modifyAuctionReservation(auctionReservation.getId(), request);
+
+        //then
+        assertThat(response).isNotNull()
+            .hasFieldOrPropertyWithValue("plantGrade", PlantGrade.ADVANCED)
+            .hasFieldOrPropertyWithValue("plantCount", 15)
+            .hasFieldOrPropertyWithValue("desiredPrice", 2500);
+
+        List<AuctionReservation> auctionReservations = auctionReservationRepository.findAll();
+        assertThat(auctionReservations).hasSize(1)
+            .extracting("plantGrade", "plantCount", "desiredPrice.value")
+            .containsExactly(
+                tuple(PlantGrade.ADVANCED, 15, 2500)
+            );
     }
 
     private AuctionReservation createAuctionReservation(int plantCount) {

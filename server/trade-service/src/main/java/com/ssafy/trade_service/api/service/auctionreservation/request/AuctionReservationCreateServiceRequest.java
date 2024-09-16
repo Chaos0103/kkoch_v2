@@ -9,7 +9,7 @@ import lombok.Builder;
 
 import java.util.List;
 
-public class AuctionReservationServiceRequest {
+public class AuctionReservationCreateServiceRequest {
 
     private final String varietyCode;
     private final PlantGrade plantGrade;
@@ -17,15 +17,15 @@ public class AuctionReservationServiceRequest {
     private final Price desiredPrice;
 
     @Builder
-    private AuctionReservationServiceRequest(String varietyCode, PlantGrade plantGrade, int plantCount, Price desiredPrice) {
+    private AuctionReservationCreateServiceRequest(String varietyCode, PlantGrade plantGrade, int plantCount, Price desiredPrice) {
         this.varietyCode = varietyCode;
         this.plantGrade = plantGrade;
         this.plantCount = plantCount;
         this.desiredPrice = desiredPrice;
     }
 
-    public static AuctionReservationServiceRequest of(String varietyCode, String plantGrade, int plantCount, int desiredPrice) {
-        return new AuctionReservationServiceRequest(varietyCode, PlantGrade.of(plantGrade), plantCount, Price.of(desiredPrice));
+    public static AuctionReservationCreateServiceRequest of(String varietyCode, String plantGrade, int plantCount, int desiredPrice) {
+        return new AuctionReservationCreateServiceRequest(varietyCode, PlantGrade.of(plantGrade), plantCount, Price.of(desiredPrice));
     }
 
     public AuctionReservation toEntity(Long memberId, Integer auctionScheduleId) {

@@ -3,8 +3,10 @@ package com.ssafy.trade_service.api.service.auctionreservation;
 import com.ssafy.trade_service.api.ApiResponse;
 import com.ssafy.trade_service.api.client.MemberServiceClient;
 import com.ssafy.trade_service.api.client.response.MemberIdResponse;
-import com.ssafy.trade_service.api.service.auctionreservation.request.AuctionReservationServiceRequest;
+import com.ssafy.trade_service.api.service.auctionreservation.request.AuctionReservationModifyServiceRequest;
+import com.ssafy.trade_service.api.service.auctionreservation.request.AuctionReservationCreateServiceRequest;
 import com.ssafy.trade_service.api.service.auctionreservation.response.AuctionReservationCreateResponse;
+import com.ssafy.trade_service.api.service.auctionreservation.response.AuctionReservationModifyResponse;
 import com.ssafy.trade_service.common.exception.AppException;
 import com.ssafy.trade_service.domain.auctionreservation.AuctionReservation;
 import com.ssafy.trade_service.domain.auctionreservation.repository.AuctionReservationRepository;
@@ -27,7 +29,7 @@ public class AuctionReservationService {
     private final AuctionReservationRepository auctionReservationRepository;
     private final MemberServiceClient memberServiceClient;
 
-    public AuctionReservationCreateResponse createAuctionReservation(int auctionScheduleId, AuctionReservationServiceRequest request) {
+    public AuctionReservationCreateResponse createAuctionReservation(int auctionScheduleId, AuctionReservationCreateServiceRequest request) {
         Long memberId = getMemberId();
 
         List<Integer> content = auctionReservationRepository.findAllPlantCountByAuctionScheduleId(auctionScheduleId, memberId);
@@ -45,6 +47,10 @@ public class AuctionReservationService {
         AuctionReservation savedAuctionReservation = auctionReservationRepository.save(auctionReservation);
 
         return AuctionReservationCreateResponse.of(savedAuctionReservation);
+    }
+
+    public AuctionReservationModifyResponse modifyAuctionReservation(long auctionReservationId, AuctionReservationModifyServiceRequest request) {
+        return null;
     }
 
     private Long getMemberId() {

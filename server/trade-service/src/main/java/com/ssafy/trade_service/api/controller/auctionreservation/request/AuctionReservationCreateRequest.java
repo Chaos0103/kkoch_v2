@@ -1,6 +1,6 @@
 package com.ssafy.trade_service.api.controller.auctionreservation.request;
 
-import com.ssafy.trade_service.api.service.auctionreservation.request.AuctionReservationServiceRequest;
+import com.ssafy.trade_service.api.service.auctionreservation.request.AuctionReservationCreateServiceRequest;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -34,7 +34,7 @@ public class AuctionReservationCreateRequest {
         this.desiredPrice = desiredPrice;
     }
 
-    public AuctionReservationServiceRequest toServiceRequest() {
-        return AuctionReservationServiceRequest.of(varietyCode, plantGrade, plantCount, desiredPrice);
+    public AuctionReservationCreateServiceRequest toServiceRequest() {
+        return AuctionReservationCreateServiceRequest.of(varietyCode, plantGrade, plantCount, desiredPrice);
     }
 }
