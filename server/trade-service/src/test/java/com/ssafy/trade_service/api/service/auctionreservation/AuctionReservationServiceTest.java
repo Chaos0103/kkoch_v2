@@ -1,6 +1,9 @@
 package com.ssafy.trade_service.api.service.auctionreservation;
 
 import com.ssafy.trade_service.IntegrationTestSupport;
+import com.ssafy.trade_service.api.ApiResponse;
+import com.ssafy.trade_service.api.client.AuctionServiceClient;
+import com.ssafy.trade_service.api.client.response.AuctionScheduleStatusResponse;
 import com.ssafy.trade_service.api.service.auctionreservation.request.AuctionReservationCreateServiceRequest;
 import com.ssafy.trade_service.api.service.auctionreservation.request.AuctionReservationModifyServiceRequest;
 import com.ssafy.trade_service.api.service.auctionreservation.response.AuctionReservationCreateResponse;
@@ -15,11 +18,13 @@ import com.ssafy.trade_service.domain.auctionreservation.repository.AuctionReser
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.BDDMockito.given;
 
 class AuctionReservationServiceTest extends IntegrationTestSupport {
 
@@ -28,6 +33,32 @@ class AuctionReservationServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private AuctionReservationRepository auctionReservationRepository;
+
+    @MockBean
+    private AuctionServiceClient auctionServiceClient;
+
+    @DisplayName("경매 예약 등록시 경매가 진행하기 전까지 예약을 등록할 수 있다.")
+    @Test
+    void createAuctionReservationIsAfterProgress() {
+        //given
+        mockingIsAfterProgress(true);
+
+        AuctionReservationCreateServiceRequest request = AuctionReservationCreateServiceRequest.builder()
+            .varietyCode("10031204")
+            .plantGrade(PlantGrade.SUPER)
+            .plantCount(10)
+            .desiredPrice(Price.of(3000))
+            .build();
+
+        //when
+        assertThatThrownBy(() -> auctionReservationService.createAuctionReservation(1, request))
+            .isInstanceOf(AppException.class)
+            .hasMessage("경매 진행중에 예약을 등록할 수 없습니다.");
+
+        //then
+        List<AuctionReservation> auctionReservations = auctionReservationRepository.findAll();
+        assertThat(auctionReservations).isEmpty();
+    }
 
     @DisplayName("경매 예약 등록시 같은 경매에 최대 10건의 예약을 등록할 수 있다.")
     @Test
@@ -43,6 +74,8 @@ class AuctionReservationServiceTest extends IntegrationTestSupport {
         createAuctionReservation(5);
         createAuctionReservation(5);
         createAuctionReservation(5);
+
+        mockingIsAfterProgress(false);
 
         AuctionReservationCreateServiceRequest request = AuctionReservationCreateServiceRequest.builder()
             .varietyCode("10031204")
@@ -71,6 +104,8 @@ class AuctionReservationServiceTest extends IntegrationTestSupport {
         createAuctionReservation(20);
         createAuctionReservation(20);
 
+        mockingIsAfterProgress(false);
+
         AuctionReservationCreateServiceRequest request = AuctionReservationCreateServiceRequest.builder()
             .varietyCode("10031204")
             .plantGrade(PlantGrade.SUPER)
@@ -92,6 +127,8 @@ class AuctionReservationServiceTest extends IntegrationTestSupport {
     @Test
     void createAuctionReservation() {
         //given
+        mockingIsAfterProgress(false);
+
         AuctionReservationCreateServiceRequest request = AuctionReservationCreateServiceRequest.builder()
             .varietyCode("10031204")
             .plantGrade(PlantGrade.SUPER)
@@ -112,6 +149,34 @@ class AuctionReservationServiceTest extends IntegrationTestSupport {
         assertThat(auctionReservations).hasSize(1);
     }
 
+    @DisplayName("경매 예약 수정시 경매가 진행하기 전까지 예약을 수정할 수 있다.")
+    @Test
+    void modifyAuctionReservationIsAfterProgress() {
+        //given
+        AuctionReservation auctionReservation = createAuctionReservation(10);
+
+        mockingIsAfterProgress(true);
+
+        AuctionReservationModifyServiceRequest request = AuctionReservationModifyServiceRequest.builder()
+            .plantGrade(PlantGrade.ADVANCED)
+            .plantCount(15)
+            .desiredPrice(Price.of(2500))
+            .build();
+
+        //when
+        assertThatThrownBy(() -> auctionReservationService.modifyAuctionReservation(auctionReservation.getId(), request))
+            .isInstanceOf(AppException.class)
+            .hasMessage("경매 진행중에 예약을 수정할 수 없습니다.");
+
+        //then
+        Optional<AuctionReservation> findAuctionReservation = auctionReservationRepository.findById(auctionReservation.getId());
+        assertThat(findAuctionReservation).isPresent()
+            .get()
+            .hasFieldOrPropertyWithValue("reservationInfo.plantGrade", PlantGrade.SUPER)
+            .hasFieldOrPropertyWithValue("reservationInfo.plantCount", 10)
+            .hasFieldOrPropertyWithValue("reservationInfo.desiredPrice.value", 3000);
+    }
+
     @DisplayName("경매 예약 수정시 같은 경매에 최대 100단의 예약을 등록할 수 있다.")
     @Test
     void modifyMaximumPlantCount() {
@@ -121,6 +186,8 @@ class AuctionReservationServiceTest extends IntegrationTestSupport {
         createAuctionReservation(20);
         createAuctionReservation(20);
         createAuctionReservation(20);
+
+        mockingIsAfterProgress(false);
 
         AuctionReservationModifyServiceRequest request = AuctionReservationModifyServiceRequest.builder()
             .plantGrade(PlantGrade.SUPER)
@@ -146,6 +213,8 @@ class AuctionReservationServiceTest extends IntegrationTestSupport {
         //given
         AuctionReservation auctionReservation = createAuctionReservation(10);
 
+        mockingIsAfterProgress(false);
+
         AuctionReservationModifyServiceRequest request = AuctionReservationModifyServiceRequest.builder()
             .plantGrade(PlantGrade.ADVANCED)
             .plantCount(15)
@@ -169,11 +238,33 @@ class AuctionReservationServiceTest extends IntegrationTestSupport {
             );
     }
 
+    @DisplayName("경매 예약 삭제시 경매가 진행하기 전까지 예약을 수정할 수 있다.")
+    @Test
+    void removeAuctionReservationIsAfterProgress() {
+        //given
+        AuctionReservation auctionReservation = createAuctionReservation(10);
+
+        mockingIsAfterProgress(true);
+
+        //when
+        assertThatThrownBy(() -> auctionReservationService.removeAuctionReservation(auctionReservation.getId()))
+            .isInstanceOf(AppException.class)
+            .hasMessage("경매 진행중에 예약을 삭제할 수 없습니다.");
+
+        //then
+        Optional<AuctionReservation> findAuctionReservation = auctionReservationRepository.findById(auctionReservation.getId());
+        assertThat(findAuctionReservation).isPresent()
+            .get()
+            .hasFieldOrPropertyWithValue("isDeleted", false);
+    }
+
     @DisplayName("경매 예약을 삭제한다.")
     @Test
     void removeAuctionReservation() {
         //given
         AuctionReservation auctionReservation = createAuctionReservation(10);
+
+        mockingIsAfterProgress(false);
 
         //when
         AuctionReservationRemoveResponse response = auctionReservationService.removeAuctionReservation(auctionReservation.getId());
@@ -203,5 +294,13 @@ class AuctionReservationServiceTest extends IntegrationTestSupport {
                 .build())
             .build();
         return auctionReservationRepository.save(auctionReservation);
+    }
+
+    private void mockingIsAfterProgress(boolean result) {
+        AuctionScheduleStatusResponse response = AuctionScheduleStatusResponse.builder()
+            .result(result)
+            .build();
+        given(auctionServiceClient.isAfterProgress(1))
+            .willReturn(ApiResponse.ok(response));
     }
 }
