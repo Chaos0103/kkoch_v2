@@ -22,9 +22,9 @@ public class AuctionReservationModifyServiceRequest {
     }
 
     public PlantCounts getPlantCounts(List<Integer> content, int plantCount) {
-        int index = content.indexOf(plantCount);
-        content.set(index, this.plantCount);
-        return PlantCounts.of(content);
+        PlantCounts plantCounts = PlantCounts.of(content);
+        plantCounts.modifyTheFirstValueFound(this.plantCount, plantCount);
+        return plantCounts;
     }
 
     public void modify(AuctionReservation auctionReservation) {

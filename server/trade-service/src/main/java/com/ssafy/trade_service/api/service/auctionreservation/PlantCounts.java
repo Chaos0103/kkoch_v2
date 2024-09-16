@@ -14,6 +14,11 @@ public class PlantCounts {
         return new PlantCounts(counts);
     }
 
+    public void modifyTheFirstValueFound(int elem, int find) {
+        int index = counts.indexOf(find);
+        counts.set(index, elem);
+    }
+
     public boolean isSizeMoreThan(int maxSize) {
         return counts.size() > maxSize;
     }
