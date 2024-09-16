@@ -41,4 +41,14 @@ public class AuctionReservation extends TimeBaseEntity {
     public static AuctionReservation create(Long memberId, Integer auctionScheduleId, ReservationInfo reservationInfo) {
         return of(false, memberId, auctionScheduleId, reservationInfo);
     }
+
+    public int getPlantCount() {
+        return reservationInfo.getPlantCount();
+    }
+
+    public void modify(PlantGrade plantGrade, int plantCount, Price desiredPrice) {
+        reservationInfo = reservationInfo.withPlantGrade(plantGrade)
+            .withPlantCount(plantCount)
+            .withDesiredPrice(desiredPrice);
+    }
 }

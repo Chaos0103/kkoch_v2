@@ -162,7 +162,7 @@ class AuctionReservationServiceTest extends IntegrationTestSupport {
 
         List<AuctionReservation> auctionReservations = auctionReservationRepository.findAll();
         assertThat(auctionReservations).hasSize(1)
-            .extracting("plantGrade", "plantCount", "desiredPrice.value")
+            .extracting("reservationInfo.plantGrade", "reservationInfo.plantCount", "reservationInfo.desiredPrice.value")
             .containsExactly(
                 tuple(PlantGrade.ADVANCED, 15, 2500)
             );

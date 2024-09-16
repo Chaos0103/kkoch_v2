@@ -38,4 +38,16 @@ public class ReservationInfo {
     public static ReservationInfo of(String varietyCode, PlantGrade plantGrade, int plantCount, Price desiredPrice) {
         return new ReservationInfo(varietyCode, plantGrade, plantCount, desiredPrice);
     }
+
+    public ReservationInfo withPlantGrade(PlantGrade plantGrade) {
+        return of(varietyCode, plantGrade, plantCount, desiredPrice);
+    }
+
+    public ReservationInfo withPlantCount(int plantCount) {
+        return of(varietyCode, plantGrade, plantCount, desiredPrice);
+    }
+
+    public ReservationInfo withDesiredPrice(Price desiredPrice) {
+        return of(varietyCode, plantGrade, plantCount, desiredPrice);
+    }
 }

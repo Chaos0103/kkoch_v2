@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+
+import static com.ssafy.trade_service.domain.auctionreservation.repository.AuctionReservationRepository.NO_SUCH_AUCTION_RESERVATION;
 
 @Service
 @Transactional
@@ -50,7 +53,19 @@ public class AuctionReservationService {
     }
 
     public AuctionReservationModifyResponse modifyAuctionReservation(long auctionReservationId, AuctionReservationModifyServiceRequest request) {
-        return null;
+        AuctionReservation auctionReservation = auctionReservationRepository.findById(auctionReservationId)
+            .orElseThrow(() -> new NoSuchElementException(NO_SUCH_AUCTION_RESERVATION));
+
+        List<Integer> content = auctionReservationRepository.findAllPlantCountByAuctionScheduleId(auctionReservation.getAuctionScheduleId(), auctionReservation.getMemberId());
+        PlantCounts plantCounts = request.getPlantCounts(content, auctionReservation.getPlantCount());
+
+        if (plantCounts.isSumMoreThan(MAXIMUM_NUMBER_OF_PLANT_COUNT_PER_AUCTION)) {
+            throw new AppException(MAXIMUM_PLANT_COUNT_EXCEEDED);
+        }
+
+        request.modify(auctionReservation);
+
+        return AuctionReservationModifyResponse.of(auctionReservation);
     }
 
     private Long getMemberId() {
