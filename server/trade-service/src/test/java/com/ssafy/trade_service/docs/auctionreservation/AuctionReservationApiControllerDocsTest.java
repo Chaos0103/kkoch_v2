@@ -6,6 +6,7 @@ import com.ssafy.trade_service.api.controller.auctionreservation.request.Auction
 import com.ssafy.trade_service.api.service.auctionreservation.AuctionReservationService;
 import com.ssafy.trade_service.api.service.auctionreservation.response.AuctionReservationCreateResponse;
 import com.ssafy.trade_service.api.service.auctionreservation.response.AuctionReservationModifyResponse;
+import com.ssafy.trade_service.api.service.auctionreservation.response.AuctionReservationRemoveResponse;
 import com.ssafy.trade_service.docs.RestDocsSupport;
 import com.ssafy.trade_service.domain.auctionreservation.PlantGrade;
 import org.junit.jupiter.api.DisplayName;
@@ -20,8 +21,7 @@ import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -155,6 +155,58 @@ class AuctionReservationApiControllerDocsTest extends RestDocsSupport {
                         .description("화훼단수"),
                     fieldWithPath("desiredPrice").type(JsonFieldType.NUMBER)
                         .description("희망가격")
+                ),
+                responseFields(
+                    fieldWithPath("code").type(JsonFieldType.NUMBER)
+                        .description("코드"),
+                    fieldWithPath("status").type(JsonFieldType.STRING)
+                        .description("상태"),
+                    fieldWithPath("message").type(JsonFieldType.STRING)
+                        .description("메시지"),
+                    fieldWithPath("data").type(JsonFieldType.OBJECT)
+                        .description("응답 데이터"),
+                    fieldWithPath("data.id").type(JsonFieldType.NUMBER)
+                        .description("경매 예약 ID"),
+                    fieldWithPath("data.plantGrade").type(JsonFieldType.STRING)
+                        .description("화훼등급"),
+                    fieldWithPath("data.plantCount").type(JsonFieldType.NUMBER)
+                        .description("화훼단수"),
+                    fieldWithPath("data.desiredPrice").type(JsonFieldType.NUMBER)
+                        .description("희망가격")
+                )
+            ));
+    }
+
+    @DisplayName("경매 예약 삭제 API")
+    @Test
+    void removeAuctionReservation() throws Exception {
+        AuctionReservationRemoveResponse response = AuctionReservationRemoveResponse.builder()
+            .id(1L)
+            .plantGrade(PlantGrade.SUPER)
+            .plantCount(10)
+            .desiredPrice(3000)
+            .build();
+
+        given(auctionReservationService.removeAuctionReservation(anyLong()))
+            .willReturn(response);
+
+        mockMvc.perform(
+                delete("/trade-service/auction-schedules/{auctionScheduleId}/auction-reservations/{auctionReservationId}", 1, 1)
+                    .header(HttpHeaders.AUTHORIZATION, "issued.access.token")
+            )
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andDo(document("remove-auction-reservation",
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName(HttpHeaders.AUTHORIZATION)
+                        .description("회원 토큰")
+                ),
+                pathParameters(
+                    parameterWithName("auctionScheduleId")
+                        .description("경매 일정 ID"),
+                    parameterWithName("auctionReservationId")
+                        .description("경매 예약 ID")
                 ),
                 responseFields(
                     fieldWithPath("code").type(JsonFieldType.NUMBER)
