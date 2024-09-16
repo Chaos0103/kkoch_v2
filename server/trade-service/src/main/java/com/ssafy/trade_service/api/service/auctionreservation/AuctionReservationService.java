@@ -4,7 +4,7 @@ import com.ssafy.trade_service.api.ApiResponse;
 import com.ssafy.trade_service.api.client.MemberServiceClient;
 import com.ssafy.trade_service.api.client.response.MemberIdResponse;
 import com.ssafy.trade_service.api.service.auctionreservation.request.AuctionReservationServiceRequest;
-import com.ssafy.trade_service.api.service.auctionreservation.response.AuctionReservationResponse;
+import com.ssafy.trade_service.api.service.auctionreservation.response.AuctionReservationCreateResponse;
 import com.ssafy.trade_service.common.exception.AppException;
 import com.ssafy.trade_service.domain.auctionreservation.AuctionReservation;
 import com.ssafy.trade_service.domain.auctionreservation.repository.AuctionReservationRepository;
@@ -27,7 +27,7 @@ public class AuctionReservationService {
     private final AuctionReservationRepository auctionReservationRepository;
     private final MemberServiceClient memberServiceClient;
 
-    public AuctionReservationResponse createAuctionReservation(int auctionScheduleId, AuctionReservationServiceRequest request) {
+    public AuctionReservationCreateResponse createAuctionReservation(int auctionScheduleId, AuctionReservationServiceRequest request) {
         Long memberId = getMemberId();
 
         List<Integer> content = auctionReservationRepository.findAllPlantCountByAuctionScheduleId(auctionScheduleId, memberId);
@@ -44,7 +44,7 @@ public class AuctionReservationService {
         AuctionReservation auctionReservation = request.toEntity(memberId, auctionScheduleId);
         AuctionReservation savedAuctionReservation = auctionReservationRepository.save(auctionReservation);
 
-        return AuctionReservationResponse.of(savedAuctionReservation);
+        return AuctionReservationCreateResponse.of(savedAuctionReservation);
     }
 
     private Long getMemberId() {

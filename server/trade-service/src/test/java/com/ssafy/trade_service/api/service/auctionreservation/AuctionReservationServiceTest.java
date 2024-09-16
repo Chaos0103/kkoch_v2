@@ -2,7 +2,7 @@ package com.ssafy.trade_service.api.service.auctionreservation;
 
 import com.ssafy.trade_service.IntegrationTestSupport;
 import com.ssafy.trade_service.api.service.auctionreservation.request.AuctionReservationServiceRequest;
-import com.ssafy.trade_service.api.service.auctionreservation.response.AuctionReservationResponse;
+import com.ssafy.trade_service.api.service.auctionreservation.response.AuctionReservationCreateResponse;
 import com.ssafy.trade_service.common.exception.AppException;
 import com.ssafy.trade_service.domain.auctionreservation.AuctionReservation;
 import com.ssafy.trade_service.domain.auctionreservation.PlantGrade;
@@ -97,7 +97,7 @@ class AuctionReservationServiceTest extends IntegrationTestSupport {
             .build();
 
         //when
-        AuctionReservationResponse response = auctionReservationService.createAuctionReservation(1, request);
+        AuctionReservationCreateResponse response = auctionReservationService.createAuctionReservation(1, request);
 
         //then
         assertThat(response).isNotNull()

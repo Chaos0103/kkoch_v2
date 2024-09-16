@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class AuctionReservationResponse {
+public class AuctionReservationCreateResponse {
 
     private long id;
     private PlantGrade plantGrade;
@@ -16,15 +16,15 @@ public class AuctionReservationResponse {
     private int desiredPrice;
 
     @Builder
-    private AuctionReservationResponse(long id, PlantGrade plantGrade, int plantCount, int desiredPrice) {
+    private AuctionReservationCreateResponse(long id, PlantGrade plantGrade, int plantCount, int desiredPrice) {
         this.id = id;
         this.plantGrade = plantGrade;
         this.plantCount = plantCount;
         this.desiredPrice = desiredPrice;
     }
 
-    public static AuctionReservationResponse of(AuctionReservation auctionReservation) {
-        return new AuctionReservationResponse(
+    public static AuctionReservationCreateResponse of(AuctionReservation auctionReservation) {
+        return new AuctionReservationCreateResponse(
             auctionReservation.getId(),
             auctionReservation.getReservationInfo().getPlantGrade(),
             auctionReservation.getReservationInfo().getPlantCount(),
