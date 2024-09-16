@@ -1,0 +1,13 @@
+[[create-auction-reservation]]
+=== 경매 예약 등록 API
+
+==== HTTP Request
+
+include::{snippets}/create-auction-reservation/http-request.adoc[]
+include::{snippets}/create-auction-reservation/request-headers.adoc[]
+include::{snippets}/create-auction-reservation/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/create-auction-reservation/http-response.adoc[]
+include::{snippets}/create-auction-reservation/response-fields.adoc[]
