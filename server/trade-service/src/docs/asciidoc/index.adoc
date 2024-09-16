@@ -15,4 +15,5 @@ include::overview.adoc[]
 == 경매 예약 API
 
 include::api/auctionreservation/create-auction-reservation.adoc[]
+include::api/auctionreservation/modify-auction-reservation.adoc[]
 
