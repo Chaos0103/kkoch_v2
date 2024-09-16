@@ -23,7 +23,7 @@ class AuctionReservationQueryRepositoryTest extends IntegrationTestSupport {
     @Autowired
     private AuctionReservationRepository auctionReservationRepository;
 
-    @DisplayName("")
+    @DisplayName("회원 ID와 경매 일정 ID로 경매 예약 목록을 조회한다.")
     @Test
     void findAllByAuctionScheduleId() {
         //given
