@@ -51,4 +51,9 @@ public class AuctionReservation extends TimeBaseEntity {
             .withPlantCount(plantCount)
             .withDesiredPrice(desiredPrice);
     }
+
+    @Override
+    public void remove() {
+        super.remove();
+    }
 }

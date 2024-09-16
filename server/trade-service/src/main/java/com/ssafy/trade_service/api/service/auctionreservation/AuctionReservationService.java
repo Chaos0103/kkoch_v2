@@ -54,8 +54,7 @@ public class AuctionReservationService {
     }
 
     public AuctionReservationModifyResponse modifyAuctionReservation(long auctionReservationId, AuctionReservationModifyServiceRequest request) {
-        AuctionReservation auctionReservation = auctionReservationRepository.findById(auctionReservationId)
-            .orElseThrow(() -> new NoSuchElementException(NO_SUCH_AUCTION_RESERVATION));
+        AuctionReservation auctionReservation = findAuctionReservationById(auctionReservationId);
 
         List<Integer> content = auctionReservationRepository.findAllPlantCountByAuctionScheduleId(auctionReservation.getAuctionScheduleId(), auctionReservation.getMemberId());
         PlantCounts plantCounts = request.getPlantCounts(content, auctionReservation.getPlantCount());
@@ -70,7 +69,16 @@ public class AuctionReservationService {
     }
 
     public AuctionReservationRemoveResponse removeAuctionReservation(long auctionReservationId) {
-        return null;
+        AuctionReservation auctionReservation = findAuctionReservationById(auctionReservationId);
+
+        auctionReservation.remove();
+
+        return AuctionReservationRemoveResponse.of(auctionReservation);
+    }
+
+    private AuctionReservation findAuctionReservationById(long auctionReservationId) {
+        return auctionReservationRepository.findById(auctionReservationId)
+            .orElseThrow(() -> new NoSuchElementException(NO_SUCH_AUCTION_RESERVATION));
     }
 
     private Long getMemberId() {
