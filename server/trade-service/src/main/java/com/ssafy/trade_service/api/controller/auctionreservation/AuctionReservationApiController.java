@@ -2,8 +2,10 @@ package com.ssafy.trade_service.api.controller.auctionreservation;
 
 import com.ssafy.trade_service.api.ApiResponse;
 import com.ssafy.trade_service.api.controller.auctionreservation.request.AuctionReservationCreateRequest;
+import com.ssafy.trade_service.api.controller.auctionreservation.request.AuctionReservationModifyRequest;
 import com.ssafy.trade_service.api.service.auctionreservation.AuctionReservationService;
 import com.ssafy.trade_service.api.service.auctionreservation.response.AuctionReservationCreateResponse;
+import com.ssafy.trade_service.api.service.auctionreservation.response.AuctionReservationModifyResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,5 +27,14 @@ public class AuctionReservationApiController {
         AuctionReservationCreateResponse response = auctionReservationService.createAuctionReservation(auctionScheduleId, request.toServiceRequest());
 
         return ApiResponse.ok(response);
+    }
+
+    @PatchMapping("/{auctionReservationId}")
+    public ApiResponse<AuctionReservationModifyResponse> modifyAuctionReservation(
+        @PathVariable String auctionScheduleId,
+        @PathVariable String auctionReservationId,
+        @Valid @RequestBody AuctionReservationModifyRequest request
+    ) {
+        return null;
     }
 }
