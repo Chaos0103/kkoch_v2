@@ -1,0 +1,13 @@
+[[search-auction-reservations]]
+=== 경매 예약 목록 조회 API
+
+==== HTTP Request
+
+include::{snippets}/search-auction-reservations/http-request.adoc[]
+include::{snippets}/search-auction-reservations/path-parameters.adoc[]
+include::{snippets}/search-auction-reservations/request-headers.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/search-auction-reservations/http-response.adoc[]
+include::{snippets}/search-auction-reservations/response-fields.adoc[]

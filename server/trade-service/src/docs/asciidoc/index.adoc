@@ -17,4 +17,5 @@ include::overview.adoc[]
 include::api/auctionreservation/create-auction-reservation.adoc[]
 include::api/auctionreservation/modify-auction-reservation.adoc[]
 include::api/auctionreservation/remove-auction-reservation.adoc[]
+include::api/auctionreservation/search-auction-reservations.adoc[]
 
