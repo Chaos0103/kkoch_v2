@@ -46,6 +46,8 @@ public class AuctionReservationApiController {
         @PathVariable Integer auctionScheduleId,
         @PathVariable Long auctionReservationId
     ) {
-        return null;
+        AuctionReservationRemoveResponse response = auctionReservationService.removeAuctionReservation(auctionReservationId);
+
+        return ApiResponse.ok(response);
     }
 }
