@@ -1,0 +1,13 @@
+[[remove-auction-reservation]]
+=== 경매 예약 삭제 API
+
+==== HTTP Request
+
+include::{snippets}/remove-auction-reservation/http-request.adoc[]
+include::{snippets}/remove-auction-reservation/path-parameters.adoc[]
+include::{snippets}/remove-auction-reservation/request-headers.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/remove-auction-reservation/http-response.adoc[]
+include::{snippets}/remove-auction-reservation/response-fields.adoc[]
