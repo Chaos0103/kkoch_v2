@@ -24,6 +24,10 @@ public class AuctionReservationServiceRequest {
         this.desiredPrice = desiredPrice;
     }
 
+    public static AuctionReservationServiceRequest of(String varietyCode, String plantGrade, int plantCount, int desiredPrice) {
+        return new AuctionReservationServiceRequest(varietyCode, PlantGrade.of(plantGrade), plantCount, Price.of(desiredPrice));
+    }
+
     public AuctionReservation toEntity(Long memberId, Integer auctionScheduleId) {
         ReservationInfo reservationInfo = ReservationInfo.of(varietyCode, plantGrade, plantCount, desiredPrice);
         return AuctionReservation.create(memberId, auctionScheduleId, reservationInfo);

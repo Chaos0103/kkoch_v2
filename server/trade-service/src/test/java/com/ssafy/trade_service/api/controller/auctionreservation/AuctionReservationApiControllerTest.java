@@ -82,6 +82,28 @@ class AuctionReservationApiControllerTest extends ControllerTestSupport {
             .andExpect(jsonPath("$.data").isEmpty());
     }
 
+    @DisplayName("경매 예약 등록시 화훼단수는 필수값이다.")
+    @Test
+    void createAuctionReservationWithoutPlantCount() throws Exception {
+        AuctionReservationCreateRequest request = AuctionReservationCreateRequest.builder()
+            .varietyCode("10031204")
+            .plantGrade("SUPER")
+            .plantCount(null)
+            .desiredPrice(3000)
+            .build();
+
+        mockMvc.perform(
+                post("/trade-service/auction-schedules/{auctionScheduleId}/auction-reservations", 1)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(request))
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.code").value("400"))
+            .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
+            .andExpect(jsonPath("$.message").value("화훼단수를 입력해주세요."))
+            .andExpect(jsonPath("$.data").isEmpty());
+    }
+
     @DisplayName("경매 예약 등록시 희망가격은 양수값이다.")
     @Test
     void createAuctionReservationIsDesiredPriceZero() throws Exception {
@@ -90,6 +112,28 @@ class AuctionReservationApiControllerTest extends ControllerTestSupport {
             .plantGrade("SUPER")
             .plantCount(10)
             .desiredPrice(0)
+            .build();
+
+        mockMvc.perform(
+                post("/trade-service/auction-schedules/{auctionScheduleId}/auction-reservations", 1)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(request))
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.code").value("400"))
+            .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
+            .andExpect(jsonPath("$.message").value("희망가격을 올바르게 입력해주세요."))
+            .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @DisplayName("경매 예약 등록시 희망가격은 필수값이다.")
+    @Test
+    void createAuctionReservationWithoutDesiredPrice() throws Exception {
+        AuctionReservationCreateRequest request = AuctionReservationCreateRequest.builder()
+            .varietyCode("10031204")
+            .plantGrade("SUPER")
+            .plantCount(10)
+            .desiredPrice(null)
             .build();
 
         mockMvc.perform(
