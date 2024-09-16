@@ -9,8 +9,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.http.MediaType;
 
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -287,6 +286,15 @@ class AuctionReservationApiControllerTest extends ControllerTestSupport {
                 patch("/trade-service/auction-schedules/{auctionScheduleId}/auction-reservations/{auctionReservationId}", 1, 1)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
+            )
+            .andExpect(status().isOk());
+    }
+
+    @DisplayName("경매 예약을 삭제한다.")
+    @Test
+    void removeAuctionReservation() throws Exception {
+        mockMvc.perform(
+                delete("/trade-service/auction-schedules/{auctionScheduleId}/auction-reservations/{auctionReservationId}", 1, 1)
             )
             .andExpect(status().isOk());
     }
