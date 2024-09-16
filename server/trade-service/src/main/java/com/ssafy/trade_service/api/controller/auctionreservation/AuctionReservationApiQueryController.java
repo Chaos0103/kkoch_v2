@@ -1,6 +1,7 @@
 package com.ssafy.trade_service.api.controller.auctionreservation;
 
 import com.ssafy.trade_service.api.ApiResponse;
+import com.ssafy.trade_service.api.ListResponse;
 import com.ssafy.trade_service.api.service.auctionreservation.AuctionReservationQueryService;
 import com.ssafy.trade_service.domain.auctionreservation.repository.response.AuctionReservationResponse;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,9 @@ public class AuctionReservationApiQueryController {
     private final AuctionReservationQueryService auctionReservationQueryService;
 
     @GetMapping
-    public ApiResponse<AuctionReservationResponse> searchAuctionReservations(@PathVariable Integer auctionScheduleId) {
-        return null;
+    public ApiResponse<ListResponse<AuctionReservationResponse>> searchAuctionReservations(@PathVariable Integer auctionScheduleId) {
+        ListResponse<AuctionReservationResponse> response = auctionReservationQueryService.searchAuctionReservations(auctionScheduleId);
+
+        return ApiResponse.ok(response);
     }
 }
