@@ -5,6 +5,7 @@ import com.ssafy.trade_service.api.service.auctionreservation.request.AuctionRes
 import com.ssafy.trade_service.api.service.auctionreservation.request.AuctionReservationModifyServiceRequest;
 import com.ssafy.trade_service.api.service.auctionreservation.response.AuctionReservationCreateResponse;
 import com.ssafy.trade_service.api.service.auctionreservation.response.AuctionReservationModifyResponse;
+import com.ssafy.trade_service.api.service.auctionreservation.response.AuctionReservationRemoveResponse;
 import com.ssafy.trade_service.common.exception.AppException;
 import com.ssafy.trade_service.domain.auctionreservation.AuctionReservation;
 import com.ssafy.trade_service.domain.auctionreservation.PlantGrade;
@@ -166,6 +167,27 @@ class AuctionReservationServiceTest extends IntegrationTestSupport {
             .containsExactly(
                 tuple(PlantGrade.ADVANCED, 15, 2500)
             );
+    }
+
+    @DisplayName("경매 예약을 삭제한다.")
+    @Test
+    void removeAuctionReservation() {
+        //given
+        AuctionReservation auctionReservation = createAuctionReservation(10);
+
+        //when
+        AuctionReservationRemoveResponse response = auctionReservationService.removeAuctionReservation(auctionReservation.getId());
+
+        //then
+        assertThat(response).isNotNull()
+            .hasFieldOrPropertyWithValue("plantGrade", PlantGrade.SUPER)
+            .hasFieldOrPropertyWithValue("plantCount", 10)
+            .hasFieldOrPropertyWithValue("desiredPrice", 3000);
+
+        Optional<AuctionReservation> findAuctionReservation = auctionReservationRepository.findById(auctionReservation.getId());
+        assertThat(findAuctionReservation).isPresent()
+            .get()
+            .hasFieldOrPropertyWithValue("isDeleted", true);
     }
 
     private AuctionReservation createAuctionReservation(int plantCount) {

@@ -7,6 +7,7 @@ import com.ssafy.trade_service.api.service.auctionreservation.request.AuctionRes
 import com.ssafy.trade_service.api.service.auctionreservation.request.AuctionReservationCreateServiceRequest;
 import com.ssafy.trade_service.api.service.auctionreservation.response.AuctionReservationCreateResponse;
 import com.ssafy.trade_service.api.service.auctionreservation.response.AuctionReservationModifyResponse;
+import com.ssafy.trade_service.api.service.auctionreservation.response.AuctionReservationRemoveResponse;
 import com.ssafy.trade_service.common.exception.AppException;
 import com.ssafy.trade_service.domain.auctionreservation.AuctionReservation;
 import com.ssafy.trade_service.domain.auctionreservation.repository.AuctionReservationRepository;
@@ -66,6 +67,10 @@ public class AuctionReservationService {
         request.modify(auctionReservation);
 
         return AuctionReservationModifyResponse.of(auctionReservation);
+    }
+
+    public AuctionReservationRemoveResponse removeAuctionReservation(long auctionReservationId) {
+        return null;
     }
 
     private Long getMemberId() {
