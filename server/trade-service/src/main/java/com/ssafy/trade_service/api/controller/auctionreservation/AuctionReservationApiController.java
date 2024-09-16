@@ -26,15 +26,17 @@ public class AuctionReservationApiController {
     ) {
         AuctionReservationCreateResponse response = auctionReservationService.createAuctionReservation(auctionScheduleId, request.toServiceRequest());
 
-        return ApiResponse.ok(response);
+        return ApiResponse.created(response);
     }
 
     @PatchMapping("/{auctionReservationId}")
     public ApiResponse<AuctionReservationModifyResponse> modifyAuctionReservation(
-        @PathVariable String auctionScheduleId,
-        @PathVariable String auctionReservationId,
+        @PathVariable Integer auctionScheduleId,
+        @PathVariable Long auctionReservationId,
         @Valid @RequestBody AuctionReservationModifyRequest request
     ) {
-        return null;
+        AuctionReservationModifyResponse response = auctionReservationService.modifyAuctionReservation(auctionReservationId, request.toServiceRequest());
+
+        return ApiResponse.ok(response);
     }
 }

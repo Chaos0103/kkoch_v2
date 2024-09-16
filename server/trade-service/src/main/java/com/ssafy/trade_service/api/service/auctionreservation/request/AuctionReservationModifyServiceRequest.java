@@ -21,6 +21,10 @@ public class AuctionReservationModifyServiceRequest {
         this.desiredPrice = desiredPrice;
     }
 
+    public static AuctionReservationModifyServiceRequest of(String plantGrade, int plantCount, int desiredPrice) {
+        return new AuctionReservationModifyServiceRequest(PlantGrade.of(plantGrade), plantCount, Price.of(desiredPrice));
+    }
+
     public PlantCounts getPlantCounts(List<Integer> content, int plantCount) {
         PlantCounts plantCounts = PlantCounts.of(content);
         plantCounts.modifyTheFirstValueFound(this.plantCount, plantCount);
