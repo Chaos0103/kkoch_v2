@@ -43,4 +43,8 @@ public class OrderQueryRepository {
             .offset(pageable.getOffset())
             .fetch();
     }
+
+    public int countByMemberId(Long memberId) {
+        return 0;
+    }
 }

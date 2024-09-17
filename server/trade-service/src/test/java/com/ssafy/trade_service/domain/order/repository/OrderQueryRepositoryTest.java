@@ -54,6 +54,20 @@ class OrderQueryRepositoryTest extends IntegrationTestSupport {
             );
     }
 
+    @DisplayName("회원 ID로 주문 목록 갯수를 조회한다.")
+    @Test
+    void countByMemberId() {
+        //given
+        createOrder();
+        createOrder();
+
+        //when
+        int total = orderQueryRepository.countByMemberId(1L);
+
+        //then
+        assertThat(total).isEqualTo(2);
+    }
+
     private Order createOrder() {
         Order order = Order.builder()
             .isDeleted(false)
