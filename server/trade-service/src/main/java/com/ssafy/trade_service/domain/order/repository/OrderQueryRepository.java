@@ -45,6 +45,14 @@ public class OrderQueryRepository {
     }
 
     public int countByMemberId(Long memberId) {
-        return 0;
+        return queryFactory
+            .select(order.id)
+            .from(order)
+            .where(
+                order.isDeleted.isFalse(),
+                order.memberId.eq(memberId)
+            )
+            .fetch()
+            .size();
     }
 }
