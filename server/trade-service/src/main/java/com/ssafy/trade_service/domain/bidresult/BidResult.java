@@ -45,4 +45,10 @@ public class BidResult extends TimeBaseEntity {
     public static BidResult of(boolean isDeleted, Order order, Long auctionVarietyId, int bidPrice, LocalDateTime bidDateTime) {
         return new BidResult(isDeleted, order, auctionVarietyId, bidPrice, bidDateTime);
     }
+
+    public static BidResult create(Order order, Long auctionVarietyId, int bidPrice, LocalDateTime bidDateTime) {
+        BidResult bidResult = of(false, order, auctionVarietyId, bidPrice, bidDateTime);
+        order.addBidResult(bidResult);
+        return bidResult;
+    }
 }

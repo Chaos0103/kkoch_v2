@@ -17,7 +17,7 @@ public class PickUp {
     @Column(nullable = false)
     private final Boolean isPickUp;
 
-    @Column(nullable = false)
+    @Column
     private final LocalDateTime pickUpDateTime;
 
     @Builder
@@ -28,5 +28,9 @@ public class PickUp {
 
     public static PickUp of(Boolean isPickUp, LocalDateTime pickUpDateTime) {
         return new PickUp(isPickUp, pickUpDateTime);
+    }
+
+    public static PickUp init() {
+        return of(false, null);
     }
 }

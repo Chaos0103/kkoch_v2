@@ -1,5 +1,6 @@
 package com.ssafy.trade_service.domain.bidinfo;
 
+import com.ssafy.trade_service.domain.order.Order;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,5 +30,9 @@ public class Bid {
 
     public static Bid of(Long memberId, List<BidInfo> infos, LocalDateTime createdDateTime) {
         return new Bid(memberId, infos, createdDateTime);
+    }
+
+    public Order toOrder() {
+        return Order.create(memberId, infos);
     }
 }

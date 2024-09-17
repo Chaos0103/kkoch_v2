@@ -1,5 +1,7 @@
 package com.ssafy.trade_service.domain.bidinfo;
 
+import com.ssafy.trade_service.domain.bidresult.BidResult;
+import com.ssafy.trade_service.domain.order.Order;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,5 +26,9 @@ public class BidInfo {
 
     public static BidInfo of(Long auctionVarietyId, int bidPrice, LocalDateTime bidDateTime) {
         return new BidInfo(auctionVarietyId, bidPrice, bidDateTime);
+    }
+
+    public BidResult toBidResult(Order order) {
+        return BidResult.create(order, auctionVarietyId, bidPrice, bidDateTime);
     }
 }

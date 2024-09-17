@@ -1,5 +1,6 @@
 package com.ssafy.trade_service.api.service.order.response;
 
+import com.ssafy.trade_service.domain.order.Order;
 import com.ssafy.trade_service.domain.order.OrderStatus;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,5 +21,9 @@ public class OrderCreateResponse {
         this.orderStatus = orderStatus;
         this.totalPrice = totalPrice;
         this.orderCount = orderCount;
+    }
+
+    public static OrderCreateResponse of(Order order) {
+        return new OrderCreateResponse(order.getId(), order.getOrderStatus(), order.getTotalPrice(), order.getBidResults().size());
     }
 }

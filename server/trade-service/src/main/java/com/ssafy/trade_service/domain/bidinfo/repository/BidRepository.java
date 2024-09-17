@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BidRepository extends MongoRepository<Bid, Long> {
+
+    String NO_SUCH_BID = "낙찰받은 품종이 없습니다.";
 }
