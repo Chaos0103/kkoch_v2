@@ -1,0 +1,13 @@
+[[pickup-order]]
+=== 주문 픽업 API
+
+==== HTTP Request
+
+include::{snippets}/pickup-order/http-request.adoc[]
+include::{snippets}/pickup-order/path-parameters.adoc[]
+include::{snippets}/pickup-order/request-headers.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/pickup-order/http-response.adoc[]
+include::{snippets}/pickup-order/response-fields.adoc[]

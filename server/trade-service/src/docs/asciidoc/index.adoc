@@ -22,5 +22,6 @@ include::api/auctionreservation/search-auction-reservations.adoc[]
 [[Order-API]]
 == 주문 API
 
+include::api/order/pickup-order.adoc[]
 include::api/order/search-orders.adoc[]
 
