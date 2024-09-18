@@ -14,4 +14,8 @@ public enum OrderStatus {
     OrderStatus(String text) {
         this.text = text;
     }
+
+    public boolean canPickUp() {
+        return this == PAYMENT_COMPLETED;
+    }
 }

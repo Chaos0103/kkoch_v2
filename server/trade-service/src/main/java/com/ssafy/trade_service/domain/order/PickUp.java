@@ -33,4 +33,8 @@ public class PickUp {
     public static PickUp init() {
         return of(false, null);
     }
+
+    public static PickUp pickUp(LocalDateTime current) {
+        return of(true, current);
+    }
 }

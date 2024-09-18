@@ -2,6 +2,7 @@ package com.ssafy.trade_service.api.service.order;
 
 import com.ssafy.trade_service.api.service.order.response.OrderCreateResponse;
 import com.ssafy.trade_service.api.service.order.response.OrderPickUpResponse;
+import com.ssafy.trade_service.common.exception.AppException;
 import com.ssafy.trade_service.domain.bidinfo.Bid;
 import com.ssafy.trade_service.domain.bidinfo.repository.BidRepository;
 import com.ssafy.trade_service.domain.order.Order;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 
 import static com.ssafy.trade_service.domain.bidinfo.repository.BidRepository.NO_SUCH_BID;
+import static com.ssafy.trade_service.domain.order.repository.OrderRepository.NO_SUCH_ORDER;
 
 @Service
 @Transactional
@@ -35,7 +37,20 @@ public class OrderService {
     }
 
     public OrderPickUpResponse pickUp(Long orderId, LocalDateTime current) {
-        return null;
+        Order order = findOrderById(orderId);
+
+        if (order.cannotPickUp()) {
+            throw new AppException("결제되지 않은 주문입니다.");
+        }
+
+        order.pickUp(current);
+
+        return OrderPickUpResponse.of(order);
+    }
+
+    private Order findOrderById(Long orderId) {
+        return orderRepository.findById(orderId)
+            .orElseThrow(() -> new NoSuchElementException(NO_SUCH_ORDER));
     }
 
     private Bid findBidByMemberId(Long memberId) {
