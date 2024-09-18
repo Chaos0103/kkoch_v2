@@ -19,3 +19,8 @@ include::api/auctionreservation/modify-auction-reservation.adoc[]
 include::api/auctionreservation/remove-auction-reservation.adoc[]
 include::api/auctionreservation/search-auction-reservations.adoc[]
 
+[[Order-API]]
+== 주문 API
+
+include::api/order/search-orders.adoc[]
+
