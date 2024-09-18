@@ -1,6 +1,7 @@
 package com.ssafy.trade_service.api.service.order;
 
 import com.ssafy.trade_service.api.service.order.response.OrderCreateResponse;
+import com.ssafy.trade_service.api.service.order.response.OrderPickUpResponse;
 import com.ssafy.trade_service.domain.bidinfo.Bid;
 import com.ssafy.trade_service.domain.bidinfo.repository.BidRepository;
 import com.ssafy.trade_service.domain.order.Order;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 
 import static com.ssafy.trade_service.domain.bidinfo.repository.BidRepository.NO_SUCH_BID;
@@ -30,6 +32,10 @@ public class OrderService {
         bidRepository.deleteById(memberId);
 
         return OrderCreateResponse.of(savedOrder);
+    }
+
+    public OrderPickUpResponse pickUp(Long orderId, LocalDateTime current) {
+        return null;
     }
 
     private Bid findBidByMemberId(Long memberId) {
