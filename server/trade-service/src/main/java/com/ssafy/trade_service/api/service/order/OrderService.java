@@ -22,6 +22,8 @@ import static com.ssafy.trade_service.domain.order.repository.OrderRepository.NO
 @RequiredArgsConstructor
 public class OrderService {
 
+    private static final String DOES_NOT_PAY = "결제되지 않은 주문입니다.";
+
     private final OrderRepository orderRepository;
     private final BidRepository bidRepository;
 
@@ -40,7 +42,7 @@ public class OrderService {
         Order order = findOrderById(orderId);
 
         if (order.cannotPickUp()) {
-            throw new AppException("결제되지 않은 주문입니다.");
+            throw new AppException(DOES_NOT_PAY);
         }
 
         order.pickUp(current);
