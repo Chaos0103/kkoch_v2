@@ -39,4 +39,8 @@ public class Payment extends TimeBaseEntity {
     public static Payment of(boolean isDeleted, Order order, BankAccount bankAccount, PaymentInfo paymentInfo) {
         return new Payment(isDeleted, order, bankAccount, paymentInfo);
     }
+
+    public static Payment create(Order order, BankAccount bankAccount, PaymentInfo paymentInfo) {
+        return of(false, order, bankAccount, paymentInfo);
+    }
 }

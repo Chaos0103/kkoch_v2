@@ -33,4 +33,8 @@ public class PaymentInfo {
     public static PaymentInfo of(int paymentAmount, PaymentStatus paymentStatus, LocalDateTime paymentDateTime) {
         return new PaymentInfo(paymentAmount, paymentStatus, paymentDateTime);
     }
+
+    public static PaymentInfo complete(int paymentAmount, LocalDateTime paymentDateTime) {
+        return of(paymentAmount, PaymentStatus.PAYMENT_COMPLETED, paymentDateTime);
+    }
 }

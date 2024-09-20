@@ -3,6 +3,9 @@ package com.ssafy.trade_service.domain.order;
 import com.ssafy.trade_service.domain.TimeBaseEntity;
 import com.ssafy.trade_service.domain.bidinfo.BidInfo;
 import com.ssafy.trade_service.domain.bidresult.BidResult;
+import com.ssafy.trade_service.domain.payment.BankAccount;
+import com.ssafy.trade_service.domain.payment.Payment;
+import com.ssafy.trade_service.domain.payment.PaymentInfo;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -60,6 +63,12 @@ public class Order extends TimeBaseEntity {
         bidInfos.forEach(bidInfo -> bidInfo.toBidResult(order));
 
         return order;
+    }
+
+    public Payment toPayment(BankAccount bankAccount, LocalDateTime paymentDateTime) {
+        this.orderStatus = OrderStatus.PAYMENT_COMPLETED;
+        PaymentInfo paymentInfo = PaymentInfo.complete(totalPrice, paymentDateTime);
+        return Payment.create(this, bankAccount, paymentInfo);
     }
 
     public void addBidResult(BidResult bidResult) {
