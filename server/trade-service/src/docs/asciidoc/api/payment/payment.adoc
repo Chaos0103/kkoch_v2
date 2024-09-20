@@ -1,0 +1,13 @@
+[[payment]]
+=== 주문 결제 API
+
+==== HTTP Request
+
+include::{snippets}/payment/http-request.adoc[]
+include::{snippets}/payment/path-parameters.adoc[]
+include::{snippets}/payment/request-headers.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/payment/http-response.adoc[]
+include::{snippets}/payment/response-fields.adoc[]
