@@ -1,6 +1,7 @@
 package com.ssafy.trade_service.api.client;
 
 import com.ssafy.trade_service.api.ApiResponse;
+import com.ssafy.trade_service.api.client.response.BankAccountResponse;
 import com.ssafy.trade_service.api.client.response.MemberIdResponse;
 import com.ssafy.trade_service.common.config.FeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -11,4 +12,7 @@ public interface MemberServiceClient {
 
     @GetMapping("/member-service/members/client")
     ApiResponse<MemberIdResponse> searchMemberId();
+
+    @GetMapping("/member-service/members/client/bank-account")
+    ApiResponse<BankAccountResponse> searchBankAccount();
 }

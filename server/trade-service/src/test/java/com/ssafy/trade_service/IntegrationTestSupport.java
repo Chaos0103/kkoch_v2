@@ -15,7 +15,7 @@ import static org.mockito.BDDMockito.given;
 public abstract class IntegrationTestSupport {
 
     @MockBean
-    private MemberServiceClient memberServiceClient;
+    protected MemberServiceClient memberServiceClient;
 
     @BeforeEach
     void setUp() {
