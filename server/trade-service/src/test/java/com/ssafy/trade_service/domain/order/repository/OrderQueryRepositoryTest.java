@@ -6,8 +6,8 @@ import com.ssafy.trade_service.domain.bidresult.repository.BidResultRepository;
 import com.ssafy.trade_service.domain.order.Order;
 import com.ssafy.trade_service.domain.order.OrderStatus;
 import com.ssafy.trade_service.domain.order.PickUp;
+import com.ssafy.trade_service.domain.order.repository.dto.OrderDetailDto;
 import com.ssafy.trade_service.domain.order.repository.response.OrderResponse;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,8 @@ import org.springframework.data.domain.PageRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 
 class OrderQueryRepositoryTest extends IntegrationTestSupport {
 
@@ -66,6 +67,24 @@ class OrderQueryRepositoryTest extends IntegrationTestSupport {
 
         //then
         assertThat(total).isEqualTo(2);
+    }
+
+    @DisplayName("주문 ID로 주문을 조회한다.")
+    @Test
+    void findById() {
+        //given
+        Order order = createOrder();
+
+        //when
+        OrderDetailDto dto = orderQueryRepository.findById(order.getId());
+
+        //then
+        assertThat(dto).isNotNull()
+            .hasFieldOrPropertyWithValue("id", order.getId())
+            .hasFieldOrPropertyWithValue("orderStatus", order.getOrderStatus())
+            .hasFieldOrPropertyWithValue("totalPrice", order.getTotalPrice())
+            .hasFieldOrPropertyWithValue("isPickUp", order.getPickUp().getIsPickUp())
+            .hasFieldOrPropertyWithValue("pickUpDateTime", order.getPickUp().getPickUpDateTime());
     }
 
     private Order createOrder() {

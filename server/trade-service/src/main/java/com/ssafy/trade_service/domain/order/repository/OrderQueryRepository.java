@@ -2,6 +2,7 @@ package com.ssafy.trade_service.domain.order.repository;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.trade_service.domain.order.repository.dto.OrderDetailDto;
 import com.ssafy.trade_service.domain.order.repository.response.OrderResponse;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Pageable;
@@ -54,5 +55,9 @@ public class OrderQueryRepository {
             )
             .fetch()
             .size();
+    }
+
+    public OrderDetailDto findById(Long orderId) {
+        return null;
     }
 }

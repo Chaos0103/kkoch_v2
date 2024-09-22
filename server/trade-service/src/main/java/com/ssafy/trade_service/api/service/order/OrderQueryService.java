@@ -4,6 +4,7 @@ import com.ssafy.trade_service.api.ApiResponse;
 import com.ssafy.trade_service.api.PageResponse;
 import com.ssafy.trade_service.api.client.MemberServiceClient;
 import com.ssafy.trade_service.api.client.response.MemberIdResponse;
+import com.ssafy.trade_service.api.service.order.response.OrderDetailResponse;
 import com.ssafy.trade_service.common.util.PageUtils;
 import com.ssafy.trade_service.domain.order.repository.OrderQueryRepository;
 import com.ssafy.trade_service.domain.order.repository.response.OrderResponse;
@@ -31,6 +32,15 @@ public class OrderQueryService {
         int total = orderQueryRepository.countByMemberId(memberId);
 
         return PageResponse.create(content, pageable, total);
+    }
+
+    public OrderDetailResponse searchOrder(Long orderId) {
+        //find order
+        //find all bid result by order id
+        //get auction variety id list
+        //find all auction variety by auction variety id
+        //generate response object
+        return null;
     }
 
     private Long getMemberId() {
