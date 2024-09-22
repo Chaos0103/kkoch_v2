@@ -1,6 +1,7 @@
 package com.ssafy.trade_service.domain.order.repository;
 
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.trade_service.domain.order.repository.dto.OrderDetailDto;
 import com.ssafy.trade_service.domain.order.repository.response.OrderResponse;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.ssafy.trade_service.domain.order.QOrder.order;
 
@@ -57,7 +59,24 @@ public class OrderQueryRepository {
             .size();
     }
 
-    public OrderDetailDto findById(Long orderId) {
-        return null;
+    public Optional<OrderDetailDto> findById(Long orderId) {
+        OrderDetailDto content = queryFactory
+            .select(
+                Projections.fields(
+                    OrderDetailDto.class,
+                    Expressions.asNumber(orderId).as("id"),
+                    order.orderStatus,
+                    order.totalPrice,
+                    order.pickUp.isPickUp,
+                    order.pickUp.pickUpDateTime
+                )
+            )
+            .from(order)
+            .where(
+                order.isDeleted.isFalse(),
+                order.id.eq(orderId)
+            )
+            .fetchFirst();
+        return Optional.ofNullable(content);
     }
 }

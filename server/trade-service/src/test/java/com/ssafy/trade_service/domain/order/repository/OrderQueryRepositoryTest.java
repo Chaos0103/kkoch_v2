@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
@@ -76,10 +77,11 @@ class OrderQueryRepositoryTest extends IntegrationTestSupport {
         Order order = createOrder();
 
         //when
-        OrderDetailDto dto = orderQueryRepository.findById(order.getId());
+        Optional<OrderDetailDto> dto = orderQueryRepository.findById(order.getId());
 
         //then
-        assertThat(dto).isNotNull()
+        assertThat(dto).isPresent()
+            .get()
             .hasFieldOrPropertyWithValue("id", order.getId())
             .hasFieldOrPropertyWithValue("orderStatus", order.getOrderStatus())
             .hasFieldOrPropertyWithValue("totalPrice", order.getTotalPrice())
