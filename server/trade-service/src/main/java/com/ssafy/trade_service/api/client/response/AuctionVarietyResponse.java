@@ -1,5 +1,6 @@
 package com.ssafy.trade_service.api.client.response;
 
+import com.ssafy.trade_service.api.service.order.response.orderdetail.Variety;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,5 +30,9 @@ public class AuctionVarietyResponse {
         this.plantCount = plantCount;
         this.region = region;
         this.shipper = shipper;
+    }
+
+    public Variety toVariety() {
+        return Variety.of(varietyCode, plantCategory, itemName, varietyName, plantGrade, plantCount, region, shipper);
     }
 }

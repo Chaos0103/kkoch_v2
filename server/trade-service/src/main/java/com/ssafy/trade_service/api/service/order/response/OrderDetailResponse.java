@@ -1,5 +1,8 @@
 package com.ssafy.trade_service.api.service.order.response;
 
+import com.ssafy.trade_service.api.service.order.response.orderdetail.BidResult;
+import com.ssafy.trade_service.api.service.order.vo.AuctionVarieties;
+import com.ssafy.trade_service.api.service.order.vo.BidResults;
 import com.ssafy.trade_service.domain.order.OrderStatus;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,50 +32,7 @@ public class OrderDetailResponse {
         this.bidResults = bidResults;
     }
 
-    private static class BidResult {
-        private Long id;
-        private Variety variety;
-        private int bidPrice;
-        private LocalDateTime bidDateTime;
-
-        @Builder
-        private BidResult(Long id, Variety variety, int bidPrice, LocalDateTime bidDateTime) {
-            this.id = id;
-            this.variety = variety;
-            this.bidPrice = bidPrice;
-            this.bidDateTime = bidDateTime;
-        }
-
-        private static class Variety {
-            private VarietyInfo varietyInfo;
-            private String plantGrade;
-            private int plantCount;
-            private String region;
-            private String shipper;
-
-            @Builder
-            public Variety(VarietyInfo varietyInfo, String plantGrade, int plantCount, String region, String shipper) {
-                this.varietyInfo = varietyInfo;
-                this.plantGrade = plantGrade;
-                this.plantCount = plantCount;
-                this.region = region;
-                this.shipper = shipper;
-            }
-
-            private static class VarietyInfo {
-                private String varietyCode;
-                private String plantCategory;
-                private String itemName;
-                private String varietyName;
-
-                @Builder
-                private VarietyInfo(String varietyCode, String plantCategory, String itemName, String varietyName) {
-                    this.varietyCode = varietyCode;
-                    this.plantCategory = plantCategory;
-                    this.itemName = itemName;
-                    this.varietyName = varietyName;
-                }
-            }
-        }
+    public static OrderDetailResponse of(Long id, OrderStatus orderStatus, int totalPrice, Boolean isPickUp, LocalDateTime pickUpDateTime, BidResults bidResults, AuctionVarieties auctionVarieties) {
+        return new OrderDetailResponse(id, orderStatus, totalPrice, isPickUp, pickUpDateTime, bidResults.generateBidResultList(auctionVarieties));
     }
 }

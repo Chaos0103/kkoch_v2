@@ -1,5 +1,8 @@
 package com.ssafy.trade_service.domain.order.repository.dto;
 
+import com.ssafy.trade_service.api.service.order.response.OrderDetailResponse;
+import com.ssafy.trade_service.api.service.order.vo.AuctionVarieties;
+import com.ssafy.trade_service.api.service.order.vo.BidResults;
 import com.ssafy.trade_service.domain.order.OrderStatus;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -22,5 +25,9 @@ public class OrderDetailDto {
         this.totalPrice = totalPrice;
         this.isPickUp = isPickUp;
         this.pickUpDateTime = pickUpDateTime;
+    }
+
+    public OrderDetailResponse toResponse(BidResults bidResults, AuctionVarieties auctionVarieties) {
+        return OrderDetailResponse.of(id, orderStatus, totalPrice, isPickUp, pickUpDateTime, bidResults, auctionVarieties);
     }
 }
