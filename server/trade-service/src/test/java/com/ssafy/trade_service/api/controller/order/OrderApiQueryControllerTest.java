@@ -17,4 +17,13 @@ class OrderApiQueryControllerTest extends ControllerTestSupport {
             )
             .andExpect(status().isOk());
     }
+
+    @DisplayName("회원의 주문 상세 내역을 조회한다.")
+    @Test
+    void searchOrder() throws Exception {
+        mockMvc.perform(
+                get("/trade-service/orders/{orderId}", 1)
+            )
+            .andExpect(status().isOk());
+    }
 }
