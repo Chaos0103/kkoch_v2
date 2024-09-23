@@ -44,13 +44,15 @@ public class OrderDetailResponse {
         }
 
         private static class Variety {
+            private VarietyInfo varietyInfo;
             private String plantGrade;
             private int plantCount;
             private String region;
             private String shipper;
 
             @Builder
-            public Variety(String plantGrade, int plantCount, String region, String shipper) {
+            public Variety(VarietyInfo varietyInfo, String plantGrade, int plantCount, String region, String shipper) {
+                this.varietyInfo = varietyInfo;
                 this.plantGrade = plantGrade;
                 this.plantCount = plantCount;
                 this.region = region;
