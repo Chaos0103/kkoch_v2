@@ -29,6 +29,8 @@ public class OrderApiQueryController {
 
     @GetMapping("/{orderId}")
     public ApiResponse<OrderDetailResponse> searchOrder(@PathVariable Long orderId) {
-        return null;
+        OrderDetailResponse response = orderQueryService.searchOrder(orderId);
+
+        return ApiResponse.ok(response);
     }
 }
