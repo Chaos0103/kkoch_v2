@@ -24,6 +24,7 @@ include::api/auctionreservation/search-auction-reservations.adoc[]
 
 include::api/order/pickup-order.adoc[]
 include::api/order/search-orders.adoc[]
+include::api/order/search-order.adoc[]
 
 [[Payment-API]]
 == 결제 API

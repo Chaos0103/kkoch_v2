@@ -30,8 +30,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -147,6 +146,10 @@ class OrderApiQueryControllerDocsTest extends RestDocsSupport {
                 requestHeaders(
                     headerWithName(HttpHeaders.AUTHORIZATION)
                         .description("회원 토큰")
+                ),
+                pathParameters(
+                    parameterWithName("orderId")
+                        .description("주문 ID")
                 ),
                 responseFields(
                     fieldWithPath("code").type(JsonFieldType.NUMBER)
