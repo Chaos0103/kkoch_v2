@@ -14,21 +14,27 @@ import java.time.LocalDateTime;
 public class BidInfo {
 
     private Long auctionVarietyId;
+    private String varietyCode;
+    private String plantGrade;
+    private int plantCount;
     private int bidPrice;
     private LocalDateTime bidDateTime;
 
     @Builder
-    private BidInfo(Long auctionVarietyId, int bidPrice, LocalDateTime bidDateTime) {
+    private BidInfo(Long auctionVarietyId, String varietyCode, String plantGrade, int plantCount, int bidPrice, LocalDateTime bidDateTime) {
         this.auctionVarietyId = auctionVarietyId;
+        this.varietyCode = varietyCode;
+        this.plantGrade = plantGrade;
+        this.plantCount = plantCount;
         this.bidPrice = bidPrice;
         this.bidDateTime = bidDateTime;
     }
 
-    public static BidInfo of(Long auctionVarietyId, int bidPrice, LocalDateTime bidDateTime) {
-        return new BidInfo(auctionVarietyId, bidPrice, bidDateTime);
+    public static BidInfo of(Long auctionVarietyId, String varietyCode, String plantGrade, int plantCount, int bidPrice, LocalDateTime bidDateTime) {
+        return new BidInfo(auctionVarietyId, varietyCode, plantGrade, plantCount, bidPrice, bidDateTime);
     }
 
     public BidResult toBidResult(Order order) {
-        return BidResult.create(order, auctionVarietyId, bidPrice, bidDateTime);
+        return BidResult.create(order, auctionVarietyId, varietyCode, plantGrade, plantCount, bidPrice, bidDateTime);
     }
 }
