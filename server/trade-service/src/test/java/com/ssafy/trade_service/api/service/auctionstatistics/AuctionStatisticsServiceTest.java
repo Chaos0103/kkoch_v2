@@ -55,7 +55,7 @@ class AuctionStatisticsServiceTest extends IntegrationTestSupport {
 
         //then
         assertThat(response).isNotNull()
-            .hasFieldOrPropertyWithValue("calculatedVarietyCount", 2)
+            .hasFieldOrPropertyWithValue("calculatedVarietyCount", 3)
             .hasFieldOrPropertyWithValue("calculatedDate", date);
         List<AuctionStatistics> auctionStatistics = auctionStatisticsRepository.findAll();
         assertThat(auctionStatistics).hasSize(3)

@@ -41,4 +41,8 @@ public class AuctionStatistics extends TimeBaseEntity {
     public static AuctionStatistics of(boolean isDeleted, String varietyCode, String plantGrade, int plantCount, PriceCalculatedResult calculatedResult) {
         return new AuctionStatistics(isDeleted, varietyCode, plantGrade, plantCount, calculatedResult);
     }
+
+    public static AuctionStatistics create(String varietyCode, String plantGrade, int plantCount, PriceCalculatedResult calculatedResult) {
+        return of(false, varietyCode, plantGrade, plantCount, calculatedResult);
+    }
 }
