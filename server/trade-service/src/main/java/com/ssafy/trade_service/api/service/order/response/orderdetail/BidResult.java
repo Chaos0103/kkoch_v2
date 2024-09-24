@@ -1,9 +1,13 @@
 package com.ssafy.trade_service.api.service.order.response.orderdetail;
 
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Getter
+@NoArgsConstructor
 public class BidResult {
 
     private Long id;

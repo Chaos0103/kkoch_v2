@@ -1,5 +1,10 @@
 package com.ssafy.trade_service.api.service.order.response.orderdetail;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@NoArgsConstructor
 public class Variety {
     private VarietyInfo varietyInfo;
     private String plantGrade;
@@ -20,6 +25,8 @@ public class Variety {
         return new Variety(varietyInfo, plantGrade, plantCount, region, shipper);
     }
 
+    @Getter
+    @NoArgsConstructor
     private static class VarietyInfo {
         private String varietyCode;
         private String plantCategory;
