@@ -25,7 +25,7 @@ class AuctionStatisticsApiQueryControllerTest extends ControllerTestSupport {
             .build();
 
         mockMvc.perform(
-                get("/trade-service/auction-statistics/{AuctionStatisticsId}", 1)
+                get("/trade-service/auction-statistics/{varietyCode}", "10031204")
                     .queryParam("to", param.getTo().toString())
                     .queryParam("plantGrade", param.getPlantGrade())
             )
@@ -46,7 +46,7 @@ class AuctionStatisticsApiQueryControllerTest extends ControllerTestSupport {
             .build();
 
         mockMvc.perform(
-                get("/trade-service/auction-statistics/{AuctionStatisticsId}", 1)
+                get("/trade-service/auction-statistics/{varietyCode}", "10031204")
                     .queryParam("from", param.getFrom().toString())
                     .queryParam("plantGrade", param.getPlantGrade())
             )
@@ -68,7 +68,7 @@ class AuctionStatisticsApiQueryControllerTest extends ControllerTestSupport {
             .build();
 
         mockMvc.perform(
-                get("/trade-service/auction-statistics/{AuctionStatisticsId}", 1)
+                get("/trade-service/auction-statistics/{varietyCode}", "10031204")
                     .queryParam("from", param.getFrom().toString())
                     .queryParam("to", param.getTo().toString())
                     .queryParam("plantGrade", param.getPlantGrade())
@@ -86,7 +86,7 @@ class AuctionStatisticsApiQueryControllerTest extends ControllerTestSupport {
             .build();
 
         mockMvc.perform(
-                get("/trade-service/auction-statistics/{AuctionStatisticsId}", 1)
+                get("/trade-service/auction-statistics/{varietyCode}", "10031204")
                     .queryParam("from", param.getFrom().toString())
                     .queryParam("to", param.getTo().toString())
                     .queryParam("plantGrade", param.getPlantGrade())
