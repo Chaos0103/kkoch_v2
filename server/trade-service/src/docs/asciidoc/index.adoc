@@ -30,3 +30,8 @@ include::api/order/search-order.adoc[]
 == 결제 API
 
 include::api/payment/payment.adoc[]
+
+[[Auction-Statistics-API]]
+== 경매 통계 API
+
+include::api/auctionstatistics/search-auction-statistics.adoc[]
