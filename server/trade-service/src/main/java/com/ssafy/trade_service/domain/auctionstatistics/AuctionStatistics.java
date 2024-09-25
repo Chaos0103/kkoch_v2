@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -26,23 +28,27 @@ public class AuctionStatistics extends TimeBaseEntity {
     @Column(nullable = false, updatable = false)
     private int plantCount;
 
+    @Column(nullable = false, updatable = false)
+    private LocalDate calculatedDate;
+
     @Embedded
     private PriceCalculatedResult calculatedResult;
 
     @Builder
-    private AuctionStatistics(boolean isDeleted, String varietyCode, String plantGrade, int plantCount, PriceCalculatedResult calculatedResult) {
+    private AuctionStatistics(boolean isDeleted, String varietyCode, String plantGrade, int plantCount, LocalDate calculatedDate, PriceCalculatedResult calculatedResult) {
         super(isDeleted);
         this.varietyCode = varietyCode;
         this.plantGrade = plantGrade;
         this.plantCount = plantCount;
+        this.calculatedDate = calculatedDate;
         this.calculatedResult = calculatedResult;
     }
 
-    public static AuctionStatistics of(boolean isDeleted, String varietyCode, String plantGrade, int plantCount, PriceCalculatedResult calculatedResult) {
-        return new AuctionStatistics(isDeleted, varietyCode, plantGrade, plantCount, calculatedResult);
+    public static AuctionStatistics of(boolean isDeleted, String varietyCode, String plantGrade, int plantCount, LocalDate calculatedDate, PriceCalculatedResult calculatedResult) {
+        return new AuctionStatistics(isDeleted, varietyCode, plantGrade, plantCount, calculatedDate, calculatedResult);
     }
 
-    public static AuctionStatistics create(String varietyCode, String plantGrade, int plantCount, PriceCalculatedResult calculatedResult) {
-        return of(false, varietyCode, plantGrade, plantCount, calculatedResult);
+    public static AuctionStatistics create(String varietyCode, String plantGrade, int plantCount, LocalDate calculatedDate, PriceCalculatedResult calculatedResult) {
+        return of(false, varietyCode, plantGrade, plantCount, calculatedDate, calculatedResult);
     }
 }
