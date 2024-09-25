@@ -19,7 +19,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class AuctionStatisticsService {
 
-    private static final Set<String> PLANT_GRADES = Set.of("SUPER", "ADVANCED", "BASIC");
+    private static final Set<String> PLANT_GRADES = Set.of("SUPER", "ADVANCED", "NORMAL");
     private final AuctionStatisticsRepository auctionStatisticsRepository;
     private final BidResultRepository bidResultRepository;
 
