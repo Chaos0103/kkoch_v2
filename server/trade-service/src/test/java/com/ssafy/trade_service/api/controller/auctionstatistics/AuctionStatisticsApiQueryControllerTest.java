@@ -26,7 +26,6 @@ class AuctionStatisticsApiQueryControllerTest extends ControllerTestSupport {
 
         mockMvc.perform(
                 get("/trade-service/auction-statistics/{AuctionStatisticsId}", 1)
-                    .queryParam("from", param.getFrom().toString())
                     .queryParam("to", param.getTo().toString())
                     .queryParam("plantGrade", param.getPlantGrade())
             )
@@ -49,7 +48,6 @@ class AuctionStatisticsApiQueryControllerTest extends ControllerTestSupport {
         mockMvc.perform(
                 get("/trade-service/auction-statistics/{AuctionStatisticsId}", 1)
                     .queryParam("from", param.getFrom().toString())
-                    .queryParam("to", param.getTo().toString())
                     .queryParam("plantGrade", param.getPlantGrade())
             )
             .andExpect(status().isBadRequest())

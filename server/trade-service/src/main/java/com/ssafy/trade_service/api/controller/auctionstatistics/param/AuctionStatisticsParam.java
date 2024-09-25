@@ -1,5 +1,7 @@
 package com.ssafy.trade_service.api.controller.auctionstatistics.param;
 
+import com.ssafy.trade_service.domain.auctionstatistics.repository.cond.AuctionStatisticsSearchCond;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,8 +14,12 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class AuctionStatisticsParam {
 
+    @NotNull(message = "조회 시작일을 입력해주세요.")
     private LocalDate from;
+
+    @NotNull(message = "조회 종료일을 입력해주세요.")
     private LocalDate to;
+
     private String plantGrade;
 
     @Builder
@@ -21,5 +27,9 @@ public class AuctionStatisticsParam {
         this.from = from;
         this.to = to;
         this.plantGrade = plantGrade;
+    }
+
+    public AuctionStatisticsSearchCond toCond() {
+        return AuctionStatisticsSearchCond.of(from, to, plantGrade);
     }
 }
