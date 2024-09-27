@@ -1,5 +1,21 @@
+server:
+  port: ${server.port}
+
 spring:
   application:
     name: live-service
   config:
     import: "optional:configserver:"
+  data:
+    redis:
+      host: 127.0.0.1
+      port: ${redis.port}
+logging:
+  level:
+    com.ssafy.live_service: debug
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans, info, metrics, prometheus, busrefresh
