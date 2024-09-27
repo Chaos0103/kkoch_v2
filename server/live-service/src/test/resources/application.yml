@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: live-service
+  config:
+    import: "optional:configserver:"
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+logging:
+  level:
+    com.ssafy.live_service: debug
