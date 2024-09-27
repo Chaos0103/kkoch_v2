@@ -7,8 +7,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -24,6 +26,20 @@ public class AuctionEventService {
     }
 
     public AuctionEventResponse publish(Long auctionVarietyId) {
-        return null;
+        String key = String.valueOf(auctionVarietyId);
+        try {
+            Set<BidInfo> bidInfos = redisTemplate.opsForZSet().range(key, 0, 0);
+            if (CollectionUtils.isEmpty(bidInfos)) {
+                return null;
+            }
+
+            return bidInfos.stream()
+                .map(bidInfo -> AuctionEventResponse.of(bidInfo.getBidPrice()))
+                .toList()
+                .get(0);
+        } finally {
+            Long size = redisTemplate.opsForZSet().size(key);
+            redisTemplate.opsForZSet().removeRange(key, 0, size);
+        }
     }
 }

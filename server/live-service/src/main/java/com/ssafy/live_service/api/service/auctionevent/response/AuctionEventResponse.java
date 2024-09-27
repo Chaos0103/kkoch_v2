@@ -12,4 +12,8 @@ public class AuctionEventResponse {
     private AuctionEventResponse(int bidPrice) {
         this.bidPrice = bidPrice;
     }
+
+    public static AuctionEventResponse of(int bidPrice) {
+        return new AuctionEventResponse(bidPrice);
+    }
 }
