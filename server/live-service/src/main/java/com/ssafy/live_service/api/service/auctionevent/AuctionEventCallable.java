@@ -7,22 +7,21 @@ import java.util.concurrent.Callable;
 
 public class AuctionEventCallable implements Callable<Boolean> {
 
+    private final AuctionEventService auctionEventService;
     private final String memberKey;
     private final BidServiceRequest bid;
     private final LocalDateTime current;
 
-    private AuctionEventCallable(String memberKey, BidServiceRequest bid, LocalDateTime current) {
+    public AuctionEventCallable(AuctionEventService auctionEventService, String memberKey, BidServiceRequest bid, LocalDateTime current) {
+        this.auctionEventService = auctionEventService;
         this.memberKey = memberKey;
         this.bid = bid;
         this.current = current;
     }
 
-    public static AuctionEventCallable of(String memberKey, BidServiceRequest bid, LocalDateTime current) {
-        return new AuctionEventCallable(memberKey, bid, current);
-    }
-
     @Override
     public Boolean call() throws Exception {
-        return null;
+        long millis = System.currentTimeMillis();
+        return auctionEventService.addQueue(memberKey, bid, current, millis);
     }
 }
