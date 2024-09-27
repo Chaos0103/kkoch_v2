@@ -1,6 +1,7 @@
 package com.ssafy.live_service.api.service.auctionevent;
 
 import com.ssafy.live_service.api.service.auctionevent.request.BidServiceRequest;
+import com.ssafy.live_service.api.service.auctionevent.response.AuctionEventResponse;
 import com.ssafy.live_service.api.service.auctionevent.vo.BidInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -20,5 +21,9 @@ public class AuctionEventService {
         BidInfo bidInfo = request.toValue(memberKey, current);
         redisTemplate.opsForZSet().add(request.getKey(), bidInfo, millis);
         return true;
+    }
+
+    public AuctionEventResponse publish(Long auctionVarietyId) {
+        return null;
     }
 }

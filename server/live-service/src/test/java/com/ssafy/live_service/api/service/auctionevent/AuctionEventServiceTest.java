@@ -2,6 +2,7 @@ package com.ssafy.live_service.api.service.auctionevent;
 
 import com.ssafy.live_service.IntegrationTestSupport;
 import com.ssafy.live_service.api.service.auctionevent.request.BidServiceRequest;
+import com.ssafy.live_service.api.service.auctionevent.response.AuctionEventResponse;
 import com.ssafy.live_service.api.service.auctionevent.vo.BidInfo;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -84,5 +85,41 @@ class AuctionEventServiceTest extends IntegrationTestSupport {
 
         //then
         assertThat(result).isTrue();
+    }
+
+    @DisplayName("가장 먼저 요청한 회원이 품종을 낙찰받는다.")
+    @Test
+    void publish() {
+        //given
+        String memberKey1 = UUID.randomUUID().toString();
+        String memberKey2 = UUID.randomUUID().toString();
+        String memberKey3 = UUID.randomUUID().toString();
+
+        createEvent(memberKey1, 3000, 2L);
+        createEvent(memberKey2, 3100, 1L);
+        createEvent(memberKey3, 3200, 3L);
+
+        //when
+        AuctionEventResponse response = auctionEventService.publish(1L);
+
+        //then
+        assertThat(response).isNotNull()
+            .hasFieldOrPropertyWithValue("bidPrice", 3100);
+        Long size = redisTemplate.opsForZSet().size(String.valueOf(1L));
+        assertThat(size).isNotNull()
+            .isEqualTo(0);
+    }
+
+    private void createEvent(String memberKey, int bidPrice, long millis) {
+        BidInfo bidInfo = BidInfo.builder()
+            .memberKey(memberKey)
+            .auctionVarietyId(1L)
+            .varietyCode("10031204")
+            .plantGrade("SUPER")
+            .plantCount(10)
+            .bidPrice(bidPrice)
+            .bidDateTime(LocalDateTime.of(2024, 8, 15, 5, 10))
+            .build();
+        redisTemplate.opsForZSet().add(String.valueOf(1L), bidInfo, millis);
     }
 }

@@ -1,5 +1,6 @@
 package com.ssafy.live_service.api.service.auctionevent.vo;
 
+import lombok.Builder;
 import lombok.Getter;
 
 import java.io.Serializable;
@@ -16,6 +17,7 @@ public class BidInfo implements Serializable {
     private final int bidPrice;
     private final LocalDateTime bidDateTime;
 
+    @Builder
     private BidInfo(String memberKey, Long auctionVarietyId, String varietyCode, String plantGrade, int plantCount, int bidPrice, LocalDateTime bidDateTime) {
         this.memberKey = memberKey;
         this.auctionVarietyId = auctionVarietyId;
