@@ -16,10 +16,10 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class AuctionEventTest extends IntegrationTestSupport {
+class AuctionEventServiceTest extends IntegrationTestSupport {
 
     @Autowired
-    private AuctionEvent auctionEvent;
+    private AuctionEventService auctionEventService;
 
     @Autowired
     private RedisTemplate<String, BidInfo> redisTemplate;
@@ -46,11 +46,11 @@ class AuctionEventTest extends IntegrationTestSupport {
             .build();
         String memberKey2 = UUID.randomUUID().toString();
 
-        auctionEvent.addQueue(memberKey1, request, current, 1L);
-        auctionEvent.addQueue(memberKey2, request, current, 2L);
+        auctionEventService.addQueue(memberKey1, request, current, 1L);
+        auctionEventService.addQueue(memberKey2, request, current, 2L);
 
         //when
-        boolean result = auctionEvent.addQueue(memberKey1, request, current, 3L);
+        boolean result = auctionEventService.addQueue(memberKey1, request, current, 3L);
 
         //then
         assertThat(result).isTrue();
@@ -81,7 +81,7 @@ class AuctionEventTest extends IntegrationTestSupport {
             .build();
 
         //when
-        boolean result = auctionEvent.addQueue(memberKey, request, current, 1L);
+        boolean result = auctionEventService.addQueue(memberKey, request, current, 1L);
 
         //then
         assertThat(result).isTrue();
@@ -100,7 +100,7 @@ class AuctionEventTest extends IntegrationTestSupport {
         createEvent(memberKey3, 3200, 3L);
 
         //when
-        AuctionEventResponse response = auctionEvent.publish(1L);
+        AuctionEventResponse response = auctionEventService.publish(1L);
 
         //then
         assertThat(response).isNotNull()

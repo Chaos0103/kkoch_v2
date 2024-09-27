@@ -5,17 +5,17 @@ import com.ssafy.live_service.api.service.auctionevent.response.AuctionEventResp
 import com.ssafy.live_service.api.service.auctionevent.vo.BidInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
-@Component
+@Service
 @Transactional
 @RequiredArgsConstructor
-public class AuctionEvent {
+public class AuctionEventService {
 
     private static final int START_INDEX = 0;
     private static final int END_INDEX = 0;
