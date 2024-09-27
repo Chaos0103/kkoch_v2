@@ -5,17 +5,20 @@ import com.ssafy.live_service.api.service.auctionevent.response.AuctionEventResp
 import com.ssafy.live_service.api.service.auctionevent.vo.BidInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
-@Service
+@Component
 @Transactional
 @RequiredArgsConstructor
-public class AuctionEventService {
+public class AuctionEvent {
+
+    private static final int START_INDEX = 0;
+    private static final int END_INDEX = 0;
 
     private final RedisTemplate<String, BidInfo> redisTemplate;
 
@@ -28,7 +31,7 @@ public class AuctionEventService {
     public AuctionEventResponse publish(Long auctionVarietyId) {
         String key = String.valueOf(auctionVarietyId);
         try {
-            Set<BidInfo> bidInfos = redisTemplate.opsForZSet().range(key, 0, 0);
+            Set<BidInfo> bidInfos = redisTemplate.opsForZSet().range(key, START_INDEX, END_INDEX);
             if (CollectionUtils.isEmpty(bidInfos)) {
                 return null;
             }
@@ -36,10 +39,17 @@ public class AuctionEventService {
             return bidInfos.stream()
                 .map(bidInfo -> AuctionEventResponse.of(bidInfo.getBidPrice()))
                 .toList()
-                .get(0);
+                .get(START_INDEX);
         } finally {
-            Long size = redisTemplate.opsForZSet().size(key);
-            redisTemplate.opsForZSet().removeRange(key, 0, size);
+            redisClear(key);
         }
+    }
+
+    private void redisClear(String key) {
+        Long size = redisTemplate.opsForZSet().size(key);
+        if (size == null) {
+            return;
+        }
+        redisTemplate.opsForZSet().removeRange(key, START_INDEX, size);
     }
 }
