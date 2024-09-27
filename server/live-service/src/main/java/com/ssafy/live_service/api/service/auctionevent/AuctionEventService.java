@@ -17,6 +17,8 @@ public class AuctionEventService {
     private final RedisTemplate<String, BidInfo> redisTemplate;
 
     public boolean addQueue(String memberKey, BidServiceRequest request, LocalDateTime current, Long millis) {
-        return false;
+        BidInfo bidInfo = request.toValue(memberKey, current);
+        redisTemplate.opsForZSet().add(request.getKey(), bidInfo, millis);
+        return true;
     }
 }

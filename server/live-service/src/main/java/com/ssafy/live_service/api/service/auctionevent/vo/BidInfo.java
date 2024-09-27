@@ -1,23 +1,23 @@
 package com.ssafy.live_service.api.service.auctionevent.vo;
 
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BidInfo {
+public class BidInfo implements Serializable {
 
-    private Long auctionVarietyId;
-    private String varietyCode;
-    private String plantGrade;
-    private int plantCount;
-    private int bidPrice;
-    private LocalDateTime bidDateTime;
+    private final String memberKey;
+    private final Long auctionVarietyId;
+    private final String varietyCode;
+    private final String plantGrade;
+    private final int plantCount;
+    private final int bidPrice;
+    private final LocalDateTime bidDateTime;
 
-    private BidInfo(Long auctionVarietyId, String varietyCode, String plantGrade, int plantCount, int bidPrice, LocalDateTime bidDateTime) {
+    private BidInfo(String memberKey, Long auctionVarietyId, String varietyCode, String plantGrade, int plantCount, int bidPrice, LocalDateTime bidDateTime) {
+        this.memberKey = memberKey;
         this.auctionVarietyId = auctionVarietyId;
         this.varietyCode = varietyCode;
         this.plantGrade = plantGrade;
@@ -26,7 +26,7 @@ public class BidInfo {
         this.bidDateTime = bidDateTime;
     }
 
-    public static BidInfo of(Long auctionVarietyId, String varietyCode, String plantGrade, int plantCount, int bidPrice, LocalDateTime bidDateTime) {
-        return new BidInfo(auctionVarietyId, varietyCode, plantGrade, plantCount, bidPrice, bidDateTime);
+    public static BidInfo of(String memberKey, Long auctionVarietyId, String varietyCode, String plantGrade, int plantCount, int bidPrice, LocalDateTime bidDateTime) {
+        return new BidInfo(memberKey, auctionVarietyId, varietyCode, plantGrade, plantCount, bidPrice, bidDateTime);
     }
 }
