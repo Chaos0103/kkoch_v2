@@ -26,8 +26,7 @@ public class AuctionRoomService {
             return participationNumber;
         }
 
-        int size = getParticipationSizeByKey(key);
-        int generatedParticipationNumber = size + 1;
+        int generatedParticipationNumber = generateNextParticipationNumberBy(key);
         redisTemplate.opsForHash().put(key, memberKey, generatedParticipationNumber);
 
         return generatedParticipationNumber;
@@ -37,9 +36,10 @@ public class AuctionRoomService {
         return String.format(AUCTION_ROOM_PARTICIPATE_KEY_FORMAT, auctionScheduleId);
     }
 
-    private int getParticipationSizeByKey(String key) {
-        return redisTemplate.opsForHash().size(key)
+    private int generateNextParticipationNumberBy(String key) {
+        int size = redisTemplate.opsForHash().size(key)
             .intValue();
+        return size + 1;
     }
 
     private String getMemberKey() {
