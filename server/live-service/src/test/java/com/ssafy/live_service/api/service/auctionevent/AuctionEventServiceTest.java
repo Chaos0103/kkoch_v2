@@ -26,7 +26,7 @@ class AuctionEventServiceTest extends IntegrationTestSupport {
 
     @AfterEach
     void tearDown() {
-        redisTemplate.delete(String.valueOf(1L));
+        redisTemplate.delete("AUCTION-EVENT-1");
     }
 
     @DisplayName("동일한 회원이 여러번 요청을 보내면 대기열에서 후순위가 된다.")
@@ -53,7 +53,7 @@ class AuctionEventServiceTest extends IntegrationTestSupport {
         //then
         assertThat(result).isTrue();
 
-        String key = String.valueOf(1L);
+        String key = "AUCTION-EVENT-1";
         Long size = redisTemplate.opsForZSet().size(key);
         assertThat(size).isNotNull()
             .isEqualTo(2);
@@ -103,7 +103,7 @@ class AuctionEventServiceTest extends IntegrationTestSupport {
         //then
         assertThat(response).isNotNull()
             .hasFieldOrPropertyWithValue("bidPrice", 3100);
-        Long size = redisTemplate.opsForZSet().size(String.valueOf(1L));
+        Long size = redisTemplate.opsForZSet().size("AUCTION-EVENT-1");
         assertThat(size).isNotNull()
             .isEqualTo(0);
     }
@@ -118,6 +118,6 @@ class AuctionEventServiceTest extends IntegrationTestSupport {
             .bidPrice(bidPrice)
             .bidDateTime(LocalDateTime.of(2024, 8, 15, 5, 10))
             .build();
-        redisTemplate.opsForZSet().add(String.valueOf(1L), bidInfo, millis);
+        redisTemplate.opsForZSet().add("AUCTION-EVENT-1", bidInfo, millis);
     }
 }

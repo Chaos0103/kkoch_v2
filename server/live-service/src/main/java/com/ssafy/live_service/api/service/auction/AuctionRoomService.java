@@ -11,28 +11,34 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuctionRoomService {
 
+    private static final String AUCTION_ROOM_PARTICIPATE_KEY_FORMAT = "AUCTION-PARTICIPATION-%d";
+
     private final RedisTemplate<String, Integer> redisTemplate;
     private final MemberServiceClient memberServiceClient;
 
     public int generateParticipationNumber(int auctionScheduleId) {
-        //회원 고유키 조회
+        String key = generateKey(auctionScheduleId);
+
         String memberKey = getMemberKey();
 
-        Integer participationNumber = (Integer) redisTemplate.opsForHash().get(String.valueOf(auctionScheduleId), memberKey);
+        Integer participationNumber = (Integer) redisTemplate.opsForHash().get(key, memberKey);
         if (participationNumber != null) {
             return participationNumber;
         }
 
-        //회원 번호 발급
-        int size = getParticipationSizeByKey(auctionScheduleId);
+        int size = getParticipationSizeByKey(key);
         int generatedParticipationNumber = size + 1;
-        redisTemplate.opsForHash().put(String.valueOf(auctionScheduleId), memberKey, generatedParticipationNumber);
+        redisTemplate.opsForHash().put(key, memberKey, generatedParticipationNumber);
 
         return generatedParticipationNumber;
     }
 
-    private int getParticipationSizeByKey(int auctionScheduleId) {
-        return redisTemplate.opsForHash().size(String.valueOf(auctionScheduleId))
+    private String generateKey(int auctionScheduleId) {
+        return String.format(AUCTION_ROOM_PARTICIPATE_KEY_FORMAT, auctionScheduleId);
+    }
+
+    private int getParticipationSizeByKey(String key) {
+        return redisTemplate.opsForHash().size(key)
             .intValue();
     }
 

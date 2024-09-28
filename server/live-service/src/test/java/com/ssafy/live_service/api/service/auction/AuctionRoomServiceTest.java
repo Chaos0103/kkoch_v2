@@ -24,7 +24,7 @@ class AuctionRoomServiceTest extends IntegrationTestSupport {
 
     @AfterEach
     void tearDown() {
-        redisTemplate.delete(String.valueOf(1L));
+        redisTemplate.delete("AUCTION-PARTICIPATION-1");
     }
 
     @DisplayName("한 경매에 동일한 회원이 여러번 참가해도 최초에 발급받은 번호를 사용한다.")
@@ -34,7 +34,7 @@ class AuctionRoomServiceTest extends IntegrationTestSupport {
         int participationNumber = 1;
         String memberKey = UUID.randomUUID().toString();
 
-        auctionParticipation(1, memberKey, participationNumber);
+        auctionParticipation(memberKey, participationNumber);
         mockingMember(memberKey, 1L);
 
         //when
@@ -64,7 +64,7 @@ class AuctionRoomServiceTest extends IntegrationTestSupport {
         //given
         int anotherParticipationNumber = 2;
         String anotherMemberKey = UUID.randomUUID().toString();
-        auctionParticipation(1, anotherMemberKey, anotherParticipationNumber);
+        auctionParticipation(anotherMemberKey, anotherParticipationNumber);
 
         String memberKey = UUID.randomUUID().toString();
         mockingMember(memberKey, 1L);
@@ -85,7 +85,7 @@ class AuctionRoomServiceTest extends IntegrationTestSupport {
             .willReturn(ApiResponse.ok(member));
     }
 
-    private void auctionParticipation(int auctionScheduleId, String memberKey, int participationNumber) {
-        redisTemplate.opsForHash().put(String.valueOf(auctionScheduleId), memberKey, participationNumber);
+    private void auctionParticipation(String memberKey, int participationNumber) {
+        redisTemplate.opsForHash().put("AUCTION-PARTICIPATION-1", memberKey, participationNumber);
     }
 }

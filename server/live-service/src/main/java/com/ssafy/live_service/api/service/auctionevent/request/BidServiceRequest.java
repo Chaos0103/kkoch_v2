@@ -30,7 +30,7 @@ public class BidServiceRequest {
         return BidInfo.of(memberKey, auctionVarietyId, varietyCode, plantGrade, plantCount, bidPrice, current);
     }
 
-    public String getKey() {
-        return String.valueOf(auctionVarietyId);
+    public String getKey(String format) {
+        return String.format(format, auctionVarietyId);
     }
 }

@@ -17,6 +17,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class AuctionEventService {
 
+    private static final String AUCTION_EVENT_KEY_FORMAT = "AUCTION-EVENT-%d";
     private static final int START_INDEX = 0;
     private static final int END_INDEX = 0;
 
@@ -24,12 +25,12 @@ public class AuctionEventService {
 
     public boolean addQueue(String memberKey, BidServiceRequest request, LocalDateTime current, Long millis) {
         BidInfo bidInfo = request.toValue(memberKey, current);
-        redisTemplate.opsForZSet().add(request.getKey(), bidInfo, millis);
+        redisTemplate.opsForZSet().add(request.getKey(AUCTION_EVENT_KEY_FORMAT), bidInfo, millis);
         return true;
     }
 
     public AuctionEventResponse publish(Long auctionVarietyId) {
-        String key = String.valueOf(auctionVarietyId);
+        String key = generateKey(auctionVarietyId);
         try {
             Set<BidInfo> bidInfos = redisTemplate.opsForZSet().range(key, START_INDEX, END_INDEX);
             if (CollectionUtils.isEmpty(bidInfos)) {
@@ -45,11 +46,11 @@ public class AuctionEventService {
         }
     }
 
+    private String generateKey(Long auctionVarietyId) {
+        return String.format(AUCTION_EVENT_KEY_FORMAT, auctionVarietyId);
+    }
+
     private void redisClear(String key) {
-        Long size = redisTemplate.opsForZSet().size(key);
-        if (size == null) {
-            return;
-        }
-        redisTemplate.opsForZSet().removeRange(key, START_INDEX, size);
+        redisTemplate.delete(key);
     }
 }
