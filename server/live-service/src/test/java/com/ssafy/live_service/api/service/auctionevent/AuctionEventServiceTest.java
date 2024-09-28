@@ -26,9 +26,7 @@ class AuctionEventServiceTest extends IntegrationTestSupport {
 
     @AfterEach
     void tearDown() {
-        Long size = redisTemplate.opsForZSet().size(String.valueOf(1L));
-        redisTemplate.opsForZSet()
-            .removeRange(String.valueOf(1L), 0, size);
+        redisTemplate.delete(String.valueOf(1L));
     }
 
     @DisplayName("동일한 회원이 여러번 요청을 보내면 대기열에서 후순위가 된다.")
