@@ -61,6 +61,9 @@ dependencies {
 
 	//monitoring
 	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+
+	//json
+	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 }
 
 dependencyManagement {
