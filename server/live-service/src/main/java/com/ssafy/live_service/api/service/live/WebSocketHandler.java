@@ -8,12 +8,11 @@ import com.ssafy.live_service.api.client.response.ReservationVarietyResponse;
 import com.ssafy.live_service.api.service.auction.AuctionProgressService;
 import com.ssafy.live_service.api.service.auction.vo.AuctionVariety;
 import com.ssafy.live_service.api.service.live.vo.Json;
-import com.ssafy.live_service.api.service.live.vo.SessionInfo;
-import com.ssafy.live_service.api.service.live.vo.Sessions;
+import com.ssafy.live_service.api.service.live.vo.map.ParticipantSessionRepository;
 import com.ssafy.live_service.common.exception.AppException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -26,13 +25,13 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
-@Service
+@Component
 @RequiredArgsConstructor
-public class LiveService extends TextWebSocketHandler {
+public class WebSocketHandler extends TextWebSocketHandler {
 
-    private static final Map<String, Sessions> sessionMap = new ConcurrentHashMap<>(); //웹소켓 세션 저장소(key: 경매ID, value: 경매에 참가한 회원의 세션 정보 목록)
+    private final ParticipantSessionRepository participantSessionRepository;
     private static final Map<String, String> videoSessionMap = new ConcurrentHashMap<>(); //비디오 세션 저장소(key: 경매ID, value: 비디오 세션)
-    private static final Map<String, SessionInfo> auctionMasterAdminMap = new ConcurrentHashMap<>(); //경매 관리자(key: 경매ID, value: 경매를 최초로 오픈한 관리자 세션)
+    private static final Map<String, WebSocketSession> auctionMasterAdminMap = new ConcurrentHashMap<>(); //경매 관리자(key: 경매ID, value: 경매를 최초로 오픈한 관리자 세션)
 
     private final AuctionProgressService auctionProgressService;
     private final AuctionServiceClient auctionServiceClient;
@@ -55,10 +54,8 @@ public class LiveService extends TextWebSocketHandler {
             session.sendMessage(new TextMessage(videoSessionMap.get(auctionScheduleId)));
         }
 
-        sessionMap.putIfAbsent(auctionScheduleId, Sessions.create());
-        Sessions sessions = sessionMap.get(auctionScheduleId);
-        sessions.add(session);
-        sessionMap.put(auctionScheduleId, sessions);
+        participantSessionRepository.init(auctionScheduleId);
+        participantSessionRepository.addSession(auctionScheduleId, session);
     }
 
     /**
@@ -93,14 +90,12 @@ public class LiveService extends TextWebSocketHandler {
         }
         String auctionScheduleId = getAuctionScheduleIdByUrl(session.getUri());
 
-        String sessionId = session.getId();
-        Sessions sessions = sessionMap.get(auctionScheduleId);
-        sessions.remove(sessionId);
+        participantSessionRepository.removeSession(auctionScheduleId, session);
 
-        if (auctionMasterAdminMap.get(auctionScheduleId).eqSessionId(sessionId)) {
+        if (auctionMasterAdminMap.get(auctionScheduleId).getId().equals(session.getId())) {
             auctionMasterAdminMap.remove(auctionScheduleId);
             sendEndMessage(auctionScheduleId);
-            sessionMap.remove(auctionScheduleId);
+            participantSessionRepository.remove(auctionScheduleId);
             videoSessionMap.remove(auctionScheduleId);
         }
     }
@@ -113,7 +108,7 @@ public class LiveService extends TextWebSocketHandler {
         String auctionScheduleId = getAuctionScheduleIdByUrl(session.getUri());
 
         if (isNotProgressAuction(auctionScheduleId)) {
-            sessionMap.remove(auctionScheduleId);
+            participantSessionRepository.remove(auctionScheduleId);
             session.sendMessage(new TextMessage("진행중인 경매가 아닙니다."));
             return;
         }
@@ -123,15 +118,14 @@ public class LiveService extends TextWebSocketHandler {
     }
 
     private void sendMessageToAllSession(String auctionScheduleId, String msg) {
-        sessionMap.get(auctionScheduleId)
-            .sendMessage(msg);
+        participantSessionRepository.sendMessage(auctionScheduleId, msg);
     }
 
     private boolean isNotProgressAuction(String auctionScheduleId) {
         return !videoSessionMap.containsKey(auctionScheduleId);
     }
 
-    private void admin(WebSocketSession session, Json json) {
+    private void admin(WebSocketSession session, Json json) throws IOException {
         if (session.getUri() == null) {
             return;
         }
@@ -140,7 +134,7 @@ public class LiveService extends TextWebSocketHandler {
         Command cmd = json.getCmd();
 
         if (cmd.isOpen()) {
-            auctionMasterAdminMap.put(auctionScheduleId, SessionInfo.of(session));
+            auctionMasterAdminMap.put(auctionScheduleId, session);
             String videoSessionId = json.getVideoSessionId();
             videoSessionMap.put(auctionScheduleId, videoSessionId);
             log.info("[{}] 경매장 웹소켓 오픈", auctionScheduleId);
@@ -171,15 +165,14 @@ public class LiveService extends TextWebSocketHandler {
                 return;
             }
             String reservationVarietyJson = objToJson(reservationVariety);
-            auctionMasterAdminMap.get(auctionScheduleId)
-                .sendMessage(reservationVarietyJson);
+            auctionMasterAdminMap.get(auctionScheduleId).sendMessage(new TextMessage(reservationVarietyJson));
             log.info("[{}] 예약 경매 정보 전송", auctionScheduleId);
             return;
         }
 
         if (cmd.isClose()) {
             auctionServiceClient.modifyAuctionStatusToComplete(Integer.parseInt(auctionScheduleId));
-            sessionMap.remove(auctionScheduleId);
+            participantSessionRepository.remove(auctionScheduleId);
             videoSessionMap.remove(auctionScheduleId);
             auctionMasterAdminMap.remove(auctionScheduleId);
             log.info("[{}] 경매장 웹소켓 종료", auctionScheduleId);
@@ -202,7 +195,6 @@ public class LiveService extends TextWebSocketHandler {
     }
 
     private void sendEndMessage(String auctionScheduleId) {
-        sessionMap.get(auctionScheduleId)
-            .sendMessage("금일 경매가 종료되었습니다.");
+        participantSessionRepository.sendMessage(auctionScheduleId, "금일 경매가 종료되었습니다.");
     }
 }

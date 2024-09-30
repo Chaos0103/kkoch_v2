@@ -11,13 +11,13 @@ import java.util.Optional;
 
 public class Sessions {
 
-    private final List<SessionInfo> values;
+    private final List<WebSocketSession> values;
 
-    private Sessions(List<SessionInfo> values) {
+    private Sessions(List<WebSocketSession> values) {
         this.values = values;
     }
 
-    private static Sessions of(List<SessionInfo> values) {
+    private static Sessions of(List<WebSocketSession> values) {
         return new Sessions(values);
     }
 
@@ -26,30 +26,26 @@ public class Sessions {
     }
 
     public void add(WebSocketSession session) {
-        SessionInfo sessionInfo = SessionInfo.of(session);
-        values.add(sessionInfo);
+        values.add(session);
     }
 
-    public void remove(String sessionId) {
-        Optional<SessionInfo> findSessionInfo = values.stream()
-            .filter(sessionInfo -> sessionInfo.eqSessionId(sessionId))
+    public void remove(WebSocketSession session) {
+        Optional<WebSocketSession> findSession = values.stream()
+            .filter(s -> s.getId().equals(session.getId()))
             .findFirst();
-        if (findSessionInfo.isEmpty()) {
+        if (findSession.isEmpty()) {
             return;
         }
-        values.remove(findSessionInfo.get());
+        values.remove(findSession.get());
     }
 
     public void sendMessage(String msg) {
-        values.stream()
-            .map(SessionInfo::getSession)
-            .forEach(session -> {
-                    try {
-                        session.sendMessage(new TextMessage(msg));
-                    } catch (IOException e) {
-                        throw new AppException(e);
-                    }
-                }
-            );
+        values.forEach(session -> {
+            try {
+                session.sendMessage(new TextMessage(msg));
+            } catch (IOException e) {
+                throw new AppException(e);
+            }
+        });
     }
 }
