@@ -8,6 +8,7 @@ import com.ssafy.live_service.api.client.response.ReservationVarietyResponse;
 import com.ssafy.live_service.api.service.auction.AuctionProgressService;
 import com.ssafy.live_service.api.service.auction.vo.AuctionVariety;
 import com.ssafy.live_service.api.service.live.vo.Json;
+import com.ssafy.live_service.api.service.live.vo.map.AuctionMasterSessionRepository;
 import com.ssafy.live_service.api.service.live.vo.map.ParticipantSessionRepository;
 import com.ssafy.live_service.api.service.live.vo.map.VideoSessionRepository;
 import com.ssafy.live_service.common.exception.AppException;
@@ -22,8 +23,6 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Component
@@ -32,7 +31,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
     private final ParticipantSessionRepository participantSessionRepository;
     private final VideoSessionRepository videoSessionRepository;
-    private static final Map<String, WebSocketSession> auctionMasterAdminMap = new ConcurrentHashMap<>(); //경매 관리자(key: 경매ID, value: 경매를 최초로 오픈한 관리자 세션)
+    private final AuctionMasterSessionRepository auctionMasterSessionRepository;
 
     private final AuctionProgressService auctionProgressService;
     private final AuctionServiceClient auctionServiceClient;
@@ -94,8 +93,8 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
         participantSessionRepository.removeSession(auctionScheduleId, session);
 
-        if (auctionMasterAdminMap.get(auctionScheduleId).getId().equals(session.getId())) {
-            auctionMasterAdminMap.remove(auctionScheduleId);
+        if (auctionMasterSessionRepository.isMaster(auctionScheduleId, session)) {
+            auctionMasterSessionRepository.remove(auctionScheduleId);
             sendEndMessage(auctionScheduleId);
             participantSessionRepository.remove(auctionScheduleId);
             videoSessionRepository.remove(auctionScheduleId);
@@ -132,7 +131,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
         Command cmd = json.getCmd();
 
         if (cmd.isOpen()) {
-            auctionMasterAdminMap.put(auctionScheduleId, session);
+            auctionMasterSessionRepository.save(auctionScheduleId, session);
             String videoSessionId = json.getVideoSessionId();
             videoSessionRepository.save(auctionScheduleId, videoSessionId);
             log.info("[{}] 경매장 웹소켓 오픈", auctionScheduleId);
@@ -163,7 +162,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
                 return;
             }
             String reservationVarietyJson = objToJson(reservationVariety);
-            auctionMasterAdminMap.get(auctionScheduleId).sendMessage(new TextMessage(reservationVarietyJson));
+            auctionMasterSessionRepository.sendMessage(auctionScheduleId, reservationVarietyJson);
             log.info("[{}] 예약 경매 정보 전송", auctionScheduleId);
             return;
         }
@@ -172,7 +171,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
             auctionServiceClient.modifyAuctionStatusToComplete(Integer.parseInt(auctionScheduleId));
             participantSessionRepository.remove(auctionScheduleId);
             videoSessionRepository.remove(auctionScheduleId);
-            auctionMasterAdminMap.remove(auctionScheduleId);
+            auctionMasterSessionRepository.remove(auctionScheduleId);
             log.info("[{}] 경매장 웹소켓 종료", auctionScheduleId);
         }
     }
