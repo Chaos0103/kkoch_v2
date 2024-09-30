@@ -9,6 +9,7 @@ import com.ssafy.live_service.api.service.auction.AuctionProgressService;
 import com.ssafy.live_service.api.service.auction.vo.AuctionVariety;
 import com.ssafy.live_service.api.service.live.vo.Json;
 import com.ssafy.live_service.api.service.live.vo.map.ParticipantSessionRepository;
+import com.ssafy.live_service.api.service.live.vo.map.VideoSessionRepository;
 import com.ssafy.live_service.common.exception.AppException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +31,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class WebSocketHandler extends TextWebSocketHandler {
 
     private final ParticipantSessionRepository participantSessionRepository;
-    private static final Map<String, String> videoSessionMap = new ConcurrentHashMap<>(); //비디오 세션 저장소(key: 경매ID, value: 비디오 세션)
+    private final VideoSessionRepository videoSessionRepository;
     private static final Map<String, WebSocketSession> auctionMasterAdminMap = new ConcurrentHashMap<>(); //경매 관리자(key: 경매ID, value: 경매를 최초로 오픈한 관리자 세션)
 
     private final AuctionProgressService auctionProgressService;
@@ -50,8 +51,9 @@ public class WebSocketHandler extends TextWebSocketHandler {
         String auctionScheduleId = getAuctionScheduleIdByUrl(session.getUri());
 
         //경매의 비디오 세션이 발급됬으면
-        if (!videoSessionMap.get(auctionScheduleId).isEmpty()) {
-            session.sendMessage(new TextMessage(videoSessionMap.get(auctionScheduleId)));
+        if (!videoSessionRepository.existsSessionBy(auctionScheduleId)) {
+            String videoSessionId = videoSessionRepository.get(auctionScheduleId);
+            session.sendMessage(new TextMessage(videoSessionId));
         }
 
         participantSessionRepository.init(auctionScheduleId);
@@ -96,7 +98,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
             auctionMasterAdminMap.remove(auctionScheduleId);
             sendEndMessage(auctionScheduleId);
             participantSessionRepository.remove(auctionScheduleId);
-            videoSessionMap.remove(auctionScheduleId);
+            videoSessionRepository.remove(auctionScheduleId);
         }
     }
 
@@ -107,7 +109,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
         String auctionScheduleId = getAuctionScheduleIdByUrl(session.getUri());
 
-        if (isNotProgressAuction(auctionScheduleId)) {
+        if (!videoSessionRepository.existsSessionBy(auctionScheduleId)) {
             participantSessionRepository.remove(auctionScheduleId);
             session.sendMessage(new TextMessage("진행중인 경매가 아닙니다."));
             return;
@@ -121,10 +123,6 @@ public class WebSocketHandler extends TextWebSocketHandler {
         participantSessionRepository.sendMessage(auctionScheduleId, msg);
     }
 
-    private boolean isNotProgressAuction(String auctionScheduleId) {
-        return !videoSessionMap.containsKey(auctionScheduleId);
-    }
-
     private void admin(WebSocketSession session, Json json) throws IOException {
         if (session.getUri() == null) {
             return;
@@ -136,7 +134,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
         if (cmd.isOpen()) {
             auctionMasterAdminMap.put(auctionScheduleId, session);
             String videoSessionId = json.getVideoSessionId();
-            videoSessionMap.put(auctionScheduleId, videoSessionId);
+            videoSessionRepository.save(auctionScheduleId, videoSessionId);
             log.info("[{}] 경매장 웹소켓 오픈", auctionScheduleId);
 
             //경매품 전체 조회 요청
@@ -173,7 +171,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
         if (cmd.isClose()) {
             auctionServiceClient.modifyAuctionStatusToComplete(Integer.parseInt(auctionScheduleId));
             participantSessionRepository.remove(auctionScheduleId);
-            videoSessionMap.remove(auctionScheduleId);
+            videoSessionRepository.remove(auctionScheduleId);
             auctionMasterAdminMap.remove(auctionScheduleId);
             log.info("[{}] 경매장 웹소켓 종료", auctionScheduleId);
         }
