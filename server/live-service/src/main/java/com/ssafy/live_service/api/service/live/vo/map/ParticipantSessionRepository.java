@@ -13,4 +13,6 @@ public interface ParticipantSessionRepository {
     void remove(String auctionScheduleId);
 
     void sendMessage(String auctionScheduleId, String msg);
+
+    void sendAuctionCompleteMessage(String auctionScheduleId);
 }

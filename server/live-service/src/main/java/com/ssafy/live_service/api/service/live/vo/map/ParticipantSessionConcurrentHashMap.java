@@ -40,4 +40,9 @@ public class ParticipantSessionConcurrentHashMap implements ParticipantSessionRe
         map.get(auctionScheduleId)
             .sendMessage(msg);
     }
+
+    @Override
+    public void sendAuctionCompleteMessage(String auctionScheduleId) {
+        sendMessage(auctionScheduleId, "금일 경매가 종료되었습니다.");
+    }
 }

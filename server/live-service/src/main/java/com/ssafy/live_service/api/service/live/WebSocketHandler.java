@@ -32,7 +32,6 @@ public class WebSocketHandler extends TextWebSocketHandler {
     private final ParticipantSessionRepository participantSessionRepository;
     private final VideoSessionRepository videoSessionRepository;
     private final AuctionMasterSessionRepository auctionMasterSessionRepository;
-
     private final AuctionProgressService auctionProgressService;
     private final AuctionServiceClient auctionServiceClient;
     private final TradeServiceClient tradeServiceClient;
@@ -42,12 +41,8 @@ public class WebSocketHandler extends TextWebSocketHandler {
      */
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        if (session.getUri() == null) {
-            return;
-        }
-
         log.debug("웹소켓 연결 (sessionId = {})", session.getId());
-        String auctionScheduleId = getAuctionScheduleIdByUrl(session.getUri());
+        String auctionScheduleId = getAuctionScheduleIdByUrl(session);
 
         //경매의 비디오 세션이 발급됬으면
         if (!videoSessionRepository.existsSessionBy(auctionScheduleId)) {
@@ -86,27 +81,21 @@ public class WebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         log.debug("웹소켓 연결 종료 (sessionId = {})", session.getId());
-        if (session.getUri() == null) {
-            return;
-        }
-        String auctionScheduleId = getAuctionScheduleIdByUrl(session.getUri());
-
-        participantSessionRepository.removeSession(auctionScheduleId, session);
+        String auctionScheduleId = getAuctionScheduleIdByUrl(session);
 
         if (auctionMasterSessionRepository.isMaster(auctionScheduleId, session)) {
             auctionMasterSessionRepository.remove(auctionScheduleId);
-            sendEndMessage(auctionScheduleId);
+            participantSessionRepository.sendAuctionCompleteMessage(auctionScheduleId);
             participantSessionRepository.remove(auctionScheduleId);
             videoSessionRepository.remove(auctionScheduleId);
-        }
-    }
-
-    private void client(WebSocketSession session, TextMessage message) throws IOException {
-        if (session.getUri() == null) {
             return;
         }
 
-        String auctionScheduleId = getAuctionScheduleIdByUrl(session.getUri());
+        participantSessionRepository.removeSession(auctionScheduleId, session);
+    }
+
+    private void client(WebSocketSession session, TextMessage message) throws IOException {
+        String auctionScheduleId = getAuctionScheduleIdByUrl(session);
 
         if (!videoSessionRepository.existsSessionBy(auctionScheduleId)) {
             participantSessionRepository.remove(auctionScheduleId);
@@ -123,11 +112,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
     }
 
     private void admin(WebSocketSession session, Json json) throws IOException {
-        if (session.getUri() == null) {
-            return;
-        }
-
-        String auctionScheduleId = getAuctionScheduleIdByUrl(session.getUri());
+        String auctionScheduleId = getAuctionScheduleIdByUrl(session);
         Command cmd = json.getCmd();
 
         if (cmd.isOpen()) {
@@ -176,7 +161,11 @@ public class WebSocketHandler extends TextWebSocketHandler {
         }
     }
 
-    private String getAuctionScheduleIdByUrl(URI uri) {
+    private String getAuctionScheduleIdByUrl(WebSocketSession session) {
+        URI uri = session.getUri();
+        if (uri == null) {
+            throw new AppException("주소를 올바르게 입력해주세요.");
+        }
         String path = uri.getPath();
         String[] pathSplit = path.split("/");
         return pathSplit[pathSplit.length - 1];
@@ -189,9 +178,5 @@ public class WebSocketHandler extends TextWebSocketHandler {
         } catch (JsonProcessingException e) {
             throw new AppException(e);
         }
-    }
-
-    private void sendEndMessage(String auctionScheduleId) {
-        participantSessionRepository.sendMessage(auctionScheduleId, "금일 경매가 종료되었습니다.");
     }
 }
