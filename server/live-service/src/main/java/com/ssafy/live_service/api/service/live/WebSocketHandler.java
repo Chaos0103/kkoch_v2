@@ -84,10 +84,8 @@ public class WebSocketHandler extends TextWebSocketHandler {
         String auctionScheduleId = getAuctionScheduleIdByUrl(session);
 
         if (auctionMasterSessionRepository.isMaster(auctionScheduleId, session)) {
-            auctionMasterSessionRepository.remove(auctionScheduleId);
             participantSessionRepository.sendAuctionCompleteMessage(auctionScheduleId);
-            participantSessionRepository.remove(auctionScheduleId);
-            videoSessionRepository.remove(auctionScheduleId);
+            closeSession(auctionScheduleId);
             return;
         }
 
@@ -116,10 +114,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
         Command cmd = json.getCmd();
 
         if (cmd.isOpen()) {
-            auctionMasterSessionRepository.save(auctionScheduleId, session);
-            String videoSessionId = json.getVideoSessionId();
-            videoSessionRepository.save(auctionScheduleId, videoSessionId);
-            log.info("[{}] 경매장 웹소켓 오픈", auctionScheduleId);
+            openWebSocket(session, json);
 
             //경매품 전체 조회 요청
             List<AuctionVariety> auctionVarieties = auctionProgressService.initAuctionVariety(Integer.parseInt(auctionScheduleId));
@@ -153,12 +148,18 @@ public class WebSocketHandler extends TextWebSocketHandler {
         }
 
         if (cmd.isClose()) {
+            closeSession(auctionScheduleId);
             auctionServiceClient.modifyAuctionStatusToComplete(Integer.parseInt(auctionScheduleId));
-            participantSessionRepository.remove(auctionScheduleId);
-            videoSessionRepository.remove(auctionScheduleId);
-            auctionMasterSessionRepository.remove(auctionScheduleId);
             log.info("[{}] 경매장 웹소켓 종료", auctionScheduleId);
         }
+    }
+
+    private void openWebSocket(WebSocketSession session, Json json) {
+        String auctionScheduleId = getAuctionScheduleIdByUrl(session);
+        auctionMasterSessionRepository.save(auctionScheduleId, session);
+        String videoSessionId = json.getVideoSessionId();
+        videoSessionRepository.save(auctionScheduleId, videoSessionId);
+        log.info("[{}] 경매장 웹소켓 오픈", auctionScheduleId);
     }
 
     private String getAuctionScheduleIdByUrl(WebSocketSession session) {
@@ -178,5 +179,11 @@ public class WebSocketHandler extends TextWebSocketHandler {
         } catch (JsonProcessingException e) {
             throw new AppException(e);
         }
+    }
+
+    private void closeSession(String auctionScheduleId) {
+        participantSessionRepository.remove(auctionScheduleId);
+        videoSessionRepository.remove(auctionScheduleId);
+        auctionMasterSessionRepository.remove(auctionScheduleId);
     }
 }
