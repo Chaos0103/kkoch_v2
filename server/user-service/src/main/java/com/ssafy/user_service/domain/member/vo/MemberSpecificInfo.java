@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Getter
@@ -29,16 +30,30 @@ public class MemberSpecificInfo {
         this.role = role;
     }
 
-    public static MemberSpecificInfo of(String memberKey, Role role) {
+    public static MemberSpecificInfo of(Role role) {
+        String memberKey = generateMemberKey();
         return new MemberSpecificInfo(memberKey, role);
     }
 
-    public static MemberSpecificInfo generateUser() {
-        return of(generateMemberKey(), Role.USER);
+    public static MemberSpecificInfo createUser() {
+        return of(Role.USER);
     }
 
-    public static MemberSpecificInfo generateAdmin() {
-        return of(generateMemberKey(), Role.ADMIN);
+    public static MemberSpecificInfo createAdmin() {
+        return of(Role.ADMIN);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MemberSpecificInfo that = (MemberSpecificInfo) o;
+        return Objects.equals(getMemberKey(), that.getMemberKey()) && getRole() == that.getRole();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getMemberKey(), getRole());
     }
 
     private static String generateMemberKey() {

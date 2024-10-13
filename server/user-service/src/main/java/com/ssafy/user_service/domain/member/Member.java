@@ -56,13 +56,13 @@ public class Member extends TimeBaseEntity {
     }
 
     public static Member createUser(String email, String pwd, String name, String tel, String businessNumber) {
-        MemberSpecificInfo userSpecificInfo = MemberSpecificInfo.generateUser();
+        MemberSpecificInfo userSpecificInfo = MemberSpecificInfo.createUser();
         UserAdditionalInfo additionalInfo = UserAdditionalInfo.create(businessNumber);
         return of(false, userSpecificInfo, email, pwd, name, tel, additionalInfo);
     }
 
     public static Member createAdmin(String email, String pwd, String name, String tel) {
-        MemberSpecificInfo adminSpecificInfo = MemberSpecificInfo.generateAdmin();
+        MemberSpecificInfo adminSpecificInfo = MemberSpecificInfo.createAdmin();
         return of(false, adminSpecificInfo, email, pwd, name, tel, null);
     }
 
