@@ -2,6 +2,7 @@ package com.ssafy.user_service.api.service.member;
 
 import com.ssafy.user_service.api.service.member.request.BankAccountServiceRequest;
 import com.ssafy.user_service.api.service.member.response.*;
+import com.ssafy.user_service.domain.member.MemberValidate;
 import com.ssafy.user_service.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
-import static com.ssafy.user_service.api.service.member.MemberValidate.*;
+import static com.ssafy.user_service.domain.member.MemberValidate.*;
 
 @Slf4j
 @Service

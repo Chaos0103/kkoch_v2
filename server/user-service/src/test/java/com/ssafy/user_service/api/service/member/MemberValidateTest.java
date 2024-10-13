@@ -3,6 +3,7 @@ package com.ssafy.user_service.api.service.member;
 import com.ssafy.user_service.common.exception.LengthOutOfRangeException;
 import com.ssafy.user_service.common.exception.NotSupportedException;
 import com.ssafy.user_service.common.exception.StringFormatException;
+import com.ssafy.user_service.domain.member.MemberValidate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

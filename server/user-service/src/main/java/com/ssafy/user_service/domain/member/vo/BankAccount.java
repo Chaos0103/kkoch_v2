@@ -1,7 +1,5 @@
 package com.ssafy.user_service.domain.member.vo;
 
-import com.ssafy.user_service.common.exception.AppException;
-import com.ssafy.user_service.common.util.StringUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
@@ -9,6 +7,9 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 import java.util.Objects;
+
+import static com.ssafy.user_service.domain.member.MemberValidate.validateAccountNumber;
+import static com.ssafy.user_service.domain.member.MemberValidate.validateBankCode;
 
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
@@ -22,17 +23,8 @@ public class BankAccount {
 
     @Builder
     private BankAccount(String bankCode, String accountNumber) {
-        if (StringUtils.isBlank(bankCode) || bankCode.length() != 3) {
-            throw new AppException();
-        }
-
-        if (Bank.isNotSupported(bankCode)) {
-            throw new AppException();
-        }
-
-        if (StringUtils.isBlank(accountNumber) || accountNumber.length() > 14) {
-            throw new AppException();
-        }
+        validateBankCode(bankCode);
+        validateAccountNumber(accountNumber);
 
         this.bankCode = bankCode;
         this.accountNumber = accountNumber;

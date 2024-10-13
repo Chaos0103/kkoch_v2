@@ -1,6 +1,7 @@
 package com.ssafy.user_service.domain.member;
 
-import com.ssafy.user_service.common.exception.AppException;
+import com.ssafy.user_service.common.exception.LengthOutOfRangeException;
+import com.ssafy.user_service.common.exception.NotSupportedException;
 import com.ssafy.user_service.domain.member.vo.BankAccount;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,14 +20,16 @@ class BankAccountTest {
     @ParameterizedTest
     void bankCodeOutOfLength(String bankCode) {
         assertThatThrownBy(() -> createBankAccount(bankCode, "123123123456"))
-            .isInstanceOf(AppException.class);
+            .isInstanceOf(LengthOutOfRangeException.class)
+            .hasMessage("은행 코드를 올바르게 입력해주세요.");
     }
 
     @DisplayName("은행 코드를 지원하지 않으면 예외가 발생한다.")
     @Test
     void bankCodeNotSupported() {
         assertThatThrownBy(() -> createBankAccount("000", "123123123456"))
-            .isInstanceOf(AppException.class);
+            .isInstanceOf(NotSupportedException.class)
+            .hasMessage("지원하지 않는 은행 코드입니다.");
     }
 
     @DisplayName("은행 계좌의 길이가 14를 초과하면 예외가 발생한다.")
@@ -35,7 +38,8 @@ class BankAccountTest {
     @ParameterizedTest
     void accountNumberOutOfLength(String accountNumber) {
         assertThatThrownBy(() -> createBankAccount("088", accountNumber))
-            .isInstanceOf(AppException.class);
+            .isInstanceOf(LengthOutOfRangeException.class)
+            .hasMessage("은행 계좌의 길이는 최대 14자리 입니다.");
     }
 
     @DisplayName("은행 계좌 객체를 생성한다.")

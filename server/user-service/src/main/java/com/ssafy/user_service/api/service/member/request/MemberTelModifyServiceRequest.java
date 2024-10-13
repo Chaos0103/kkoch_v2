@@ -3,7 +3,7 @@ package com.ssafy.user_service.api.service.member.request;
 import lombok.Builder;
 import lombok.Getter;
 
-import static com.ssafy.user_service.api.service.member.MemberValidate.validateTel;
+import static com.ssafy.user_service.domain.member.MemberValidate.validateTel;
 
 @Getter
 public class MemberTelModifyServiceRequest {

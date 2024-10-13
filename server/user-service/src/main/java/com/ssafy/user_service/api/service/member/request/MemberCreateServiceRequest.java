@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import static com.ssafy.user_service.api.service.member.MemberValidate.*;
+import static com.ssafy.user_service.domain.member.MemberValidate.*;
 
 @Getter
 public class MemberCreateServiceRequest {
