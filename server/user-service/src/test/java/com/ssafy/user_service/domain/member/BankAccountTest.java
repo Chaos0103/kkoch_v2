@@ -44,7 +44,7 @@ class BankAccountTest {
 
     @DisplayName("은행 계좌 객체를 생성한다.")
     @Test
-    void bankCodeLength() {
+    void createBankAccount() {
         BankAccount bankAccount = createBankAccount("088", "01234567891234");
 
         assertThat(bankAccount).isNotNull()
@@ -61,7 +61,7 @@ class BankAccountTest {
         assertThat(bankAccount1.equals(bankAccount2)).isTrue();
     }
 
-    private static BankAccount createBankAccount(String bankCode, String accountNumber) {
+    private BankAccount createBankAccount(String bankCode, String accountNumber) {
         return BankAccount.builder()
             .bankCode(bankCode)
             .accountNumber(accountNumber)

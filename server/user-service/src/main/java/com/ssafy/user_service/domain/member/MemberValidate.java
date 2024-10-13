@@ -70,7 +70,7 @@ public abstract class MemberValidate {
     }
 
     public static boolean validateBusinessNumber(String businessNumber) {
-        if (isLengthMoreThan(businessNumber, MAX_BUSINESS_NUMBER_LENGTH)) {
+        if (isBlank(businessNumber) || isLengthMoreThan(businessNumber, MAX_BUSINESS_NUMBER_LENGTH)) {
             throw new LengthOutOfRangeException("사업자 번호의 길이는 최대 12자리 입니다.");
         }
 

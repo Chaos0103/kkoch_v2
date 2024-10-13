@@ -57,7 +57,7 @@ public class Member extends TimeBaseEntity {
 
     public static Member createUser(String email, String pwd, String name, String tel, String businessNumber) {
         MemberSpecificInfo userSpecificInfo = MemberSpecificInfo.generateUser();
-        UserAdditionalInfo additionalInfo = UserAdditionalInfo.init(businessNumber);
+        UserAdditionalInfo additionalInfo = UserAdditionalInfo.create(businessNumber);
         return of(false, userSpecificInfo, email, pwd, name, tel, additionalInfo);
     }
 

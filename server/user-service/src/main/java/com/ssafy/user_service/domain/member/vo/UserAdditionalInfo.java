@@ -7,6 +7,10 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
+import static com.ssafy.user_service.domain.member.MemberValidate.validateBusinessNumber;
+
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 public class UserAdditionalInfo {
@@ -19,6 +23,8 @@ public class UserAdditionalInfo {
 
     @Builder
     private UserAdditionalInfo(String businessNumber, BankAccount bankAccount) {
+        validateBusinessNumber(businessNumber);
+
         this.businessNumber = businessNumber;
         this.bankAccount = bankAccount;
     }
@@ -27,12 +33,25 @@ public class UserAdditionalInfo {
         return new UserAdditionalInfo(businessNumber, bankAccount);
     }
 
-    public static UserAdditionalInfo init(String businessNumber) {
+    public static UserAdditionalInfo create(String businessNumber) {
         return of(businessNumber, null);
     }
 
     public UserAdditionalInfo withBankAccount(String bankCode, String accountNumber) {
         BankAccount modifiedBackAccount = BankAccount.of(bankCode, accountNumber);
         return of(businessNumber, modifiedBackAccount);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserAdditionalInfo that = (UserAdditionalInfo) o;
+        return Objects.equals(businessNumber, that.businessNumber) && Objects.equals(bankAccount, that.bankAccount);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(businessNumber, bankAccount);
     }
 }
