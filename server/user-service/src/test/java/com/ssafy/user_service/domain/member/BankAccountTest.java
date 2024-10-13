@@ -1,6 +1,7 @@
 package com.ssafy.user_service.domain.member;
 
 import com.ssafy.user_service.common.exception.AppException;
+import com.ssafy.user_service.domain.member.vo.BankAccount;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -29,9 +30,11 @@ class BankAccountTest {
     }
 
     @DisplayName("은행 계좌의 길이가 14를 초과하면 예외가 발생한다.")
-    @Test
-    void accountNumberOutOfLength() {
-        assertThatThrownBy(() -> createBankAccount("088", "012345678912345"))
+    @ValueSource(strings = {"012345678912345"})
+    @NullAndEmptySource
+    @ParameterizedTest
+    void accountNumberOutOfLength(String accountNumber) {
+        assertThatThrownBy(() -> createBankAccount("088", accountNumber))
             .isInstanceOf(AppException.class);
     }
 

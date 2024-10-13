@@ -1,4 +1,4 @@
-package com.ssafy.user_service.domain.member;
+package com.ssafy.user_service.domain.member.vo;
 
 import lombok.RequiredArgsConstructor;
 

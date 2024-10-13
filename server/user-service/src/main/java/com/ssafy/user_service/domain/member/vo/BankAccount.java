@@ -1,4 +1,4 @@
-package com.ssafy.user_service.domain.member;
+package com.ssafy.user_service.domain.member.vo;
 
 import com.ssafy.user_service.common.exception.AppException;
 import com.ssafy.user_service.common.util.StringUtils;
@@ -30,7 +30,7 @@ public class BankAccount {
             throw new AppException();
         }
 
-        if (accountNumber.length() > 14) {
+        if (StringUtils.isBlank(accountNumber) || accountNumber.length() > 14) {
             throw new AppException();
         }
 

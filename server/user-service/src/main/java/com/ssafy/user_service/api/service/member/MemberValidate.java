@@ -3,7 +3,7 @@ package com.ssafy.user_service.api.service.member;
 import com.ssafy.user_service.common.exception.LengthOutOfRangeException;
 import com.ssafy.user_service.common.exception.NotSupportedException;
 import com.ssafy.user_service.common.exception.StringFormatException;
-import com.ssafy.user_service.domain.member.Bank;
+import com.ssafy.user_service.domain.member.vo.Bank;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

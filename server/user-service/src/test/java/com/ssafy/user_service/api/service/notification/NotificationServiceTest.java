@@ -5,6 +5,10 @@ import com.ssafy.user_service.api.service.notification.response.NotificationOpen
 import com.ssafy.user_service.api.service.notification.response.NotificationRemoveResponse;
 import com.ssafy.user_service.domain.member.*;
 import com.ssafy.user_service.domain.member.repository.MemberRepository;
+import com.ssafy.user_service.domain.member.vo.BankAccount;
+import com.ssafy.user_service.domain.member.vo.MemberSpecificInfo;
+import com.ssafy.user_service.domain.member.vo.Role;
+import com.ssafy.user_service.domain.member.vo.UserAdditionalInfo;
 import com.ssafy.user_service.domain.membernotification.MemberNotification;
 import com.ssafy.user_service.domain.membernotification.repository.MemberNotificationRepository;
 import com.ssafy.user_service.domain.notification.Notification;

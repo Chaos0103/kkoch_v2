@@ -1,5 +1,6 @@
 package com.ssafy.user_service.domain.member;
 
+import com.ssafy.user_service.domain.member.vo.Role;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

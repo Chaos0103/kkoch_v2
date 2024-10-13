@@ -1,6 +1,8 @@
 package com.ssafy.user_service.domain.member;
 
 import com.ssafy.user_service.domain.TimeBaseEntity;
+import com.ssafy.user_service.domain.member.vo.MemberSpecificInfo;
+import com.ssafy.user_service.domain.member.vo.UserAdditionalInfo;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
