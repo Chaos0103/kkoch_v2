@@ -37,13 +37,13 @@ class MemberApiControllerDocsTest extends RestDocsSupport {
 
     @DisplayName("일반 회원 가입 API")
     @Test
-    void createUserMember() throws Exception {
+    void createMember() throws Exception {
         MemberCreateRequest request = MemberCreateRequest.builder()
             .email("ssafy@ssafy.com")
             .password("ssafy1234!")
             .name("김싸피")
             .tel("01012341234")
-            .businessNumber("1231212345")
+            .role("USER")
             .build();
 
         MemberCreateResponse response = MemberCreateResponse.builder()
@@ -52,7 +52,7 @@ class MemberApiControllerDocsTest extends RestDocsSupport {
             .createdDateTime(LocalDateTime.now())
             .build();
 
-        given(memberService.createUserMember(any()))
+        given(memberService.createMember(any()))
             .willReturn(response);
 
         mockMvc.perform(
@@ -74,66 +74,8 @@ class MemberApiControllerDocsTest extends RestDocsSupport {
                         .description("이름"),
                     fieldWithPath("tel").type(JsonFieldType.STRING)
                         .description("연락처"),
-                    fieldWithPath("businessNumber").type(JsonFieldType.STRING)
-                        .description("사업자 번호")
-                ),
-                responseFields(
-                    fieldWithPath("code").type(JsonFieldType.NUMBER)
-                        .description("코드"),
-                    fieldWithPath("status").type(JsonFieldType.STRING)
-                        .description("상태"),
-                    fieldWithPath("message").type(JsonFieldType.STRING)
-                        .description("메시지"),
-                    fieldWithPath("data").type(JsonFieldType.OBJECT)
-                        .description("응답 데이터"),
-                    fieldWithPath("data.email").type(JsonFieldType.STRING)
-                        .description("회원 가입된 이메일"),
-                    fieldWithPath("data.name").type(JsonFieldType.STRING)
-                        .description("회원 가입된 이름"),
-                    fieldWithPath("data.createdDateTime").type(JsonFieldType.ARRAY)
-                        .description("회원 가입 일시")
-                )
-            ));
-    }
-
-    @DisplayName("관리자 회원 가입 API")
-    @Test
-    void createAdminMember() throws Exception {
-        AdminMemberCreateRequest request = AdminMemberCreateRequest.builder()
-            .email("ssafy@ssafy.com")
-            .password("ssafy1234!")
-            .name("김싸피")
-            .tel("01012341234")
-            .build();
-
-        MemberCreateResponse response = MemberCreateResponse.builder()
-            .email("ss***@ssafy.com")
-            .name("김싸피")
-            .createdDateTime(LocalDateTime.now())
-            .build();
-
-        given(memberService.createAdminMember(any()))
-            .willReturn(response);
-
-        mockMvc.perform(
-                post("/members/admin")
-                    .content(objectMapper.writeValueAsString(request))
-                    .contentType(MediaType.APPLICATION_JSON)
-            )
-            .andDo(print())
-            .andExpect(status().isCreated())
-            .andDo(document("create-admin-member",
-                preprocessRequest(prettyPrint()),
-                preprocessResponse(prettyPrint()),
-                requestFields(
-                    fieldWithPath("email").type(JsonFieldType.STRING)
-                        .description("이메일"),
-                    fieldWithPath("password").type(JsonFieldType.STRING)
-                        .description("비밀번호"),
-                    fieldWithPath("name").type(JsonFieldType.STRING)
-                        .description("이름"),
-                    fieldWithPath("tel").type(JsonFieldType.STRING)
-                        .description("연락처")
+                    fieldWithPath("role").type(JsonFieldType.STRING)
+                        .description("회원 구분")
                 ),
                 responseFields(
                     fieldWithPath("code").type(JsonFieldType.NUMBER)

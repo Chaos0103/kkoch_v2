@@ -9,26 +9,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class MemberSpecificInfoTest {
 
-    @DisplayName("권한이 USER인 회원 고유 정보를 생성한다.")
-    @Test
-    void createUser() {
-        MemberSpecificInfo memberSpecificInfo = MemberSpecificInfo.createUser();
-
-        assertThat(memberSpecificInfo).isNotNull()
-            .hasFieldOrProperty("memberKey")
-            .hasFieldOrPropertyWithValue("role", Role.USER);
-    }
-
-    @DisplayName("권한이 ADMIN인 회원 고유 정보를 생성한다.")
-    @Test
-    void createAdmin() {
-        MemberSpecificInfo memberSpecificInfo = MemberSpecificInfo.createAdmin();
-
-        assertThat(memberSpecificInfo).isNotNull()
-            .hasFieldOrProperty("memberKey")
-            .hasFieldOrPropertyWithValue("role", Role.ADMIN);
-    }
-
     @DisplayName("회원 고유키와 권한이 동일하면 동일한 객체이다.")
     @Test
     void equals() {

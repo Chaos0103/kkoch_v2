@@ -24,19 +24,19 @@ public class MemberCreateRequest {
     @NotBlank(message = NOT_BLANK_TEL)
     private String tel;
 
-    @NotBlank(message = NOT_BLANK_BUSINESS_NUMBER)
-    private String businessNumber;
+    @NotBlank(message = NOT_BLANK_ROLE)
+    private String role;
 
     @Builder
-    private MemberCreateRequest(String email, String password, String name, String tel, String businessNumber) {
+    private MemberCreateRequest(String email, String password, String name, String tel, String role) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.tel = tel;
-        this.businessNumber = businessNumber;
+        this.role = role;
     }
 
     public MemberCreateServiceRequest toServiceRequest() {
-        return MemberCreateServiceRequest.createUser(email, password, name, tel, businessNumber);
+        return MemberCreateServiceRequest.of(email, password, name, tel, role);
     }
 }

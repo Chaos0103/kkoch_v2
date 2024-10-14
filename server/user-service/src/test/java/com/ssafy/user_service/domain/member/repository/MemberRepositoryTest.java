@@ -8,6 +8,8 @@ import com.ssafy.user_service.domain.member.vo.Role;
 import com.ssafy.user_service.domain.member.vo.UserAdditionalInfo;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Optional;
@@ -20,42 +22,45 @@ class MemberRepositoryTest extends IntegrationTestSupport {
     private MemberRepository memberRepository;
 
     @DisplayName("이메일을 입력 받아 존재 여부를 확인한다.")
-    @Test
-    void existsByEmail() {
+    @CsvSource({"ssafy@ssafy.com,true", "ssafy@gmail.com,false"})
+    @ParameterizedTest
+    void existsByEmail(String email, boolean expected) {
         //given
-        Member member = createMember();
+        createMember();
 
         //when
-        boolean isExistEmail = memberRepository.existsByEmail("ssafy@ssafy.com");
+        boolean isExistEmail = memberRepository.existsByEmail(email);
 
         //then
-        assertThat(isExistEmail).isTrue();
+        assertThat(isExistEmail).isEqualTo(expected);
     }
 
     @DisplayName("연락처를 입력 받아 존재 여부를 확인한다.")
-    @Test
-    void existsByTel() {
+    @CsvSource({"01012341234,true", "01056785678,false"})
+    @ParameterizedTest
+    void existsByTel(String tel, boolean expected) {
         //given
-        Member member = createMember();
+        createMember();
 
         //when
-        boolean isExistTel = memberRepository.existsByTel("01012341234");
+        boolean isExistTel = memberRepository.existsByTel(tel);
 
         //then
-        assertThat(isExistTel).isTrue();
+        assertThat(isExistTel).isEqualTo(expected);
     }
 
     @DisplayName("사업자 번호를 입력 받아 존재 여부를 확인한다.")
-    @Test
-    void existsByUserAdditionalInfoBusinessNumber() {
+    @CsvSource({"1231212345,true", "1112233333,false"})
+    @ParameterizedTest
+    void existsByUserAdditionalInfoBusinessNumber(String businessNumber, boolean expected) {
         //given
-        Member member = createMember();
+        createMember();
 
         //when
-        boolean isExistBusinessNumber = memberRepository.existsByUserAdditionalInfoBusinessNumber("1231212345");
+        boolean isExistBusinessNumber = memberRepository.existsByUserAdditionalInfoBusinessNumber(businessNumber);
 
         //then
-        assertThat(isExistBusinessNumber).isTrue();
+        assertThat(isExistBusinessNumber).isEqualTo(expected);
     }
 
     @DisplayName("회원 고유키를 입력 받아 회원을 조회한다.")
@@ -66,6 +71,21 @@ class MemberRepositoryTest extends IntegrationTestSupport {
 
         //when
         Optional<Member> findMember = memberRepository.findBySpecificInfoMemberKey(member.getMemberKey());
+
+        //then
+        assertThat(findMember).isPresent()
+            .get()
+            .hasFieldOrPropertyWithValue("id", member.getId());
+    }
+
+    @DisplayName("회원 이메일을 입력 받아 회원을 조회한다.")
+    @Test
+    void findByEmail() {
+        //given
+        Member member = createMember();
+
+        //when
+        Optional<Member> findMember = memberRepository.findByEmail(member.getEmail());
 
         //then
         assertThat(findMember).isPresent()

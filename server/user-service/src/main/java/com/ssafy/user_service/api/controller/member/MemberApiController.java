@@ -28,16 +28,8 @@ public class MemberApiController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<MemberCreateResponse> createUserMember(@Valid @RequestBody MemberCreateRequest request) {
-        MemberCreateResponse response = memberService.createUserMember(request.toServiceRequest());
-
-        return ApiResponse.ok(response);
-    }
-
-    @PostMapping("/admin")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<MemberCreateResponse> createAdminMember(@Valid @RequestBody AdminMemberCreateRequest request) {
-        MemberCreateResponse response = memberService.createAdminMember(request.toServiceRequest());
+    public ApiResponse<MemberCreateResponse> createMember(@Valid @RequestBody MemberCreateRequest request) {
+        MemberCreateResponse response = memberService.createMember(request.toServiceRequest());
 
         return ApiResponse.ok(response);
     }

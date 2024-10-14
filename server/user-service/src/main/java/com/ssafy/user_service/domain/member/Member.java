@@ -2,6 +2,7 @@ package com.ssafy.user_service.domain.member;
 
 import com.ssafy.user_service.domain.TimeBaseEntity;
 import com.ssafy.user_service.domain.member.vo.MemberSpecificInfo;
+import com.ssafy.user_service.domain.member.vo.Role;
 import com.ssafy.user_service.domain.member.vo.UserAdditionalInfo;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -55,15 +56,9 @@ public class Member extends TimeBaseEntity {
         return new Member(isDeleted, specificInfo, email, pwd, name, tel, userAdditionalInfo);
     }
 
-    public static Member createUser(String email, String pwd, String name, String tel, String businessNumber) {
-        MemberSpecificInfo userSpecificInfo = MemberSpecificInfo.createUser();
-        UserAdditionalInfo additionalInfo = UserAdditionalInfo.create(businessNumber);
-        return of(false, userSpecificInfo, email, pwd, name, tel, additionalInfo);
-    }
-
-    public static Member createAdmin(String email, String pwd, String name, String tel) {
-        MemberSpecificInfo adminSpecificInfo = MemberSpecificInfo.createAdmin();
-        return of(false, adminSpecificInfo, email, pwd, name, tel, null);
+    public static Member create(Role role, String email, String pwd, String name, String tel) {
+        MemberSpecificInfo memberSpecificInfo = MemberSpecificInfo.create(role);
+        return of(false, memberSpecificInfo, email, pwd, name, tel, null);
     }
 
     public void modifyPassword(String pwd) {

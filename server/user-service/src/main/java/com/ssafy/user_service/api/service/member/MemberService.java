@@ -20,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 
+import static com.ssafy.user_service.domain.member.repository.MemberRepository.*;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -28,14 +30,14 @@ public class MemberService implements UserDetailsService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public MemberCreateResponse createUserMember(MemberCreateServiceRequest request) {
-        checkDuplicateBusinessNumber(request.getBusinessNumber());
+    public MemberCreateResponse createMember(MemberCreateServiceRequest request) {
+        checkDuplicateEmail(request.getEmail());
+        checkDuplicateTel(request.getTel());
 
-        return createMember(request);
-    }
+        Member member = request.toEntity(passwordEncoder);
+        Member savedMember = memberRepository.save(member);
 
-    public MemberCreateResponse createAdminMember(MemberCreateServiceRequest request) {
-        return createMember(request);
+        return MemberCreateResponse.of(savedMember);
     }
 
     public MemberPasswordModifyResponse modifyPassword(String memberKey, LocalDateTime currentDateTime, MemberPasswordModifyServiceRequest request) {
@@ -99,40 +101,30 @@ public class MemberService implements UserDetailsService {
         }
     }
 
-    private MemberCreateResponse createMember(MemberCreateServiceRequest request) {
-        checkDuplicateEmail(request.getEmail());
-        checkDuplicateTel(request.getTel());
-
-        Member member = request.toEntity(passwordEncoder);
-        Member savedMember = memberRepository.save(member);
-
-        return MemberCreateResponse.of(savedMember);
-    }
-
     private void checkDuplicateEmail(String email) {
         boolean isExistEmail = memberRepository.existsByEmail(email);
         if (isExistEmail) {
-            throw new AppException("이미 가입된 이메일입니다.");
+            throw new AppException(DUPLICATED_EMAIL);
         }
     }
 
     private void checkDuplicateTel(String tel) {
         boolean isExistTel = memberRepository.existsByTel(tel);
         if (isExistTel) {
-            throw new AppException("이미 가입된 연락처입니다.");
+            throw new AppException(DUPLICATED_TEL);
         }
     }
 
     private void checkDuplicateBusinessNumber(String businessNumber) {
         boolean isExistBusinessNumber = memberRepository.existsByUserAdditionalInfoBusinessNumber(businessNumber);
         if (isExistBusinessNumber) {
-            throw new AppException("이미 가입된 사업자 번호입니다.");
+            throw new AppException(DUPLICATED_BUSINESS_NUMBER);
         }
     }
 
     private Member findMemberBy(String memberKey) {
         return memberRepository.findBySpecificInfoMemberKey(memberKey)
-            .orElseThrow(() -> new NoSuchElementException("등록되지 않은 회원입니다."));
+            .orElseThrow(() -> new NoSuchElementException(NO_SUCH_MEMBER));
     }
 
     private String generateEncodedPassword(String password) {

@@ -30,17 +30,13 @@ public class MemberSpecificInfo {
         this.role = role;
     }
 
-    public static MemberSpecificInfo of(Role role) {
-        String memberKey = generateMemberKey();
+    public static MemberSpecificInfo of(String memberKey, Role role) {
         return new MemberSpecificInfo(memberKey, role);
     }
 
-    public static MemberSpecificInfo createUser() {
-        return of(Role.USER);
-    }
-
-    public static MemberSpecificInfo createAdmin() {
-        return of(Role.ADMIN);
+    public static MemberSpecificInfo create(Role role) {
+        String memberKey = generateMemberKey();
+        return of(memberKey, role);
     }
 
     @Override

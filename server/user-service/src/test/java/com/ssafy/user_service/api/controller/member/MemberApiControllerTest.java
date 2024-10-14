@@ -16,12 +16,12 @@ class MemberApiControllerTest extends ControllerTestSupport {
 
     @DisplayName("일반 회원 가입시 이메일은 필수값이다.")
     @Test
-    void createUserMemberWithoutEmail() throws Exception {
+    void createMemberWithoutEmail() throws Exception {
         MemberCreateRequest request = MemberCreateRequest.builder()
             .password("ssafy1234!")
             .name("김싸피")
             .tel("01012341234")
-            .businessNumber("1231212345")
+            .role("USER")
             .build();
 
         mockMvc.perform(
@@ -39,12 +39,12 @@ class MemberApiControllerTest extends ControllerTestSupport {
 
     @DisplayName("일반 회원 가입시 비밀번호는 필수값이다.")
     @Test
-    void createUserMemberWithoutPassword() throws Exception {
+    void createMemberWithoutPassword() throws Exception {
         MemberCreateRequest request = MemberCreateRequest.builder()
             .email("ssafy@ssafy.com")
             .name("김싸피")
             .tel("01012341234")
-            .businessNumber("1231212345")
+            .role("USER")
             .build();
 
         mockMvc.perform(
@@ -62,12 +62,12 @@ class MemberApiControllerTest extends ControllerTestSupport {
 
     @DisplayName("일반 회원 가입시 이름은 필수값이다.")
     @Test
-    void createUserMemberWithoutName() throws Exception {
+    void createMemberWithoutName() throws Exception {
         MemberCreateRequest request = MemberCreateRequest.builder()
             .email("ssafy@ssafy.com")
             .password("ssafy1234!")
             .tel("01012341234")
-            .businessNumber("1231212345")
+            .role("USER")
             .build();
 
         mockMvc.perform(
@@ -85,12 +85,12 @@ class MemberApiControllerTest extends ControllerTestSupport {
 
     @DisplayName("일반 회원 가입시 연락처는 필수값이다.")
     @Test
-    void createUserMemberWithoutTel() throws Exception {
+    void createMemberWithoutTel() throws Exception {
         MemberCreateRequest request = MemberCreateRequest.builder()
             .email("ssafy@ssafy.com")
             .password("ssafy1234!")
             .name("김싸피")
-            .businessNumber("1231212345")
+            .role("USER")
             .build();
 
         mockMvc.perform(
@@ -106,9 +106,9 @@ class MemberApiControllerTest extends ControllerTestSupport {
             .andExpect(jsonPath("$.data").isEmpty());
     }
 
-    @DisplayName("일반 회원 가입시 사업자 번호는 필수값이다.")
+    @DisplayName("일반 회원 가입시 회원 구분은 필수값이다.")
     @Test
-    void createUserMemberWithoutBusinessNumber() throws Exception {
+    void createMemberWithoutBusinessNumber() throws Exception {
         MemberCreateRequest request = MemberCreateRequest.builder()
             .email("ssafy@ssafy.com")
             .password("ssafy1234!")
@@ -125,130 +125,23 @@ class MemberApiControllerTest extends ControllerTestSupport {
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.code").value("400"))
             .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
-            .andExpect(jsonPath("$.message").value("사업자 번호를 입력해주세요."))
+            .andExpect(jsonPath("$.message").value("회원 구분을 입력해주세요."))
             .andExpect(jsonPath("$.data").isEmpty());
     }
 
     @DisplayName("일반 회원 가입을 한다.")
     @Test
-    void createUserMember() throws Exception {
+    void createMember() throws Exception {
         MemberCreateRequest request = MemberCreateRequest.builder()
             .email("ssafy@ssafy.com")
             .password("ssafy1234!")
             .name("김싸피")
             .tel("01012341234")
-            .businessNumber("1231212345")
+            .role("USER")
             .build();
 
         mockMvc.perform(
                 post("/members")
-                    .content(objectMapper.writeValueAsString(request))
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .with(csrf())
-            )
-            .andExpect(status().isCreated());
-    }
-
-    @DisplayName("관리자 회원 가입시 이메일은 필수값이다.")
-    @Test
-    void createAdminMemberWithoutEmail() throws Exception {
-        AdminMemberCreateRequest request = AdminMemberCreateRequest.builder()
-            .password("ssafy1234!")
-            .name("김싸피")
-            .tel("01012341234")
-            .build();
-
-        mockMvc.perform(
-                post("/members/admin")
-                    .content(objectMapper.writeValueAsString(request))
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .with(csrf())
-            )
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.code").value("400"))
-            .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
-            .andExpect(jsonPath("$.message").value("이메일을 입력해주세요."))
-            .andExpect(jsonPath("$.data").isEmpty());
-    }
-
-    @DisplayName("관리자 회원 가입시 비밀번호는 필수값이다.")
-    @Test
-    void createAdminMemberWithoutPassword() throws Exception {
-        AdminMemberCreateRequest request = AdminMemberCreateRequest.builder()
-            .email("ssafy@ssafy.com")
-            .name("김싸피")
-            .tel("01012341234")
-            .build();
-
-        mockMvc.perform(
-                post("/members/admin")
-                    .content(objectMapper.writeValueAsString(request))
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .with(csrf())
-            )
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.code").value("400"))
-            .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
-            .andExpect(jsonPath("$.message").value("비밀번호를 입력해주세요."))
-            .andExpect(jsonPath("$.data").isEmpty());
-    }
-
-    @DisplayName("관지라 회원 가입시 이름은 필수값이다.")
-    @Test
-    void createAdminMemberWithoutName() throws Exception {
-        AdminMemberCreateRequest request = AdminMemberCreateRequest.builder()
-            .email("ssafy@ssafy.com")
-            .password("ssafy1234!")
-            .tel("01012341234")
-            .build();
-
-        mockMvc.perform(
-                post("/members/admin")
-                    .content(objectMapper.writeValueAsString(request))
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .with(csrf())
-            )
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.code").value("400"))
-            .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
-            .andExpect(jsonPath("$.message").value("이름을 입력해주세요."))
-            .andExpect(jsonPath("$.data").isEmpty());
-    }
-
-    @DisplayName("관리자 회원 가입시 연락처는 필수값이다.")
-    @Test
-    void createAdminMemberWithoutTel() throws Exception {
-        AdminMemberCreateRequest request = AdminMemberCreateRequest.builder()
-            .email("ssafy@ssafy.com")
-            .password("ssafy1234!")
-            .name("김싸피")
-            .build();
-
-        mockMvc.perform(
-                post("/members/admin")
-                    .content(objectMapper.writeValueAsString(request))
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .with(csrf())
-            )
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.code").value("400"))
-            .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
-            .andExpect(jsonPath("$.message").value("연락처를 입력해주세요."))
-            .andExpect(jsonPath("$.data").isEmpty());
-    }
-
-    @DisplayName("관리자 회원 가입을 한다.")
-    @Test
-    void createAdminMember() throws Exception {
-        AdminMemberCreateRequest request = AdminMemberCreateRequest.builder()
-            .email("ssafy@ssafy.com")
-            .password("ssafy1234!")
-            .name("김싸피")
-            .tel("01012341234")
-            .build();
-
-        mockMvc.perform(
-                post("/members/admin")
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
                     .with(csrf())

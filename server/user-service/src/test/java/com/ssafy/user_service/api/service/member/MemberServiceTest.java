@@ -7,7 +7,7 @@ import com.ssafy.user_service.api.service.member.request.MemberPasswordModifySer
 import com.ssafy.user_service.api.service.member.request.MemberTelModifyServiceRequest;
 import com.ssafy.user_service.api.service.member.response.*;
 import com.ssafy.user_service.common.exception.AppException;
-import com.ssafy.user_service.domain.member.*;
+import com.ssafy.user_service.domain.member.Member;
 import com.ssafy.user_service.domain.member.repository.MemberRepository;
 import com.ssafy.user_service.domain.member.vo.BankAccount;
 import com.ssafy.user_service.domain.member.vo.MemberSpecificInfo;
@@ -34,7 +34,7 @@ class MemberServiceTest extends IntegrationTestSupport {
 
     @DisplayName("일반 회원 등록시 입력 받은 이메일을 사용중인 회원이 존재하면 예외가 발생한다.")
     @Test
-    void createUserMemberDuplicatedEmail() {
+    void createMemberDuplicatedEmail() {
         //given
         Member member = createMember("ssafy@ssafy.com", "01012341234", "1231212345");
 
@@ -43,11 +43,11 @@ class MemberServiceTest extends IntegrationTestSupport {
             .password("ssafy1234!")
             .name("김싸피")
             .tel("01056785678")
-            .businessNumber("1112233333")
+            .role(Role.USER)
             .build();
 
         //when
-        assertThatThrownBy(() -> memberService.createUserMember(request))
+        assertThatThrownBy(() -> memberService.createMember(request))
             .isInstanceOf(AppException.class)
             .hasMessage("이미 가입된 이메일입니다.");
 
@@ -58,7 +58,7 @@ class MemberServiceTest extends IntegrationTestSupport {
 
     @DisplayName("일반 회원 등록시 입력 받은 연락처를 사용중인 회원이 존재하면 예외가 발생한다.")
     @Test
-    void createUserMemberDuplicatedTel() {
+    void createMemberDuplicatedTel() {
         //given
         Member member = createMember("ssafy@ssafy.com", "01012341234", "1231212345");
 
@@ -67,37 +67,13 @@ class MemberServiceTest extends IntegrationTestSupport {
             .password("ssafy1234!")
             .name("김싸피")
             .tel("01012341234")
-            .businessNumber("1112233333")
+            .role(Role.USER)
             .build();
 
         //when
-        assertThatThrownBy(() -> memberService.createUserMember(request))
+        assertThatThrownBy(() -> memberService.createMember(request))
             .isInstanceOf(AppException.class)
             .hasMessage("이미 가입된 연락처입니다.");
-
-        //then
-        List<Member> members = memberRepository.findAll();
-        assertThat(members).hasSize(1);
-    }
-
-    @DisplayName("일반 회원 등록시 입력 받은 사업자 번호를 사용중인 회원이 존재하면 예외가 발생한다.")
-    @Test
-    void createUserMemberDuplicatedBusinessNumber() {
-        //given
-        Member member = createMember("ssafy@ssafy.com", "01012341234", "1231212345");
-
-        MemberCreateServiceRequest request = MemberCreateServiceRequest.builder()
-            .email("ssafy@gmail.com")
-            .password("ssafy1234!")
-            .name("김싸피")
-            .tel("01056785678")
-            .businessNumber("1231212345")
-            .build();
-
-        //when
-        assertThatThrownBy(() -> memberService.createUserMember(request))
-            .isInstanceOf(AppException.class)
-            .hasMessage("이미 가입된 사업자 번호입니다.");
 
         //then
         List<Member> members = memberRepository.findAll();
@@ -106,84 +82,18 @@ class MemberServiceTest extends IntegrationTestSupport {
 
     @DisplayName("회원 정보를 입력 받아 일반 회원 등록을 한다.")
     @Test
-    void createUserMember() {
+    void createMember() {
         //given
         MemberCreateServiceRequest request = MemberCreateServiceRequest.builder()
             .email("ssafy@ssafy.com")
             .password("ssafy1234!")
             .name("김싸피")
             .tel("01012341234")
-            .businessNumber("1231212345")
+            .role(Role.USER)
             .build();
 
         //when
-        MemberCreateResponse response = memberService.createUserMember(request);
-
-        //then
-        assertThat(response).isNotNull()
-            .hasFieldOrPropertyWithValue("email", "ss***@ssafy.com")
-            .hasFieldOrPropertyWithValue("name", "김싸피");
-    }
-
-    @DisplayName("관리자 회원 등록시 입력 받은 이메일을 사용중인 회원이 존재하면 예외가 발생한다.")
-    @Test
-    void createAdminMemberDuplicatedEmail() {
-        //given
-        Member member = createMember("ssafy@ssafy.com", "01012341234", "1231212345");
-
-        MemberCreateServiceRequest request = MemberCreateServiceRequest.builder()
-            .email("ssafy@ssafy.com")
-            .password("ssafy1234!")
-            .name("김관리")
-            .tel("01056785678")
-            .build();
-
-        //when
-        assertThatThrownBy(() -> memberService.createAdminMember(request))
-            .isInstanceOf(AppException.class)
-            .hasMessage("이미 가입된 이메일입니다.");
-
-        //then
-        List<Member> members = memberRepository.findAll();
-        assertThat(members).hasSize(1);
-    }
-
-    @DisplayName("관리자 회원 등록시 입력 받은 연락처를 사용중인 회원이 존재하면 예외가 발생한다.")
-    @Test
-    void createAdminMemberDuplicatedTel() {
-        //given
-        Member member = createMember("ssafy@ssafy.com", "01012341234", "1231212345");
-
-        MemberCreateServiceRequest request = MemberCreateServiceRequest.builder()
-            .email("ssafy@gmail.com")
-            .password("ssafy1234!")
-            .name("김싸피")
-            .tel("01012341234")
-            .build();
-
-        //when
-        assertThatThrownBy(() -> memberService.createAdminMember(request))
-            .isInstanceOf(AppException.class)
-            .hasMessage("이미 가입된 연락처입니다.");
-
-        //then
-        List<Member> members = memberRepository.findAll();
-        assertThat(members).hasSize(1);
-    }
-
-    @DisplayName("회원 정보를 입력 받아 관리자 회원 등록을 한다.")
-    @Test
-    void createAdminMember() {
-        //given
-        MemberCreateServiceRequest request = MemberCreateServiceRequest.builder()
-            .email("ssafy@ssafy.com")
-            .password("ssafy1234!")
-            .name("김싸피")
-            .tel("01012341234")
-            .build();
-
-        //when
-        MemberCreateResponse response = memberService.createAdminMember(request);
+        MemberCreateResponse response = memberService.createMember(request);
 
         //then
         assertThat(response).isNotNull()
