@@ -63,9 +63,11 @@ public class MemberService implements UserDetailsService {
     public MemberTelModifyResponse modifyTel(String memberKey, LocalDateTime currentDateTime, MemberTelModifyServiceRequest request) {
         Member member = findMemberBy(memberKey);
 
-        checkDuplicateTel(request.getTel());
+        if (request.isDuplicatedTel(memberRepository)) {
+            throw new AppException(DUPLICATED_TEL);
+        }
 
-        member.modifyTel(request.getTel());
+        request.modifyTelOf(member);
 
         return MemberTelModifyResponse.of(member.getTel(), currentDateTime);
     }

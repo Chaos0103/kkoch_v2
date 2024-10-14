@@ -1,11 +1,12 @@
 package com.ssafy.user_service.api.service.member.request;
 
+import com.ssafy.user_service.domain.member.Member;
+import com.ssafy.user_service.domain.member.repository.MemberRepository;
 import lombok.Builder;
 import lombok.Getter;
 
 import static com.ssafy.user_service.domain.member.MemberValidate.validateTel;
 
-@Getter
 public class MemberTelModifyServiceRequest {
 
     private final String tel;
@@ -19,5 +20,13 @@ public class MemberTelModifyServiceRequest {
         validateTel(tel);
 
         return new MemberTelModifyServiceRequest(tel);
+    }
+
+    public void modifyTelOf(Member member) {
+        member.modifyTel(tel);
+    }
+
+    public boolean isDuplicatedTel(MemberRepository memberRepository) {
+        return memberRepository.existsByTel(tel);
     }
 }

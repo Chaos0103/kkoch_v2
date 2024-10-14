@@ -160,17 +160,18 @@ class MemberServiceTest extends IntegrationTestSupport {
     @Test
     void modifyTelDuplicatedTel() {
         //given
+        createMember(generateMemberKey(), "other@ssafy.com", "01012341234", "1231212345");
+
         LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
+        String memberKey = generateMemberKey();
+        Member member = createMember(memberKey, "ssafy@ssafy.com", "01056785678", "1112233333");
 
-        Member otherMember = createMember(generateMemberKey(), "other@ssafy.com", "01012341234", "1231212345");
-
-        Member member = createMember(generateMemberKey(), "ssafy@ssafy.com", "01056785678", "1112233333");
         MemberTelModifyServiceRequest request = MemberTelModifyServiceRequest.builder()
             .tel("01012341234")
             .build();
 
         //when
-        assertThatThrownBy(() -> memberService.modifyTel(member.getMemberKey(), currentDateTime, request))
+        assertThatThrownBy(() -> memberService.modifyTel(memberKey, currentDateTime, request))
             .isInstanceOf(AppException.class)
             .hasMessage("이미 가입된 연락처입니다.");
 
@@ -186,14 +187,15 @@ class MemberServiceTest extends IntegrationTestSupport {
     void modifyTel() {
         //given
         LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
+        String memberKey = generateMemberKey();
+        Member member = createMember(memberKey, "ssafy@ssafy.com", "01012341234", "1231212345");
 
-        Member member = createMember(generateMemberKey(), "ssafy@ssafy.com", "01012341234", "1231212345");
         MemberTelModifyServiceRequest request = MemberTelModifyServiceRequest.builder()
             .tel("01056785678")
             .build();
 
         //when
-        MemberTelModifyResponse response = memberService.modifyTel(member.getMemberKey(), currentDateTime, request);
+        MemberTelModifyResponse response = memberService.modifyTel(memberKey, currentDateTime, request);
 
         //then
         assertThat(response).isNotNull()
