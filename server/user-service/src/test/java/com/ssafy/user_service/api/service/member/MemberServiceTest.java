@@ -32,14 +32,14 @@ class MemberServiceTest extends IntegrationTestSupport {
     @Autowired
     private MemberRepository memberRepository;
 
-    @DisplayName("일반 회원 등록시 입력 받은 이메일을 사용중인 회원이 존재하면 예외가 발생한다.")
+    @DisplayName("회원 등록시 입력 받은 이메일을 사용중인 회원이 존재하면 예외가 발생한다.")
     @Test
     void createMemberDuplicatedEmail() {
         //given
         Member member = createMember("ssafy@ssafy.com", "01012341234", "1231212345");
 
         MemberCreateServiceRequest request = MemberCreateServiceRequest.builder()
-            .email("ssafy@ssafy.com")
+            .email(member.getEmail())
             .password("ssafy1234!")
             .name("김싸피")
             .tel("01056785678")
@@ -56,7 +56,7 @@ class MemberServiceTest extends IntegrationTestSupport {
         assertThat(members).hasSize(1);
     }
 
-    @DisplayName("일반 회원 등록시 입력 받은 연락처를 사용중인 회원이 존재하면 예외가 발생한다.")
+    @DisplayName("회원 등록시 입력 받은 연락처를 사용중인 회원이 존재하면 예외가 발생한다.")
     @Test
     void createMemberDuplicatedTel() {
         //given
@@ -66,7 +66,7 @@ class MemberServiceTest extends IntegrationTestSupport {
             .email("ssafy@gmail.com")
             .password("ssafy1234!")
             .name("김싸피")
-            .tel("01012341234")
+            .tel(member.getTel())
             .role(Role.USER)
             .build();
 
@@ -80,7 +80,7 @@ class MemberServiceTest extends IntegrationTestSupport {
         assertThat(members).hasSize(1);
     }
 
-    @DisplayName("회원 정보를 입력 받아 일반 회원 등록을 한다.")
+    @DisplayName("회원 정보를 입력 받아 회원 등록을 한다.")
     @Test
     void createMember() {
         //given
@@ -211,7 +211,7 @@ class MemberServiceTest extends IntegrationTestSupport {
         Member member = createMember("ssafy@ssafy.com", "01012341234", "1231212345");
 
         MemberUserAdditionalInfoModifyServiceRequest request = MemberUserAdditionalInfoModifyServiceRequest.builder()
-            .businessNumber("1231212345")
+            .businessNumber("1231112345")
             .bankCode("088")
             .accountNumber("123123123456")
             .build();
