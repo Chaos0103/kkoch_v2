@@ -1,9 +1,11 @@
 package com.ssafy.user_service.domain.member;
 
+import com.ssafy.user_service.common.exception.AppException;
 import com.ssafy.user_service.common.exception.LengthOutOfRangeException;
 import com.ssafy.user_service.common.exception.NotSupportedException;
 import com.ssafy.user_service.common.exception.StringFormatException;
 import com.ssafy.user_service.domain.member.vo.Bank;
+import com.ssafy.user_service.domain.member.vo.Role;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -21,7 +23,7 @@ public abstract class MemberValidate {
     private static final int ACCOUNT_CODE_LENGTH = 3;
     private static final int MAX_ACCOUNT_NUMBER_LENGTH = 14;
 
-    public static boolean validateEmail(String email) {
+    public static String validateEmail(String email) {
         if (isLengthMoreThan(email, MAX_EMAIL_LENGTH)) {
             throw new LengthOutOfRangeException("이메일의 길이는 최대 100자리 입니다.");
         }
@@ -30,10 +32,10 @@ public abstract class MemberValidate {
             throw new StringFormatException("이메일을 올바르게 입력해주세요.");
         }
 
-        return true;
+        return email;
     }
 
-    public static boolean validatePassword(String password) {
+    public static String validatePassword(String password) {
         if (isLengthLessThan(password, MIN_PASSWORD_LENGTH) || isLengthMoreThan(password, MAX_PASSWORD_LENGTH)) {
             throw new LengthOutOfRangeException("비밀번호의 길이는 최소 8자리에서 최대 20자리 입니다.");
         }
@@ -42,10 +44,10 @@ public abstract class MemberValidate {
             throw new StringFormatException("비밀번호를 올바르게 입력해주세요.");
         }
 
-        return true;
+        return password;
     }
 
-    public static boolean validateName(String name) {
+    public static String validateName(String name) {
         if (isLengthMoreThan(name, MAX_NAME_LENGTH)) {
             throw new LengthOutOfRangeException("이름의 길이는 최대 20자리 입니다.");
         }
@@ -54,10 +56,10 @@ public abstract class MemberValidate {
             throw new StringFormatException("이름을 올바르게 입력해주세요.");
         }
 
-        return true;
+        return name.strip();
     }
 
-    public static boolean validateTel(String tel) {
+    public static String validateTel(String tel) {
         if (isLengthNotEquals(tel, TEL_LENGTH)) {
             throw new LengthOutOfRangeException("연락처를 올바르게 입력해주세요.");
         }
@@ -66,7 +68,7 @@ public abstract class MemberValidate {
             throw new StringFormatException("연락처를 올바르게 입력해주세요.");
         }
 
-        return true;
+        return tel.strip();
     }
 
     public static boolean validateBusinessNumber(String businessNumber) {
@@ -103,5 +105,13 @@ public abstract class MemberValidate {
         }
 
         return true;
+    }
+
+    public static Role validateRole(String role) {
+        try {
+            return Role.valueOf(role);
+        } catch (IllegalArgumentException e) {
+            throw new AppException("회원 구분을 올바르게 입력해주세요.");
+        }
     }
 }

@@ -1,10 +1,10 @@
 package com.ssafy.user_service.api.service.member;
 
 import com.ssafy.user_service.IntegrationTestSupport;
-import com.ssafy.user_service.api.service.member.request.MemberUserAdditionalInfoModifyServiceRequest;
 import com.ssafy.user_service.api.service.member.request.MemberCreateServiceRequest;
 import com.ssafy.user_service.api.service.member.request.MemberPasswordModifyServiceRequest;
 import com.ssafy.user_service.api.service.member.request.MemberTelModifyServiceRequest;
+import com.ssafy.user_service.api.service.member.request.MemberUserAdditionalInfoModifyServiceRequest;
 import com.ssafy.user_service.api.service.member.response.*;
 import com.ssafy.user_service.common.exception.AppException;
 import com.ssafy.user_service.domain.member.Member;
@@ -36,14 +36,15 @@ class MemberServiceTest extends IntegrationTestSupport {
     @Test
     void createMemberDuplicatedEmail() {
         //given
-        Member member = createMember("ssafy@ssafy.com", "01012341234", "1231212345");
+        String email = "ssafy@ssafy.com";
+        createMember(generateMemberKey(), email, "01012341234", "1231212345");
 
         MemberCreateServiceRequest request = MemberCreateServiceRequest.builder()
-            .email(member.getEmail())
+            .email(email)
             .password("ssafy1234!")
             .name("김싸피")
             .tel("01056785678")
-            .role(Role.USER)
+            .role("USER")
             .build();
 
         //when
@@ -60,14 +61,15 @@ class MemberServiceTest extends IntegrationTestSupport {
     @Test
     void createMemberDuplicatedTel() {
         //given
-        Member member = createMember("ssafy@ssafy.com", "01012341234", "1231212345");
+        String tel = "01012341234";
+        createMember(generateMemberKey(), "ssafy@ssafy.com", tel, "1231212345");
 
         MemberCreateServiceRequest request = MemberCreateServiceRequest.builder()
             .email("ssafy@gmail.com")
             .password("ssafy1234!")
             .name("김싸피")
-            .tel(member.getTel())
-            .role(Role.USER)
+            .tel(tel)
+            .role("USER")
             .build();
 
         //when
@@ -89,7 +91,7 @@ class MemberServiceTest extends IntegrationTestSupport {
             .password("ssafy1234!")
             .name("김싸피")
             .tel("01012341234")
-            .role(Role.USER)
+            .role("USER")
             .build();
 
         //when
@@ -106,15 +108,16 @@ class MemberServiceTest extends IntegrationTestSupport {
     void modifyPasswordNotMatchCurrentPassword() {
         //given
         LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
+        String memberKey = generateMemberKey();
+        Member member = createMember(memberKey, "ssafy@ssafy.com", "01012341234", "1231212345");
 
-        Member member = createMember("ssafy@ssafy.com", "01012341234", "1231212345");
         MemberPasswordModifyServiceRequest request = MemberPasswordModifyServiceRequest.builder()
             .currentPassword("ssafy1111!")
             .newPassword("ssafy5678@")
             .build();
 
         //when
-        assertThatThrownBy(() -> memberService.modifyPassword(member.getMemberKey(), currentDateTime, request))
+        assertThatThrownBy(() -> memberService.modifyPassword(memberKey, currentDateTime, request))
             .isInstanceOf(AppException.class)
             .hasMessage("비밀번호가 일치하지 않습니다.");
 
@@ -131,21 +134,22 @@ class MemberServiceTest extends IntegrationTestSupport {
     void modifyPassword() {
         //given
         LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
+        String memberKey = generateMemberKey();
+        Member member = createMember(memberKey, "ssafy@ssafy.com", "01012341234", "1231212345");
 
-        Member member = createMember("ssafy@ssafy.com", "01012341234", "1231212345");
         MemberPasswordModifyServiceRequest request = MemberPasswordModifyServiceRequest.builder()
             .currentPassword("ssafy1234!")
             .newPassword("ssafy5678@")
             .build();
 
         //when
-        MemberPasswordModifyResponse response = memberService.modifyPassword(member.getMemberKey(), currentDateTime, request);
+        MemberPasswordModifyResponse response = memberService.modifyPassword(memberKey, currentDateTime, request);
 
         //then
         Optional<Member> findMember = memberRepository.findById(member.getId());
         assertThat(findMember).isPresent();
 
-        boolean matches = passwordEncoder.matches(request.getNewPassword(), findMember.get().getPwd());
+        boolean matches = passwordEncoder.matches("ssafy5678@", findMember.get().getPwd());
         assertThat(matches).isTrue();
 
         assertThat(response).isNotNull()
@@ -158,9 +162,9 @@ class MemberServiceTest extends IntegrationTestSupport {
         //given
         LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
 
-        Member otherMember = createMember("other@ssafy.com", "01012341234", "1231212345");
+        Member otherMember = createMember(generateMemberKey(), "other@ssafy.com", "01012341234", "1231212345");
 
-        Member member = createMember("ssafy@ssafy.com", "01056785678", "1112233333");
+        Member member = createMember(generateMemberKey(), "ssafy@ssafy.com", "01056785678", "1112233333");
         MemberTelModifyServiceRequest request = MemberTelModifyServiceRequest.builder()
             .tel("01012341234")
             .build();
@@ -183,7 +187,7 @@ class MemberServiceTest extends IntegrationTestSupport {
         //given
         LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
 
-        Member member = createMember("ssafy@ssafy.com", "01012341234", "1231212345");
+        Member member = createMember(generateMemberKey(), "ssafy@ssafy.com", "01012341234", "1231212345");
         MemberTelModifyServiceRequest request = MemberTelModifyServiceRequest.builder()
             .tel("01056785678")
             .build();
@@ -208,7 +212,7 @@ class MemberServiceTest extends IntegrationTestSupport {
         //given
         LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
 
-        Member member = createMember("ssafy@ssafy.com", "01012341234", "1231212345");
+        Member member = createMember(generateMemberKey(), "ssafy@ssafy.com", "01012341234", "1231212345");
 
         MemberUserAdditionalInfoModifyServiceRequest request = MemberUserAdditionalInfoModifyServiceRequest.builder()
             .businessNumber("1231112345")
@@ -237,7 +241,7 @@ class MemberServiceTest extends IntegrationTestSupport {
         //given
         LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
 
-        Member member = createMember("ssafy@ssafy.com", "01012341234", "1231212345");
+        Member member = createMember(generateMemberKey(), "ssafy@ssafy.com", "01012341234", "1231212345");
 
         //when
         assertThatThrownBy(() -> memberService.removeMember(member.getMemberKey(), "ssafy5678@", currentDateTime))
@@ -256,7 +260,7 @@ class MemberServiceTest extends IntegrationTestSupport {
         //given
         LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
 
-        Member member = createMember("ssafy@ssafy.com", "01012341234", "1231212345");
+        Member member = createMember(generateMemberKey(), "ssafy@ssafy.com", "01012341234", "1231212345");
 
         //when
         MemberRemoveResponse response = memberService.removeMember(member.getMemberKey(), "ssafy1234!", currentDateTime);
@@ -270,11 +274,11 @@ class MemberServiceTest extends IntegrationTestSupport {
             .hasFieldOrPropertyWithValue("isDeleted", true);
     }
 
-    private Member createMember(String email, String tel, String businessNumber) {
+    private Member createMember(String memberKey, String email, String tel, String businessNumber) {
         Member member = Member.builder()
             .isDeleted(false)
             .specificInfo(MemberSpecificInfo.builder()
-                .memberKey(generateMemberKey())
+                .memberKey(memberKey)
                 .role(Role.USER)
                 .build())
             .email(email)

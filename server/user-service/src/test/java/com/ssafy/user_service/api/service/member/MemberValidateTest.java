@@ -43,10 +43,10 @@ class MemberValidateTest {
         String email = "a".repeat(90) + "@ssafy.com";
 
         //when
-        boolean result = MemberValidate.validateEmail(email);
+        String result = MemberValidate.validateEmail(email);
 
         //then
-        assertThat(result).isTrue();
+        assertThat(result).isEqualTo(email);
     }
 
     @DisplayName("비밀번호의 길이가 최대 범위를 벗어나면 예외가 발생한다.")
@@ -88,10 +88,10 @@ class MemberValidateTest {
     @ParameterizedTest
     void validatePassword(String password) {
         //given //when
-        boolean result = MemberValidate.validatePassword(password);
+        String result = MemberValidate.validatePassword(password);
 
         //then
-        assertThat(result).isTrue();
+        assertThat(result).isEqualTo(password);
     }
 
     @DisplayName("이름의 길이가 최대 범위를 벗어나면 예외가 발생한다.")
@@ -125,10 +125,10 @@ class MemberValidateTest {
         String name = "김수한무거북이와두루미삼천갑자동방삭치치";
 
         //when
-        boolean result = MemberValidate.validateName(name);
+        String result = MemberValidate.validateName(name);
 
         //then
-        assertThat(result).isTrue();
+        assertThat(result).isEqualTo(name);
     }
 
     @DisplayName("연락처의 길이가 최대 범위를 벗어나면 예외가 발생한다.")
@@ -174,10 +174,10 @@ class MemberValidateTest {
         String tel = "01012341234";
 
         //when
-        boolean result = MemberValidate.validateTel(tel);
+        String result = MemberValidate.validateTel(tel);
 
         //then
-        assertThat(result).isTrue();
+        assertThat(result).isEqualTo(tel);
     }
 
     @DisplayName("사업자 번호의 길이가 최대 범위를 벗어나면 예외가 발생한다.")

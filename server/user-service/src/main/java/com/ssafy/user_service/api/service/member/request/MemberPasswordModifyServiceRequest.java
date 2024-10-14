@@ -1,11 +1,11 @@
 package com.ssafy.user_service.api.service.member.request;
 
+import com.ssafy.user_service.domain.member.Member;
 import lombok.Builder;
-import lombok.Getter;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static com.ssafy.user_service.domain.member.MemberValidate.validatePassword;
 
-@Getter
 public class MemberPasswordModifyServiceRequest {
 
     private final String currentPassword;
@@ -14,12 +14,18 @@ public class MemberPasswordModifyServiceRequest {
     @Builder
     private MemberPasswordModifyServiceRequest(String currentPassword, String newPassword) {
         this.currentPassword = currentPassword;
-        this.newPassword = newPassword;
+        this.newPassword = validatePassword(newPassword);
     }
 
     public static MemberPasswordModifyServiceRequest of(String currentPassword, String newPassword) {
-        validatePassword(newPassword);
-
         return new MemberPasswordModifyServiceRequest(currentPassword, newPassword);
+    }
+
+    public void modifyPwdOf(Member member, PasswordEncoder encoder) {
+        member.modifyPassword(encoder.encode(newPassword));
+    }
+
+    public boolean isNotMatchesCurrentPwdOf(Member member, PasswordEncoder encoder) {
+        return member.isNotMatchesPwd(encoder, currentPassword);
     }
 }

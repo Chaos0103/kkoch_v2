@@ -1,9 +1,9 @@
 package com.ssafy.user_service.api.service.member;
 
-import com.ssafy.user_service.api.service.member.request.MemberUserAdditionalInfoModifyServiceRequest;
 import com.ssafy.user_service.api.service.member.request.MemberCreateServiceRequest;
 import com.ssafy.user_service.api.service.member.request.MemberPasswordModifyServiceRequest;
 import com.ssafy.user_service.api.service.member.request.MemberTelModifyServiceRequest;
+import com.ssafy.user_service.api.service.member.request.MemberUserAdditionalInfoModifyServiceRequest;
 import com.ssafy.user_service.api.service.member.response.*;
 import com.ssafy.user_service.common.exception.AppException;
 import com.ssafy.user_service.domain.member.Member;
@@ -28,12 +28,19 @@ import static com.ssafy.user_service.domain.member.repository.MemberRepository.*
 @RequiredArgsConstructor
 public class MemberService implements UserDetailsService {
 
+    private static final String NOT_MATCHES_CURRENT_PWD = "비밀번호가 일치하지 않습니다.";
+
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
     public MemberCreateResponse createMember(MemberCreateServiceRequest request) {
-        checkDuplicateEmail(request.getEmail());
-        checkDuplicateTel(request.getTel());
+        if (request.isDuplicatedEmail(memberRepository)) {
+            throw new AppException(DUPLICATED_EMAIL);
+        }
+
+        if (request.isDuplicatedTel(memberRepository)) {
+            throw new AppException(DUPLICATED_TEL);
+        }
 
         Member member = request.toEntity(passwordEncoder);
         Member savedMember = memberRepository.save(member);
@@ -44,9 +51,11 @@ public class MemberService implements UserDetailsService {
     public MemberPasswordModifyResponse modifyPassword(String memberKey, LocalDateTime currentDateTime, MemberPasswordModifyServiceRequest request) {
         Member member = findMemberBy(memberKey);
 
-        checkMatchesPassword(member, request.getCurrentPassword());
+        if (request.isNotMatchesCurrentPwdOf(member, passwordEncoder)) {
+            throw new AppException(NOT_MATCHES_CURRENT_PWD);
+        }
 
-        modifyPassword(member, request.getNewPassword());
+        request.modifyPwdOf(member, passwordEncoder);
 
         return MemberPasswordModifyResponse.of(currentDateTime);
     }
@@ -94,21 +103,9 @@ public class MemberService implements UserDetailsService {
             .build();
     }
 
-    private void modifyPassword(Member member, String newPassword) {
-        String encodedPassword = generateEncodedPassword(newPassword);
-        member.modifyPassword(encodedPassword);
-    }
-
     private void checkMatchesPassword(Member member, String currentPassword) {
         if (member.isNotMatchesPwd(passwordEncoder, currentPassword)) {
-            throw new AppException("비밀번호가 일치하지 않습니다.");
-        }
-    }
-
-    private void checkDuplicateEmail(String email) {
-        boolean isExistEmail = memberRepository.existsByEmail(email);
-        if (isExistEmail) {
-            throw new AppException(DUPLICATED_EMAIL);
+            throw new AppException(NOT_MATCHES_CURRENT_PWD);
         }
     }
 
