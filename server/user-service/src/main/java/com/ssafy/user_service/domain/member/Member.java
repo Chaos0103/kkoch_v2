@@ -92,4 +92,8 @@ public class Member extends TimeBaseEntity {
     public String getMaskingEmail() {
         return maskingEmail(email);
     }
+
+    public void modifyUserAdditionalInfo(UserAdditionalInfo userAdditionalInfo) {
+        this.userAdditionalInfo = userAdditionalInfo;
+    }
 }

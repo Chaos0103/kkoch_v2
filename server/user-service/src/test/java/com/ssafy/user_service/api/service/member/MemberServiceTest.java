@@ -1,7 +1,7 @@
 package com.ssafy.user_service.api.service.member;
 
 import com.ssafy.user_service.IntegrationTestSupport;
-import com.ssafy.user_service.api.service.member.request.MemberBankAccountModifyServiceRequest;
+import com.ssafy.user_service.api.service.member.request.MemberUserAdditionalInfoModifyServiceRequest;
 import com.ssafy.user_service.api.service.member.request.MemberCreateServiceRequest;
 import com.ssafy.user_service.api.service.member.request.MemberPasswordModifyServiceRequest;
 import com.ssafy.user_service.api.service.member.request.MemberTelModifyServiceRequest;
@@ -204,19 +204,20 @@ class MemberServiceTest extends IntegrationTestSupport {
 
     @DisplayName("은행 계좌 정보를 입력 받아 은행 계좌 수정을 한다.")
     @Test
-    void modifyBankAccount() {
+    void modifyUserAdditionalInfo() {
         //given
         LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
 
         Member member = createMember("ssafy@ssafy.com", "01012341234", "1231212345");
 
-        MemberBankAccountModifyServiceRequest request = MemberBankAccountModifyServiceRequest.builder()
+        MemberUserAdditionalInfoModifyServiceRequest request = MemberUserAdditionalInfoModifyServiceRequest.builder()
+            .businessNumber("1231212345")
             .bankCode("088")
             .accountNumber("123123123456")
             .build();
 
         //when
-        MemberBankAccountModifyResponse response = memberService.modifyBankAccount(member.getMemberKey(), currentDateTime, request);
+        MemberAdditionalInfoModifyResponse response = memberService.modifyUserAdditionalInfo(member.getMemberKey(), currentDateTime, request);
 
         //then
         assertThat(response).isNotNull()

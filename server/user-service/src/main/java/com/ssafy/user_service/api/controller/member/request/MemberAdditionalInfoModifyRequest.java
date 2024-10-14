@@ -1,7 +1,7 @@
 package com.ssafy.user_service.api.controller.member.request;
 
 import com.ssafy.user_service.api.service.member.request.BankAccountServiceRequest;
-import com.ssafy.user_service.api.service.member.request.MemberBankAccountModifyServiceRequest;
+import com.ssafy.user_service.api.service.member.request.MemberUserAdditionalInfoModifyServiceRequest;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +11,10 @@ import static com.ssafy.user_service.api.controller.member.message.MemberBinding
 
 @Getter
 @NoArgsConstructor
-public class MemberBankAccountModifyRequest {
+public class MemberAdditionalInfoModifyRequest {
+
+    @NotBlank(message = NOT_BLANK_BUSINESS_NUMBER)
+    private String businessNumber;
 
     @NotBlank(message = NOT_BLANK_BANK_CODE)
     private String bankCode;
@@ -23,7 +26,8 @@ public class MemberBankAccountModifyRequest {
     private String authNumber;
 
     @Builder
-    private MemberBankAccountModifyRequest(String bankCode, String accountNumber, String authNumber) {
+    private MemberAdditionalInfoModifyRequest(String businessNumber, String bankCode, String accountNumber, String authNumber) {
+        this.businessNumber = businessNumber;
         this.bankCode = bankCode;
         this.accountNumber = accountNumber;
         this.authNumber = authNumber;
@@ -33,7 +37,7 @@ public class MemberBankAccountModifyRequest {
         return BankAccountServiceRequest.of(bankCode, accountNumber);
     }
 
-    public MemberBankAccountModifyServiceRequest toServiceRequest() {
-        return MemberBankAccountModifyServiceRequest.of(bankCode, accountNumber);
+    public MemberUserAdditionalInfoModifyServiceRequest toServiceRequest() {
+        return MemberUserAdditionalInfoModifyServiceRequest.of(businessNumber, bankCode, accountNumber);
     }
 }

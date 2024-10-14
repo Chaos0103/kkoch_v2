@@ -204,7 +204,7 @@ class MemberApiControllerDocsTest extends RestDocsSupport {
             .willReturn(response);
 
         mockMvc.perform(
-                post("/members/bank-account")
+                post("/members/additional-info")
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -234,16 +234,17 @@ class MemberApiControllerDocsTest extends RestDocsSupport {
             ));
     }
 
-    @DisplayName("은행 계좌 수정 API")
+    @DisplayName("추가 정보 수정 API")
     @Test
     void modifyBankAccount() throws Exception {
-        MemberBankAccountModifyRequest request = MemberBankAccountModifyRequest.builder()
+        MemberAdditionalInfoModifyRequest request = MemberAdditionalInfoModifyRequest.builder()
+            .businessNumber("1231212345")
             .bankCode("088")
             .accountNumber("123123123456")
             .authNumber("012")
             .build();
 
-        MemberBankAccountModifyResponse response = MemberBankAccountModifyResponse.builder()
+        MemberAdditionalInfoModifyResponse response = MemberAdditionalInfoModifyResponse.builder()
             .bankCode("088")
             .accountNumber("123***123456")
             .bankAccountModifiedDateTime(LocalDateTime.now())
@@ -252,20 +253,22 @@ class MemberApiControllerDocsTest extends RestDocsSupport {
         given(authService.validateAuthNumberToBankAccount(any(), anyString()))
             .willReturn(true);
 
-        given(memberService.modifyBankAccount(anyString(), any(), any()))
+        given(memberService.modifyUserAdditionalInfo(anyString(), any(), any()))
             .willReturn(response);
 
         mockMvc.perform(
-                patch("/members/bank-account")
+                patch("/members/additional-info")
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andDo(print())
             .andExpect(status().isOk())
-            .andDo(document("modify-bank-account",
+            .andDo(document("modify-additional-info",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
                 requestFields(
+                    fieldWithPath("businessNumber").type(JsonFieldType.STRING)
+                        .description("사업자 번호"),
                     fieldWithPath("bankCode").type(JsonFieldType.STRING)
                         .description("은행 코드"),
                     fieldWithPath("accountNumber").type(JsonFieldType.STRING)

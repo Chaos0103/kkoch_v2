@@ -56,7 +56,7 @@ public class MemberApiController {
         return ApiResponse.ok(response);
     }
 
-    @PostMapping("/bank-account")
+    @PostMapping("/additional-info")
     public ApiResponse<BankAccountAuthResponse> sendOneCoinAuthNumber(@Valid @RequestBody BankAccountRequest request) {
         LocalDateTime currentDateTime = getCurrentDateTime();
 
@@ -67,15 +67,15 @@ public class MemberApiController {
         return ApiResponse.ok(response);
     }
 
-    @PatchMapping("/bank-account")
-    public ApiResponse<MemberBankAccountModifyResponse> modifyBankAccount(@Valid @RequestBody MemberBankAccountModifyRequest request) {
+    @PatchMapping("/additional-info")
+    public ApiResponse<MemberAdditionalInfoModifyResponse> modifyBankAccount(@Valid @RequestBody MemberAdditionalInfoModifyRequest request) {
         authService.validateAuthNumberToBankAccount(request.toAuthServiceRequest(), request.getAuthNumber());
 
         LocalDateTime currentDateTime = getCurrentDateTime();
 
         String memberKey = findMemberKeyByToken();
 
-        MemberBankAccountModifyResponse response = memberService.modifyBankAccount(memberKey, currentDateTime, request.toServiceRequest());
+        MemberAdditionalInfoModifyResponse response = memberService.modifyUserAdditionalInfo(memberKey, currentDateTime, request.toServiceRequest());
 
         return ApiResponse.ok(response);
     }

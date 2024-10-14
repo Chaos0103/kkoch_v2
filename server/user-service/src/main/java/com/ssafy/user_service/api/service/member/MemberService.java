@@ -1,6 +1,6 @@
 package com.ssafy.user_service.api.service.member;
 
-import com.ssafy.user_service.api.service.member.request.MemberBankAccountModifyServiceRequest;
+import com.ssafy.user_service.api.service.member.request.MemberUserAdditionalInfoModifyServiceRequest;
 import com.ssafy.user_service.api.service.member.request.MemberCreateServiceRequest;
 import com.ssafy.user_service.api.service.member.request.MemberPasswordModifyServiceRequest;
 import com.ssafy.user_service.api.service.member.request.MemberTelModifyServiceRequest;
@@ -8,6 +8,7 @@ import com.ssafy.user_service.api.service.member.response.*;
 import com.ssafy.user_service.common.exception.AppException;
 import com.ssafy.user_service.domain.member.Member;
 import com.ssafy.user_service.domain.member.repository.MemberRepository;
+import com.ssafy.user_service.domain.member.vo.UserAdditionalInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -60,12 +61,15 @@ public class MemberService implements UserDetailsService {
         return MemberTelModifyResponse.of(member.getTel(), currentDateTime);
     }
 
-    public MemberBankAccountModifyResponse modifyBankAccount(String memberKey, LocalDateTime currentDateTime, MemberBankAccountModifyServiceRequest request) {
+    public MemberAdditionalInfoModifyResponse modifyUserAdditionalInfo(String memberKey, LocalDateTime currentDateTime, MemberUserAdditionalInfoModifyServiceRequest request) {
+        checkDuplicateBusinessNumber(request.getBusinessNumber());
+
         Member member = findMemberBy(memberKey);
 
-        member.modifyBankAccount(request.getBankCode(), request.getAccountNumber());
+        UserAdditionalInfo userAdditionalInfo = request.createUserAdditionalInfo();
+        member.modifyUserAdditionalInfo(userAdditionalInfo);
 
-        return MemberBankAccountModifyResponse.of(request.getBankCode(), request.getAccountNumber(), currentDateTime);
+        return MemberAdditionalInfoModifyResponse.of(request.getBankCode(), request.getAccountNumber(), currentDateTime);
     }
 
     public MemberRemoveResponse removeMember(String memberKey, String password, LocalDateTime currentDateTime) {
