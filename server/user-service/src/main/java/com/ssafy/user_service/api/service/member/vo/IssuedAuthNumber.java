@@ -1,4 +1,4 @@
-package com.ssafy.user_service.api.service.member;
+package com.ssafy.user_service.api.service.member.vo;
 
 public class IssuedAuthNumber {
 

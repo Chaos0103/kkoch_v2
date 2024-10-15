@@ -39,7 +39,6 @@ class MemberQueryApiControllerDocsTest extends RestDocsSupport {
             .email("ss***@ssafy.com")
             .name("김싸피")
             .tel("010****1234")
-            .businessNumber("123*****45")
             .build();
 
         given(memberQueryService.searchMemberInfo(anyString()))
@@ -71,9 +70,7 @@ class MemberQueryApiControllerDocsTest extends RestDocsSupport {
                     fieldWithPath("data.name").type(JsonFieldType.STRING)
                         .description("회원명"),
                     fieldWithPath("data.tel").type(JsonFieldType.STRING)
-                        .description("연락처"),
-                    fieldWithPath("data.businessNumber").type(JsonFieldType.STRING)
-                        .description("사업자 번호")
+                        .description("연락처")
                 )
             ));
     }

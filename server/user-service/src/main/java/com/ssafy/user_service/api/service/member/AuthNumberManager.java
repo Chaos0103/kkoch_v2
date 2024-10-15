@@ -1,5 +1,6 @@
 package com.ssafy.user_service.api.service.member;
 
+import com.ssafy.user_service.api.service.member.vo.IssuedAuthNumber;
 import com.ssafy.user_service.common.exception.AppException;
 import com.ssafy.user_service.common.redis.RedisRepository;
 import lombok.RequiredArgsConstructor;

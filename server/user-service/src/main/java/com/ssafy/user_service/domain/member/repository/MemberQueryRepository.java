@@ -27,8 +27,7 @@ public class MemberQueryRepository {
                     MemberInfoResponse.class,
                     member.email,
                     member.name,
-                    member.tel,
-                    member.userAdditionalInfo.businessNumber
+                    member.tel
                 )
             )
             .from(member)

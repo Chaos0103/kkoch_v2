@@ -36,8 +36,7 @@ class MemberQueryServiceTest extends IntegrationTestSupport {
         assertThat(response).isNotNull()
             .hasFieldOrPropertyWithValue("email", "ss***@ssafy.com")
             .hasFieldOrPropertyWithValue("name", "김싸피")
-            .hasFieldOrPropertyWithValue("tel", "010****1234")
-            .hasFieldOrPropertyWithValue("businessNumber", "123*****45");
+            .hasFieldOrPropertyWithValue("tel", "010****1234");
     }
 
     @DisplayName("회원 고유키를 입력 받아 회원 ID를 조회한다.")

@@ -38,8 +38,7 @@ class MemberQueryRepositoryTest extends IntegrationTestSupport {
             .get()
             .hasFieldOrPropertyWithValue("email", "ssafy@ssafy.com")
             .hasFieldOrPropertyWithValue("name", "김싸피")
-            .hasFieldOrPropertyWithValue("tel", "01012341234")
-            .hasFieldOrPropertyWithValue("businessNumber", "1231212345");
+            .hasFieldOrPropertyWithValue("tel", "01012341234");
     }
 
     @DisplayName("회원 고유키로 회원 ID를 조회한다.")
