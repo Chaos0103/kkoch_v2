@@ -68,14 +68,14 @@ public class MemberApiController {
     }
 
     @PatchMapping("/additional-info")
-    public ApiResponse<MemberAdditionalInfoModifyResponse> modifyBankAccount(@Valid @RequestBody MemberAdditionalInfoModifyRequest request) {
+    public ApiResponse<MemberBankAccountModifyResponse> modifyBankAccount(@Valid @RequestBody MemberAdditionalInfoModifyRequest request) {
         authService.validateAuthNumberToBankAccount(request.toAuthServiceRequest(), request.getAuthNumber());
 
         LocalDateTime currentDateTime = getCurrentDateTime();
 
         String memberKey = findMemberKeyByToken();
 
-        MemberAdditionalInfoModifyResponse response = memberService.modifyUserAdditionalInfo(memberKey, currentDateTime, request.toServiceRequest());
+        MemberBankAccountModifyResponse response = memberService.modifyBankAccount(memberKey, currentDateTime, request.toServiceRequest());
 
         return ApiResponse.ok(response);
     }

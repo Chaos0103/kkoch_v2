@@ -234,10 +234,10 @@ class MemberValidateTest {
     @ParameterizedTest
     void validateBankCode(String bankCode) {
         //given //when
-        boolean result = MemberValidate.validateBankCode(bankCode);
+        String result = MemberValidate.validateBankCode(bankCode);
 
         //then
-        assertThat(result).isTrue();
+        assertThat(result).isEqualTo(bankCode);
     }
 
     @DisplayName("은행 계좌의 길이가 최대 범위를 벗어나면 예외가 발생한다.")
@@ -271,9 +271,9 @@ class MemberValidateTest {
         String accountNumber = "01234567890123";
 
         //when
-        boolean result = MemberValidate.validateAccountNumber(accountNumber);
+        String result = MemberValidate.validateAccountNumber(accountNumber);
 
         //then
-        assertThat(result).isTrue();
+        assertThat(result).isEqualTo(accountNumber);
     }
 }

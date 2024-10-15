@@ -295,20 +295,19 @@ class MemberServiceTest extends IntegrationTestSupport {
 
     @DisplayName("은행 계좌 정보를 입력 받아 은행 계좌 수정을 한다.")
     @Test
-    void modifyUserAdditionalInfo() {
+    void modifyBankAccount() {
         //given
         LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
         UserAdditionalInfo userAdditionalInfo = createUserAdditionalInfo("1231212345");
         Member member = createMember(generateMemberKey(), "ssafy@ssafy.com", "01012341234", userAdditionalInfo);
 
-        MemberUserAdditionalInfoModifyServiceRequest request = MemberUserAdditionalInfoModifyServiceRequest.builder()
-            .businessNumber("1231112345")
+        MemberBankAccountModifyServiceRequest request = MemberBankAccountModifyServiceRequest.builder()
             .bankCode("088")
             .accountNumber("123123123456")
             .build();
 
         //when
-        MemberAdditionalInfoModifyResponse response = memberService.modifyUserAdditionalInfo(member.getMemberKey(), currentDateTime, request);
+        MemberBankAccountModifyResponse response = memberService.modifyBankAccount(member.getMemberKey(), currentDateTime, request);
 
         //then
         assertThat(response).isNotNull()

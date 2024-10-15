@@ -1,7 +1,7 @@
 package com.ssafy.user_service.api.controller.member.request;
 
 import com.ssafy.user_service.api.service.member.request.BankAccountServiceRequest;
-import com.ssafy.user_service.api.service.member.request.MemberUserAdditionalInfoModifyServiceRequest;
+import com.ssafy.user_service.api.service.member.request.MemberBankAccountModifyServiceRequest;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
@@ -37,7 +37,7 @@ public class MemberAdditionalInfoModifyRequest {
         return BankAccountServiceRequest.of(bankCode, accountNumber);
     }
 
-    public MemberUserAdditionalInfoModifyServiceRequest toServiceRequest() {
-        return MemberUserAdditionalInfoModifyServiceRequest.of(businessNumber, bankCode, accountNumber);
+    public MemberBankAccountModifyServiceRequest toServiceRequest() {
+        return MemberBankAccountModifyServiceRequest.of(bankCode, accountNumber);
     }
 }

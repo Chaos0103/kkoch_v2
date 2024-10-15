@@ -5,9 +5,8 @@ import com.ssafy.user_service.api.service.member.response.*;
 import com.ssafy.user_service.common.exception.AppException;
 import com.ssafy.user_service.domain.member.Member;
 import com.ssafy.user_service.domain.member.repository.MemberRepository;
-import com.ssafy.user_service.domain.member.vo.UserAdditionalInfo;
+import com.ssafy.user_service.domain.member.vo.BankAccount;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.NoSuchElementException;
 
 import static com.ssafy.user_service.domain.member.repository.MemberRepository.*;
 
@@ -26,6 +24,8 @@ import static com.ssafy.user_service.domain.member.repository.MemberRepository.*
 public class MemberService implements UserDetailsService {
 
     private static final String NOT_MATCHES_CURRENT_PWD = "비밀번호가 일치하지 않습니다.";
+    private static final String HAS_BUSINESS_NUMBER = "이미 사업자 번호가 등록되었습니다.";
+    private static final String USERNAME_NOT_FOUND = "계정을 확인해주세요.";
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
@@ -46,7 +46,7 @@ public class MemberService implements UserDetailsService {
     }
 
     public MemberPasswordModifyResponse modifyPassword(String memberKey, LocalDateTime currentDateTime, MemberPasswordModifyServiceRequest request) {
-        Member member = findMemberBy(memberKey);
+        Member member = memberRepository.findByMemberKey(memberKey);
 
         if (request.isNotMatchesCurrentPwdOf(member, passwordEncoder)) {
             throw new AppException(NOT_MATCHES_CURRENT_PWD);
@@ -58,7 +58,7 @@ public class MemberService implements UserDetailsService {
     }
 
     public MemberTelModifyResponse modifyTel(String memberKey, LocalDateTime currentDateTime, MemberTelModifyServiceRequest request) {
-        Member member = findMemberBy(memberKey);
+        Member member = memberRepository.findByMemberKey(memberKey);
 
         if (request.isDuplicatedTel(memberRepository)) {
             throw new AppException(DUPLICATED_TEL);
@@ -70,10 +70,10 @@ public class MemberService implements UserDetailsService {
     }
 
     public RegisterBusinessNumberResponse registerBusinessNumber(String memberKey, LocalDateTime current, RegisterBusinessNumberServiceRequest request) {
-        Member member = findMemberBy(memberKey);
+        Member member = memberRepository.findByMemberKey(memberKey);
 
         if (member.hasBusinessNumber()) {
-            throw new AppException("이미 사업자 번호가 등록되었습니다.");
+            throw new AppException(HAS_BUSINESS_NUMBER);
         }
 
         if (request.isDuplicatedBusinessNumber(memberRepository)) {
@@ -85,19 +85,16 @@ public class MemberService implements UserDetailsService {
         return RegisterBusinessNumberResponse.of(member.getBusinessNumber(), current);
     }
 
-    public MemberAdditionalInfoModifyResponse modifyUserAdditionalInfo(String memberKey, LocalDateTime currentDateTime, MemberUserAdditionalInfoModifyServiceRequest request) {
-        checkDuplicateBusinessNumber(request.getBusinessNumber());
+    public MemberBankAccountModifyResponse modifyBankAccount(String memberKey, LocalDateTime currentDateTime, MemberBankAccountModifyServiceRequest request) {
+        Member member = memberRepository.findByMemberKey(memberKey);
 
-        Member member = findMemberBy(memberKey);
+        BankAccount bankAccount = request.modifyBankAccountOf(member);
 
-        UserAdditionalInfo userAdditionalInfo = request.createUserAdditionalInfo();
-        member.modifyUserAdditionalInfo(userAdditionalInfo);
-
-        return MemberAdditionalInfoModifyResponse.of(request.getBankCode(), request.getAccountNumber(), currentDateTime);
+        return MemberBankAccountModifyResponse.of(bankAccount, currentDateTime);
     }
 
     public MemberRemoveResponse removeMember(String memberKey, String password, LocalDateTime currentDateTime) {
-        Member member = findMemberBy(memberKey);
+        Member member = memberRepository.findByMemberKey(memberKey);
 
         if (member.isNotMatchesPwd(passwordEncoder, password)) {
             throw new AppException(NOT_MATCHES_CURRENT_PWD);
@@ -111,24 +108,8 @@ public class MemberService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Member member = memberRepository.findByEmail(email)
-            .orElseThrow(() -> new UsernameNotFoundException("계정을 확인해주세요."));
+            .orElseThrow(() -> new UsernameNotFoundException(USERNAME_NOT_FOUND));
 
-        return User.builder()
-            .username(member.getMemberKey())
-            .password(member.getPwd())
-            .roles(member.getSpecificInfo().getRole().toString())
-            .build();
-    }
-
-    private void checkDuplicateBusinessNumber(String businessNumber) {
-        boolean isExistBusinessNumber = memberRepository.existsByUserAdditionalInfoBusinessNumber(businessNumber);
-        if (isExistBusinessNumber) {
-            throw new AppException(DUPLICATED_BUSINESS_NUMBER);
-        }
-    }
-
-    private Member findMemberBy(String memberKey) {
-        return memberRepository.findBySpecificInfoMemberKey(memberKey)
-            .orElseThrow(() -> new NoSuchElementException(NO_SUCH_MEMBER));
+        return member.toUser();
     }
 }

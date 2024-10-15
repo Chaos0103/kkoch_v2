@@ -83,7 +83,7 @@ public abstract class MemberValidate {
         return businessNumber;
     }
 
-    public static boolean validateBankCode(String bankCode) {
+    public static String validateBankCode(String bankCode) {
         if (isBlank(bankCode) || isLengthNotEquals(bankCode, ACCOUNT_CODE_LENGTH)) {
             throw new LengthOutOfRangeException("은행 코드를 올바르게 입력해주세요.");
         }
@@ -92,10 +92,10 @@ public abstract class MemberValidate {
             throw new NotSupportedException("지원하지 않는 은행 코드입니다.");
         }
 
-        return true;
+        return bankCode;
     }
 
-    public static boolean validateAccountNumber(String accountNumber) {
+    public static String validateAccountNumber(String accountNumber) {
         if (isBlank(accountNumber) || isLengthMoreThan(accountNumber, MAX_ACCOUNT_NUMBER_LENGTH)) {
             throw new LengthOutOfRangeException("은행 계좌의 길이는 최대 14자리 입니다.");
         }
@@ -104,7 +104,7 @@ public abstract class MemberValidate {
             throw new StringFormatException("은행 계좌를 올바르게 입력해주세요.");
         }
 
-        return true;
+        return accountNumber;
     }
 
     public static Role validateRole(String role) {

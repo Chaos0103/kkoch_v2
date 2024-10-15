@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.Objects;
@@ -11,6 +12,7 @@ import java.util.Objects;
 import static com.ssafy.user_service.domain.member.MemberValidate.validateAccountNumber;
 import static com.ssafy.user_service.domain.member.MemberValidate.validateBankCode;
 
+@Getter
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 public class BankAccount {

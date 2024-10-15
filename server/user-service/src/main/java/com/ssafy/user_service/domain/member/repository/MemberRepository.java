@@ -4,6 +4,7 @@ import com.ssafy.user_service.domain.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Repository
@@ -23,4 +24,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findBySpecificInfoMemberKey(String memberKey);
 
     Optional<Member> findByEmail(String email);
+
+    default Member findByMemberKey(String memberKey) {
+        return findBySpecificInfoMemberKey(memberKey)
+            .orElseThrow(() -> new NoSuchElementException(NO_SUCH_MEMBER));
+    }
 }

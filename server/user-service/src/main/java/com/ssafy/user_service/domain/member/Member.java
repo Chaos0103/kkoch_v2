@@ -1,6 +1,7 @@
 package com.ssafy.user_service.domain.member;
 
 import com.ssafy.user_service.domain.TimeBaseEntity;
+import com.ssafy.user_service.domain.member.vo.BankAccount;
 import com.ssafy.user_service.domain.member.vo.MemberSpecificInfo;
 import com.ssafy.user_service.domain.member.vo.Role;
 import com.ssafy.user_service.domain.member.vo.UserAdditionalInfo;
@@ -9,6 +10,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static com.ssafy.user_service.api.service.member.Masking.maskingEmail;
@@ -61,6 +64,14 @@ public class Member extends TimeBaseEntity {
         return of(false, memberSpecificInfo, email, pwd, name, tel, null);
     }
 
+    public UserDetails toUser() {
+        return User.builder()
+            .username(getMemberKey())
+            .password(pwd)
+            .roles(getRoleToStr())
+            .build();
+    }
+
     public void registerBusinessNumber(String businessNumber) {
         userAdditionalInfo = UserAdditionalInfo.create(businessNumber);
         specificInfo = specificInfo.withRoleBusiness();
@@ -74,8 +85,9 @@ public class Member extends TimeBaseEntity {
         this.tel = tel;
     }
 
-    public void modifyBankAccount(String bankCode, String accountNumber) {
+    public BankAccount modifyBankAccount(String bankCode, String accountNumber) {
         this.userAdditionalInfo = userAdditionalInfo.withBankAccount(bankCode, accountNumber);
+        return userAdditionalInfo.getBankAccount();
     }
 
     public boolean isMatchesPwd(PasswordEncoder encoder, String pwd) {
@@ -106,7 +118,7 @@ public class Member extends TimeBaseEntity {
         return maskingEmail(email);
     }
 
-    public void modifyUserAdditionalInfo(UserAdditionalInfo userAdditionalInfo) {
-        this.userAdditionalInfo = userAdditionalInfo;
+    private String getRoleToStr() {
+        return specificInfo.getRole().toString();
     }
 }

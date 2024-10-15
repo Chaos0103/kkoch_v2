@@ -32,6 +32,7 @@ public class UserAdditionalInfo {
     public static UserAdditionalInfo of(String businessNumber, BankAccount bankAccount) {
         return UserAdditionalInfo.builder()
             .businessNumber(businessNumber)
+            .bankAccount(bankAccount)
             .build();
     }
 

@@ -244,7 +244,7 @@ class MemberApiControllerDocsTest extends RestDocsSupport {
             .authNumber("012")
             .build();
 
-        MemberAdditionalInfoModifyResponse response = MemberAdditionalInfoModifyResponse.builder()
+        MemberBankAccountModifyResponse response = MemberBankAccountModifyResponse.builder()
             .bankCode("088")
             .accountNumber("123***123456")
             .bankAccountModifiedDateTime(LocalDateTime.now())
@@ -253,7 +253,7 @@ class MemberApiControllerDocsTest extends RestDocsSupport {
         given(authService.validateAuthNumberToBankAccount(any(), anyString()))
             .willReturn(true);
 
-        given(memberService.modifyUserAdditionalInfo(anyString(), any(), any()))
+        given(memberService.modifyBankAccount(anyString(), any(), any()))
             .willReturn(response);
 
         mockMvc.perform(
