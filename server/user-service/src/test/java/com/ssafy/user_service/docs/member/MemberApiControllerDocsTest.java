@@ -188,6 +188,52 @@ class MemberApiControllerDocsTest extends RestDocsSupport {
             ));
     }
 
+    @DisplayName("사업자 번호 등록 API")
+    @Test
+    void registerBusinessNumber() throws Exception {
+        RegisterBusinessNumberRequest request = RegisterBusinessNumberRequest.builder()
+            .businessNumber("1231212345")
+            .build();
+
+        RegisterBusinessNumberResponse response = RegisterBusinessNumberResponse.builder()
+            .businessNumber("1231212345")
+            .registeredDateTime(LocalDateTime.now())
+            .build();
+
+        given(memberService.registerBusinessNumber(anyString(), any(), any()))
+            .willReturn(response);
+
+        mockMvc.perform(
+                post("/members/business-number")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andDo(document("register-business-number",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestFields(
+                    fieldWithPath("businessNumber").type(JsonFieldType.STRING)
+                        .description("사업자 번호")
+                ),
+                responseFields(
+                    fieldWithPath("code").type(JsonFieldType.NUMBER)
+                        .description("코드"),
+                    fieldWithPath("status").type(JsonFieldType.STRING)
+                        .description("상태"),
+                    fieldWithPath("message").type(JsonFieldType.STRING)
+                        .description("메시지"),
+                    fieldWithPath("data").type(JsonFieldType.OBJECT)
+                        .description("응답 데이터"),
+                    fieldWithPath("data.businessNumber").type(JsonFieldType.STRING)
+                        .description("사업자 번호"),
+                    fieldWithPath("data.registeredDateTime").type(JsonFieldType.ARRAY)
+                        .description("사업자 번호 등록 일시")
+                )
+            ));
+    }
+
     @DisplayName("은행 계좌 1원 인증 요청 API")
     @Test
     void sendOneCoinAuthNumber() throws Exception {
@@ -204,7 +250,7 @@ class MemberApiControllerDocsTest extends RestDocsSupport {
             .willReturn(response);
 
         mockMvc.perform(
-                post("/members/additional-info")
+                post("/members/bank-account")
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -234,11 +280,10 @@ class MemberApiControllerDocsTest extends RestDocsSupport {
             ));
     }
 
-    @DisplayName("추가 정보 수정 API")
+    @DisplayName("은행 계좌 수정 API")
     @Test
     void modifyBankAccount() throws Exception {
         MemberAdditionalInfoModifyRequest request = MemberAdditionalInfoModifyRequest.builder()
-            .businessNumber("1231212345")
             .bankCode("088")
             .accountNumber("123123123456")
             .authNumber("012")
@@ -257,18 +302,16 @@ class MemberApiControllerDocsTest extends RestDocsSupport {
             .willReturn(response);
 
         mockMvc.perform(
-                patch("/members/additional-info")
+                patch("/members/bank-account")
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andDo(print())
             .andExpect(status().isOk())
-            .andDo(document("modify-additional-info",
+            .andDo(document("modify-bank-account",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
                 requestFields(
-                    fieldWithPath("businessNumber").type(JsonFieldType.STRING)
-                        .description("사업자 번호"),
                     fieldWithPath("bankCode").type(JsonFieldType.STRING)
                         .description("은행 코드"),
                     fieldWithPath("accountNumber").type(JsonFieldType.STRING)

@@ -241,6 +241,41 @@ class MemberApiControllerTest extends ControllerTestSupport {
             .andExpect(status().isOk());
     }
 
+    @DisplayName("사업자 번호 등록시 사업자 번호는 필수값이다.")
+    @Test
+    void registerBusinessNumberWithoutBusinessNumber() throws Exception {
+        RegisterBusinessNumberRequest request = RegisterBusinessNumberRequest.builder()
+            .build();
+
+        mockMvc.perform(
+                post("/members/business-number")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf())
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.code").value("400"))
+            .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
+            .andExpect(jsonPath("$.message").value("사업자 번호를 입력해주세요."))
+            .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @DisplayName("사업자 번호 등록시 사업자 번호는 필수값이다.")
+    @Test
+    void registerBusinessNumber() throws Exception {
+        RegisterBusinessNumberRequest request = RegisterBusinessNumberRequest.builder()
+            .businessNumber("1231212345")
+            .build();
+
+        mockMvc.perform(
+                post("/members/business-number")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf())
+            )
+            .andExpect(status().isOk());
+    }
+
     @DisplayName("은행 계좌 1원 인증 요청시 은행 코드는 필수값이다.")
     @Test
     void sendOneCoinAuthNumberWithoutBankCode() throws Exception {
@@ -249,7 +284,7 @@ class MemberApiControllerTest extends ControllerTestSupport {
             .build();
 
         mockMvc.perform(
-                post("/members/additional-info")
+                post("/members/bank-account")
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
                     .with(csrf())
@@ -269,7 +304,7 @@ class MemberApiControllerTest extends ControllerTestSupport {
             .build();
 
         mockMvc.perform(
-                post("/members/additional-info")
+                post("/members/bank-account")
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
                     .with(csrf())
@@ -290,7 +325,7 @@ class MemberApiControllerTest extends ControllerTestSupport {
             .build();
 
         mockMvc.perform(
-                post("/members/additional-info")
+                post("/members/bank-account")
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
                     .with(csrf())
@@ -302,13 +337,12 @@ class MemberApiControllerTest extends ControllerTestSupport {
     @Test
     void modifyBankAccountWithoutBankCode() throws Exception {
         MemberAdditionalInfoModifyRequest request = MemberAdditionalInfoModifyRequest.builder()
-            .businessNumber("1231212345")
             .accountNumber("123123123456")
             .authNumber("012")
             .build();
 
         mockMvc.perform(
-                patch("/members/additional-info")
+                patch("/members/bank-account")
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
                     .with(csrf())
@@ -324,13 +358,12 @@ class MemberApiControllerTest extends ControllerTestSupport {
     @Test
     void modifyBankAccountWithoutAccountNumber() throws Exception {
         MemberAdditionalInfoModifyRequest request = MemberAdditionalInfoModifyRequest.builder()
-            .businessNumber("1231212345")
             .bankCode("088")
             .authNumber("012")
             .build();
 
         mockMvc.perform(
-                patch("/members/additional-info")
+                patch("/members/bank-account")
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
                     .with(csrf())
@@ -346,13 +379,12 @@ class MemberApiControllerTest extends ControllerTestSupport {
     @Test
     void modifyBankAccountWithoutAuthNumber() throws Exception {
         MemberAdditionalInfoModifyRequest request = MemberAdditionalInfoModifyRequest.builder()
-            .businessNumber("1231212345")
             .bankCode("088")
             .accountNumber("123123123456")
             .build();
 
         mockMvc.perform(
-                patch("/members/additional-info")
+                patch("/members/bank-account")
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
                     .with(csrf())
@@ -368,14 +400,13 @@ class MemberApiControllerTest extends ControllerTestSupport {
     @Test
     void modifyBankAccount() throws Exception {
         MemberAdditionalInfoModifyRequest request = MemberAdditionalInfoModifyRequest.builder()
-            .businessNumber("1231212345")
             .bankCode("088")
             .accountNumber("123123123456")
             .authNumber("012")
             .build();
 
         mockMvc.perform(
-                patch("/members/additional-info")
+                patch("/members/bank-account")
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
                     .with(csrf())

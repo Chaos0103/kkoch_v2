@@ -1,0 +1,12 @@
+[[register-business-number]]
+=== 사업자 번호 등록 API
+
+==== HTTP Request
+
+include::{snippets}/register-business-number/http-request.adoc[]
+include::{snippets}/register-business-number/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/register-business-number/http-response.adoc[]
+include::{snippets}/register-business-number/response-fields.adoc[]

@@ -56,7 +56,18 @@ public class MemberApiController {
         return ApiResponse.ok(response);
     }
 
-    @PostMapping("/additional-info")
+    @PostMapping("/business-number")
+    public ApiResponse<RegisterBusinessNumberResponse> registerBusinessNumber(@Valid @RequestBody RegisterBusinessNumberRequest request) {
+        LocalDateTime currentDateTime = getCurrentDateTime();
+
+        String memberKey = findMemberKeyByToken();
+
+        RegisterBusinessNumberResponse response = memberService.registerBusinessNumber(memberKey, currentDateTime, request.toServiceRequest());
+
+        return ApiResponse.ok(response);
+    }
+
+    @PostMapping("/bank-account")
     public ApiResponse<BankAccountAuthResponse> sendOneCoinAuthNumber(@Valid @RequestBody BankAccountRequest request) {
         LocalDateTime currentDateTime = getCurrentDateTime();
 
@@ -67,7 +78,7 @@ public class MemberApiController {
         return ApiResponse.ok(response);
     }
 
-    @PatchMapping("/additional-info")
+    @PatchMapping("/bank-account")
     public ApiResponse<MemberBankAccountModifyResponse> modifyBankAccount(@Valid @RequestBody MemberAdditionalInfoModifyRequest request) {
         authService.validateAuthNumberToBankAccount(request.toAuthServiceRequest(), request.getAuthNumber());
 

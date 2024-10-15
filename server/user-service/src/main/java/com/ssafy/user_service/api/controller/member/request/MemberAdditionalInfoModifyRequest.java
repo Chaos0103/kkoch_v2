@@ -13,9 +13,6 @@ import static com.ssafy.user_service.api.controller.member.message.MemberBinding
 @NoArgsConstructor
 public class MemberAdditionalInfoModifyRequest {
 
-    @NotBlank(message = NOT_BLANK_BUSINESS_NUMBER)
-    private String businessNumber;
-
     @NotBlank(message = NOT_BLANK_BANK_CODE)
     private String bankCode;
 
@@ -26,8 +23,7 @@ public class MemberAdditionalInfoModifyRequest {
     private String authNumber;
 
     @Builder
-    private MemberAdditionalInfoModifyRequest(String businessNumber, String bankCode, String accountNumber, String authNumber) {
-        this.businessNumber = businessNumber;
+    private MemberAdditionalInfoModifyRequest(String bankCode, String accountNumber, String authNumber) {
         this.bankCode = bankCode;
         this.accountNumber = accountNumber;
         this.authNumber = authNumber;
