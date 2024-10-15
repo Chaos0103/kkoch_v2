@@ -1,10 +1,7 @@
 package com.ssafy.user_service.api.service.member;
 
 import com.ssafy.user_service.IntegrationTestSupport;
-import com.ssafy.user_service.api.service.member.request.MemberCreateServiceRequest;
-import com.ssafy.user_service.api.service.member.request.MemberPasswordModifyServiceRequest;
-import com.ssafy.user_service.api.service.member.request.MemberTelModifyServiceRequest;
-import com.ssafy.user_service.api.service.member.request.MemberUserAdditionalInfoModifyServiceRequest;
+import com.ssafy.user_service.api.service.member.request.*;
 import com.ssafy.user_service.api.service.member.response.*;
 import com.ssafy.user_service.common.exception.AppException;
 import com.ssafy.user_service.domain.member.Member;
@@ -37,7 +34,8 @@ class MemberServiceTest extends IntegrationTestSupport {
     void createMemberDuplicatedEmail() {
         //given
         String email = "ssafy@ssafy.com";
-        createMember(generateMemberKey(), email, "01012341234", "1231212345");
+        UserAdditionalInfo userAdditionalInfo = createUserAdditionalInfo("1231212345");
+        createMember(generateMemberKey(), email, "01012341234", userAdditionalInfo);
 
         MemberCreateServiceRequest request = MemberCreateServiceRequest.builder()
             .email(email)
@@ -62,7 +60,8 @@ class MemberServiceTest extends IntegrationTestSupport {
     void createMemberDuplicatedTel() {
         //given
         String tel = "01012341234";
-        createMember(generateMemberKey(), "ssafy@ssafy.com", tel, "1231212345");
+        UserAdditionalInfo userAdditionalInfo = createUserAdditionalInfo("1231212345");
+        createMember(generateMemberKey(), "ssafy@ssafy.com", tel, userAdditionalInfo);
 
         MemberCreateServiceRequest request = MemberCreateServiceRequest.builder()
             .email("ssafy@gmail.com")
@@ -109,7 +108,8 @@ class MemberServiceTest extends IntegrationTestSupport {
         //given
         LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
         String memberKey = generateMemberKey();
-        Member member = createMember(memberKey, "ssafy@ssafy.com", "01012341234", "1231212345");
+        UserAdditionalInfo userAdditionalInfo = createUserAdditionalInfo("1231212345");
+        Member member = createMember(memberKey, "ssafy@ssafy.com", "01012341234", userAdditionalInfo);
 
         MemberPasswordModifyServiceRequest request = MemberPasswordModifyServiceRequest.builder()
             .currentPassword("ssafy1111!")
@@ -135,7 +135,8 @@ class MemberServiceTest extends IntegrationTestSupport {
         //given
         LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
         String memberKey = generateMemberKey();
-        Member member = createMember(memberKey, "ssafy@ssafy.com", "01012341234", "1231212345");
+        UserAdditionalInfo userAdditionalInfo = createUserAdditionalInfo("1231212345");
+        Member member = createMember(memberKey, "ssafy@ssafy.com", "01012341234", userAdditionalInfo);
 
         MemberPasswordModifyServiceRequest request = MemberPasswordModifyServiceRequest.builder()
             .currentPassword("ssafy1234!")
@@ -160,11 +161,13 @@ class MemberServiceTest extends IntegrationTestSupport {
     @Test
     void modifyTelDuplicatedTel() {
         //given
-        createMember(generateMemberKey(), "other@ssafy.com", "01012341234", "1231212345");
+        UserAdditionalInfo userAdditionalInfo1 = createUserAdditionalInfo("1231212345");
+        createMember(generateMemberKey(), "other@ssafy.com", "01012341234", userAdditionalInfo1);
 
         LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
         String memberKey = generateMemberKey();
-        Member member = createMember(memberKey, "ssafy@ssafy.com", "01056785678", "1112233333");
+        UserAdditionalInfo userAdditionalInfo2 = createUserAdditionalInfo("1112233333");
+        Member member = createMember(memberKey, "ssafy@ssafy.com", "01056785678", userAdditionalInfo2);
 
         MemberTelModifyServiceRequest request = MemberTelModifyServiceRequest.builder()
             .tel("01012341234")
@@ -188,7 +191,8 @@ class MemberServiceTest extends IntegrationTestSupport {
         //given
         LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
         String memberKey = generateMemberKey();
-        Member member = createMember(memberKey, "ssafy@ssafy.com", "01012341234", "1231212345");
+        UserAdditionalInfo userAdditionalInfo = createUserAdditionalInfo("1231212345");
+        Member member = createMember(memberKey, "ssafy@ssafy.com", "01012341234", userAdditionalInfo);
 
         MemberTelModifyServiceRequest request = MemberTelModifyServiceRequest.builder()
             .tel("01056785678")
@@ -208,13 +212,94 @@ class MemberServiceTest extends IntegrationTestSupport {
             .hasFieldOrPropertyWithValue("tel", "01056785678");
     }
 
+    @DisplayName("사업자 번호 등록시 입력 받은 사업자 번호를 사용중인 회원이 존재하면 예외가 발생한다.")
+    @Test
+    void registerBusinessNumberDuplicatedBusinessNumber() {
+        //given
+        LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
+        UserAdditionalInfo userAdditionalInfo = createUserAdditionalInfo("1231212345");
+        createMember(generateMemberKey(), "ssafy@ssafy.com", "01012341234", userAdditionalInfo);
+
+        String memberKey = generateMemberKey();
+        Member member = createMember(memberKey, "ssafy@gmail.com", "01056785678", null);
+
+        RegisterBusinessNumberServiceRequest request = RegisterBusinessNumberServiceRequest.builder()
+            .businessNumber("1231212345")
+            .build();
+
+        //when
+        assertThatThrownBy(() -> memberService.registerBusinessNumber(memberKey, currentDateTime, request))
+            .isInstanceOf(AppException.class)
+            .hasMessage("이미 가입된 사업자 번호입니다.");
+
+        //then
+        Optional<Member> findMember = memberRepository.findById(member.getId());
+        assertThat(findMember).isPresent()
+            .get()
+            .hasFieldOrPropertyWithValue("userAdditionalInfo", null);
+    }
+
+    @DisplayName("사업자 번호 등록시 이미 사업자 번호를 등록한 회원이라면 예외가 발생한다.")
+    @Test
+    void registerBusinessNumberExistBusinessNumber() {
+        //given
+        LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
+        String memberKey = generateMemberKey();
+        UserAdditionalInfo userAdditionalInfo = createUserAdditionalInfo("1231212345");
+        Member member = createMember(memberKey, "ssafy@ssafy.com", "01012341234", userAdditionalInfo);
+
+        RegisterBusinessNumberServiceRequest request = RegisterBusinessNumberServiceRequest.builder()
+            .businessNumber("1112233333")
+            .build();
+
+        //when
+        assertThatThrownBy(() -> memberService.registerBusinessNumber(memberKey, currentDateTime, request))
+            .isInstanceOf(AppException.class)
+            .hasMessage("이미 사업자 번호가 등록되었습니다.");
+
+        //then
+        Optional<Member> findMember = memberRepository.findById(member.getId());
+        assertThat(findMember).isPresent()
+            .get()
+            .hasFieldOrPropertyWithValue("userAdditionalInfo.businessNumber", "1231212345");
+    }
+
+    @DisplayName("사업자 번호를 입력 받아 사업자 번호를 등록한다.")
+    @Test
+    void registerBusinessNumber() {
+        //given
+        LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
+        String memberKey = generateMemberKey();
+        Member member = createMember(memberKey, "ssafy@ssafy.com", "01012341234", null);
+
+        RegisterBusinessNumberServiceRequest request = RegisterBusinessNumberServiceRequest.builder()
+            .businessNumber("1231212345")
+            .build();
+
+        //when
+        RegisterBusinessNumberResponse response = memberService.registerBusinessNumber(memberKey, currentDateTime, request);
+
+        //then
+        assertThat(response).isNotNull()
+            .hasFieldOrPropertyWithValue("businessNumber", "1231212345")
+            .hasFieldOrPropertyWithValue("registeredDateTime", currentDateTime);
+
+        Optional<Member> findMember = memberRepository.findById(member.getId());
+        assertThat(findMember).isPresent()
+            .get()
+            .hasFieldOrPropertyWithValue("specificInfo.memberKey", memberKey)
+            .hasFieldOrPropertyWithValue("specificInfo.role", Role.BUSINESS)
+            .hasFieldOrPropertyWithValue("userAdditionalInfo.businessNumber", "1231212345")
+            .hasFieldOrPropertyWithValue("userAdditionalInfo.bankAccount", null);
+    }
+
     @DisplayName("은행 계좌 정보를 입력 받아 은행 계좌 수정을 한다.")
     @Test
     void modifyUserAdditionalInfo() {
         //given
         LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
-
-        Member member = createMember(generateMemberKey(), "ssafy@ssafy.com", "01012341234", "1231212345");
+        UserAdditionalInfo userAdditionalInfo = createUserAdditionalInfo("1231212345");
+        Member member = createMember(generateMemberKey(), "ssafy@ssafy.com", "01012341234", userAdditionalInfo);
 
         MemberUserAdditionalInfoModifyServiceRequest request = MemberUserAdditionalInfoModifyServiceRequest.builder()
             .businessNumber("1231112345")
@@ -231,8 +316,9 @@ class MemberServiceTest extends IntegrationTestSupport {
             .hasFieldOrPropertyWithValue("accountNumber", "123***123456")
             .hasFieldOrPropertyWithValue("bankAccountModifiedDateTime", currentDateTime);
 
-        Member findMember = memberRepository.findById(member.getId()).orElse(null);
-        assertThat(findMember).isNotNull()
+        Optional<Member> findMember = memberRepository.findById(member.getId());
+        assertThat(findMember).isPresent()
+            .get()
             .hasFieldOrPropertyWithValue("userAdditionalInfo.bankAccount.bankCode", "088")
             .hasFieldOrPropertyWithValue("userAdditionalInfo.bankAccount.accountNumber", "123123123456");
     }
@@ -242,17 +328,19 @@ class MemberServiceTest extends IntegrationTestSupport {
     void removeMemberNotMatchesPassword() {
         //given
         LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
-
-        Member member = createMember(generateMemberKey(), "ssafy@ssafy.com", "01012341234", "1231212345");
+        String memberKey = generateMemberKey();
+        UserAdditionalInfo userAdditionalInfo = createUserAdditionalInfo("1231212345");
+        Member member = createMember(memberKey, "ssafy@ssafy.com", "01012341234", userAdditionalInfo);
 
         //when
-        assertThatThrownBy(() -> memberService.removeMember(member.getMemberKey(), "ssafy5678@", currentDateTime))
+        assertThatThrownBy(() -> memberService.removeMember(memberKey, "ssafy5678@", currentDateTime))
             .isInstanceOf(AppException.class)
             .hasMessage("비밀번호가 일치하지 않습니다.");
 
         //then
-        Member findMember = memberRepository.findById(member.getId()).orElse(null);
-        assertThat(findMember).isNotNull()
+        Optional<Member> findMember = memberRepository.findById(member.getId());
+        assertThat(findMember).isPresent()
+            .get()
             .hasFieldOrPropertyWithValue("isDeleted", false);
     }
 
@@ -261,8 +349,8 @@ class MemberServiceTest extends IntegrationTestSupport {
     void removeMember() {
         //given
         LocalDateTime currentDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
-
-        Member member = createMember(generateMemberKey(), "ssafy@ssafy.com", "01012341234", "1231212345");
+        UserAdditionalInfo userAdditionalInfo = createUserAdditionalInfo("1231212345");
+        Member member = createMember(generateMemberKey(), "ssafy@ssafy.com", "01012341234", userAdditionalInfo);
 
         //when
         MemberRemoveResponse response = memberService.removeMember(member.getMemberKey(), "ssafy1234!", currentDateTime);
@@ -271,12 +359,13 @@ class MemberServiceTest extends IntegrationTestSupport {
         assertThat(response).isNotNull()
             .hasFieldOrPropertyWithValue("withdrawnDateTime", currentDateTime);
 
-        Member findMember = memberRepository.findById(member.getId()).orElse(null);
-        assertThat(findMember).isNotNull()
+        Optional<Member> findMember = memberRepository.findById(member.getId());
+        assertThat(findMember).isPresent()
+            .get()
             .hasFieldOrPropertyWithValue("isDeleted", true);
     }
 
-    private Member createMember(String memberKey, String email, String tel, String businessNumber) {
+    private Member createMember(String memberKey, String email, String tel, UserAdditionalInfo userAdditionalInfo) {
         Member member = Member.builder()
             .isDeleted(false)
             .specificInfo(MemberSpecificInfo.builder()
@@ -287,14 +376,18 @@ class MemberServiceTest extends IntegrationTestSupport {
             .pwd(passwordEncoder.encode("ssafy1234!"))
             .name("김싸피")
             .tel(tel)
-            .userAdditionalInfo(UserAdditionalInfo.builder()
-                .businessNumber(businessNumber)
-                .bankAccount(BankAccount.builder()
-                    .bankCode("088")
-                    .accountNumber("123123123456")
-                    .build())
-                .build())
+            .userAdditionalInfo(userAdditionalInfo)
             .build();
         return memberRepository.save(member);
+    }
+
+    private static UserAdditionalInfo createUserAdditionalInfo(String businessNumber) {
+        return UserAdditionalInfo.builder()
+            .businessNumber(businessNumber)
+            .bankAccount(BankAccount.builder()
+                .bankCode("088")
+                .accountNumber("123123123456")
+                .build())
+            .build();
     }
 }

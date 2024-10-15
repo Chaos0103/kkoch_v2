@@ -211,10 +211,10 @@ class MemberValidateTest {
         String businessNumber = "123123412345";
 
         //when
-        boolean result = MemberValidate.validateBusinessNumber(businessNumber);
+        String result = MemberValidate.validateBusinessNumber(businessNumber);
 
         //then
-        assertThat(result).isTrue();
+        assertThat(result).isEqualTo(businessNumber);
     }
 
     @DisplayName("지원하지 않는 은행 코드라면 예외가 발생한다.")

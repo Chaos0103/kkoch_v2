@@ -61,6 +61,11 @@ public class Member extends TimeBaseEntity {
         return of(false, memberSpecificInfo, email, pwd, name, tel, null);
     }
 
+    public void registerBusinessNumber(String businessNumber) {
+        userAdditionalInfo = UserAdditionalInfo.create(businessNumber);
+        specificInfo = specificInfo.withRoleBusiness();
+    }
+
     public void modifyPassword(String pwd) {
         this.pwd = pwd;
     }
@@ -85,8 +90,16 @@ public class Member extends TimeBaseEntity {
         return getIsDeleted();
     }
 
+    public boolean hasBusinessNumber() {
+        return userAdditionalInfo != null;
+    }
+
     public String getMemberKey() {
         return specificInfo.getMemberKey();
+    }
+
+    public String getBusinessNumber() {
+        return userAdditionalInfo.getBusinessNumber();
     }
 
     public String getMaskingEmail() {

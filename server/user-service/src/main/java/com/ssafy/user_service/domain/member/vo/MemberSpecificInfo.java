@@ -39,6 +39,10 @@ public class MemberSpecificInfo {
         return of(memberKey, role);
     }
 
+    public MemberSpecificInfo withRoleBusiness() {
+        return of(memberKey, Role.BUSINESS);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

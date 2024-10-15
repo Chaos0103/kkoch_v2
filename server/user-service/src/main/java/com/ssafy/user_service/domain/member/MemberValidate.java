@@ -71,7 +71,7 @@ public abstract class MemberValidate {
         return tel.strip();
     }
 
-    public static boolean validateBusinessNumber(String businessNumber) {
+    public static String validateBusinessNumber(String businessNumber) {
         if (isBlank(businessNumber) || isLengthMoreThan(businessNumber, MAX_BUSINESS_NUMBER_LENGTH)) {
             throw new LengthOutOfRangeException("사업자 번호의 길이는 최대 12자리 입니다.");
         }
@@ -80,7 +80,7 @@ public abstract class MemberValidate {
             throw new StringFormatException("사업자 번호를 올바르게 입력해주세요.");
         }
 
-        return true;
+        return businessNumber;
     }
 
     public static boolean validateBankCode(String bankCode) {

@@ -1,9 +1,6 @@
 package com.ssafy.user_service.api.service.member;
 
-import com.ssafy.user_service.api.service.member.request.MemberCreateServiceRequest;
-import com.ssafy.user_service.api.service.member.request.MemberPasswordModifyServiceRequest;
-import com.ssafy.user_service.api.service.member.request.MemberTelModifyServiceRequest;
-import com.ssafy.user_service.api.service.member.request.MemberUserAdditionalInfoModifyServiceRequest;
+import com.ssafy.user_service.api.service.member.request.*;
 import com.ssafy.user_service.api.service.member.response.*;
 import com.ssafy.user_service.common.exception.AppException;
 import com.ssafy.user_service.domain.member.Member;
@@ -72,6 +69,22 @@ public class MemberService implements UserDetailsService {
         return MemberTelModifyResponse.of(member.getTel(), currentDateTime);
     }
 
+    public RegisterBusinessNumberResponse registerBusinessNumber(String memberKey, LocalDateTime current, RegisterBusinessNumberServiceRequest request) {
+        Member member = findMemberBy(memberKey);
+
+        if (member.hasBusinessNumber()) {
+            throw new AppException("이미 사업자 번호가 등록되었습니다.");
+        }
+
+        if (request.isDuplicatedBusinessNumber(memberRepository)) {
+            throw new AppException(DUPLICATED_BUSINESS_NUMBER);
+        }
+
+        request.registerBusinessNumber(member);
+
+        return RegisterBusinessNumberResponse.of(member.getBusinessNumber(), current);
+    }
+
     public MemberAdditionalInfoModifyResponse modifyUserAdditionalInfo(String memberKey, LocalDateTime currentDateTime, MemberUserAdditionalInfoModifyServiceRequest request) {
         checkDuplicateBusinessNumber(request.getBusinessNumber());
 
@@ -86,7 +99,9 @@ public class MemberService implements UserDetailsService {
     public MemberRemoveResponse removeMember(String memberKey, String password, LocalDateTime currentDateTime) {
         Member member = findMemberBy(memberKey);
 
-        checkMatchesPassword(member, password);
+        if (member.isNotMatchesPwd(passwordEncoder, password)) {
+            throw new AppException(NOT_MATCHES_CURRENT_PWD);
+        }
 
         member.remove();
 
@@ -105,19 +120,6 @@ public class MemberService implements UserDetailsService {
             .build();
     }
 
-    private void checkMatchesPassword(Member member, String currentPassword) {
-        if (member.isNotMatchesPwd(passwordEncoder, currentPassword)) {
-            throw new AppException(NOT_MATCHES_CURRENT_PWD);
-        }
-    }
-
-    private void checkDuplicateTel(String tel) {
-        boolean isExistTel = memberRepository.existsByTel(tel);
-        if (isExistTel) {
-            throw new AppException(DUPLICATED_TEL);
-        }
-    }
-
     private void checkDuplicateBusinessNumber(String businessNumber) {
         boolean isExistBusinessNumber = memberRepository.existsByUserAdditionalInfoBusinessNumber(businessNumber);
         if (isExistBusinessNumber) {
@@ -128,9 +130,5 @@ public class MemberService implements UserDetailsService {
     private Member findMemberBy(String memberKey) {
         return memberRepository.findBySpecificInfoMemberKey(memberKey)
             .orElseThrow(() -> new NoSuchElementException(NO_SUCH_MEMBER));
-    }
-
-    private String generateEncodedPassword(String password) {
-        return passwordEncoder.encode(password);
     }
 }

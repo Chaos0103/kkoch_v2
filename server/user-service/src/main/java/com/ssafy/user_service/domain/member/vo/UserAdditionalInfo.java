@@ -5,12 +5,14 @@ import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 
 import static com.ssafy.user_service.domain.member.MemberValidate.validateBusinessNumber;
 
+@Getter
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 public class UserAdditionalInfo {
@@ -23,14 +25,14 @@ public class UserAdditionalInfo {
 
     @Builder
     private UserAdditionalInfo(String businessNumber, BankAccount bankAccount) {
-        validateBusinessNumber(businessNumber);
-
-        this.businessNumber = businessNumber;
+        this.businessNumber = validateBusinessNumber(businessNumber);
         this.bankAccount = bankAccount;
     }
 
     public static UserAdditionalInfo of(String businessNumber, BankAccount bankAccount) {
-        return new UserAdditionalInfo(businessNumber, bankAccount);
+        return UserAdditionalInfo.builder()
+            .businessNumber(businessNumber)
+            .build();
     }
 
     public static UserAdditionalInfo create(String businessNumber) {
