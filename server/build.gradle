@@ -36,9 +36,11 @@ subprojects {
         }
     }
 
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-actuator'
+        implementation 'org.projectlombok:lombok'
+    }
+
     bootJar { enabled = false }
     jar { enabled = true }
 }
-
-
-
