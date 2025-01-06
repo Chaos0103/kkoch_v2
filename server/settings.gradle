@@ -1,3 +1,5 @@
 rootProject.name = 'kkoch'
 
 include 'discovery-service'
+include 'common'
+
