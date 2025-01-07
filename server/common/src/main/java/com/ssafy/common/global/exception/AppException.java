@@ -1,23 +1,23 @@
 package com.ssafy.common.global.exception;
 
+import com.ssafy.common.global.exception.code.ErrorCode;
+import lombok.Getter;
+
+@Getter
 public class AppException extends RuntimeException {
 
-    public AppException() {
+    private final ErrorCode errorCode;
+    private final String message;
+
+    protected AppException(ErrorCode errorCode) {
+        super(errorCode.getMessage());
+        this.errorCode = errorCode;
+        this.message = errorCode.getMessage();
     }
 
-    public AppException(String message) {
+    protected AppException(ErrorCode errorCode, String message) {
         super(message);
-    }
-
-    public AppException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public AppException(Throwable cause) {
-        super(cause);
-    }
-
-    public AppException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+        this.errorCode = errorCode;
+        this.message = message;
     }
 }

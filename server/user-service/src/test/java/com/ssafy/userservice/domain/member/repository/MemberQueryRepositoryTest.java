@@ -63,9 +63,9 @@ class MemberQueryRepositoryTest extends IntegrationTestSupport {
         //then
         assertThat(content).isPresent()
             .hasValueSatisfying(memberDisplayInfoDto -> {
-                assertThat(memberDisplayInfoDto.getEmail()).isEqualTo("ssafy@ssafy.com");
-                assertThat(memberDisplayInfoDto.getName()).isEqualTo("김싸피");
-                assertThat(memberDisplayInfoDto.getTel()).isEqualTo("01012341234");
+                assertThat(memberDisplayInfoDto)
+                    .extracting("email", "name", "tel")
+                    .containsExactly("ssafy@gmail.com", "김싸피", "01012341234");
             });
     }
 
@@ -116,7 +116,7 @@ class MemberQueryRepositoryTest extends IntegrationTestSupport {
         Member member = Member.builder()
             .isDeleted(isDeleted)
             .specificInfo(createSpecificInfo(memberKey))
-            .email("ssafy@ssafy.com")
+            .email("ssafy@gmail.com")
             .pwd("ssafy1234!")
             .name("김싸피")
             .tel("01012341234")

@@ -1,6 +1,5 @@
 package com.ssafy.common.global.utils;
 
-import com.ssafy.common.global.exception.AppException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -33,7 +32,8 @@ public abstract class TimeUtils {
         try {
             return LocalDate.parse(str);
         } catch (DateTimeParseException e) {
-            throw new AppException("날짜를 올바르게 입력해주세요.", e);
+            //TODO: 기능 구현
+            throw new RuntimeException("날짜를 올바르게 입력해주세요.", e);
         }
     }
 }
