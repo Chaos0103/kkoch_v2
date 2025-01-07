@@ -1,0 +1,32 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:kkochApplication
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  h2:
+    console:
+      enabled: true
+
+logging:
+  level:
+    com.ssafy.userservice: debug
+    org.hibernate.SQL: debug
+
+token:
+  secret-key: thisisssafyenjoytripprojectlocalprofiletokensecretkeyhledoranpeanutzekaviperdelight
+  access-token-expire-time: 18_000_000 #1000 * 60 * 30L
+  refresh-token-expire-time: 604_800_000 #1000 * 60 * 60L * 24 * 7
+
+kakao:
+  open-api-key: ${KAKAO.KEY}
