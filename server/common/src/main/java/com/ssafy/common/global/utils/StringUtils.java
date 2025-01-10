@@ -9,7 +9,7 @@ import static org.springframework.util.StringUtils.hasText;
 public abstract class StringUtils {
 
     private static final String KOREAN_REGEX = "^[가-힣]*$";
-    private static final String EMAIL_REGEX = "\\w+@\\w+\\.\\w+(\\.\\w+)?";
+    private static final String EMAIL_REGEX = "^(?!.*\\.\\.)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?(?:\\.[a-zA-Z]{2,})+$";
     private static final String PASSWORD_REGEX = "^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$";
 
     public static boolean isBlank(String str) {

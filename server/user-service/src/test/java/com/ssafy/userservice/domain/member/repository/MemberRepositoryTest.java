@@ -2,13 +2,12 @@ package com.ssafy.userservice.domain.member.repository;
 
 import com.ssafy.userservice.domain.member.Member;
 import com.ssafy.userservice.domain.member.enums.Role;
-import com.ssafy.userservice.domain.member.vo.BankAccount;
-import com.ssafy.userservice.domain.member.vo.MemberSpecificInfo;
-import com.ssafy.userservice.domain.member.vo.UserAdditionalInfo;
+import com.ssafy.userservice.domain.member.vo.*;
 import common.IntegrationTestSupport;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -24,6 +23,8 @@ class MemberRepositoryTest extends IntegrationTestSupport {
 
     @Autowired
     MemberRepository memberRepository;
+    @Autowired
+    PasswordEncoder encoder;
 
     @DisplayName("입력 받은 이메일을 사용하는 회원이 존재하면 true를 반환한다.")
     @Test
@@ -33,7 +34,7 @@ class MemberRepositoryTest extends IntegrationTestSupport {
         createMember(DEFAULT_MEMBER_KEY, email, DEFAULT_TEL, DEFAULT_BUSINESS_NUMBER);
 
         //when
-        boolean result = memberRepository.existsByEmail(email);
+        boolean result = memberRepository.existsByEmail(Email.of(email));
 
         //then
         assertThat(result).isTrue();
@@ -46,7 +47,7 @@ class MemberRepositoryTest extends IntegrationTestSupport {
         String email = "ssafy@gmail.com";
 
         //when
-        boolean result = memberRepository.existsByEmail(email);
+        boolean result = memberRepository.existsByEmail(Email.of(email));
 
         //then
         assertThat(result).isFalse();
@@ -60,7 +61,7 @@ class MemberRepositoryTest extends IntegrationTestSupport {
         createMember(DEFAULT_MEMBER_KEY, DEFAULT_EMAIL, tel, DEFAULT_BUSINESS_NUMBER);
 
         //when
-        boolean result = memberRepository.existsByTel(tel);
+        boolean result = memberRepository.existsByTel(Tel.of(tel));
 
         //then
         assertThat(result).isTrue();
@@ -73,7 +74,7 @@ class MemberRepositoryTest extends IntegrationTestSupport {
         String tel = "01012341234";
 
         //when
-        boolean result = memberRepository.existsByTel(tel);
+        boolean result = memberRepository.existsByTel(Tel.of(tel));
 
         //then
         assertThat(result).isFalse();
@@ -87,7 +88,7 @@ class MemberRepositoryTest extends IntegrationTestSupport {
         createMember(DEFAULT_MEMBER_KEY, DEFAULT_EMAIL, DEFAULT_TEL, businessNumber);
 
         //when
-        boolean result = memberRepository.existsByUserAdditionalInfoBusinessNumber(businessNumber);
+        boolean result = memberRepository.existsByUserAdditionalInfoBusinessNumber(BusinessNumber.of(businessNumber));
 
         //then
         assertThat(result).isTrue();
@@ -100,7 +101,7 @@ class MemberRepositoryTest extends IntegrationTestSupport {
         String businessNumber = "1231212345";
 
         //when
-        boolean result = memberRepository.existsByUserAdditionalInfoBusinessNumber(businessNumber);
+        boolean result = memberRepository.existsByUserAdditionalInfoBusinessNumber(BusinessNumber.of(businessNumber));
 
         //then
         assertThat(result).isFalse();
@@ -144,7 +145,7 @@ class MemberRepositoryTest extends IntegrationTestSupport {
         Member createdMember = createMember(DEFAULT_MEMBER_KEY, email, DEFAULT_TEL, DEFAULT_BUSINESS_NUMBER);
 
         //when
-        Optional<Member> findMember = memberRepository.findByEmail(email);
+        Optional<Member> findMember = memberRepository.findByEmail(Email.of(email));
 
         //then
         assertThat(findMember).isPresent()
@@ -160,7 +161,7 @@ class MemberRepositoryTest extends IntegrationTestSupport {
         String email = "invalid@gmail.com";
 
         //when
-        Optional<Member> findMember = memberRepository.findByEmail(email);
+        Optional<Member> findMember = memberRepository.findByEmail(Email.of(email));
 
         //then
         assertThat(findMember).isEmpty();
@@ -171,10 +172,11 @@ class MemberRepositoryTest extends IntegrationTestSupport {
             .isDeleted(false)
             .specificInfo(createSpecificInfo(memberKey))
             .email(email)
-            .pwd("ssafy1234!")
+            .password("ssafy1234!")
             .name("김싸피")
             .tel(tel)
             .userAdditionalInfo(createUserAdditionalInfo(businessNumber))
+            .encoder(encoder)
             .build();
         return memberRepository.save(member);
     }

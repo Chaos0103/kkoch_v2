@@ -24,9 +24,9 @@ public class MemberQueryRepository {
             .select(
                 Projections.fields(
                     MemberDisplayInfoDto.class,
-                    member.email,
-                    member.name,
-                    member.tel
+                    member.email.email,
+                    member.name.name,
+                    member.tel.tel
                 )
             )
             .from(member)

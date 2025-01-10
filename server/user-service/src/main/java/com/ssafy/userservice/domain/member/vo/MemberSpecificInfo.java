@@ -5,16 +5,13 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.util.Objects;
 import java.util.UUID;
 
 @Getter
 @Embeddable
+@EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 public class MemberSpecificInfo {
 
@@ -42,19 +39,6 @@ public class MemberSpecificInfo {
 
     public MemberSpecificInfo withRoleBusiness() {
         return of(memberKey, Role.BUSINESS);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        MemberSpecificInfo that = (MemberSpecificInfo) o;
-        return Objects.equals(getMemberKey(), that.getMemberKey()) && getRole() == that.getRole();
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getMemberKey(), getRole());
     }
 
     private static String generateMemberKey() {

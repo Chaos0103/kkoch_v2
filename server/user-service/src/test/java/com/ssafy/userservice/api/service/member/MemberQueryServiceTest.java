@@ -13,6 +13,7 @@ import common.IntegrationTestSupport;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -21,9 +22,10 @@ class MemberQueryServiceTest extends IntegrationTestSupport {
 
     @Autowired
     MemberQueryService memberQueryService;
-
     @Autowired
     MemberRepository memberRepository;
+    @Autowired
+    PasswordEncoder encoder;
 
     @DisplayName("회원 정보 조회 시 입력 받은 회원 고유키와 일치하는 회원을 찾지 못한 경우 예외가 발생한다.")
     @Test
@@ -92,10 +94,11 @@ class MemberQueryServiceTest extends IntegrationTestSupport {
             .isDeleted(false)
             .specificInfo(createSpecificInfo(memberKey))
             .email("ssafy@gmail.com")
-            .pwd("ssafy1234!")
+            .password("ssafy1234!")
             .name("김싸피")
             .tel("01012341234")
             .userAdditionalInfo(createDefaultUserAdditionalInfo())
+            .encoder(encoder)
             .build();
         return memberRepository.save(member);
     }

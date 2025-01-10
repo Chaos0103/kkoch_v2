@@ -1,10 +1,8 @@
 package com.ssafy.userservice.domain.member;
 
 import com.ssafy.common.domain.TimeBaseEntity;
-import com.ssafy.userservice.domain.member.vo.BankAccount;
-import com.ssafy.userservice.domain.member.vo.MemberSpecificInfo;
 import com.ssafy.userservice.domain.member.enums.Role;
-import com.ssafy.userservice.domain.member.vo.UserAdditionalInfo;
+import com.ssafy.userservice.domain.member.vo.*;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -27,59 +25,59 @@ public class Member extends TimeBaseEntity {
     @Embedded
     private MemberSpecificInfo specificInfo;
 
-    @Column(unique = true, nullable = false, updatable = false, length = 100)
-    private String email;
+    @Embedded
+    private Email email;
 
-    @Column(nullable = false, columnDefinition = "char(60)", length = 60)
-    private String pwd;
+    @Embedded
+    private Password password;
 
-    @Column(nullable = false, updatable = false, length = 20)
-    private String name;
+    @Embedded
+    private Name name;
 
-    @Column(unique = true, nullable = false, columnDefinition = "char(11)", length = 11)
-    private String tel;
+    @Embedded
+    private Tel tel;
 
     @Embedded
     private UserAdditionalInfo userAdditionalInfo;
 
     @Builder
-    private Member(boolean isDeleted, MemberSpecificInfo specificInfo, String email, String pwd, String name, String tel, UserAdditionalInfo userAdditionalInfo) {
+    private Member(boolean isDeleted, MemberSpecificInfo specificInfo, String email, String password, String name, String tel, UserAdditionalInfo userAdditionalInfo, PasswordEncoder encoder) {
         super(isDeleted);
         this.specificInfo = specificInfo;
-        this.email = email;
-        this.pwd = pwd;
-        this.name = name;
-        this.tel = tel;
+        this.email = Email.of(email);
+        this.password = Password.of(password, encoder);
+        this.name = Name.of(name);
+        this.tel = Tel.of(tel);
         this.userAdditionalInfo = userAdditionalInfo;
     }
 
-    public static Member of(boolean isDeleted, MemberSpecificInfo specificInfo, String email, String pwd, String name, String tel, UserAdditionalInfo userAdditionalInfo) {
-        return new Member(isDeleted, specificInfo, email, pwd, name, tel, userAdditionalInfo);
+    public static Member of(boolean isDeleted, MemberSpecificInfo specificInfo, String email, String pwd, String name, String tel, UserAdditionalInfo userAdditionalInfo, PasswordEncoder encoder) {
+        return new Member(isDeleted, specificInfo, email, pwd, name, tel, userAdditionalInfo, encoder);
     }
 
-    public static Member create(Role role, String email, String pwd, String name, String tel) {
+    public static Member create(Role role, String email, String pwd, String name, String tel, PasswordEncoder encoder) {
         MemberSpecificInfo memberSpecificInfo = MemberSpecificInfo.create(role);
-        return of(false, memberSpecificInfo, email, pwd, name, tel, null);
+        return of(false, memberSpecificInfo, email, pwd, name, tel, null, encoder);
     }
 
     public UserDetails toUser() {
         return User.builder()
             .username(getMemberKey())
-            .password(pwd)
+            .password(password.getPassword())
             .roles(getRoleToStr())
             .build();
     }
 
-    public void registerBusinessNumber(String businessNumber) {
-        userAdditionalInfo = UserAdditionalInfo.create(businessNumber);
+    public void registerBusinessNumber(BusinessNumber businessNumber) {
+        userAdditionalInfo = UserAdditionalInfo.create(businessNumber.getBusinessNumber());
         specificInfo = specificInfo.withRoleBusiness();
     }
 
-    public void modifyPassword(String pwd) {
-        this.pwd = pwd;
+    public void modifyPassword(String pwd, PasswordEncoder encoder) {
+        this.password = Password.of(pwd, encoder);
     }
 
-    public void modifyTel(String tel) {
+    public void modifyTel(Tel tel) {
         this.tel = tel;
     }
 
@@ -88,15 +86,15 @@ public class Member extends TimeBaseEntity {
         return userAdditionalInfo.getBankAccount();
     }
 
-    public boolean isMatchesPwd(PasswordEncoder encoder, String pwd) {
-        return encoder.matches(pwd, this.pwd);
+    public boolean isNotMatchesPwd(String password, PasswordEncoder encoder) {
+        return !this.password.matches(password, encoder);
     }
 
-    public boolean isNotMatchesPwd(PasswordEncoder encoder, String pwd) {
-        return !isMatchesPwd(encoder, pwd);
+    public boolean telEquals(Tel tel) {
+        return this.tel.equals(tel);
     }
 
-    public boolean isDelete() {
+    public boolean isWithdraw() {
         return getIsDeleted();
     }
 
@@ -108,17 +106,31 @@ public class Member extends TimeBaseEntity {
         return specificInfo.getMemberKey();
     }
 
+    public String getName() {
+        return name.getName();
+    }
+
+    public String getTel() {
+        return tel.getTel();
+    }
+
     public String getBusinessNumber() {
-        return userAdditionalInfo.getBusinessNumber();
+        return userAdditionalInfo.getBusinessNumber().getBusinessNumber();
     }
 
     public String getMaskingEmail() {
-        //TODO: 기능 구현
-        //return maskingEmail(email);
-        return null;
+        return email.getMasking();
+    }
+
+    public BankAccount getBankAccount() {
+        return userAdditionalInfo.getBankAccount();
     }
 
     private String getRoleToStr() {
         return specificInfo.getRole().toString();
+    }
+
+    public boolean isNotBusiness() {
+        return userAdditionalInfo == null || specificInfo.getRole() != Role.BUSINESS;
     }
 }
