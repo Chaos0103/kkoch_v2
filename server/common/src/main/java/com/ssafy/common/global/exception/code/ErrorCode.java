@@ -4,12 +4,13 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.*;
 
 @Getter
 @RequiredArgsConstructor
 public enum ErrorCode {
+
+    TOKEN_EXPIRED(UNAUTHORIZED, "토큰이 만료되었습니다."),
 
     MEMBER_NOT_FOUND(NOT_FOUND, "회원을 찾을 수 없습니다."),
     INVALID_EMAIL_LENGTH(BAD_REQUEST, "이메일은 최대 100자 입니다."),
