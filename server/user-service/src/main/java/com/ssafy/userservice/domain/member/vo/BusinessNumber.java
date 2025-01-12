@@ -32,6 +32,11 @@ public class BusinessNumber {
         return new BusinessNumber(businessNumber);
     }
 
+    @Override
+    public String toString() {
+        return businessNumber;
+    }
+
     private void validation(String businessNumber) {
         if (isBlank(businessNumber) || isLengthMoreThan(businessNumber, MAX_BUSINESS_NUMBER_LENGTH)) {
             throw MemberException.of(INVALID_BUSINESS_NUMBER_LENGTH);

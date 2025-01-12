@@ -20,7 +20,7 @@ class PasswordTest {
     @ValueSource(strings = {"ssafy1!", "ssafy1234567890!12345"})
     void invalidPasswordLength(String password) {
         //given //when //then
-        assertThatThrownBy(() -> Password.of(password, encoder))
+        assertThatThrownBy(() -> Password.of(password))
             .isInstanceOf(MemberException.class)
             .hasMessage("비밀번호는 최소 8자에서 최대 20자 입니다.");
     }
@@ -37,7 +37,7 @@ class PasswordTest {
     })
     void invalidPassword(String password) {
         //given //when //then
-        assertThatThrownBy(() -> Password.of(password, encoder))
+        assertThatThrownBy(() -> Password.of(password))
             .isInstanceOf(MemberException.class)
             .hasMessage("비밀번호를 올바르게 입력해주세요.");
     }
@@ -47,7 +47,7 @@ class PasswordTest {
     @ValueSource(strings = {"ssafy12!", "ssafy1234567890!1234"})
     void validPassword(String password) {
         //given //when
-        Password createdPassword = Password.of(password, encoder);
+        Password createdPassword = Password.of(password);
 
         //then
         assertThat(createdPassword)
@@ -62,10 +62,10 @@ class PasswordTest {
     void doesMatches() {
         //given
         String matchesPassword = "ssafy1234!";
-        Password password = Password.of(matchesPassword, encoder);
+        Password password = Password.of(matchesPassword);
 
         //when
-        boolean result = password.matches(matchesPassword, encoder);
+        boolean result = password.matches(matchesPassword);
 
         //then
         assertThat(result).isTrue();
@@ -76,10 +76,10 @@ class PasswordTest {
     void doesNotMatches() {
         //given
         String notMatchesPassword = "ssafy5678@";
-        Password password = Password.of("ssafy1234!", encoder);
+        Password password = Password.of("ssafy1234!");
 
         //when
-        boolean result = password.matches(notMatchesPassword, encoder);
+        boolean result = password.matches(notMatchesPassword);
 
         //then
         assertThat(result).isFalse();

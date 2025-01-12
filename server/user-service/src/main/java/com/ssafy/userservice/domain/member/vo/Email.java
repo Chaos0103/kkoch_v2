@@ -38,6 +38,11 @@ public class Email {
         return Masking.maskingEmail(email);
     }
 
+    @Override
+    public String toString() {
+        return email;
+    }
+
     private void validation(String email) {
         if (isLengthMoreThan(email, MAX_EMAIL_LENGTH)) {
             throw MemberException.of(INVALID_EMAIL_LENGTH);

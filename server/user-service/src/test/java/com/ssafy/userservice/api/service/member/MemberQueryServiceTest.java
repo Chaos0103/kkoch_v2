@@ -6,9 +6,7 @@ import com.ssafy.userservice.api.service.member.response.MemberIdInnerClientResp
 import com.ssafy.userservice.domain.member.Member;
 import com.ssafy.userservice.domain.member.enums.Role;
 import com.ssafy.userservice.domain.member.repository.MemberRepository;
-import com.ssafy.userservice.domain.member.vo.BankAccount;
-import com.ssafy.userservice.domain.member.vo.MemberSpecificInfo;
-import com.ssafy.userservice.domain.member.vo.UserAdditionalInfo;
+import com.ssafy.userservice.domain.member.vo.*;
 import common.IntegrationTestSupport;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -93,12 +91,11 @@ class MemberQueryServiceTest extends IntegrationTestSupport {
         Member member = Member.builder()
             .isDeleted(false)
             .specificInfo(createSpecificInfo(memberKey))
-            .email("ssafy@gmail.com")
-            .password("ssafy1234!")
-            .name("김싸피")
-            .tel("01012341234")
+            .email(Email.of("ssafy@gmail.com"))
+            .password(Password.of("ssafy1234!"))
+            .name(Name.of("김싸피"))
+            .tel(Tel.of("01012341234"))
             .userAdditionalInfo(createDefaultUserAdditionalInfo())
-            .encoder(encoder)
             .build();
         return memberRepository.save(member);
     }
@@ -112,7 +109,7 @@ class MemberQueryServiceTest extends IntegrationTestSupport {
 
     private UserAdditionalInfo createDefaultUserAdditionalInfo() {
         return UserAdditionalInfo.builder()
-            .businessNumber("1231212345")
+            .businessNumber(BusinessNumber.of("1231212345"))
             .bankAccount(createDefaultBackAccount())
             .build();
     }

@@ -171,12 +171,11 @@ class MemberRepositoryTest extends IntegrationTestSupport {
         Member member = Member.builder()
             .isDeleted(false)
             .specificInfo(createSpecificInfo(memberKey))
-            .email(email)
-            .password("ssafy1234!")
-            .name("김싸피")
-            .tel(tel)
+            .email(Email.of(email))
+            .password(Password.of("ssafy1234!"))
+            .name(Name.of("김싸피"))
+            .tel(Tel.of(tel))
             .userAdditionalInfo(createUserAdditionalInfo(businessNumber))
-            .encoder(encoder)
             .build();
         return memberRepository.save(member);
     }
@@ -190,7 +189,7 @@ class MemberRepositoryTest extends IntegrationTestSupport {
 
     private UserAdditionalInfo createUserAdditionalInfo(String businessNumber) {
         return UserAdditionalInfo.builder()
-            .businessNumber(businessNumber)
+            .businessNumber(BusinessNumber.of(businessNumber))
             .bankAccount(createDefaultBackAccount())
             .build();
     }

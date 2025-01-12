@@ -6,10 +6,7 @@ import com.ssafy.userservice.api.service.member.response.*;
 import com.ssafy.userservice.domain.member.Member;
 import com.ssafy.userservice.domain.member.enums.Role;
 import com.ssafy.userservice.domain.member.repository.MemberRepository;
-import com.ssafy.userservice.domain.member.vo.BankAccount;
-import com.ssafy.userservice.domain.member.vo.BusinessNumber;
-import com.ssafy.userservice.domain.member.vo.MemberSpecificInfo;
-import com.ssafy.userservice.domain.member.vo.UserAdditionalInfo;
+import com.ssafy.userservice.domain.member.vo.*;
 import common.IntegrationTestSupport;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -300,7 +297,7 @@ class MemberServiceTest extends IntegrationTestSupport {
 
     @DisplayName("사업자 번호를 등록할 회원이 이미 사업자 번호를 가지고 있다면 예외가 발생한다.")
     @Test
-    void registerBusinessNumberWhenHasBusinessNumber() {
+    void registerBusinessNumberWhenIsBusiness() {
         //given
         LocalDateTime currentDateTime = LocalDateTime.now();
         String memberKey = "validMemberKey";
@@ -373,7 +370,7 @@ class MemberServiceTest extends IntegrationTestSupport {
             .hasValueSatisfying(member -> {
                 assertThat(member.getSpecificInfo().getRole()).isEqualTo(Role.BUSINESS);
                 assertThat(member.getUserAdditionalInfo()).isNotNull();
-                assertThat(member.getUserAdditionalInfo().getBusinessNumber()).isEqualTo(BusinessNumber.of(businessNumber));
+                assertThat(member.getUserAdditionalInfo().getBusinessNumber()).isEqualTo(businessNumber);
             });
     }
 
@@ -523,12 +520,11 @@ class MemberServiceTest extends IntegrationTestSupport {
         Member member = Member.builder()
             .isDeleted(false)
             .specificInfo(createSpecificInfo(memberKey, role))
-            .email(email)
-            .password(password)
-            .name("김싸피")
-            .tel(tel)
+            .email(Email.of(email))
+            .password(Password.of(password))
+            .name(Name.of("김싸피"))
+            .tel(Tel.of(tel))
             .userAdditionalInfo(userAdditionalInfo)
-            .encoder(encoder)
             .build();
         return memberRepository.save(member);
     }
@@ -542,7 +538,7 @@ class MemberServiceTest extends IntegrationTestSupport {
 
     private UserAdditionalInfo createUserAdditionalInfo(String businessNumber) {
         return UserAdditionalInfo.builder()
-            .businessNumber(businessNumber)
+            .businessNumber(BusinessNumber.of(businessNumber))
             .bankAccount(createDefaultBackAccount())
             .build();
     }

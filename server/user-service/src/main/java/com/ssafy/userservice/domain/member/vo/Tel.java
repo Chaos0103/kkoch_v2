@@ -32,6 +32,11 @@ public class Tel {
         return new Tel(tel);
     }
 
+    @Override
+    public String toString() {
+        return tel;
+    }
+
     private void validation(String tel) {
         if (isLengthNotEquals(tel, TEL_LENGTH)) {
             throw MemberException.of(INVALID_TEL);

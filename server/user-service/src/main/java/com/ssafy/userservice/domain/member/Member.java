@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Getter
@@ -41,23 +40,26 @@ public class Member extends TimeBaseEntity {
     private UserAdditionalInfo userAdditionalInfo;
 
     @Builder
-    private Member(boolean isDeleted, MemberSpecificInfo specificInfo, String email, String password, String name, String tel, UserAdditionalInfo userAdditionalInfo, PasswordEncoder encoder) {
+    private Member(boolean isDeleted, MemberSpecificInfo specificInfo, Email email, Password password, Name name, Tel tel, UserAdditionalInfo userAdditionalInfo) {
         super(isDeleted);
         this.specificInfo = specificInfo;
-        this.email = Email.of(email);
-        this.password = Password.of(password, encoder);
-        this.name = Name.of(name);
-        this.tel = Tel.of(tel);
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.tel = tel;
         this.userAdditionalInfo = userAdditionalInfo;
     }
 
-    public static Member of(boolean isDeleted, MemberSpecificInfo specificInfo, String email, String pwd, String name, String tel, UserAdditionalInfo userAdditionalInfo, PasswordEncoder encoder) {
-        return new Member(isDeleted, specificInfo, email, pwd, name, tel, userAdditionalInfo, encoder);
-    }
-
-    public static Member create(Role role, String email, String pwd, String name, String tel, PasswordEncoder encoder) {
-        MemberSpecificInfo memberSpecificInfo = MemberSpecificInfo.create(role);
-        return of(false, memberSpecificInfo, email, pwd, name, tel, null, encoder);
+    public static Member create(Role role, Email email, Password password, Name name, Tel tel) {
+        return Member.builder()
+            .isDeleted(false)
+            .specificInfo(MemberSpecificInfo.create(role))
+            .email(email)
+            .password(password)
+            .name(name)
+            .tel(tel)
+            .userAdditionalInfo(null)
+            .build();
     }
 
     public UserDetails toUser() {
@@ -69,12 +71,12 @@ public class Member extends TimeBaseEntity {
     }
 
     public void registerBusinessNumber(BusinessNumber businessNumber) {
-        userAdditionalInfo = UserAdditionalInfo.create(businessNumber.getBusinessNumber());
+        userAdditionalInfo = UserAdditionalInfo.create(businessNumber);
         specificInfo = specificInfo.withRoleBusiness();
     }
 
-    public void modifyPassword(String pwd, PasswordEncoder encoder) {
-        this.password = Password.of(pwd, encoder);
+    public void modifyPassword(Password password) {
+        this.password = password;
     }
 
     public void modifyTel(Tel tel) {
@@ -86,24 +88,32 @@ public class Member extends TimeBaseEntity {
         return userAdditionalInfo.getBankAccount();
     }
 
-    public boolean isNotMatchesPwd(String password, PasswordEncoder encoder) {
-        return !this.password.matches(password, encoder);
+    public boolean isNotMatchesPwd(String password) {
+        return !this.password.matches(password);
     }
 
     public boolean telEquals(Tel tel) {
         return this.tel.equals(tel);
     }
 
+    public boolean isBusiness() {
+        return userAdditionalInfo != null && specificInfo.getRole() == Role.BUSINESS;
+    }
+
+    public boolean isNotBusiness() {
+        return !isBusiness();
+    }
+
     public boolean isWithdraw() {
         return getIsDeleted();
     }
 
-    public boolean hasBusinessNumber() {
-        return userAdditionalInfo != null;
-    }
-
     public String getMemberKey() {
         return specificInfo.getMemberKey();
+    }
+
+    public String getMaskingEmail() {
+        return email.getMasking();
     }
 
     public String getName() {
@@ -115,11 +125,7 @@ public class Member extends TimeBaseEntity {
     }
 
     public String getBusinessNumber() {
-        return userAdditionalInfo.getBusinessNumber().getBusinessNumber();
-    }
-
-    public String getMaskingEmail() {
-        return email.getMasking();
+        return userAdditionalInfo.getBusinessNumber();
     }
 
     public BankAccount getBankAccount() {
@@ -128,9 +134,5 @@ public class Member extends TimeBaseEntity {
 
     private String getRoleToStr() {
         return specificInfo.getRole().toString();
-    }
-
-    public boolean isNotBusiness() {
-        return userAdditionalInfo == null || specificInfo.getRole() != Role.BUSINESS;
     }
 }
