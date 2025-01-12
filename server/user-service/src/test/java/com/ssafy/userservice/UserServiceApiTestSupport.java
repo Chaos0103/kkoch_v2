@@ -3,6 +3,7 @@ package com.ssafy.userservice;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.userservice.api.controller.member.MemberApiController;
 import com.ssafy.userservice.api.controller.member.MemberQueryApiController;
+import com.ssafy.userservice.api.service.auth.AuthenticationService;
 import com.ssafy.userservice.api.service.member.MemberQueryService;
 import com.ssafy.userservice.api.service.member.MemberService;
 import com.ssafy.userservice.config.SecurityConfig;
@@ -32,11 +33,14 @@ public abstract class UserServiceApiTestSupport extends ControllerTestSupport {
     protected MemberQueryService memberQueryService;
 
     @MockitoBean
+    protected AuthenticationService authenticationService;
+
+    @MockitoBean
     protected MemberRepository memberRepository;
 
     @MockitoBean
     protected BCryptPasswordEncoder bCryptPasswordEncoder;
-    
+
     @MockitoBean
     private JwtTokenProvider tokenProvider;
 }

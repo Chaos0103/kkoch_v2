@@ -380,13 +380,13 @@ class MemberServiceTest extends IntegrationTestSupport {
         //given
         LocalDateTime currentDateTime = LocalDateTime.now();
         String memberKey = "invalidMemberKey";
-        MemberBankAccountModifyServiceRequest request = MemberBankAccountModifyServiceRequest.builder()
+        BankAccount bankAccount = BankAccount.builder()
             .bankCode("088")
             .accountNumber("123123123456")
             .build();
 
         //when //then
-        assertThatThrownBy(() -> memberService.modifyBankAccount(memberKey, currentDateTime, request))
+        assertThatThrownBy(() -> memberService.modifyBankAccount(memberKey, currentDateTime, bankAccount))
             .isInstanceOf(MemberException.class)
             .hasMessage("회원을 찾을 수 없습니다.");
     }
@@ -399,13 +399,13 @@ class MemberServiceTest extends IntegrationTestSupport {
         String memberKey = "validMemberKey";
         Member createdMember = createMember(memberKey, Role.USER, "ssafy@gmail.com", "ssafy1234!", "01012341234", null);
 
-        MemberBankAccountModifyServiceRequest request = MemberBankAccountModifyServiceRequest.builder()
+        BankAccount bankAccount = BankAccount.builder()
             .bankCode("088")
             .accountNumber("123123123456")
             .build();
 
         //when
-        assertThatThrownBy(() -> memberService.modifyBankAccount(memberKey, currentDateTime, request))
+        assertThatThrownBy(() -> memberService.modifyBankAccount(memberKey, currentDateTime, bankAccount))
             .isInstanceOf(MemberException.class)
             .hasMessage("사업자 회원이 아닙니다.");
 
@@ -425,13 +425,13 @@ class MemberServiceTest extends IntegrationTestSupport {
         LocalDateTime currentDateTime = LocalDateTime.now();
         String memberKey = "validMemberKey";
         Member createdMember = createMember(memberKey, Role.BUSINESS, "ssafy@naver.com", "ssafy1234!", "01012341234", createUserAdditionalInfo("1231212345"));
-        MemberBankAccountModifyServiceRequest request = MemberBankAccountModifyServiceRequest.builder()
+        BankAccount bankAccount = BankAccount.builder()
             .bankCode("088")
             .accountNumber("123123123456")
             .build();
 
         //when
-        MemberBankAccountModifyResponse memberBankAccountModifyResponse = memberService.modifyBankAccount(memberKey, currentDateTime, request);
+        MemberBankAccountModifyResponse memberBankAccountModifyResponse = memberService.modifyBankAccount(memberKey, currentDateTime, bankAccount);
 
         //then
         assertThat(memberBankAccountModifyResponse)

@@ -4,6 +4,7 @@ import com.ssafy.common.global.exception.MemberException;
 import com.ssafy.userservice.api.service.member.request.*;
 import com.ssafy.userservice.api.service.member.response.*;
 import com.ssafy.userservice.domain.member.Member;
+import com.ssafy.userservice.domain.member.enums.Bank;
 import com.ssafy.userservice.domain.member.repository.MemberRepository;
 import com.ssafy.userservice.domain.member.vo.BankAccount;
 import com.ssafy.userservice.domain.member.vo.Email;
@@ -102,7 +103,7 @@ public class MemberService implements UserDetailsService {
         return RegisterBusinessNumberResponse.of(member.getBusinessNumber(), current);
     }
 
-    public MemberBankAccountModifyResponse modifyBankAccount(String memberKey, LocalDateTime currentDateTime, MemberBankAccountModifyServiceRequest request) {
+    public MemberBankAccountModifyResponse modifyBankAccount(String memberKey, LocalDateTime currentDateTime, BankAccount bankAccount) {
         Member member = memberRepository.findBySpecificInfoMemberKey(memberKey)
             .orElseThrow(() -> MemberException.notFound(memberKey));
 
@@ -111,7 +112,7 @@ public class MemberService implements UserDetailsService {
             throw MemberException.of(NOT_BUSINESS_MEMBER);
         }
 
-        BankAccount bankAccount = member.modifyBankAccount(request.getBankCode(), request.getAccountNumber());
+        member.modifyBankAccount(bankAccount);
 
         log.info("회원 은행 계좌 수정 [memberKey = {}]", memberKey);
         return MemberBankAccountModifyResponse.of(bankAccount, currentDateTime);

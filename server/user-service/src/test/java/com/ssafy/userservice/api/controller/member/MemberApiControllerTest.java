@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.userservice.UserServiceApiTestSupport;
 import com.ssafy.userservice.api.controller.NullAndEmptyAndBlankSource;
 import com.ssafy.userservice.api.controller.member.request.*;
+import com.ssafy.userservice.domain.member.vo.BankAccount;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -13,6 +14,8 @@ import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -313,7 +316,113 @@ class MemberApiControllerTest extends UserServiceApiTestSupport {
             .andExpect(status().isOk());
     }
 
-    @DisplayName("회원 탈퇴를 한다.")
+    @DisplayName("회원 은행 계좌 인증 번호 발송 시 은행 코드는 필수값이다.")
+    @NullAndEmptyAndBlankSource
+    @ParameterizedTest
+    void sendBankAccountAuthenticationNumberWithoutBankCode(String bankCode) throws Exception {
+        SendBankAccountAuthenticationNumberRequest request = SendBankAccountAuthenticationNumberRequest.builder()
+            .bankCode(bankCode)
+            .accountNumber("123123123456")
+            .build();
+
+        mockMvc.perform(
+                post("/v1/members/bank-account")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(request))
+                    .with(csrf())
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.code").value("400"))
+            .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
+            .andExpect(jsonPath("$.message").value("은행 코드를 입력해주세요."))
+            .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @DisplayName("회원 은행 계좌 인증 번호 발송 시 은행 계좌는 필수값이다.")
+    @NullAndEmptyAndBlankSource
+    @ParameterizedTest
+    void sendBankAccountAuthenticationNumberWithoutAccountNumber(String accountNumber) throws Exception {
+        SendBankAccountAuthenticationNumberRequest request = SendBankAccountAuthenticationNumberRequest.builder()
+            .bankCode("088")
+            .accountNumber(accountNumber)
+            .build();
+
+        mockMvc.perform(
+                post("/v1/members/bank-account")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(request))
+                    .with(csrf())
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.code").value("400"))
+            .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
+            .andExpect(jsonPath("$.message").value("은행 계좌를 입력해주세요."))
+            .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @DisplayName("회원 은행 계좌 수정을 위해 인증 번호를 발송한다.")
+    @Test
+    void sendBankAccountAuthenticationNumber() throws Exception {
+        SendBankAccountAuthenticationNumberRequest request = SendBankAccountAuthenticationNumberRequest.builder()
+            .bankCode("088")
+            .accountNumber("123123123456")
+            .build();
+
+        mockMvc.perform(
+                post("/v1/members/bank-account")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(request))
+                    .with(csrf())
+            )
+            .andExpect(status().isOk());
+    }
+
+    @DisplayName("은행 계좌 수정 시 인증 번호는 필수값이다.")
+    @NullAndEmptyAndBlankSource
+    @ParameterizedTest
+    void modifyBankAccountWithoutAuthenticationNumber(String authenticationNumber) throws Exception {
+        MemberBankAccountModifyRequest request = MemberBankAccountModifyRequest.builder()
+            .authenticationNumber(authenticationNumber)
+            .build();
+
+        mockMvc.perform(
+                patch("/v1/members/bank-account")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(request))
+                    .with(csrf())
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.code").value("400"))
+            .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
+            .andExpect(jsonPath("$.message").value("인증 번호를 입력해주세요."))
+            .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @DisplayName("회원의 은행 계좌를 수정한다.")
+    @Test
+    void modifyBankAccount() throws Exception {
+        MemberBankAccountModifyRequest request = MemberBankAccountModifyRequest.builder()
+            .authenticationNumber("123")
+            .build();
+
+        BankAccount bankAccount = BankAccount.builder()
+            .bankCode("088")
+            .accountNumber("123123123456")
+            .build();
+
+        given(authenticationService.checkAuthenticationNumberToBankAccount(anyString(), anyString()))
+            .willReturn(bankAccount);
+
+        mockMvc.perform(
+                patch("/v1/members/bank-account")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(request))
+                    .with(csrf())
+            )
+            .andExpect(status().isOk());
+    }
+
+    @DisplayName("회원 탈퇴 시 비밀번호는 필수값이다.")
     @NullAndEmptyAndBlankSource
     @ParameterizedTest
     void removeMemberWithoutPassword(String password) throws Exception {

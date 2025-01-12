@@ -30,9 +30,8 @@ public class UserAdditionalInfo {
         return of(businessNumber, null);
     }
 
-    public UserAdditionalInfo withBankAccount(String bankCode, String accountNumber) {
-        BankAccount modifiedBackAccount = BankAccount.of(bankCode, accountNumber);
-        return of(businessNumber, modifiedBackAccount);
+    public UserAdditionalInfo withBankAccount(BankAccount bankAccount) {
+        return of(businessNumber, bankAccount);
     }
 
     public String getBusinessNumber() {

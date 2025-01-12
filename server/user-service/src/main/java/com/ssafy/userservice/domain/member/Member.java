@@ -83,9 +83,8 @@ public class Member extends TimeBaseEntity {
         this.tel = tel;
     }
 
-    public BankAccount modifyBankAccount(String bankCode, String accountNumber) {
-        this.userAdditionalInfo = userAdditionalInfo.withBankAccount(bankCode, accountNumber);
-        return userAdditionalInfo.getBankAccount();
+    public void modifyBankAccount(BankAccount bankAccount) {
+        this.userAdditionalInfo = userAdditionalInfo.withBankAccount(bankAccount);
     }
 
     public boolean isNotMatchesPwd(String password) {
