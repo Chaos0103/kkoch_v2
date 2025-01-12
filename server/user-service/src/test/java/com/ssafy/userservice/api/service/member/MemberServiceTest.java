@@ -448,7 +448,7 @@ class MemberServiceTest extends IntegrationTestSupport {
             .hasValueSatisfying(member -> {
                 assertThat(member.getBankAccount()).isNotNull();
                 assertThat(member.getBankAccount().getBankCode()).isEqualTo("088");
-                assertThat(member.getBankAccount().getAccountNumber().getAccountNumber()).isEqualTo("123123123456");
+                assertThat(member.getBankAccount().getAccountNumber()).isEqualTo("123123123456");
             });
     }
 

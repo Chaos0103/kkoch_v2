@@ -30,6 +30,10 @@ public class BankAccount {
         return bankCode.getBankCode();
     }
 
+    public String getAccountNumber() {
+        return accountNumber.getAccountNumber();
+    }
+
     public String getMaskingAccountNumber() {
         return accountNumber.masking();
     }

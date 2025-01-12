@@ -33,6 +33,15 @@ public class AccountNumber {
         return new AccountNumber(accountNumber);
     }
 
+    public String masking() {
+        return Masking.maskingAccountNumber(accountNumber);
+    }
+
+    @Override
+    public String toString() {
+        return accountNumber;
+    }
+
     private void validation(String accountNumber) {
         if (isBlank(accountNumber) || isLengthMoreThan(accountNumber, MAX_ACCOUNT_NUMBER_LENGTH)) {
             throw MemberException.of(INVALID_ACCOUNT_NUMBER_LENGTH);
@@ -41,9 +50,5 @@ public class AccountNumber {
         if (isNotNumber(accountNumber)) {
             throw MemberException.of(INVALID_ACCOUNT_NUMBER);
         }
-    }
-
-    public String masking() {
-        return Masking.maskingAccountNumber(accountNumber);
     }
 }

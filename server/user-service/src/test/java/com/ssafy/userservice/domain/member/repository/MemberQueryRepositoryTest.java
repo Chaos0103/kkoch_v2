@@ -8,7 +8,6 @@ import common.IntegrationTestSupport;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -21,9 +20,6 @@ class MemberQueryRepositoryTest extends IntegrationTestSupport {
 
     @Autowired
     MemberRepository memberRepository;
-
-    @Autowired
-    PasswordEncoder encoder;
 
     @DisplayName("회원 정보 조회 시 입력 받은 회원 고유키와 일치하는 회원이 삭제된 경우 빈 값을 반환한다.")
     @Test

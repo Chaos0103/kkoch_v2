@@ -29,6 +29,11 @@ public class BankCode {
         return new BankCode(bankCode);
     }
 
+    @Override
+    public String toString() {
+        return bankCode;
+    }
+
     private void validation(String bankCode) {
         if (Bank.isNotSupported(bankCode)) {
             throw MemberException.of(INVALID_BANK_CODE);
