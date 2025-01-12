@@ -14,6 +14,10 @@ public class RegisterBusinessNumberServiceRequest {
         this.businessNumber = businessNumber;
     }
 
+    public static RegisterBusinessNumberServiceRequest of(String businessNumber) {
+        return new RegisterBusinessNumberServiceRequest(businessNumber);
+    }
+
     public BusinessNumber getBusinessNumber() {
         return BusinessNumber.of(businessNumber);
     }

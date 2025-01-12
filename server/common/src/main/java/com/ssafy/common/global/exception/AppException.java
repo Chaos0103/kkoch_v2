@@ -2,6 +2,7 @@ package com.ssafy.common.global.exception;
 
 import com.ssafy.common.global.exception.code.ErrorCode;
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 @Getter
 public class AppException extends RuntimeException {
@@ -19,5 +20,9 @@ public class AppException extends RuntimeException {
         super(message);
         this.errorCode = errorCode;
         this.message = message;
+    }
+
+    public HttpStatus getHttpStatus() {
+        return errorCode.getHttpStatus();
     }
 }

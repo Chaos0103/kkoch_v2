@@ -25,6 +25,10 @@ public class MemberCreateServiceRequest {
         this.role = role;
     }
 
+    public static MemberCreateServiceRequest of(String email, String password, String name, String tel, String role) {
+        return new MemberCreateServiceRequest(email, password, name, tel, Role.of(role));
+    }
+
     public Member toEntity() {
         return Member.create(role, getEmail(), getPassword(), getName(), getTel());
     }

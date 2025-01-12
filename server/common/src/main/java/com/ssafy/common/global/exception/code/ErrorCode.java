@@ -13,6 +13,7 @@ public enum ErrorCode {
     TOKEN_EXPIRED(UNAUTHORIZED, "토큰이 만료되었습니다."),
 
     MEMBER_NOT_FOUND(NOT_FOUND, "회원을 찾을 수 없습니다."),
+    INVALID_MEMBER_ROLE(BAD_REQUEST, "유효하지 않은 회원 권한입니다."),
     INVALID_EMAIL_LENGTH(BAD_REQUEST, "이메일은 최대 100자 입니다."),
     INVALID_EMAIL(BAD_REQUEST, "이메일을 올바르게 입력해주세요."),
     INVALID_PASSWORD_LENGTH(BAD_REQUEST, "비밀번호는 최소 8자에서 최대 20자 입니다."),

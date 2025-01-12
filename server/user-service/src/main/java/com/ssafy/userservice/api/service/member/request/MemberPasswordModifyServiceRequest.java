@@ -16,6 +16,10 @@ public class MemberPasswordModifyServiceRequest {
         this.newPassword = newPassword;
     }
 
+    public static MemberPasswordModifyServiceRequest of(String currentPassword, String newPassword) {
+        return new MemberPasswordModifyServiceRequest(currentPassword, newPassword);
+    }
+
     public Password getNewPassword() {
         return Password.of(newPassword);
     }

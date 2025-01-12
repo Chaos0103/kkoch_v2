@@ -12,6 +12,10 @@ public class MemberTelModifyServiceRequest {
         this.tel = tel;
     }
 
+    public static MemberTelModifyServiceRequest of(String tel) {
+        return new MemberTelModifyServiceRequest(tel);
+    }
+
     public Tel getTel() {
         return Tel.of(tel);
     }
