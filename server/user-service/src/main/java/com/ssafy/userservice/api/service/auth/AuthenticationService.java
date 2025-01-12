@@ -1,28 +1,26 @@
 package com.ssafy.userservice.api.service.auth;
 
 import com.ssafy.common.global.exception.AuthenticationException;
+import com.ssafy.userservice.api.service.auth.menager.BankAccountAuthenticationManager;
 import com.ssafy.userservice.api.service.auth.response.BankAccountAuthenticationResponse;
 import com.ssafy.userservice.api.service.auth.vo.BankAccountAuthentication;
 import com.ssafy.userservice.domain.member.vo.BankAccount;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.concurrent.TimeUnit;
+import java.util.Optional;
 
 import static com.ssafy.common.global.exception.code.ErrorCode.*;
 
 @Slf4j
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class AuthenticationService {
 
     private final BankClient bankClient;
-    private final RedisTemplate<String, BankAccountAuthentication> bankAccountAuthenticationRedisTemplate;
+    private final BankAccountAuthenticationManager bankAccountAuthenticationManager;
 
     public BankAccountAuthenticationResponse sendAuthenticationNumberToBankAccount(String memberKey, BankAccount bankAccount, String issuedAuthenticationNumber, LocalDateTime currentDateTime) {
         boolean isSendSuccess = bankClient.sendAuthenticationNumber(bankAccount.getBankCode(), bankAccount.getAccountNumber(), issuedAuthenticationNumber);
@@ -31,27 +29,27 @@ public class AuthenticationService {
             throw new AuthenticationException(FAIL_SEND_AUTHENTICATION_NUMBER_TO_BANK_ACCOUNT);
         }
 
-        BankAccountAuthentication bankAccountAuthentication = BankAccountAuthentication.of(issuedAuthenticationNumber, bankAccount);
-        bankAccountAuthenticationRedisTemplate.opsForValue().set(memberKey, bankAccountAuthentication, 5, TimeUnit.MINUTES);
+        bankAccountAuthenticationManager.save(memberKey, bankAccount, issuedAuthenticationNumber);
 
-        log.debug("1원 은행 계좌 인증 번호 전송 [bankCode = {}, accountNumber = {}, issuedAuthenticationNumber = {}]", bankAccount.getBankCode(), bankAccount.getAccountNumber(), issuedAuthenticationNumber);
         log.info("1원 은행 계좌 인증 번호 전송 [bankCode = {}, accountNumber = {}]", bankAccount.getBankCode(), bankAccount.getAccountNumber());
+        log.debug("발급된 인증 번호 [issuedAuthenticationNumber = {}]", issuedAuthenticationNumber);
         return BankAccountAuthenticationResponse.of(currentDateTime.plusMinutes(5));
     }
 
     public BankAccount checkAuthenticationNumberToBankAccount(String memberKey, String authenticationNumber) {
-        BankAccountAuthentication bankAccountAuthentication = bankAccountAuthenticationRedisTemplate.opsForValue().get(memberKey);
-        if (bankAccountAuthentication == null) {
+        Optional<BankAccountAuthentication> findBankAccountAuthentication = bankAccountAuthenticationManager.findByKey(memberKey);
+        if (findBankAccountAuthentication.isEmpty()) {
             log.debug("1원 은행 계좌 인증 번호 만료");
             throw new AuthenticationException(AUTHENTICATION_NUMBER_EXPIRED);
         }
 
-        if (!bankAccountAuthentication.getAuthenticationNumber().equals(authenticationNumber)) {
+        BankAccountAuthentication bankAccountAuthentication = findBankAccountAuthentication.get();
+        if (bankAccountAuthentication.isNotEquals(authenticationNumber)) {
             log.debug("1원 은행 계좌 인증 번호 불일치 [authenticationNumber = {}]", authenticationNumber);
             throw new AuthenticationException(INVALID_AUTHENTICATION_NUMBER);
         }
 
-        bankAccountAuthenticationRedisTemplate.delete(memberKey);
+        bankAccountAuthenticationManager.delete(memberKey);
         BankAccount bankAccount = bankAccountAuthentication.getBankAccount();
         log.info("1원 은행 계좌 인증 성공 [bankCode = {}, accountNumber = {}]", bankAccount.getBankCode(), bankAccount.getAccountNumber());
         return bankAccount;

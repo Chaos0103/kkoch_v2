@@ -24,6 +24,10 @@ public class BankAccountAuthentication implements Serializable {
         return new BankAccountAuthentication(authenticationNumber, bankAccount.getBankCode(), bankAccount.getAccountNumber());
     }
 
+    public boolean isNotEquals(String authenticationNumber) {
+        return !this.authenticationNumber.equals(authenticationNumber);
+    }
+
     public BankAccount getBankAccount() {
         return BankAccount.of(bankCode, accountNumber);
     }

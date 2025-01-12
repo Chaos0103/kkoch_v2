@@ -5,13 +5,16 @@ import com.ssafy.userservice.api.service.auth.response.BankAccountAuthentication
 import com.ssafy.userservice.api.service.auth.vo.BankAccountAuthentication;
 import com.ssafy.userservice.domain.member.vo.BankAccount;
 import common.IntegrationTestSupport;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -28,6 +31,14 @@ class AuthenticationServiceTest extends IntegrationTestSupport {
 
     @MockitoBean
     BankClient bankClient;
+
+    @AfterEach
+    void tearDown() {
+        Set<String> keys = bankAccountRedisTemplate.keys("*");
+        if (!CollectionUtils.isEmpty(keys)) {
+            bankAccountRedisTemplate.delete(keys);
+        }
+    }
 
     @DisplayName("은행 계좌로 인증 번호 전송 실패 시 예외가 발생한다.")
     @Test
@@ -87,8 +98,6 @@ class AuthenticationServiceTest extends IntegrationTestSupport {
                 assertThat(bankAccountAuthentication.getBankCode()).isEqualTo("088");
                 assertThat(bankAccountAuthentication.getAccountNumber()).isEqualTo("123123123456");
             });
-
-        bankAccountRedisTemplate.delete(memberKey);
     }
 
     @DisplayName("은행 계좌 인증 번호 확인 시 발급된 인증 번호가 만료되었다면 예외가 발생한다.")
@@ -136,8 +145,6 @@ class AuthenticationServiceTest extends IntegrationTestSupport {
                 assertThat(data.getBankCode()).isEqualTo("088");
                 assertThat(data.getAccountNumber()).isEqualTo("123123123456");
             });
-
-        bankAccountRedisTemplate.delete(memberKey);
     }
 
     @DisplayName("은행 계좌 인증 번호가 일치하면 인증이 완료된 은행 계좌를 반환한다.")
