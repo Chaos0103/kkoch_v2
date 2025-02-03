@@ -1,6 +1,7 @@
 package com.ssafy.userservice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.userservice.api.controller.auth.AuthenticationApiController;
 import com.ssafy.userservice.api.controller.member.MemberApiController;
 import com.ssafy.userservice.api.controller.member.MemberQueryApiController;
 import com.ssafy.userservice.api.service.auth.AuthenticationService;
@@ -18,7 +19,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @Import(SecurityConfig.class)
-@WebMvcTest(controllers = {MemberApiController.class, MemberQueryApiController.class})
+@WebMvcTest(controllers = {MemberApiController.class, MemberQueryApiController.class, AuthenticationApiController.class})
 public abstract class UserServiceApiTestSupport extends ControllerTestSupport {
 
     @Autowired

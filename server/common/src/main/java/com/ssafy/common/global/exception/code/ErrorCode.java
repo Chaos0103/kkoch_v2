@@ -34,6 +34,7 @@ public enum ErrorCode {
     HAS_BUSINESS_NUMBER(BAD_REQUEST, "사업자 번호가 등록된 회원입니다."),
     NOT_BUSINESS_MEMBER(BAD_REQUEST, "사업자 회원이 아닙니다."),
 
+    FAIL_SEND_AUTHENTICATION_NUMBER_TO_EMAIL(BAD_REQUEST, "인증 번호 전송을 실패했습니다."),
     FAIL_SEND_AUTHENTICATION_NUMBER_TO_BANK_ACCOUNT(BAD_REQUEST, "인증 번호 전송을 실패했습니다."),
     AUTHENTICATION_NUMBER_EXPIRED(BAD_REQUEST, "인증 번호가 만료되었습니다."),
     INVALID_AUTHENTICATION_NUMBER(BAD_REQUEST, "인증 번호가 일치하지 않습니다.");
