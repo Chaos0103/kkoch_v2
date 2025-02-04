@@ -3,4 +3,5 @@ rootProject.name = 'kkoch'
 include 'common'
 include 'discovery-service'
 include 'user-service'
+include 'board-service'
 
