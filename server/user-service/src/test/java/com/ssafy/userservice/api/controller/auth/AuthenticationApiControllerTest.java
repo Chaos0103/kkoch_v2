@@ -2,11 +2,11 @@ package com.ssafy.userservice.api.controller.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.userservice.UserServiceApiTestSupport;
-import com.ssafy.userservice.api.controller.NullAndEmptyAndBlankSource;
 import com.ssafy.userservice.api.controller.auth.request.BusinessNumberAuthenticationRequest;
 import com.ssafy.userservice.api.controller.auth.request.EmailAuthenticationRequest;
 import com.ssafy.userservice.api.controller.auth.request.SendEmailAuthenticationNumberRequest;
 import com.ssafy.userservice.api.controller.auth.request.TelAuthenticationRequest;
+import common.NullAndEmptyAndBlankSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

@@ -37,7 +37,11 @@ public enum ErrorCode {
     FAIL_SEND_AUTHENTICATION_NUMBER_TO_EMAIL(BAD_REQUEST, "인증 번호 전송을 실패했습니다."),
     FAIL_SEND_AUTHENTICATION_NUMBER_TO_BANK_ACCOUNT(BAD_REQUEST, "인증 번호 전송을 실패했습니다."),
     AUTHENTICATION_NUMBER_EXPIRED(BAD_REQUEST, "인증 번호가 만료되었습니다."),
-    INVALID_AUTHENTICATION_NUMBER(BAD_REQUEST, "인증 번호가 일치하지 않습니다.");
+    INVALID_AUTHENTICATION_NUMBER(BAD_REQUEST, "인증 번호가 일치하지 않습니다."),
+
+    NOTICE_NOT_FOUND(BAD_REQUEST, "공지사항을 찾을 수 없습니다."),
+    INVALID_NOTICE_TITLE_LENGTH(BAD_REQUEST, "공지사항 제목은 최대 50자 입니다."),
+    INVALID_NOTICE_FIXED_DATE_TIME(BAD_REQUEST, "공지사항 고정 종료일시를 올바르게 입력해주세요.");
 
     private final HttpStatus httpStatus;
     private final String message;

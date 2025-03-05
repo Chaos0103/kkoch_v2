@@ -1,4 +1,4 @@
-package com.ssafy.userservice.api.controller;
+package common;
 
 import org.junit.jupiter.params.provider.EmptySource;
 import org.junit.jupiter.params.provider.NullSource;

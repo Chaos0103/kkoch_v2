@@ -18,6 +18,10 @@ public abstract class TimeUtils {
         return target == null;
     }
 
+    public static boolean isPast(LocalDateTime target, LocalDateTime current) {
+        return current.isAfter(target);
+    }
+
     public static LocalDateTime atStartOfDay(LocalDate date) {
         return date.atStartOfDay();
     }

@@ -2,9 +2,9 @@ package com.ssafy.userservice.api.controller.member;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.userservice.UserServiceApiTestSupport;
-import com.ssafy.userservice.api.controller.NullAndEmptyAndBlankSource;
 import com.ssafy.userservice.api.controller.member.request.*;
 import com.ssafy.userservice.domain.member.vo.BankAccount;
+import common.NullAndEmptyAndBlankSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
