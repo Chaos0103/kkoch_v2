@@ -69,3 +69,10 @@ project(':board-service') {
         implementation(testFixtures(project(":common")))
     }
 }
+
+project(':auction-service') {
+    dependencies {
+        implementation project(':common')
+        implementation(testFixtures(project(":common")))
+    }
+}
